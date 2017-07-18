@@ -1,8 +1,12 @@
 {
-  "name": "sprint0",
-  "version": "1.0.0",
-  "description": "A Basic Intro to React",
-  "main": "index.js",
+  "name": "dcvault",
+  "version": "2.0.0",
+  "description": "DC Vault's Business Site",
+  "main": "server/app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/admoores/dcvault.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "./node_modules/.bin/webpack -d",
