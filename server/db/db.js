@@ -69,12 +69,14 @@ columns.addresses = {
 
 
 const syncTables = (schema, force) => {
+  var force = !!force;
+
   tables.Users = schema.define('user', columns.users);
   tables.Athletes = schema.define('athlete', columns.athletes);
   tables.Poles = schema.define('pole', columns.poles);
   tables.Packages = schema.define('package', columns.packages);
   tables.Rentals = schema.define('rental', columns.rentals);
-  tables.purchases = schema.define('purchase', columns.purchases);
+  tables.Purchases = schema.define('purchase', columns.purchases);
   tables.Sites = schema.define('site', columns.sites);
   tables.Discounts = schema.define('discount', columns.Discounts);
   tables.Addresses = schema.define('address', columns.addresses);
