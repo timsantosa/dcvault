@@ -15,11 +15,13 @@ var config = {
 
   module : {
     loaders : [
-      // {
-      //   test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/
-      // },
       {
-        test : /\.jsx?/,
+        test : /\.jsx$/,
+        include : APP_DIR,
+        loader : 'babel-loader'
+      },
+      {
+        test : /\.js$/,
         include : APP_DIR,
         loader : 'babel-loader'
       }

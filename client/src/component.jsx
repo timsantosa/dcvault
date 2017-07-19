@@ -1,5 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
+import Auth from './auth.js';
+const auth = new Auth();
 // Every React component must extend React.Component, and have a name starting with a capital letter
 class App extends React.Component {
   render() { // All components have a render function in which you will return this 'HTML-like' syntax
@@ -13,9 +15,15 @@ class App extends React.Component {
 }
 
 class SubComponent extends React.Component {
+  loginTest() {
+    auth.login();
+  }
+
   render() {
     return (
-      <p style={{border: '2px dotted black'}}>You can put components inside other components</p>
+      <div>
+        <button onClick={this.loginTest} type="button">Login</button>
+      </div>
     );
   }
 }
