@@ -1,6 +1,8 @@
 import React from 'react';
 import {render} from 'react-dom';
 import Auth from './auth.js';
+import AuthComp from './authComp.jsx'
+
 const auth = new Auth();
 // Every React component must extend React.Component, and have a name starting with a capital letter
 class App extends React.Component {
@@ -8,21 +10,7 @@ class App extends React.Component {
     return (
       <div style={{border: '2px solid black'}}>
         <h2>This is a very basic React component</h2>
-        <SubComponent/>
-      </div>
-    );
-  }
-}
-
-class SubComponent extends React.Component {
-  loginTest() {
-    auth.login();
-  }
-
-  render() {
-    return (
-      <div>
-        <button onClick={this.loginTest} type="button">Login</button>
+        <AuthComp/>
       </div>
     );
   }
