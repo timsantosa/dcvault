@@ -1,9 +1,5 @@
 * { box-sizing: border-box; }
 
-body {
-  font-family: Raleway;
-}
-
 .video-background {
   background: #000;
   position: absolute;
@@ -85,4 +81,42 @@ body {
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+.content-text {
+  font-family: Lato;
+  font-size: calc(16px + .8vw);
+  font-weight: 100;
+}
+
+#mute-button {
+  font-size: 20px;
+  padding: 6px;
+  border: 1px solid white;
+  border-radius: 26px;
+}
+
+.learn-more-button , .learn-more-button:focus {
+  border: 1px solid white;
+  border-radius: 4px;
+  margin-top: 10vh;
+  padding: 6px 10px;
+  font-weight: 100;
+  font-family: Lato;
+  font-size: calc(10px + .8vw);
+  background-color: rgba(0, 0, 0, .35);
+  text-decoration: none;
+}
+
+.learn-more-button:hover {
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, .75)
+}
+
+.about-text {
+  font-weight: 300;
+}
+
+.section-header {
+  font-size: calc(25px + 1vw);
 }

@@ -6,9 +6,9 @@
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="" name="description">
   <meta content="Alex Moores" name="author">
-  <title>DC Vault</title><!-- Bootstrap Core CSS -->
+  <title> (NEW) DC Vault</title><!-- Bootstrap Core CSS -->
   <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"><!-- Custom Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,200,300,400,600,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"><!-- Plugin CSS -->
   <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -16,6 +16,7 @@
   <link href="lib/device-mockups/device-mockups.min.css" rel="stylesheet"><!-- Theme CSS -->
   <link href="css/new-age.css" rel="stylesheet"><!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <link href="css/extras.css" rel="stylesheet">
+  <!-- Fonts -->
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -24,8 +25,8 @@
     <![endif]-->
 
 <!-- Icons -->
-  <link rel="icon" href="assets/img/logos/cropped-logo_square-32x32.png" sizes="32x32" />
-  <link rel="icon" href="assets/img/logos/cropped-logo_square-192x192.png" sizes="192x192" />
+  <link rel="icon" href="img/logos/cropped-logo_square-32x32.png" sizes="32x32" />
+  <link rel="icon" href="img/logos/cropped-logo_square-192x192.png" sizes="192x192" />
   <link rel="apple-touch-icon-precomposed" href="img/logos/cropped-logo_square-180x180.png" />
   <meta name="msapplication-TileImage" content="img/logos/cropped-logo_square-270x270.png" />
 </head>
@@ -42,10 +43,10 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li>
-            <a class="page-scroll" href="#facilities">Facilities</a>
+            <a class="page-scroll" href="#about">About Us</a>
           </li>
           <li>
-            <a class="page-scroll" href="#about">About Us</a>
+            <a class="page-scroll" href="#facilities">Facilities</a>
           </li>
           <li>
             <a class="page-scroll" href="#training">Training</a>
@@ -76,12 +77,46 @@
       <div class="row">
         <div class="col-xs-12 vertical-center center-content">
            <p class='welcome-banner'>WELCOME TO <span class="red-text">DC VAULT</span></p>
+           <p class="content-text">Over <span id="medal-number" class="red-text">0</span> Championship Medalists!
            <p class="glyphicon glyphicon-volume-off" id="mute-button"></p>
-           <p class="trophy-counter">Over <span id=
+          <!-- Counter -->
+          <script type="text/javascript">
+            var actualCount = 211 // The actual number of medals
+            var time = 15000 // The amount of time in ms to count
+            var count = document.getElementById('medal-number');
+            var countUp = function(countTo, delay, current) {
+              if (current === countTo) {
+                return 0;
+              }
+              setTimeout(function() {countUp(countTo, delay, current + 1)}, delay);
+              count.innerHTML = current + 1;
+            }
+            var delay = time/actualCount;
+            countUp(actualCount, delay, 0);
+          </script>
+
+          <a href="#about" class="learn-more-button page-scroll">Learn More</a>
         </div>
       </div>
     </div>
   </header>
+
+  <section id="about" class="text-section">
+    <div class="container">
+      <div class="text-section">
+        <p class="section-header"> DC <span class="red-text">VAULT</span>
+        <p class="content-text about-text"> DC Vault is a Pole Vault club based in Washington, DC and serving the greater DC Metro Area including Virginia, Maryland, and Delaware. We provide year-round training for beginner through elite level athletes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="facilities">
+    <div class="container">
+      <div class="text-section">
+
+      </div>
+    </div>
+  </section>
 
 
   <!-- Youtube Embed -->

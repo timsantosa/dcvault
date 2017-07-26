@@ -28,11 +28,11 @@ a {
   -webkit-transition: all 0.35s;
   -moz-transition: all 0.35s;
   transition: all 0.35s;
-  color: #fdcc52;
+  color: white;
 }
 a:hover,
 a:focus {
-  color: #fcbd20;
+  color: #ddd;
 }
 hr {
   max-width: 100px;
@@ -70,9 +70,10 @@ p {
 }
 .navbar-default .navbar-header .navbar-brand {
   font-family: 'Catamaran', 'Helvetica', 'Arial', 'sans-serif';
-  font-weight: 200;
+  font-weight: 100;
   letter-spacing: 1px;
   color: #222;
+  font-size: 20px;
 }
 .navbar-default .navbar-header .navbar-brand:hover,
 .navbar-default .navbar-header .navbar-brand:focus {
@@ -88,6 +89,7 @@ p {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 11px;
+  font-weight: 700;
 }
 .navbar-default .nav > li > a,
 .navbar-default .nav > li > a:focus {
@@ -95,11 +97,11 @@ p {
 }
 .navbar-default .nav > li > a:hover,
 .navbar-default .nav > li > a:focus:hover {
-  color: #fdcc52;
+  color: #666;
 }
 .navbar-default .nav > li.active > a,
 .navbar-default .nav > li.active > a:focus {
-  color: #fdcc52 !important;
+  color: #222 !important;
   background-color: transparent;
 }
 .navbar-default .nav > li.active > a:hover,
@@ -108,7 +110,7 @@ p {
 }
 @media (min-width: 768px) {
   .navbar-default {
-    background-color: transparent;
+    background-color: rgba(43, 43, 43, .35);
     border-color: transparent;
   }
   .navbar-default .navbar-header .navbar-brand {
@@ -120,14 +122,14 @@ p {
   }
   .navbar-default .nav > li > a,
   .navbar-default .nav > li > a:focus {
-    color: rgba(255, 255, 255, 0.7);
+    color: #ddd;
   }
   .navbar-default .nav > li > a:hover,
   .navbar-default .nav > li > a:focus:hover {
-    color: white;
+    color: #aaa;
   }
   .navbar-default.affix {
-    background-color: white;
+    background-color: rgba(200, 200, 200, .9);
     border-color: rgba(34, 34, 34, 0.1);
   }
   .navbar-default.affix .navbar-header .navbar-brand {
@@ -135,15 +137,15 @@ p {
   }
   .navbar-default.affix .navbar-header .navbar-brand:hover,
   .navbar-default.affix .navbar-header .navbar-brand:focus {
-    color: #fdcc52;
+    color: #000;
   }
   .navbar-default.affix .nav > li > a,
   .navbar-default.affix .nav > li > a:focus {
-    color: #222222;
+    color: #000;
   }
   .navbar-default.affix .nav > li > a:hover,
   .navbar-default.affix .nav > li > a:focus:hover {
-    color: #fdcc52;
+    color: #666;
   }
 }
 header {
@@ -443,4 +445,10 @@ img::-moz-selection {
 }
 body {
   webkit-tap-highlight-color: #222222;
+}
+
+.text-section {
+  background-color: #ddd;
+  color: #222;
+  text-align: center;
 }
