@@ -20,6 +20,7 @@ html,
 body {
   height: 100%;
   width: 100%;
+  min-width: 320px;
 }
 body {
   font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';

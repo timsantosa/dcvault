@@ -113,10 +113,16 @@
   background-color: rgba(0, 0, 0, .75)
 }
 
-.about-text {
+.intro-text {
   font-weight: 300;
 }
 
 .section-header {
   font-size: calc(25px + 1vw);
+  text-align: center;
+}
+
+.subsection-header {
+  font-size: calc(18px + .5vw);
+  text-align: center;
 }
