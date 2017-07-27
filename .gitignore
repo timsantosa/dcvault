@@ -1,3 +1,4 @@
 node_modules/
 client/compiled/
 server/config/
+client/config/
