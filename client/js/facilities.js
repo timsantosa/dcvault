@@ -84,7 +84,7 @@ for (let i = 0; i < facilities.length; i++) {
       textBox.innerHTML = textValues[facilities[i]];
       this.className = 'facility-tab facility-tab-selected';
       map.setCenter(locations[facilities[i]]);
-      map.setZoom(10);
+      map.setZoom(11);
       markers[facilities[i]].setAnimation(google.maps.Animation.BOUNCE);
     }
   }
