@@ -179,6 +179,13 @@
   margin: 5px;
 }
 
+.footer-content {
+  font-family: Lato;
+  font-size: calc(12px + .75vw) ;
+  font-weight: 300;
+  text-align: center;
+}
+
 .smaller-text {
   font-size: 80%;
 }

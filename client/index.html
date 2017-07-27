@@ -16,6 +16,8 @@
   <link href="lib/device-mockups/device-mockups.min.css" rel="stylesheet"><!-- Theme CSS -->
   <link href="css/new-age.css" rel="stylesheet"><!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <link href="css/extras.css" rel="stylesheet">
+  <!-- initialize config vars -->
+  <script type="text/javascript" src="config/config.js"></script>
   <!-- Fonts -->
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -113,7 +115,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 col-xs-12">
-          FIRST DIV
+          <div id="map" style="width: 100%;height:35vh;min-height:450px"></div>
         </div>
 
         <div class="col-sm-7 col-xs-12">
@@ -161,17 +163,35 @@
     </div>
   </section>
 
-  <section id="contact">
+  <footer id="contact">
     <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-lg-4 center-content">
+          <img src="img/logos/logo-footer.png" style="width:50%;height:auto"/>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-lg-4 center-content test-border">
+          <p class="footer-content">Find us on...</p>
+          <div class="social-links">
 
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 offset-sm-2 col-lg-4">
+
+        </div>
+      </div>
     </div>
-  </section>
+  </footer>
 
   <!-- Youtube Embed -->
   <script type="text/javascript" src="js/player.js"></script>
 
   <!-- Interactive Facilities Portion -->
   <script type="text/javascript" src="js/facilities.js"></script>
+  <script id="mapScript"></script>
+  <script>
+    var source = 'https://maps.googleapis.com/maps/api/js?key=' + window.configVariables.GOOGLE_MAPS_API_KEY + '&callback=initMap';
+    document.getElementById('mapScript').src = source;
+  </script>
 
   <!-- jQuery -->
   <script src="lib/jquery/jquery.min.js">
