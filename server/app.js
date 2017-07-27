@@ -13,11 +13,10 @@ db.syncTables(schema, false).then(() => {
 });
 
 // Initialize Server
-const port = 8080;
 const app = express();
 require('./routes')(app, db); // Import all middleware and routes
 
 // Launch Server
-app.listen(port, () => {
-  console.log('Server running on port ', port)
+app.listen(config.server.port, () => {
+  console.log('Server running on port ', config.server.port)
 });
