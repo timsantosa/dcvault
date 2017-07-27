@@ -219,6 +219,7 @@ header .device-container .screen img {
 }
 section {
   padding: 100px 0;
+  border-bottom: 1px solid rgba(100, 100, 100, .2);
 }
 section h2 {
   font-size: 50px;
@@ -446,10 +447,4 @@ img::-moz-selection {
 }
 body {
   webkit-tap-highlight-color: #222222;
-}
-
-.text-section {
-  background-color: #ddd;
-  color: #222;
-  text-align: center;
 }
