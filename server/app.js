@@ -21,5 +21,3 @@ require('./routes')(app, db); // Import all middleware and routes
 app.listen(port, () => {
   console.log('Server running on port ', port)
 });
-
-SET PASSWORD FOR 'root'@'localhost' = PASSWORD('#ha#adED6XRtLaJE');
