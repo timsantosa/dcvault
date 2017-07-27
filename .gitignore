@@ -1,4 +1,4 @@
 node_modules/
-client/compiled/
 server/config/
 client/config/
+client/js/react-components.js
