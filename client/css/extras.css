@@ -171,19 +171,31 @@
   font-size: calc(16px + .5vw);
 }
 
-#facilities-text-box {
-
-}
-
 #facilities-text-box p {
   margin: 5px;
 }
 
 .footer-content {
-  font-family: Lato;
-  font-size: calc(12px + .75vw) ;
-  font-weight: 300;
+  font-family: Raleway;
+  font-size: calc(16px + .75vw) ;
+  font-weight: 100;
   text-align: center;
+}
+
+.social-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 3vh;
+}
+
+.social-icon {
+  width: 50%;
+  margin: 0px 10px;
+}
+
+.footer-contact-info p {
+  text-align: right;
 }
 
 .smaller-text {
