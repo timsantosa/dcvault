@@ -1,5 +1,5 @@
 import React from 'react';
 import {render} from 'react-dom';
-import TestComponent from './component1.jsx';
+import Calendar from './calendar.jsx';
 
-render(<TestComponent/>, document.getElementById('calendar'));
+render(<Calendar/>, document.getElementById('calendar'));

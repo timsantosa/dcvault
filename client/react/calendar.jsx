@@ -1,7 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 
-class TestComponent extends React.Component {
+class Calendar extends React.Component {
   render() { // All components have a render function in which you will return this 'HTML-like' syntax
     return (
       <div>
@@ -11,4 +11,4 @@ class TestComponent extends React.Component {
   }
 }
 
-export default TestComponent;
+export default Calendar;
