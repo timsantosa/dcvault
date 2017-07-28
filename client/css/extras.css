@@ -21,7 +21,7 @@
   pointer-events: none;
   background-image: url("../img/frontpage/Front-Jump.jpg");
   background-position: center;
-  background-size: contain;
+  background-size: 100vw;
   background-repeat: no-repeat;
 }
 #vidtop-content {
