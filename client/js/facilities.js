@@ -56,9 +56,36 @@ const locations = {
   PREP: {lat: 39.032617, lng: -77.108889},
   PG: {lat: 38.911269, lng: -76.866919},
   BALT: {lat: 39.403604, lng: -76.626360},
-  DCV: {lat: 38.890134, lng: -76.976392},
-  CENTER: {lat: 39.168826, lng: -76.807406}
+  DCV: {lat: 38.890134, lng: -76.976392}
 }
+
+// Begin calculate center
+
+var boundingBox = {
+  minLat: locations[Object.keys(locations)[0]].lat,
+  maxLat: locations[Object.keys(locations)[0]].lat,
+  minLng: locations[Object.keys(locations)[0]].lng,
+  maxLng: locations[Object.keys(locations)[0]].lng
+};
+
+for (let key in locations) {
+  if (locations[key].lat < boundingBox.minLat) {
+    boundingBox.minLat = locations[key].lat;
+  } else if (locations[key].lat > boundingBox.maxLat) {
+    boundingBox.maxLat = locations[key].lat;
+  }
+
+  if (locations[key].lng < boundingBox.minLng) {
+    boundingBox.minLng = locations[key].lng;
+  } else if (locations[key].lng > boundingBox.maxLng) {
+    boundingBox.maxLng = locations[key].lng;
+  }
+}
+
+locations.CENTER = {lat: (boundingBox.maxLat + boundingBox.minLat) / 2, lng: (boundingBox.maxLng + boundingBox.minLng) / 2};
+
+// End calculate center
+
 var map, markers;
 
 var current = 'DEFAULT';
@@ -90,20 +117,28 @@ for (let i = 0; i < facilities.length; i++) {
   }
 }
 
+
 window.initMap = function () {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 9,
     center: locations.CENTER,
     scrollwheel: false,
     mapTypeControl: false,
-    streetViewControl: false
+    streetViewControl: false,
+    styles: window.mapStyle
   });
+
+  var pinColor = "C0282D";
+  var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+      new google.maps.Size(21, 34),
+      new google.maps.Point(0,0),
+      new google.maps.Point(10, 34));
   markers = {
-    NCS: new google.maps.Marker({position: locations.NCS, map: map}),
-    CUA: new google.maps.Marker({position: locations.CUA, map: map}),
-    PREP: new google.maps.Marker({position: locations.PREP, map: map}),
-    PG: new google.maps.Marker({position: locations.PG, map: map}),
-    BALT: new google.maps.Marker({position: locations.BALT, map: map}),
-    DCV: new google.maps.Marker({position: locations.DCV, map: map})
+    NCS: new google.maps.Marker({position: locations.NCS, map: map, icon: pinImage}),
+    CUA: new google.maps.Marker({position: locations.CUA, map: map, icon: pinImage}),
+    PREP: new google.maps.Marker({position: locations.PREP, map: map, icon: pinImage}),
+    PG: new google.maps.Marker({position: locations.PG, map: map, icon: pinImage}),
+    BALT: new google.maps.Marker({position: locations.BALT, map: map, icon: pinImage}),
+    DCV: new google.maps.Marker({position: locations.DCV, map: map, icon: pinImage})
   }
 }
