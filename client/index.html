@@ -72,7 +72,8 @@
 
   <div class="video-background">
     <div class="video-foreground">
-      <img src="img/frontpage/Front-Jump.jpg" id="bg" alt=""/>
+      <div id="bg">
+      </div>
       <div id="bgVidPlayer">
       </div>
     </div>
@@ -118,27 +119,29 @@
   <section id="facilities">
     <div class="container">
       <div class="row">
-        <div class="col-sm-5 col-xs-12">
-          <div id="map"></div>
-        </div>
 
-        <div class="col-sm-7 col-xs-12">
+        <div class="col-sm-7 col-xs-12 col-sm-push-5">
           <p class="subsection-header"><span class="red-text">Come Visit</span> our Training Facilities</p>
           <p class="content-text" style="text-align: center">The most complete training program in the region!</p>
           <div class="facilities-interactive">
             <div class="facilities-nav">
+              <span id="DCV" class="facility-tab">DCV</span>
               <span id="NCS" class="facility-tab">NCS</span>
               <span id="CUA" class="facility-tab">CUA</span>
               <span id="PREP" class="facility-tab">PREP</span>
               <span id="PG" class="facility-tab">PG</span>
               <span id="BALT" class="facility-tab">BALT</span>
-              <span id="DCV" class="facility-tab">DCV</span>
             </div>
             <div id="facilities-text-box" class="content-text" style="margin-left: 10px">
               Through a variety of partnerships, DC Vault provides training at 5 facilities in the Washington, DC metropolitan area. Each facility has been uniquely outfitted with a wide array of specialized equipment provided by the club, allowing for training targeted to athletes of all skill levels.
             </div>
           </div>
         </div>
+
+        <div class="col-sm-5 col-xs-12 col-sm-pull-7">
+          <div id="map"></div>
+        </div>
+
       </div>
     </div>
   </section>

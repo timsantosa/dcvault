@@ -33,7 +33,7 @@ const textValues = {
 <p class="content-text" style="font-weight: bold">What</p>\
 <p class="content-text smaller-text">Indoor training site, primarily used for Level-V training.</p>',
 
-  BALT: '<p class="minor-heading">Loyola Blakefield<span class="red-text">Blakefield</span> (BALT)</p>\
+  BALT: '<p class="minor-heading">Loyola <span class="red-text">Blakefield</span> (BALT)</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
 <p class="content-text smaller-text">Loyola Blakefield</p>\
 <p class="content-text smaller-text">500 Chestnut Ave, Towson, MD</p> \
