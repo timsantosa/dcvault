@@ -114,9 +114,9 @@ for (let i = 0; i < facilities.length; i++) {
       map.setZoom(11);
       markers[facilities[i]].setAnimation(google.maps.Animation.BOUNCE);
     }
+    refreshMarkers(markers);
   }
 }
-
 
 window.initMap = function () {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -128,19 +128,19 @@ window.initMap = function () {
     styles: window.mapStyle
   });
 
-  let icon = {
-    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-    scale: 4,
-    strokeColor: 'FireBrick',
-    fillColor: 'FireBrick'
-  }
+  // let icon = {
+  //   path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+  //   scale: 4,
+  //   strokeColor: 'FireBrick',
+  //   fillColor: 'FireBrick'
+  // }
 
   markers = {
-    NCS: new google.maps.Marker({position: locations.NCS, map: map, icon: icon}),
-    CUA: new google.maps.Marker({position: locations.CUA, map: map, icon: icon}),
-    PREP: new google.maps.Marker({position: locations.PREP, map: map, icon: icon}),
-    PG: new google.maps.Marker({position: locations.PG, map: map, icon: icon}),
-    BALT: new google.maps.Marker({position: locations.BALT, map: map, icon: icon}),
-    DCV: new google.maps.Marker({position: locations.DCV, map: map, icon: icon})
+    NCS: new google.maps.Marker({position: locations.NCS, map: map}),
+    CUA: new google.maps.Marker({position: locations.CUA, map: map}),
+    PREP: new google.maps.Marker({position: locations.PREP, map: map}),
+    PG: new google.maps.Marker({position: locations.PG, map: map}),
+    BALT: new google.maps.Marker({position: locations.BALT, map: map}),
+    DCV: new google.maps.Marker({position: locations.DCV, map: map})
   }
 }

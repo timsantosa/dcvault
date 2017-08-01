@@ -7,31 +7,25 @@ class Login extends React.Component {
       <div className='fade-bg'>
         <div className='login-modal'>
           <div className='row'>
-            <div className='col-xs-4'>
-              LOGIN
+            <div className='col-xs-6' style={{textAlign: 'center', paddingTop: '10px'}}>
+              <span>LOGIN</span>
             </div>
-            <div className='col-xs-4'>
-              REGISTER
+            <div className='col-xs-6' style={{textAlign: 'center', paddingTop: '10px'}}>
+              <span>REGISTER</span>
             </div>
-            <div className='col-xs-4'>
-              <span class='glyphicon glyphicon-remove' id='login-menu-close'></span>
+          </div>
+
+
+
+          <div className="row">
+            <div className='col-xs-12' style={{textAlign: 'center'}}>
+              <a id='login-menu-close'>CANCEL</a>
             </div>
           </div>
         </div>
       </div>
     );
   }
-}
-
-const loginDiv = document.getElementById('login');
-document.getElementById('login-button').onclick = () => {
-  loginDiv.style.opacity = 1;
-  loginDiv.style.visibility = 'visible';
-};
-
-document.getElementById('login-menu-close').onclick = () => {
-  loginDiv.style.opacity = 0;
-  loginDiv.style.visibility = 'hidden';
 }
 
 export default Login;

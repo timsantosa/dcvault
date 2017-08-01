@@ -238,9 +238,13 @@
 .login-modal {
   position: fixed;
   min-width: 300px;
-  min-height: 500px;
-  background-color: #AAA;
+  background-color: #DDD;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border-radius: 2px;
+}
+
+#login-menu-close {
+  color: #333;
 }
