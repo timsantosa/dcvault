@@ -9,6 +9,7 @@
   <title> (NEW) DC Vault</title><!-- Bootstrap Core CSS -->
   <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"><!-- Custom Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Lato:100,200,300,400,500,600,700" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:100,500" />
   <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"><!-- Plugin CSS -->
   <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -19,8 +20,7 @@
   <!-- initialize config vars -->
   <script type="text/javascript" src="config/config.js"></script>
   <script type="text/javascript" src="js/map-style.js"></script>
-  <!-- Fonts -->
-  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:100,500" />
+  <script src='https://www.google.com/recaptcha/api.js'></script>
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -63,22 +63,22 @@
             <a class="page-scroll" href="#contact">Contact Us</a>
           </li>
           <li>
-            <a class="page-scroll">Login</a>
+            <a class="page-scroll" id="login-button">Login</a>
           </li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
-  <header>
 
-  <div class="video-background">
-    <div class="video-foreground">
-      <div id="bg">
-      </div>
-      <div id="bgVidPlayer">
+  <header>
+    <div class="video-background">
+      <div class="video-foreground">
+        <div id="bg">
+        </div>
+        <div id="bgVidPlayer">
+        </div>
       </div>
     </div>
-  </div>
 
     <div class="container">
       <div class="row">
@@ -203,6 +203,8 @@
       </div>
     </div>
   </footer>
+
+  <div id='login'></div>
 
   <!-- Youtube Embed -->
   <script type="text/javascript" src="js/player.js"></script>
