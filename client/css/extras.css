@@ -232,7 +232,7 @@
   left: 0;
   height: 110vh;
   width: 100vw;
-  background-color: rgba(0, 0, 0, .35);
+  background-color: rgba(100, 100, 100, .35);
 }
 
 .login-modal {
