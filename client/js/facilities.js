@@ -128,17 +128,19 @@ window.initMap = function () {
     styles: window.mapStyle
   });
 
-  var pinColor = "C0282D";
-  var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
-      new google.maps.Size(21, 34),
-      new google.maps.Point(0,0),
-      new google.maps.Point(10, 34));
+  let icon = {
+    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+    scale: 4,
+    strokeColor: 'FireBrick',
+    fillColor: 'FireBrick'
+  }
+
   markers = {
-    NCS: new google.maps.Marker({position: locations.NCS, map: map, icon: pinImage}),
-    CUA: new google.maps.Marker({position: locations.CUA, map: map, icon: pinImage}),
-    PREP: new google.maps.Marker({position: locations.PREP, map: map, icon: pinImage}),
-    PG: new google.maps.Marker({position: locations.PG, map: map, icon: pinImage}),
-    BALT: new google.maps.Marker({position: locations.BALT, map: map, icon: pinImage}),
-    DCV: new google.maps.Marker({position: locations.DCV, map: map, icon: pinImage})
+    NCS: new google.maps.Marker({position: locations.NCS, map: map, icon: icon}),
+    CUA: new google.maps.Marker({position: locations.CUA, map: map, icon: icon}),
+    PREP: new google.maps.Marker({position: locations.PREP, map: map, icon: icon}),
+    PG: new google.maps.Marker({position: locations.PG, map: map, icon: icon}),
+    BALT: new google.maps.Marker({position: locations.BALT, map: map, icon: icon}),
+    DCV: new google.maps.Marker({position: locations.DCV, map: map, icon: icon})
   }
 }
