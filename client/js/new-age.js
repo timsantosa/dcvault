@@ -21,6 +21,11 @@
         $('.navbar-toggle:visible').click();
     });
 
+    // Closes responsive menu when login clicked
+    $('#login-button').click(function() {
+        $('.navbar-toggle:visible').click();
+    });
+
     // Offset for Main Navigation
     $('#mainNav').affix({
         offset: {

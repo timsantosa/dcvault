@@ -222,8 +222,8 @@
 #login {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 2s;
-  -webkit-transition: opacity 2s;
+  transition: opacity 1s;
+  -webkit-transition: opacity 1s;
 }
 
 .fade-bg {
@@ -238,13 +238,81 @@
 .login-modal {
   position: fixed;
   min-width: 300px;
+  width: 30%;
   background-color: #DDD;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 2px;
+  margin: 10px;
+  padding: 0px;
 }
 
-#login-menu-close {
+.login-modal .row {
+  padding: 0px;
+  margin: 0px;
+}
+
+.login-modal-element {
+  text-align: center;
+  padding: 10px 0px;
+}
+
+.login-modal a {
   color: #333;
+}
+
+.horizontalDivider {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  height: 1px;
+  background: #171717;
+  background: -webkit-gradient(linear, 0 0, 100% 0, from(#EEEEEE), to(#EEEEEE), color-stop(50%, black));
+}
+
+.login-modal-container {
+  margin: 15px;
+}
+
+.login-modal-tab {
+  background-color: #CCC;
+}
+
+.login-modal-tab :hover {
+  background-color: #BBB;
+}
+
+.login-input {
+  width: 80%;
+}
+
+.forgot-button {
+  color: red;
+  float: right;
+  margin-right: 10%;
+}
+
+.red-button {
+  padding: 10px 5px;
+  background-color: #C0282D;
+  border-radius: 2px;
+  width: 20%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.red-button .button-text {
+  color: #DDD;
+  font-size: 18px;
+}
+
+.error-container {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.error-container p {
+  color: #C0282D;
+  font-size: 12px;
 }
