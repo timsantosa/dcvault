@@ -37,12 +37,15 @@ module.exports = (app, db) => {
   });
 
   app.post('/users/authenticate', (req, res) => {
+    console.log(req.body);
     if (!req.body.email || !req.body.password) {
       res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}));
     } else {
       db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
         if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
           res.status(300).send(JSON.stringify({ok: false, message: 'username or password incorrect'}));
+        } else if (!user.verified) {
+          res.status(300).send(JSON.stringify({ok: false, message: 'unverified'}));
         } else {
           let token = jwt.encode(user, config.auth.secret);
           res.send(JSON.stringify({ok: true, message: 'user authenticated', token: token}));
@@ -52,7 +55,7 @@ module.exports = (app, db) => {
   });
 
   app.post('/users/token', (req, res) => {
-    let token = req.headers['x-access-token'];
+    let token = req.body.token;
     if (!token) {
       res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
     } else {
@@ -60,6 +63,8 @@ module.exports = (app, db) => {
       db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
         if (!!foundUser) {
           res.send(JSON.stringify({ok: true, message: 'user authenticated', token: token}));
+        } else {
+          res.status(300).send(JSON.stringify({ok: false, message: 'invalid user token'}));
         }
       });
     }
@@ -77,7 +82,7 @@ module.exports = (app, db) => {
           res.status(400).redirect('/');
         } else {
           if (!user.verified) {
-            user.set({verified: true});
+            db.tables.Users.update({verified: true}, {where: {id: user.id}});
             console.log('user verified?', user.verified);
             res.redirect('/#justVerified=true');
           } else {

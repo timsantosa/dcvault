@@ -316,3 +316,13 @@
   color: #C0282D;
   font-size: 12px;
 }
+
+.status-container {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.status-container p {
+  color: #22c117;
+  font-size: 12px;
+}

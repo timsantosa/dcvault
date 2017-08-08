@@ -1,5 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
+import apiHelpers from '../js/api-helpers'
 
 class Login extends React.Component {
 
@@ -8,8 +9,33 @@ class Login extends React.Component {
 
     this.state = {
       isRegister: false,
-      errorText: ''
+      errorText: '',
+      statusText: ''
     };
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount!!!!')
+  }
+
+  isLoggedIn() {
+    const loginDiv = document.getElementById('login');
+    const loginButton = document.getElementById('login-button');
+    apiHelpers.verifyToken().then((answer) => {
+      console.log('THIS IS THE ANSWER IT GETS', answer);
+      if (answer) {
+        loginButton.innerHTML = 'MY ACCOUNT';
+      } else {
+        loginButton.onclick = () => {
+          loginDiv.style.opacity = 1;
+          loginDiv.style.visibility = 'visible';
+        };
+      }
+    });
+    document.getElementById('login-menu-close').onclick = () => {
+      loginDiv.style.opacity = 0;
+      loginDiv.style.visibility = 'hidden';
+    }
   }
 
   showRegister() {
@@ -23,24 +49,59 @@ class Login extends React.Component {
   submit() {
     let email = this.refs.emailInput.value;
     let password = this.refs.passwordInput.value;
-    let emailConf = this.refs.confirmEmailInput.value;
-    let passConf = this.refs.confirmPasswordInput.value;
-
-    this.setState({errorText: ''});
-
-    if (this.state.isRegister) {
-      // If the user is registering a new account
-      if (email.length === 0 || password.length === 0 || emailConf.length === 0 || passConf.length === 0) {
-        this.setState({errorText: 'You must fill all fields'});
-      } else if (email !== emailConf && password !== passwordConf) {
-        this.setState({errorText: 'Neither the email addresses nor the passwords match'})
-      } else if (email !== emailConf) {
-        this.setState({errorText: 'Email addresses do not match'});
-      } else if (password !== passwordConf) {
-        this.setState({errorText: 'Passwords do not match'});
-      }
+    this.setState({errorText: '', statusText: ''});
+    if (!apiHelpers.validateEmail(email)) {
+      this.setState({errorText: 'That is not a valid email address'});
     } else {
-      // If the user is trying to login to an existing account
+      if (this.state.isRegister) {
+        let emailConf = this.refs.confirmEmailInput.value;
+        let passwordConf = this.refs.confirmPasswordInput.value;
+        // If the user is registering a new account
+        if (email.length === 0 || password.length === 0 || emailConf.length === 0 || passwordConf.length === 0) {
+          this.setState({errorText: 'You must fill all fields'});
+        } else if (email !== emailConf && password !== passwordConf) {
+          this.setState({errorText: 'Neither the email addresses nor the passwords match'})
+        } else if (email !== emailConf) {
+          this.setState({errorText: 'Email addresses do not match'});
+        } else if (password !== passwordConf) {
+          this.setState({errorText: 'Passwords do not match'});
+        } else {
+          apiHelpers.register(email, password)
+          .then((response) => {
+            let info = response.data;
+            if (!info.ok) {
+              if (info.message === 'user already exists') {
+                this.setState({errorText: 'An account already exists with that email address'});
+              } else {
+                this.setState({errorText: 'An unknown error occurred. Please try again'});
+              }
+            } else {
+              this.setState({statusText: 'Account Created! Check your email for a verification link'})
+            }
+          });
+        }
+      } else {
+        if (email.length === 0 || password.length === 0) {
+          this.setState({errorText: 'You must fill all fields'});
+        } else {
+          apiHelpers.login(email, password)
+          .then((response) => {
+            let info = response.data;
+            if (!info.ok) {
+              if (info.message === 'username or password incorrect') {
+                this.setState({errorText: 'Incorrect Email or Password'});
+              } else if (info.message === 'unverified') {
+                this.setState({errorText: 'Your account has not been verified. Check your email'});
+              } else {
+                this.setState({errorText: 'An unknown error occurred. Please try again'});
+              }
+            } else {
+              localStorage.setItem('token', info.token);
+              this.setState({statusText: 'Logged In Successfully!'})
+            }
+          });
+        }
+      }
     }
   }
 
@@ -54,11 +115,20 @@ class Login extends React.Component {
     let forgotButton = '';
 
     let errorContainer = '';
+    let statusContainer = '';
 
     if (!(this.state.errorText.length === 0)) {
       errorContainer = <div className='row'>
           <div className='error-container'>
             <p>{this.state.errorText}</p>
+          </div>
+        </div>;
+    }
+
+    if (!(this.state.statusText.length === 0)) {
+      statusContainer = <div className='row'>
+          <div className='status-container'>
+            <p>{this.state.statusText}</p>
           </div>
         </div>;
     }
@@ -125,6 +195,7 @@ class Login extends React.Component {
             {confirmPassword}
 
           </div>
+          {statusContainer}
           {errorContainer}
 
           <div className='row'>
@@ -136,7 +207,7 @@ class Login extends React.Component {
 
           <div className="row">
             <div className='col-xs-12 login-modal-element'>
-              <a id='login-menu-close' className='smaller-text' style={{marginTop: '25px'}}>CANCEL</a>
+              <a id='login-menu-close' className='smaller-text' style={{marginTop: '25px'}}>CLOSE</a>
             </div>
           </div>
         </div>
