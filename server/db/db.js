@@ -6,8 +6,10 @@ let columns = {};
 
 columns.users = {
   email: Sequelize.STRING,
-  sub: Sequelize.STRING,
-  name: Sequelize.STRING
+  password: Sequelize.STRING,
+  name: Sequelize.STRING,
+  verified: {type: Sequelize.BOOLEAN, defaultValue: false},
+  verificationCode: Sequelize.STRING
   // Address FK
 };
 

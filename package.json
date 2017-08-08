@@ -10,7 +10,7 @@
   "scripts": {
     "test": "mocha -R spec test/*.js",
     "build": "./node_modules/.bin/webpack -d",
-    "start": "node ./server/app.js",
+    "start": "nodemon ./server/app.js",
     "quick": "npm run build && npm start"
   },
   "author": "",
@@ -20,11 +20,14 @@
     "babel-loader": "^7.0.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "history": "^4.6.3",
+    "jwt-simple": "^0.5.1",
     "mysql2": "^1.3.6",
+    "nodemailer": "^4.0.1",
     "path": "^0.12.7",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

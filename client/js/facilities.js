@@ -98,7 +98,6 @@ for (let i = 0; i < facilities.length; i++) {
 
     for (var j = 0; j < facilities.length; j++) { // Reset bg color of all, reset bouncing of all
       document.getElementById(facilities[j]).className = 'facility-tab';
-      markers[facilities[j]].setAnimation(null);
     }
 
     if (current === facilities[i]) {
@@ -111,8 +110,7 @@ for (let i = 0; i < facilities.length; i++) {
       textBox.innerHTML = textValues[facilities[i]];
       this.className = 'facility-tab facility-tab-selected';
       map.setCenter(locations[facilities[i]]);
-      map.setZoom(11);
-      markers[facilities[i]].setAnimation(google.maps.Animation.BOUNCE);
+      map.setZoom(14);
     }
     refreshMarkers(markers);
   }
@@ -127,13 +125,6 @@ window.initMap = function () {
     streetViewControl: false,
     styles: window.mapStyle
   });
-
-  // let icon = {
-  //   path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-  //   scale: 4,
-  //   strokeColor: 'FireBrick',
-  //   fillColor: 'FireBrick'
-  // }
 
   markers = {
     NCS: new google.maps.Marker({position: locations.NCS, map: map}),
