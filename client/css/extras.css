@@ -268,7 +268,7 @@
   margin: 10px 0;
   height: 1px;
   background: #171717;
-  background: -webkit-gradient(linear, 0 0, 100% 0, from(#EEEEEE), to(#EEEEEE), color-stop(50%, black));
+  background: -webkit-gradient(linear, 0 0, 100% 0, from(#DDD), to(#DDD), color-stop(50%, black));
 }
 
 .login-modal-container {

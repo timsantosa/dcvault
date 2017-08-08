@@ -23,17 +23,24 @@ class Login extends React.Component {
   submit() {
     let email = this.refs.emailInput.value;
     let password = this.refs.passwordInput.value;
-    let emailConf = this.refs.confirmEmailInput;
-    let passConf = this.refs.confirmPasswordInput;
+    let emailConf = this.refs.confirmEmailInput.value;
+    let passConf = this.refs.confirmPasswordInput.value;
 
     this.setState({errorText: ''});
 
     if (this.state.isRegister) {
+      // If the user is registering a new account
       if (email.length === 0 || password.length === 0 || emailConf.length === 0 || passConf.length === 0) {
         this.setState({errorText: 'You must fill all fields'});
-      } else if (email !== emailConf || password !== passConf) {
-        this.setState({errorText: 'Emails and/or passwords do not match'});
+      } else if (email !== emailConf && password !== passwordConf) {
+        this.setState({errorText: 'Neither the email addresses nor the passwords match'})
+      } else if (email !== emailConf) {
+        this.setState({errorText: 'Email addresses do not match'});
+      } else if (password !== passwordConf) {
+        this.setState({errorText: 'Passwords do not match'});
       }
+    } else {
+      // If the user is trying to login to an existing account
     }
   }
 
@@ -82,7 +89,7 @@ class Login extends React.Component {
     return (
       <div className='fade-bg'>
         <div className='login-modal'>
-          <div className='row' style={{backgroundColor: '#BBB', margin: '0px'}}>
+          <div className='row' style={{backgroundColor: '#BBB', margin: '0px', borderRadius: '2px 2px 0px 0px'}}>
             <div className='col-xs-6 login-modal-element'>
               <a onClick={this.hideRegister.bind(this)} style={this.state.isRegister ? {marginBottom: '25px'} : {marginBottom: '25px', color: '#C0282D'}}>LOGIN</a>
             </div>
