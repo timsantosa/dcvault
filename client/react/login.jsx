@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
-import apiHelpers from '../js/api-helpers'
+import apiHelpers from '../js/api-helpers';
 
 class Login extends React.Component {
 
@@ -25,7 +25,7 @@ class Login extends React.Component {
       if (answer) {
         loginButton.innerHTML = 'MY ACCOUNT';
         loginButton.onclick = () => {
-          // GO TO ACCOUNT PAGE
+          window.location.href = '/account';
         }
       } else {
         loginButton.onclick = () => {
@@ -101,6 +101,10 @@ class Login extends React.Component {
               localStorage.setItem('token', info.token);
               this.setState({statusText: 'Logged In Successfully!'});
               this.isLoggedIn();
+              setTimeout(() => {
+                document.getElementById('login-menu-close').click();
+              }, 500)
+              // window.location.href = '/account'
             }
           });
         }

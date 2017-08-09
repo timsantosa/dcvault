@@ -58,14 +58,23 @@ module.exports = (app, db) => {
     if (!token) {
       res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
     } else {
-      let user = jwt.decode(token, config.auth.secret);
-      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
-        if (!!foundUser) {
-          res.send(JSON.stringify({ok: true, message: 'user authenticated', token: token}));
-        } else {
-          res.status(300).send(JSON.stringify({ok: false, message: 'invalid user token'}));
-        }
-      });
+      let user = null;
+      try {
+        user = jwt.decode(token, config.auth.secret);
+      } catch (e) {
+
+      }
+      if (!!user) {
+        db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
+          if (!!foundUser) {
+            res.send(JSON.stringify({ok: true, message: 'user authenticated', token: token}));
+          } else {
+            res.status(300).send(JSON.stringify({ok: false, message: 'invalid user token'}));
+          }
+        });
+      } else {
+        res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+      }
     }
   });
 
@@ -109,7 +118,51 @@ module.exports = (app, db) => {
         }
       });
     }
-  })
+  });
+
+  app.post('/users/info', (req, res) => {
+    let token = req.body.token;
+    if (!token) {
+      res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+    } else {
+      let user = null;
+      try {
+        user = jwt.decode(token, config.auth.secret);
+      } catch (e) {
+      }
+      if (!!user) {
+        db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
+          if (!!foundUser) {
+            let returnUser = {
+              id: foundUser.id,
+              email: foundUser.email,
+              name: foundUser.name,
+              address: null
+            };
+            let athletes = [];
+            let getAthleteList = db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athleteList) => {
+              if (Array.isArray(athleteList)) {
+                athletes = athleteList;
+              }
+            });
+            let getUserAddress = db.tables.Addresses.find({where: {id: foundUser.addressId}}).then((address) => {
+              if (!!address) {
+                returnUser.address = address;
+              }
+            });
+
+            Promise.all([getAthleteList, getUserAddress]).then(() => {
+              res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes});
+            });
+          } else {
+            res.status(300).send(JSON.stringify({ok: false, message: 'invalid user token'}));
+          }
+        });
+      } else {
+        res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+      }
+    }
+  });
   // End Users Section
 
 

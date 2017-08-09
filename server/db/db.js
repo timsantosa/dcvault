@@ -7,16 +7,20 @@ let columns = {};
 columns.users = {
   email: Sequelize.STRING,
   password: Sequelize.STRING,
-  name: Sequelize.STRING,
   verified: {type: Sequelize.BOOLEAN, defaultValue: false},
-  verificationCode: Sequelize.STRING
+  verificationCode: Sequelize.STRING,
+  name: Sequelize.STRING
   // Address FK
 };
 
 columns.athletes = {
+  name: Sequelize.STRING,
   emergencyContactName: Sequelize.STRING,
   emergencyContactMDN: Sequelize.STRING,
-  personalRecord: Sequelize.STRING
+  personalRecord: Sequelize.STRING,
+  usatf: Sequelize.STRING,
+  age: Sequelize.INTEGER,
+  isUser: Sequelize.BOOLEAN
   // User FK
 };
 
