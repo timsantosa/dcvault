@@ -37,7 +37,6 @@ module.exports = (app, db) => {
   });
 
   app.post('/users/authenticate', (req, res) => {
-    console.log(req.body);
     if (!req.body.email || !req.body.password) {
       res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}));
     } else {
@@ -83,7 +82,6 @@ module.exports = (app, db) => {
         } else {
           if (!user.verified) {
             db.tables.Users.update({verified: true}, {where: {id: user.id}});
-            console.log('user verified?', user.verified);
             res.redirect('/#justVerified=true');
           } else {
             res.redirect('/#alreadyVerified=true');
@@ -114,5 +112,10 @@ module.exports = (app, db) => {
   })
   // End Users Section
 
+
+  // Catchall redirect to home page
+  app.get('*', (req, res) => {
+    res.redirect('/');
+  })
 
 }

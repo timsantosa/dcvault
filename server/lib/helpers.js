@@ -22,8 +22,8 @@ module.exports.sendCode = (code, email) => {
       from: '"DC Vault" <no-reply@dcvault.org>', // sender address
       subject: 'Please Verify your Account', // Subject line
       to: email,
-      text: 'Follow the Link to Verify your New Account: ' + link // plain text body
-      // html: '<a href=" + link + ">Click Here to Verify your Account</a>' // html body
+      text: 'Follow the Link to Verify your New Account: ' + link, // plain text body
+      html: '<a href="http://' + link + '">Click Here to Verify your Account</a>' // html body
   };
 
   // send mail with defined transport object

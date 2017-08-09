@@ -22,11 +22,10 @@ class Login extends React.Component {
     const loginDiv = document.getElementById('login');
     const loginButton = document.getElementById('login-button');
     apiHelpers.verifyToken().then((answer) => {
-      console.log('THIS IS THE ANSWER IT GETS', answer);
       if (answer) {
         loginButton.innerHTML = 'MY ACCOUNT';
         loginButton.onclick = () => {
-          console.log('GOING TO ACCOUNT PAGE');
+          // GO TO ACCOUNT PAGE
         }
       } else {
         loginButton.onclick = () => {
