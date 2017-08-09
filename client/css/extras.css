@@ -1,4 +1,6 @@
-* { box-sizing: border-box; }
+/** { -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+        box-sizing: border-box; }*/
 
 .video-background {
   background: #000;
@@ -338,4 +340,6 @@
 
 .training-option {
   text-align: center;
+  background-color: #BBB;
+  width: 95%;
 }

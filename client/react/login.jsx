@@ -23,7 +23,7 @@ class Login extends React.Component {
     const loginButton = document.getElementById('login-button');
     apiHelpers.verifyToken().then((answer) => {
       if (answer) {
-        loginButton.innerHTML = 'MY ACCOUNT';
+        loginButton.innerHTML = 'Account';
         loginButton.onclick = () => {
           window.location.href = '/account';
         }

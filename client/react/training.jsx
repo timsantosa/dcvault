@@ -4,25 +4,58 @@ import {render} from 'react-dom';
 class Training extends React.Component {
   render() { // All components have a render function in which you will return this 'HTML-like' syntax
     return (
-      <div className="row">
+      <div className="container">
         <p className="section-header">Training <span className="red-text">Options</span></p>
-        <div className="col-xs-6 col-md-2 training-option">
-          FIRST TRAINING OPTION
+        <div className="row">
+          <div className="col-xs-6 col-md-2">
+            <div className="training-option">
+              FIRST OPTION
+            </div>
+          </div>
+          <div className="col-xs-6 col-md-2">
+            <div className="training-option">
+              SECOND OPTION
+            </div>
+          </div>
+          <div className="col-xs-6 col-md-2">
+            <div className="training-option">
+              THIRD OPTION
+            </div>
+          </div>
+          <div className="col-xs-6 col-md-2">
+            <div className="training-option">
+              FOURTH OPTION
+            </div>
+          </div>
+          <div className="col-xs-6 col-md-2">
+            <div className="training-option">
+              FIFTH OPTION
+            </div>
+          </div>
+          <div className="col-xs-6 col-md-2">
+            <div className="training-option">
+              SIXTH OPTION
+            </div>
+          </div>
         </div>
-        <div className="col-xs-6 col-md-2 training-option">
-          SECOND TRAINING OPTION
-        </div>
-        <div className="col-xs-6 col-md-2 training-option">
-          THIRD TRAINING OPTION
-        </div>
-        <div className="col-xs-6 col-md-2 training-option">
-          FOURTH TRAINING OPTION
-        </div>
-        <div className="col-xs-6 col-md-2 training-option">
-          FIFTH TRAINING OPTION
-        </div>
-        <div className="col-xs-6 col-md-2 training-option">
-          SIXTH TRAINING OPTION
+
+        <div className="row" style={{marginTop: '25px'}}>
+          <p className="subsection-header"><span className="red-text">Other</span> Options</p>
+          <div className="col-xs-6 col-md-4">
+            <div className="training-option">
+              PRIVATE LESSONS
+            </div>
+          </div>
+          <div className="col-xs-6 col-md-4">
+            <div className="training-option">
+              POLE RENTAL
+            </div>
+          </div>
+          <div className="col-xs-6 col-md-4">
+            <div className="training-option">
+              SPECIAL EVENTS
+            </div>
+          </div>
         </div>
       </div>
     );
