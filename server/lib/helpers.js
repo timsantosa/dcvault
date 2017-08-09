@@ -34,9 +34,22 @@ module.exports.sendCode = (code, email) => {
       console.log('Message %s sent to %s response: %s', info.messageId, email, info.response);
   });
 }
-  // setup email data with unicode symbols
 
+module.exports.resetPass = (password, email) => {
+  let mailOptions = {
+      from: '"DC Vault" <no-reply@dcvault.org>', // sender address
+      subject: 'Here is your temporary password', // Subject line
+      to: email,
+      text: 'Your temporary password is as follows: ' + password + '\n Please change it at your earliest convenience through your account page.' // plain text body
+  };
 
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          return console.log(error);
+      }
+      console.log('Message %s sent to %s response: %s', info.messageId, email, info.response);
+  });
+}
 
 module.exports.randString = (len) => {
   len = len || 16;

@@ -110,7 +110,25 @@ class Login extends React.Component {
   }
 
   forgotPassword() {
-
+    this.setState({errorText: '', statusText: ''});
+    let email = this.refs.emailInput.value;
+    if (email.length === 0 || !apiHelpers.validateEmail(email)) {
+      this.setState({errorText: 'Please input the email address associated with your account'});
+    } else {
+      apiHelpers.forgotPassword(email)
+      .then((response) => {
+        let info = response.data;
+        if (info.ok) {
+          this.setState({statusText: 'A temporary password has been sent to your email'});
+        } else {
+          if (info.message === 'user does not exist') {
+            this.setState({errorText: 'There is no account with that email address'});
+          } else {
+            this.setState({errorText: 'An unknown error has occurred. Please try again'});
+          }
+        }
+      });
+    }
   }
 
   render() { // All components have a render function in which you will return this 'HTML-like' syntax

@@ -94,6 +94,24 @@ module.exports = (app, db) => {
       res.status(400).redirect('/');
     }
   });
+
+  app.post('/users/forgot', (req, res) => {
+    if (!req.body.email) {
+      res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}));
+    } else {
+      db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
+        if (!user) {
+          res.status(300).send(JSON.stringify({ok: false, message: 'user does not exist'}));
+        } else {
+          let newPass = helpers.randString()
+          db.tables.Users.update({password: bcrypt.hashSync(newPass)}, {where: {id: user.id}}).then(() => {
+            helpers.resetPass(newPass, user.email);
+            res.send(JSON.stringify({ok: true, message: 'temporary password sent'}));
+          });
+        }
+      });
+    }
+  })
   // End Users Section
 
 
