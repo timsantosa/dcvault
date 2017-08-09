@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import Calendar from './calendar.jsx';
 import Login from './login.jsx';
 import AccountPanel from './account-panel.jsx';
+import Training from './training.jsx';
 
 let currentPage = window.location.pathname;
 
@@ -11,4 +12,5 @@ if (currentPage.includes('account')) {
 } else {
   render(<Calendar/>, document.getElementById('calendar'));
   render(<Login/>, document.getElementById('login'));
+  render(<Training/>, document.getElementById('training'));
 }
