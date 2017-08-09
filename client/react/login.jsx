@@ -15,7 +15,7 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount!!!!')
+    this.isLoggedIn();
   }
 
   isLoggedIn() {
@@ -25,6 +25,9 @@ class Login extends React.Component {
       console.log('THIS IS THE ANSWER IT GETS', answer);
       if (answer) {
         loginButton.innerHTML = 'MY ACCOUNT';
+        loginButton.onclick = () => {
+          console.log('GOING TO ACCOUNT PAGE');
+        }
       } else {
         loginButton.onclick = () => {
           loginDiv.style.opacity = 1;
@@ -97,7 +100,8 @@ class Login extends React.Component {
               }
             } else {
               localStorage.setItem('token', info.token);
-              this.setState({statusText: 'Logged In Successfully!'})
+              this.setState({statusText: 'Logged In Successfully!'});
+              this.isLoggedIn();
             }
           });
         }
