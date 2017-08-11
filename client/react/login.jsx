@@ -103,6 +103,7 @@ class Login extends React.Component {
               this.isLoggedIn();
               setTimeout(() => {
                 document.getElementById('login-menu-close').click();
+                window.location.reload();
               }, 500)
               // window.location.href = '/account'
             }

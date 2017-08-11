@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta content="" name="description">
+  <meta content="Alex Moores" name="author">
+  <title>DC Vault - Register</title><!-- Bootstrap Core CSS -->
+  <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"><!-- Custom Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,200,300,400,500,600,700" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:100,500" />
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"><!-- Plugin CSS -->
+  <link href="../lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+  <link href="../lib/device-mockups/device-mockups.min.css" rel="stylesheet"><!-- Theme CSS -->
+  <link href="../css/new-age.css" rel="stylesheet"><!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <link href="../css/extras.css" rel="stylesheet">
+  <!-- initialize config vars -->
+  <script type="text/javascript" src="../config/config.js"></script>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="../js/map-style.js"></script>
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<!-- Icons -->
+  <link rel="icon" href="../img/logos/cropped-logo_square-32x32.png" sizes="32x32" />
+  <link rel="icon" href="../img/logos/cropped-logo_square-192x192.png" sizes="192x192" />
+  <link rel="apple-touch-icon-precomposed" href="../img/logos/cropped-logo_square-180x180.png" />
+  <meta name="msapplication-TileImage" content="../img/logos/cropped-logo_square-270x270.png" />
+</head>
+<body id="page-top">
+  <nav class="navbar navbar-default navbar-fixed-top" id="mainNav">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button class="navbar-toggle collapsed" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"><span class="sr-only">Toggle navigation</span><i class="fa fa-bars"></i></button> <a class="navbar-brand page-scroll" href="../#page-top">
+          <!-- <img src="img/logos/cropped-logo_square-270x270.png" style="width: 5vw"/> -->
+          DC <span class="red-text">VAULT</span>
+        </a>
+      </div><!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a class="page-scroll" href="../#facilities">Facilities</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="../#about">About Us</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="../#training">Training</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="../#schedule">Schedule</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="../#events">Events</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="#contact">Social</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="#" id="login-button">Login</a>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+  <div id="registration-page">
+  </div>
+
+  <footer id="contact">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-4">
+          <div style="height:100%;float:left;margin-bottom:20px">
+            <img src="../img/logos/logo-footer.png" style="height:100%;width:auto"/>
+          </div>
+        </div>
+        <div class="col-xs-6 col-md-4 col-md-push-4 footer-contact-info">
+          <p class="footer-content" style="font-weight:500;font-size:16px">ADDRESS</p>
+          <p class="footer-content" style="font-size:12px">1101 L St NW</p>
+          <p class="footer-content" style="font-size:12px">Washington, DC</p>
+
+          <p class="footer-content" style="font-weight:500;font-size:16px;margin-top:10px">GENERAL INQUIRY</p>
+          <p class="footer-content" style="font-size:12px">DCVault@DCVault.org</p>
+        </div>
+        <div class="col-xs-12 col-md-4 col-md-pull-4 center-content">
+          <p class="footer-content">Find us on...</p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/DCVault/"><img class="social-icon" src="../img/icons/facebook-grey-icon.png"/></a>
+            <a href="https://twitter.com/dc_vault?lang=en"><img class="social-icon" src="../img/icons/twitter-grey-icon.png"/></a>
+            <a href="https://www.instagram.com/dc_vault/"><img class="social-icon" src="../img/icons/instagram-grey-icon.png"/></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="login">
+  </div>
+  <!-- jQuery -->
+  <script src="../lib/jquery/jquery.min.js">
+  </script> <!-- Bootstrap Core JavaScript -->
+
+  <script src="../lib/bootstrap/js/bootstrap.min.js">
+  </script> <!-- Plugin JavaScript -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js">
+  </script> <!-- Theme JavaScript -->
+
+  <script src="../js/new-age.js">
+  </script>
+
+  <!-- React Components -->
+  <script type="text/javascript" src="../js/react-components.js"></script>
+</body>
+</html>
