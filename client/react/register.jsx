@@ -268,7 +268,7 @@ class AthleteInfo extends React.Component {
               <div className="form-row">
                   <label>
                       <span>Emergency Contact Phone</span>
-                      <input type="tel" name="emergency-phone"/>
+                      <input type="text" name="emergency-phone"/>
                   </label>
               </div>
 
@@ -277,6 +277,18 @@ class AthleteInfo extends React.Component {
                       <span>Emergency Contact Relation</span>
                       <input type="text" name="emergency-relation"/>
                   </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  <span>Athlete Gender</span>
+                  <select name="dropdown">
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other/Non-Binary</option>
+                  </select>
+                </label>
               </div>
 
               <div className="form-row">
@@ -337,6 +349,20 @@ class AthleteInfo extends React.Component {
                     <option value="WY">Wyoming</option>
                   </select>
                 </label>
+              </div>
+
+              <div className="form-row">
+                  <label>
+                      <span>Current School (optional)</span>
+                      <input type="text" name="email"/>
+                  </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  <span>Medical Conditions</span>
+                  <textarea rows="6" cols="64">
+                <label>
               </div>
 
               {errorContainer}
