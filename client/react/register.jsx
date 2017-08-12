@@ -39,7 +39,7 @@ class Register extends React.Component {
       });
     } else if (newPageNum === 5) {
       this.setState({
-        currentPage: (<Confirmation advance={this.advance.bind(this)}/>)
+        currentPage: (<Confirmation advance={this.advance.bind(this)} data={this.state.data}/>)
       });
     }
 
@@ -544,7 +544,7 @@ class Payment extends React.Component {
     // onAuthorize() is called when the buyer approves the payment
     onAuthorize: function(data, actions) {
       return actions.payment.execute().then(function() {
-        window.alert('Payment Complete!');
+        this.props.advance('payment', null);
       });
     }
 
@@ -580,8 +580,8 @@ class Payment extends React.Component {
                   </div>
                 </div>
               </div>
-              <p style={{fontSize: '14px', fontWeight: 'normal'}}>Click the button to process your payment through PayPal</p>
-              <div className="form-row">
+              <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
+              <div className="form-row" style={{textAlign: 'center'}}>
                 <div id="paypal-button-container"></div>
               </div>
           </form>
@@ -592,6 +592,25 @@ class Payment extends React.Component {
 }
 
 class Confirmation extends React.Component {
+  constructor(props) {
+    super(props);
+
+    apiHelpers.getUserData()
+    .then((response) => {
+      if (response.data.ok) {
+        if (response.data.user.email && apiHelpers.validateEmail(response.data.user.email)) {
+          apiHelpers.sendConfirmationEmail(response.data.user.email);
+        }
+      }
+    });
+
+    for (let element of this.props.data['athlete-info']) {
+      if (element.name === 'email' && element.value.length !== 0 && apiHelpers.validateEmail(element.value)) {
+        apiHelpers.sendConfirmationEmail(element.value);
+      }
+    }
+  }
+
   render() {
     return (
       <div className="row">

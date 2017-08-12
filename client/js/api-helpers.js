@@ -58,18 +58,8 @@ apiHelpers.validateEmail = (email) => {
   return re.test(email);
 }
 
-// apiHelpers.getPaypalToken = () => {
-//   return axios.get('/client_token')
-//   .then((response) => {
-//     return response.data;
-//   })
-// }
-
-// apiHelpers.sendPaymentNonce = (nonce, amount) => {
-//   return axios.post('/checkout', {nonce: nonce, amount: amount})
-//   .then((response) => {
-//     console.log(response)
-//   });
-// }
+apiHelpers.sendConfirmationEmail = (email) => {
+  return axios.post('/registration/confirm', {email: email});
+}
 
 export default apiHelpers;

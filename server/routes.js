@@ -19,37 +19,19 @@ module.exports = (app, db) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
+  // Registration Endpoints
 
-  // Endpoints
+  app.post('/registration/confirm', (req, res) => {
+    let email = req.body.email;
+    if(email) {
+      helpers.sendConfirmationEmails(email);
+      res.send({ok: true, message: 'email sent'});
+    } else {
+      res.status(500).send({ok: false, message: 'no or bad email'});
+    }
+  });
 
-  //paypal endpoints
-
-  // app.get("/client_token", function (req, res) {
-  //   gateway.clientToken.generate({}, function (err, response) {
-  //     res.send(response.clientToken);
-  //   });
-  // });
-
-  // app.post("/checkout", function (req, res) {
-  //   var nonce = req.body.nonce;
-  //   let saleRequest = {
-  //     amount: req.body.amount,
-  //     paymentMethodNonce: nonce,
-  //     orderId: 'DC Vault Quarterly Training'
-  //   };
-
-  //   gateway.transaction.sale(saleRequest, function (err, result) {
-  //     if (err) {
-  //       res.send("<h1>Error:  " + err + "</h1>");
-  //     } else if (result.success) {
-  //       res.send("<h1>Success! Transaction ID: " + result.transaction.id + "</h1>");
-  //     } else {
-  //       res.send("<h1>Error:  " + result.message + "</h1>");
-  //     }
-  //   });
-  // });
-
-  //end paypal endpoints
+  //End Registration Endpoints
 
   // Users Section
   app.post('/users/create', (req, res) => {
