@@ -223,6 +223,7 @@ class AthleteInfo extends React.Component {
     });
 
     let required = ['name', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'conditions'];
+    let complete = true;
 
     let output = $('#athlete-info').serializeArray();
     console.log(output);
@@ -232,12 +233,15 @@ class AthleteInfo extends React.Component {
         this.setState({
           errorText: 'Please fill in all required fields'
         });
+        complete = false;
         break;
       }
     }
 
+    if (complete) {
+      this.props.advance('athlete-info', output);
+    }
 
-    // this.props.advance('athlete-info', {});
   }
 
   render() {
@@ -407,7 +411,27 @@ class Agreement extends React.Component {
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
-          <p className="subsection-header">Athlete <span className="red-text">Information</span></p>
+          <form id="select-package" className="form-labels-on-top">
+              <div className="form-title-row">
+                  <h1>Waiver Agreement</h1>
+              </div>
+
+              <div className="row">
+                <div className="col-xs-12 col-md-6">
+                  <img src="../img/forms/release-form-dcv.png"/>
+                </div>
+                <div className="col-xs-12 col-md-6">
+                  <img src="../img/forms/release-form-gtown.png"/>
+                </div>
+              </div>
+
+              {errorContainer}
+
+              <div className="form-row">
+                  <button type="button" onClick={this.continue.bind(this)}>Continue</button>
+              </div>
+
+          </form>
         </div>
       </div>
     );
