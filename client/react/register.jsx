@@ -512,16 +512,31 @@ class Agreement extends React.Component {
   }
 }
 
+
+
 class Payment extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      price: 550,
+      discount: 0
+    }
   }
 
   componentDidMount() {
-    this.renderButton(100);
+    this.calculatePrice();
+  }
+
+  calculatePrice() {
+    let price = (this.state.price * (1 - this.state.discount)) * 1.03
+    this.renderButton(price);
   }
 
   renderButton(amount) {
+
+    let cont = this.continue.bind(this);
+
     paypal.Button.render({
     env: 'sandbox', // sandbox | production
     client: {
@@ -544,7 +559,7 @@ class Payment extends React.Component {
     // onAuthorize() is called when the buyer approves the payment
     onAuthorize: function(data, actions) {
       return actions.payment.execute().then(function() {
-        this.props.advance('payment', null);
+        cont();
       });
     }
 
@@ -580,6 +595,15 @@ class Payment extends React.Component {
                   </div>
                 </div>
               </div>
+
+              <div className="form-row">
+                <div className="row">
+                  <div className="col-xs-12" style={{textAlign:'center'}}>
+                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Registration Fee: ${this.state.price * (1 - this.state.discount)}</p>
+                  </div>
+                </div>
+              </div>
+
               <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
               <div className="form-row" style={{textAlign: 'center'}}>
                 <div id="paypal-button-container"></div>

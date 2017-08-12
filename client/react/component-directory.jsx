@@ -7,6 +7,7 @@ import Training from './training.jsx';
 import Register from './register.jsx';
 
 let currentPage = window.location.pathname;
+let queryString = window.location.search;
 
 if (currentPage.includes('account')) {
   render(<AccountPanel/>, document.getElementById('account-panel'));
@@ -17,4 +18,10 @@ if (currentPage.includes('account')) {
   render(<Calendar/>, document.getElementById('calendar'));
   render(<Login/>, document.getElementById('login'));
   render(<Training/>, document.getElementById('training'));
+
+  if (queryString.includes('justVerified=true')) {
+    let loginDiv = document.getElementById('login');
+    loginDiv.style.opacity = 1;
+    loginDiv.style.visibility = 'visible';
+  }
 }

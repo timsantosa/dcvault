@@ -84,17 +84,17 @@ const syncTables = (schema, force) => {
   tables.Users = schema.define('user', columns.users);
   tables.Athletes = schema.define('athlete', columns.athletes);
   tables.Poles = schema.define('pole', columns.poles);
-  // tables.Packages = schema.define('package', columns.packages);
+  tables.Packages = schema.define('package', columns.packages);
   tables.Rentals = schema.define('rental', columns.rentals);
   tables.Purchases = schema.define('purchase', columns.purchases);
-  // tables.Sites = schema.define('site', columns.sites);
+  tables.Sites = schema.define('site', columns.sites);
   tables.Discounts = schema.define('discount', columns.Discounts);
-  // tables.Addresses = schema.define('address', columns.addresses);
+  tables.Addresses = schema.define('address', columns.addresses);
 
 
-  // tables.Users.belongsTo(tables.Addresses, {as: 'address'});
+  tables.Users.belongsTo(tables.Addresses, {as: 'address'});
 
-  // tables.Sites.belongsTo(tables.Sites, {as: 'address'});
+  tables.Sites.belongsTo(tables.Sites, {as: 'address'});
 
   tables.Athletes.belongsTo(tables.Users, {as: 'user'});
 
@@ -102,11 +102,11 @@ const syncTables = (schema, force) => {
   tables.Rentals.belongsTo(tables.Poles, {as: 'pole'});
 
   tables.Purchases.belongsTo(tables.Users, {as: 'user'});
-  // tables.Purchases.belongsTo(tables.Packages, {as: 'package'});
+  tables.Purchases.belongsTo(tables.Packages, {as: 'package'});
 
   tables.Discounts.belongsTo(tables.Users, {as: 'user'});
-  // tables.Discounts.belongsTo(tables.Packages, {as: 'package'});
-  // tables.Discounts.belongsTo(tables.Rentals, {as: 'rental'});
+  tables.Discounts.belongsTo(tables.Packages, {as: 'package'});
+  tables.Discounts.belongsTo(tables.Rentals, {as: 'rental'});
 
   return schema.sync({force: force});
 }
