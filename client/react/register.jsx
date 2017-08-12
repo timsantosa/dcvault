@@ -517,8 +517,46 @@ class Payment extends React.Component {
     super(props);
   }
 
+  componentDidMount() {
+    this.renderButton(100);
+  }
+
+  renderButton(amount) {
+    paypal.Button.render({
+    env: 'sandbox', // sandbox | production
+    client: {
+      sandbox:    window.configVariables.PAYPAL_CLIENT_ID,
+      production: '<insert production client id>'
+    },
+    commit: true,
+    payment: function(data, actions) {
+      return actions.payment.create({
+        payment: {
+          transactions: [
+            {
+              amount: { total: amount, currency: 'USD' }
+            }
+          ]
+        }
+      });
+    },
+
+    // onAuthorize() is called when the buyer approves the payment
+    onAuthorize: function(data, actions) {
+      return actions.payment.execute().then(function() {
+        window.alert('Payment Complete!');
+      });
+    }
+
+    }, '#paypal-button-container');
+  }
+
   continue() {
     this.props.advance('payment', null)
+  }
+
+  applyDiscount() {
+
   }
 
   render() {
@@ -529,9 +567,22 @@ class Payment extends React.Component {
               <div className="form-title-row">
                   <h1>Finalize Payment</h1>
               </div>
-              <p style={{fontSize: '14px', fontWeight: 'normal'}}>This is a placeholder</p>
               <div className="form-row">
-                  <button type="button" onClick={this.continue.bind(this)}>Continue</button>
+                <div className="row">
+                  <div className="col-xs-8">
+                      <label>
+                      <span>Discount Code</span>
+                      <input type="text" name="discount" style={{width: '100%'}}/>
+                    </label>
+                  </div>
+                  <div className="col-xs-4">
+                    <button type="button" onClick={this.applyDiscount.bind(this)}>Apply</button>
+                  </div>
+                </div>
+              </div>
+              <p style={{fontSize: '14px', fontWeight: 'normal'}}>Click the button to process your payment through PayPal</p>
+              <div className="form-row">
+                <div id="paypal-button-container"></div>
               </div>
           </form>
         </div>
@@ -551,7 +602,7 @@ class Confirmation extends React.Component {
               </div>
               <p style={{fontSize: '14px', fontWeight: 'normal'}}>Check your email for Confirmation and Training Information</p>
               <div className="form-row">
-                  <button type="button" onClick={() => {window.location.href = '/'}}>Continue</button>
+                  <button type="button" onClick={() => {window.location.href = '/'}}>Home</button>
               </div>
           </form>
         </div>
