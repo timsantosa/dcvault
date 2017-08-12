@@ -1,6 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 import apiHelpers from '../js/api-helpers';
+// import initPaypal from '../js/payment';
 
 class Register extends React.Component {
   constructor(props) {
@@ -15,25 +16,28 @@ class Register extends React.Component {
 
   advance(page, info) {
     let updatedData = this.state.data;
+    let newPageNum = this.state.pageNum + 1;
     updatedData[page] = info;
     this.setState({
-      pageNum: this.state.pageNum + 1,
+      pageNum: newPageNum,
       data: updatedData
     });
 
-    if (this.state.pageNum === 2) {
+    console.log('THE CURRENT PAGE NUM IS', newPageNum);
+
+    if (newPageNum === 2) {
       this.setState({
         currentPage: (<AthleteInfo advance={this.advance.bind(this)}/>)
       });
-    } else if (this.state.pageNum === 3) {
+    } else if (newPageNum === 3) {
       this.setState({
         currentPage: (<Agreement advance={this.advance.bind(this)}/>)
       });
-    } else if (this.state.pageNum === 4) {
+    } else if (newPageNum === 4) {
       this.setState({
         currentPage: (<Payment advance={this.advance.bind(this)}/>)
       });
-    } else if (this.state.pageNum === 5) {
+    } else if (newPageNum === 5) {
       this.setState({
         currentPage: (<Confirmation advance={this.advance.bind(this)}/>)
       });
@@ -88,6 +92,7 @@ class Register extends React.Component {
           {this.state.currentPage}
           <ProgressBar pageNum={this.state.pageNum}/>
         </div>
+        <div id="paypal-button"></div>
       </section>
     );
   }
@@ -125,6 +130,7 @@ class SelectPackage extends React.Component {
           <div className='error-container'>
             <p>{this.state.errorText}</p>
           </div>
+
         </div>;
     }
 
@@ -222,7 +228,7 @@ class AthleteInfo extends React.Component {
       errorText: ''
     });
 
-    let required = ['name', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'conditions'];
+    let required = ['name', 'dob', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'conditions'];
     let complete = true;
 
     let output = $('#athlete-info').serializeArray();
@@ -268,6 +274,13 @@ class AthleteInfo extends React.Component {
                       <span className='required'>Athlete Full Name</span>
                       <input type="text" name="name"/>
                   </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  <span className='required'>Athlete DOB (mm/dd/yyyy)</span>
+                  <input type="text" name="dob" style={{width: '100%'}}/>
+                </label>
               </div>
 
               <div className="form-row">
@@ -416,6 +429,29 @@ class Agreement extends React.Component {
   }
 
   continue() {
+    this.setState({
+      errorText: ''
+    });
+
+    let required = ['name', 'date'];
+    let complete = true;
+
+    let output = $('#agreement').serializeArray();
+    console.log(output);
+
+    for (let field of output) {
+      if (required.includes(field.name) && field.value.length === 0) {
+        this.setState({
+          errorText: 'Please fill in all required fields'
+        });
+        complete = false;
+        break;
+      }
+    }
+
+    if (complete) {
+      this.props.advance('agreement', output);
+    }
 
   }
 
@@ -433,17 +469,33 @@ class Agreement extends React.Component {
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
-          <form id="select-package" className="form-labels-on-top">
+          <form id="agreement" className="form-labels-on-top">
               <div className="form-title-row">
                   <h1>Waiver Agreement</h1>
               </div>
 
+              <img className="waiver-image" src="../img/forms/release-form-dcv.png"/>
+              <img className="waiver-image" src="../img/forms/release-form-gtown.png"/>
+
+              <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's adult guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/release-form.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
+
               <div className="row">
                 <div className="col-xs-12 col-md-6">
-                  <img src="../img/forms/release-form-dcv.png"/>
+                  <div className="form-row">
+                    <label>
+                      <span className='required'>Full Name</span>
+                      <input type="text" name="name" style={{width: '100%'}}/>
+                    </label>
+                  </div>
                 </div>
+
                 <div className="col-xs-12 col-md-6">
-                  <img src="../img/forms/release-form-gtown.png"/>
+                  <div className="form-row">
+                    <label>
+                      <span className='required'>Date (mm/dd/yyyy)</span>
+                      <input type="text" name="date" style={{width: '100%'}}/>
+                    </label>
+                  </div>
                 </div>
               </div>
 
@@ -461,11 +513,27 @@ class Agreement extends React.Component {
 }
 
 class Payment extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  continue() {
+    this.props.advance('payment', null)
+  }
+
   render() {
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
-          <p className="subsection-header">Athlete <span className="red-text">Information</span></p>
+          <form id="agreement" className="form-labels-on-top">
+              <div className="form-title-row">
+                  <h1>Finalize Payment</h1>
+              </div>
+              <p style={{fontSize: '14px', fontWeight: 'normal'}}>This is a placeholder</p>
+              <div className="form-row">
+                  <button type="button" onClick={this.continue.bind(this)}>Continue</button>
+              </div>
+          </form>
         </div>
       </div>
     );
@@ -477,7 +545,15 @@ class Confirmation extends React.Component {
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
-          <p className="subsection-header">Athlete <span className="red-text">Information</span></p>
+          <form id="agreement" className="form-labels-on-top">
+              <div className="form-title-row">
+                  <h1>Success!</h1>
+              </div>
+              <p style={{fontSize: '14px', fontWeight: 'normal'}}>Check your email for Confirmation and Training Information</p>
+              <div className="form-row">
+                  <button type="button" onClick={() => {window.location.href = '/'}}>Continue</button>
+              </div>
+          </form>
         </div>
       </div>
     );

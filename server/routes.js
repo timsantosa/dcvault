@@ -7,7 +7,11 @@ const bcrypt = require('bcrypt-nodejs');
 const helpers = require('./lib/helpers');
 const config = require('./config/config');
 const bodyParser = require('body-parser');
+const braintree = require('braintree');
 
+const gateway = braintree.connect({
+  accessToken: config.paypal.token
+});
 
 module.exports = (app, db) => {
   // External Middleware
@@ -17,6 +21,35 @@ module.exports = (app, db) => {
 
 
   // Endpoints
+
+  //paypal endpoints
+
+  // app.get("/client_token", function (req, res) {
+  //   gateway.clientToken.generate({}, function (err, response) {
+  //     res.send(response.clientToken);
+  //   });
+  // });
+
+  // app.post("/checkout", function (req, res) {
+  //   var nonce = req.body.nonce;
+  //   let saleRequest = {
+  //     amount: req.body.amount,
+  //     paymentMethodNonce: nonce,
+  //     orderId: 'DC Vault Quarterly Training'
+  //   };
+
+  //   gateway.transaction.sale(saleRequest, function (err, result) {
+  //     if (err) {
+  //       res.send("<h1>Error:  " + err + "</h1>");
+  //     } else if (result.success) {
+  //       res.send("<h1>Success! Transaction ID: " + result.transaction.id + "</h1>");
+  //     } else {
+  //       res.send("<h1>Error:  " + result.message + "</h1>");
+  //     }
+  //   });
+  // });
+
+  //end paypal endpoints
 
   // Users Section
   app.post('/users/create', (req, res) => {
