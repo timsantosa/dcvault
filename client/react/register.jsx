@@ -17,7 +17,7 @@ class Register extends React.Component {
     let updatedData = this.state.data;
     updatedData[page] = info;
     this.setState({
-      pageNum: this.state.pageNum++,
+      pageNum: this.state.pageNum + 1,
       data: updatedData
     });
 
@@ -407,7 +407,25 @@ class AthleteInfo extends React.Component {
 
 
 class Agreement extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      errorText: ''
+    };
+  }
+
   render() {
+
+    let errorContainer;
+    if (!(this.state.errorText.length === 0)) {
+      errorContainer = <div className='row'>
+          <div className='error-container'>
+            <p>{this.state.errorText}</p>
+          </div>
+        </div>;
+    }
+
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>

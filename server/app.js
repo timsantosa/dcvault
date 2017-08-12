@@ -8,7 +8,7 @@ const config = require('./config/config');
 
 // Initialize database
 var schema = new Sequelize(config.db.name, config.db.user, config.db.pass, {logging: false, host: 'localhost', dialect: 'mysql', dialectOptions: {insecureAuth: true}});
-db.syncTables(schema, true).then(() => {
+db.syncTables(schema, false).then(() => {
   console.log('DB Initialized');
 });
 
