@@ -7,11 +7,7 @@ const bcrypt = require('bcrypt-nodejs');
 const helpers = require('./lib/helpers');
 const config = require('./config/config');
 const bodyParser = require('body-parser');
-const braintree = require('braintree');
 
-const gateway = braintree.connect({
-  accessToken: config.paypal.token
-});
 
 module.exports = (app, db) => {
 
