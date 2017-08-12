@@ -61,10 +61,11 @@ columns.sites = {
 };
 
 columns.discounts = {
-  code: Sequelize.STRING, // Hashed
+  code: Sequelize.STRING,
   // Optional user FK
   uses: Sequelize.INTEGER,
-  type: Sequelize.STRING
+  type: Sequelize.STRING,
+  amount: Sequelize.DOUBLE
   // package or rental FK
 };
 

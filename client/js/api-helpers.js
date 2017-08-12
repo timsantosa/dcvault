@@ -62,4 +62,14 @@ apiHelpers.sendConfirmationEmail = (email) => {
   return axios.post('/registration/confirm', {email: email});
 }
 
+apiHelpers.getDiscountAmount = (code) => {
+  return axios.post('/registration/discount', {code: code})
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  })
+}
+
 export default apiHelpers;

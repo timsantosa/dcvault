@@ -10,7 +10,7 @@ class Login extends React.Component {
     this.state = {
       isRegister: false,
       errorText: '',
-      statusText: ''
+      statusText: window.location.hash.includes('justVerified=true') ? 'Account Verified! Please log in' : ''
     };
   }
 

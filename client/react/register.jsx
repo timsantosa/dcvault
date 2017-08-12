@@ -520,7 +520,8 @@ class Payment extends React.Component {
 
     this.state = {
       price: 550,
-      discount: 0
+      discount: 0,
+      errorText: '',
     }
   }
 
@@ -572,9 +573,45 @@ class Payment extends React.Component {
 
   applyDiscount() {
 
+    this.setState({
+      errorText: ''
+    });
+    let code = this.refs.discountBox.value;
+
+    if (code.length === 0) {
+      this.setState({
+        errorText: 'You did not enter a code'
+      });
+    } else {
+      apiHelpers.getDiscountAmount(code)
+      .then((response) => {
+        let info = response.data;
+        if (!info || !info.ok) {
+          this.setState({
+            errorText: 'Invalid or Expired Code'
+          })
+        } else {
+          let discountAmount = info.amount;
+          this.setState({
+            discount: discountAmount
+          });
+          this.calculatePrice();
+        }
+      })
+    }
   }
 
   render() {
+
+    let errorContainer;
+    if (!(this.state.errorText.length === 0)) {
+      errorContainer = <div className='row'>
+          <div className='error-container'>
+            <p>{this.state.errorText}</p>
+          </div>
+        </div>;
+    }
+
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
@@ -591,7 +628,7 @@ class Payment extends React.Component {
                     </label>
                   </div>
                   <div className="col-xs-4">
-                    <button type="button" onClick={this.applyDiscount.bind(this)}>Apply</button>
+                    <button ref="discountBox" type="button" onClick={this.applyDiscount.bind(this)}>Apply</button>
                   </div>
                 </div>
               </div>
@@ -603,6 +640,8 @@ class Payment extends React.Component {
                   </div>
                 </div>
               </div>
+
+              {errorContainer}
 
               <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
               <div className="form-row" style={{textAlign: 'center'}}>

@@ -27,9 +27,25 @@ module.exports = (app, db) => {
       helpers.sendConfirmationEmails(email);
       res.send({ok: true, message: 'email sent'});
     } else {
-      res.status(500).send({ok: false, message: 'no or bad email'});
+      res.status(400).send({ok: false, message: 'no or bad email'});
     }
   });
+
+  app.post('/registration/discount', (req, res) => {
+    let code = req.body.code;
+
+    if (!code) {
+      res.status(400).send({ok: false, message: 'no code given'});
+    } else {
+      tables.Discounts.find({where: {code: code}}).then((discount) => {
+        if (!discount || discount.uses === 0) {
+          res.status(400).send({ok: false, message: 'not a valid code'});
+        } else {
+          res.send({ok: true, message: 'code accepted', amount: })
+        }
+      })
+    }
+  })
 
   //End Registration Endpoints
 
