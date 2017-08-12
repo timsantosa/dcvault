@@ -14,12 +14,23 @@ const gateway = braintree.connect({
 });
 
 module.exports = (app, db) => {
+
   // External Middleware
   app.use(express.static(path.join(__dirname, '../client')));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
   // Registration Endpoints
+
+  app.get('/create_test_code', (req, res) => {
+    db.tables.Discounts.create({
+      code: 'abcdef',
+      type: 'Military',
+      amount: .25
+    });
+
+    res.end();
+  });
 
   app.post('/registration/confirm', (req, res) => {
     let email = req.body.email;
@@ -32,16 +43,18 @@ module.exports = (app, db) => {
   });
 
   app.post('/registration/discount', (req, res) => {
+
     let code = req.body.code;
 
     if (!code) {
       res.status(400).send({ok: false, message: 'no code given'});
     } else {
-      tables.Discounts.find({where: {code: code}}).then((discount) => {
+      db.tables.Discounts.find({where: {code: code}}).then((discount) => {
         if (!discount || discount.uses === 0) {
           res.status(400).send({ok: false, message: 'not a valid code'});
         } else {
-          res.send({ok: true, message: 'code accepted', amount: })
+          res.send({ok: true, message: 'code accepted', amount: discount.amount});
+          discount.destroy();
         }
       })
     }

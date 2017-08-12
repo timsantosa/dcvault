@@ -550,7 +550,7 @@ class Payment extends React.Component {
         payment: {
           transactions: [
             {
-              amount: { total: amount, currency: 'USD' }
+              amount: { total: amount.toFixed(0), currency: 'USD' }
             }
           ]
         }
@@ -572,6 +572,8 @@ class Payment extends React.Component {
   }
 
   applyDiscount() {
+
+    console.log('applying discount', this.refs.discountBox.value);
 
     this.setState({
       errorText: ''
@@ -595,6 +597,7 @@ class Payment extends React.Component {
           this.setState({
             discount: discountAmount
           });
+          document.getElementById('paypal-button-container').innerHTML = '';
           this.calculatePrice();
         }
       })
@@ -624,24 +627,25 @@ class Payment extends React.Component {
                   <div className="col-xs-8">
                       <label>
                       <span>Discount Code</span>
-                      <input type="text" name="discount" style={{width: '100%'}}/>
+                      <input ref="discountBox" type="text" name="discount" style={{width: '100%'}}/>
                     </label>
                   </div>
                   <div className="col-xs-4">
-                    <button ref="discountBox" type="button" onClick={this.applyDiscount.bind(this)}>Apply</button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-row">
-                <div className="row">
-                  <div className="col-xs-12" style={{textAlign:'center'}}>
-                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Registration Fee: ${this.state.price * (1 - this.state.discount)}</p>
+                    <button type="button" onClick={this.applyDiscount.bind(this)}>Apply</button>
                   </div>
                 </div>
               </div>
 
               {errorContainer}
+
+              <div className="form-row">
+                <div className="row">
+                  <div className="col-xs-12" style={{textAlign:'center'}}>
+                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Registration Fee: ${(this.state.price * (1 - this.state.discount)).toFixed(0)}</p>
+                  </div>
+                </div>
+              </div>
+
 
               <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
               <div className="form-row" style={{textAlign: 'center'}}>

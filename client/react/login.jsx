@@ -100,7 +100,7 @@ class Login extends React.Component {
             } else {
               localStorage.setItem('token', info.token);
               this.setState({statusText: 'Logged In Successfully!'});
-              this.isLoggedIn();
+              window.location.hash = '';
               setTimeout(() => {
                 document.getElementById('login-menu-close').click();
                 window.location.reload();
