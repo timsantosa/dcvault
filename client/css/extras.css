@@ -352,9 +352,6 @@
 
 /*FORM STYLING*/
 
-html{
-    background-color: #f3f3f3;
-}
 
 .form-labels-on-top{
     box-sizing: border-box;
@@ -447,8 +444,10 @@ html{
     margin-top: 15px;
 }
 
-/*  Making the form responsive. Remove this media query
-    if you don't need the form to work on mobile devices. */
+.form-labels-on-top .required::after {
+  content: '*';
+  color: #C0282D;
+}
 
 @media (max-width: 600px) {
 

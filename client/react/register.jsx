@@ -2,7 +2,6 @@ import React from 'react';
 import {render} from 'react-dom';
 import apiHelpers from '../js/api-helpers';
 
-
 class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -28,9 +27,13 @@ class Register extends React.Component {
       });
     } else if (this.state.pageNum === 3) {
       this.setState({
-        currentPage: (<Payment advance={this.advance.bind(this)}/>)
+        currentPage: (<Agreement advance={this.advance.bind(this)}/>)
       });
     } else if (this.state.pageNum === 4) {
+      this.setState({
+        currentPage: (<Payment advance={this.advance.bind(this)}/>)
+      });
+    } else if (this.state.pageNum === 5) {
       this.setState({
         currentPage: (<Confirmation advance={this.advance.bind(this)}/>)
       });
@@ -134,7 +137,7 @@ class SelectPackage extends React.Component {
                   <h1>Select Training Package</h1>
               </div>
               <div className="form-row">
-                  <label><span>Quarter</span></label>
+                  <label><span className='required'>Quarter</span></label>
                   <div className="form-radio-buttons">
                       <div>
                           <label>
@@ -152,7 +155,7 @@ class SelectPackage extends React.Component {
               </div>
 
               <div className="form-row">
-                  <label><span>Training Group</span></label>
+                  <label><span className='required'>Training Group</span></label>
                   <div className="form-radio-buttons">
                       <div>
                           <label>
@@ -170,7 +173,7 @@ class SelectPackage extends React.Component {
               </div>
 
               <div className="form-row">
-                  <label><span>Training Facility</span></label>
+                  <label><span className='required'>Training Facility</span></label>
                   <div className="form-radio-buttons">
                       <div>
                           <label>
@@ -215,7 +218,26 @@ class AthleteInfo extends React.Component {
   }
 
   continue() {
-    this.props.advance('athlete-info', {});
+    this.setState({
+      errorText: ''
+    });
+
+    let required = ['name', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'conditions'];
+
+    let output = $('#athlete-info').serializeArray();
+    console.log(output);
+
+    for (let field of output) {
+      if (required.includes(field.name) && field.value.length === 0) {
+        this.setState({
+          errorText: 'Please fill in all required fields'
+        });
+        break;
+      }
+    }
+
+
+    // this.props.advance('athlete-info', {});
   }
 
   render() {
@@ -239,7 +261,7 @@ class AthleteInfo extends React.Component {
 
               <div className="form-row">
                   <label>
-                      <span>Athlete Full Name</span>
+                      <span className='required'>Athlete Full Name</span>
                       <input type="text" name="name"/>
                   </label>
               </div>
@@ -253,36 +275,36 @@ class AthleteInfo extends React.Component {
 
               <div className="form-row">
                   <label>
-                      <span>Athlete USATF Number</span>
-                      <input type="text" name="email"/>
+                      <span className='required'>Athlete USATF Number</span>
+                      <input type="text" name="usatf"/>
                   </label>
               </div>
 
               <div className="form-row">
                   <label>
-                      <span>Emergency Contact Name</span>
+                      <span className='required'>Emergency Contact Name</span>
                       <input type="text" name="emergency-contact"/>
                   </label>
               </div>
 
               <div className="form-row">
                   <label>
-                      <span>Emergency Contact Phone</span>
+                      <span className='required'>Emergency Contact Phone</span>
                       <input type="text" name="emergency-phone"/>
                   </label>
               </div>
 
               <div className="form-row">
                   <label>
-                      <span>Emergency Contact Relation</span>
+                      <span className='required'>Emergency Contact Relation</span>
                       <input type="text" name="emergency-relation"/>
                   </label>
               </div>
 
               <div className="form-row">
                 <label>
-                  <span>Athlete Gender</span>
-                  <select name="dropdown">
+                  <span className='required'>Athlete Gender</span>
+                  <select name="gender">
                     <option value="">Select Gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -293,8 +315,8 @@ class AthleteInfo extends React.Component {
 
               <div className="form-row">
                 <label>
-                  <span>State of Residence</span>
-                  <select name="dropdown">
+                  <span className='required'>State of Residence</span>
+                  <select name="state">
                     <option value="">Select State</option>
                     <option value="AL">Alabama</option>
                     <option value="AK">Alaska</option>
@@ -360,9 +382,10 @@ class AthleteInfo extends React.Component {
 
               <div className="form-row">
                 <label>
-                  <span>Medical Conditions</span>
-                  <textarea rows="6" cols="64">
-                <label>
+                  <span className='required'>Medical Conditions</span>
+                  <span style={{textSize: '75%', fontWeight: 'normal'}}> If none, write 'none' </span>
+                  <textarea rows="6" cols="40" name="conditions"/>
+                </label>
               </div>
 
               {errorContainer}
@@ -372,6 +395,19 @@ class AthleteInfo extends React.Component {
               </div>
 
           </form>
+        </div>
+      </div>
+    );
+  }
+}
+
+
+class Agreement extends React.Component {
+  render() {
+    return (
+      <div className="row">
+        <div className="col-xs-12" style={{textAlign: 'center'}}>
+          <p className="subsection-header">Athlete <span className="red-text">Information</span></p>
         </div>
       </div>
     );
