@@ -415,6 +415,10 @@ class Agreement extends React.Component {
     };
   }
 
+  continue() {
+
+  }
+
   render() {
 
     let errorContainer;
