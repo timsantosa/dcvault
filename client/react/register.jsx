@@ -55,7 +55,7 @@ class Register extends React.Component {
     const loginButton = document.getElementById('login-button');
     apiHelpers.verifyToken().then((answer) => {
       if (answer) {
-        loginButton.innerHTML = 'Account';
+        loginButton.innerHTML = 'My Account';
         loginButton.onclick = () => {
           window.location.href = '/account';
         }
@@ -228,7 +228,7 @@ class AthleteInfo extends React.Component {
       errorText: ''
     });
 
-    let required = ['name', 'dob', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'conditions'];
+    let required = ['fname', 'lname', 'email', 'dob', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'conditions'];
     let complete = true;
 
     let output = $('#athlete-info').serializeArray();
@@ -269,11 +269,24 @@ class AthleteInfo extends React.Component {
                   <h1>Athlete Information</h1>
               </div>
 
-              <div className="form-row">
-                  <label>
-                      <span className='required'>Athlete Full Name</span>
-                      <input type="text" name="name"/>
-                  </label>
+              <div className="row">
+                <div className="col-xs-12 col-md-6">
+                  <div className="form-row">
+                    <label>
+                      <span className='required'>First Name</span>
+                      <input type="text" name="fname" style={{width: '100%'}}/>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="col-xs-12 col-md-6">
+                  <div className="form-row">
+                    <label>
+                      <span className='required'>Last Name</span>
+                      <input type="text" name="lname" style={{width: '100%'}}/>
+                    </label>
+                  </div>
+                </div>
               </div>
 
               <div className="form-row">
@@ -285,7 +298,7 @@ class AthleteInfo extends React.Component {
 
               <div className="form-row">
                   <label>
-                      <span>Athlete Email (optional)</span>
+                      <span className='required'>Athlete Email</span>
                       <input type="text" name="email"/>
                   </label>
               </div>
@@ -306,15 +319,15 @@ class AthleteInfo extends React.Component {
 
               <div className="form-row">
                   <label>
-                      <span className='required'>Emergency Contact Phone</span>
-                      <input type="text" name="emergency-phone"/>
+                      <span className='required'>Emergency Contact Relation</span>
+                      <input type="text" name="emergency-relation"/>
                   </label>
               </div>
 
               <div className="form-row">
                   <label>
-                      <span className='required'>Emergency Contact Relation</span>
-                      <input type="text" name="emergency-relation"/>
+                      <span className='required'>Emergency Contact Phone</span>
+                      <input type="text" name="emergency-phone"/>
                   </label>
               </div>
 
@@ -477,7 +490,7 @@ class Agreement extends React.Component {
               <img className="waiver-image" src="../img/forms/release-form-dcv.png"/>
               <img className="waiver-image" src="../img/forms/release-form-gtown.png"/>
 
-              <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's adult guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/release-form.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
+              <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's legal guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/release-form.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
 
               <div className="row">
                 <div className="col-xs-12 col-md-6">
@@ -545,12 +558,20 @@ class Payment extends React.Component {
       production: '<insert production client id>'
     },
     commit: true,
+
+    style: {
+      size: 'responsive',
+      shape: 'rect',
+      color: 'silver',
+      label: 'pay'
+    }
+
     payment: function(data, actions) {
       return actions.payment.create({
         payment: {
           transactions: [
             {
-              amount: { total: amount.toFixed(0), currency: 'USD' }
+              amount: { total: amount.toFixed(2), currency: 'USD' }
             }
           ]
         }
@@ -641,7 +662,8 @@ class Payment extends React.Component {
               <div className="form-row">
                 <div className="row">
                   <div className="col-xs-12" style={{textAlign:'center'}}>
-                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Registration Fee: ${(this.state.price * (1 - this.state.discount)).toFixed(0)}</p>
+                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Registration Fee: ${(this.state.price * (1 - this.state.discount)).toFixed(2)}</p>
+                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Online Processing Fee: ${((this.state.price * (1 - this.state.discount)).toFixed(2)) * .03}</p>
                   </div>
                 </div>
               </div>

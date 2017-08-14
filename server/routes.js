@@ -49,12 +49,16 @@ module.exports = (app, db) => {
         if (!discount || discount.uses === 0) {
           res.status(400).send({ok: false, message: 'not a valid code'});
         } else {
-          res.send({ok: true, message: 'code accepted', amount: discount.amount});
-          discount.destroy();
+          res.send({ok: true, message: 'code accepted', amount: discount.amount, code: discount.code});
         }
       })
     }
   })
+
+  // DELETE REQ?
+  // app.post('/destroy_discount', (req, res) => {
+  //   let code = req.body.code
+  // });
 
   //End Registration Endpoints
 

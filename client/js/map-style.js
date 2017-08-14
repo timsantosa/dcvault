@@ -22,7 +22,7 @@ window.mapStyle = [
         "elementType": "all",
         "stylers": [
             {
-                "color": "#f2f2f2"
+                "color": "#ffffff"
             }
         ]
     },
@@ -109,7 +109,7 @@ window.mapStyle = [
         "elementType": "all",
         "stylers": [
             {
-                "color": "#ffd2a8"
+                "color": "#000000"
             },
             {
                 "visibility": "on"
