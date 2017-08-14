@@ -317,6 +317,7 @@
 .error-container p {
   color: #C0282D;
   font-size: 12px;
+  margin: 5px;
 }
 
 .status-container {
@@ -347,6 +348,12 @@
 #register {
   min-height: 90vh;
   background-color: #f0f0f0;
+}
+
+.price-text {
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 .waiver-image {

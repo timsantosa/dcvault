@@ -58,6 +58,38 @@ apiHelpers.validateEmail = (email) => {
   return re.test(email);
 }
 
+apiHelpers.formatDate = (date) => {
+  let validDigits = '0123456789';
+  date = date.split('');
+  let newDate = [];
+  for (let i = 0; i < date.length; i++) {
+    if (newDate.length === 2 || newDate.length === 5) {
+      newDate.push('/');
+    }
+    if (validDigits.includes(date[i])) {
+      newDate.push(date[i]);
+    }
+  }
+
+  return newDate.slice(0, 10).join('');
+}
+
+apiHelpers.formatPhone = (phone) => {
+  let validDigits = '0123456789';
+  phone = phone.split('');
+  let newPhone = [];
+  for (let i = 0; i < phone.length; i++) {
+    if (newPhone.length === 3 || newPhone.length === 7) {
+      newPhone.push('-');
+    }
+    if (validDigits.includes(phone[i])) {
+      newPhone.push(phone[i]);
+    }
+  }
+
+  return newPhone.slice(0, 12).join('');
+}
+
 apiHelpers.sendConfirmationEmail = (email) => {
   return axios.post('/registration/confirm', {email: email});
 }

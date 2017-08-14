@@ -132,7 +132,7 @@ class SelectPackage extends React.Component {
 
     if (output.quarter === undefined || output.group === undefined || output.facility === undefined) {
       this.setState({
-        errorText: 'Please provide input for all fields'
+        errorText: 'Please fill in all required fields'
       });
     } else {
       this.props.advance('selectPackage', output);
@@ -235,26 +235,83 @@ class AthleteInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorText: ''
+      errorText: []
     };
+  }
+
+  formatDOB() {
+    let dob = $('input[name=dob]').val();
+    let dobFormatted = apiHelpers.formatDate(dob);
+    $('input[name=dob]').val(dobFormatted);
+  }
+
+  formatPhone() {
+    $('input[name=emergency-phone]').val(apiHelpers.formatPhone($('input[name=emergency-phone]').val()));
+  }
+
+  formatUSATF() {
+    let usatf = $('input[name=usatf]').val().split('');
+    let usatfFormatted = []
+    for (let digit of usatf) {
+      if (('0123456789').includes(digit)) {
+        usatfFormatted.push(digit);
+      }
+    }
+    $('input[name=usatf]').val(usatfFormatted.slice(0, 10).join(''));
   }
 
   continue() {
     this.setState({
-      errorText: ''
+      errorText: []
     });
 
     let required = ['fname', 'lname', 'email', 'dob', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'conditions'];
     let complete = true;
 
     let output = parseFormValues($('#athlete-info').serializeArray());
-    console.log(output);
+
+    if(output.email.length !== 0 && !apiHelpers.validateEmail(output.email)) {
+      let errorText = this.state.errorText;
+      errorText.push('Please provide a valid email address');
+      this.setState({
+        errorText: errorText
+      });
+      complete = false;
+    }
+
+    if(output.usatf.length !== 0 && output.usatf.length !== 10) {
+      let errorText = this.state.errorText;
+      errorText.push('Please provide a valid USATF membership number');
+      this.setState({
+        errorText: errorText
+      });
+      complete = false;
+    }
+
+    if(output.dob.length !== 0 && output.dob.length !== 10) {
+      let errorText = this.state.errorText;
+      errorText.push('Please provide a valid date of birth (MM/DD/YYYY)');
+      this.setState({
+        errorText: errorText
+      });
+      complete = false;
+    }
+
+    if(output['emergency-phone'].length !== 0 && output['emergency-phone'].length !== 12) {
+      let errorText = this.state.errorText;
+      errorText.push('Please provide a valid emergency contact phone number');
+      this.setState({
+        errorText: errorText
+      });
+      complete = false;
+    }
 
     for (let field of required) {
       if (output[field].length === 0) {
-        console.log(field);
+        let errorText = this.state.errorText;
+        errorText.push('Please fill in all required fields');
         this.setState({
-          errorText: 'Please fill in all required fields'
+          errorText: errorText
         });
         complete = false;
         break;
@@ -272,7 +329,9 @@ class AthleteInfo extends React.Component {
     if (!(this.state.errorText.length === 0)) {
       errorContainer = <div className='row'>
           <div className='error-container'>
-            <p>{this.state.errorText}</p>
+            {this.state.errorText.map((error) => {
+              return <p key={error}>{error}</p>
+            })}
           </div>
         </div>;
     }
@@ -290,7 +349,7 @@ class AthleteInfo extends React.Component {
                 <div className="col-xs-12 col-md-6">
                   <div className="form-row">
                     <label>
-                      <span className='required'>First Name</span>
+                      <span className='required'>Athlete First Name</span>
                       <input type="text" name="fname" style={{width: '100%'}}/>
                     </label>
                   </div>
@@ -299,7 +358,7 @@ class AthleteInfo extends React.Component {
                 <div className="col-xs-12 col-md-6">
                   <div className="form-row">
                     <label>
-                      <span className='required'>Last Name</span>
+                      <span className='required'>Athlete Last Name</span>
                       <input type="text" name="lname" style={{width: '100%'}}/>
                     </label>
                   </div>
@@ -309,7 +368,7 @@ class AthleteInfo extends React.Component {
               <div className="form-row">
                 <label>
                   <span className='required'>Athlete DOB (mm/dd/yyyy)</span>
-                  <input type="text" name="dob" style={{width: '100%'}}/>
+                  <input type="text" name="dob" onChange={this.formatDOB.bind(this)}/>
                 </label>
               </div>
 
@@ -323,7 +382,7 @@ class AthleteInfo extends React.Component {
               <div className="form-row">
                   <label>
                       <span className='required'>Athlete USATF Number</span>
-                      <input type="text" name="usatf"/>
+                      <input type="text" name="usatf" onChange={this.formatUSATF.bind(this)}/>
                   </label>
               </div>
 
@@ -344,7 +403,7 @@ class AthleteInfo extends React.Component {
               <div className="form-row">
                   <label>
                       <span className='required'>Emergency Contact Phone</span>
-                      <input type="text" name="emergency-phone"/>
+                      <input type="text" name="emergency-phone" onChange={this.formatPhone.bind(this)}/>
                   </label>
               </div>
 
@@ -423,7 +482,7 @@ class AthleteInfo extends React.Component {
               <div className="form-row">
                   <label>
                       <span>Current School (optional)</span>
-                      <input type="text" name="email"/>
+                      <input type="text" name="school"/>
                   </label>
               </div>
 
@@ -456,6 +515,12 @@ class Agreement extends React.Component {
     this.state = {
       errorText: ''
     };
+  }
+
+  formatDate() {
+    let date = $('input[name=date]').val();
+    let dateFormatted = apiHelpers.formatDate(date);
+    $('input[name=date]').val(dateFormatted);
   }
 
   continue() {
@@ -523,7 +588,7 @@ class Agreement extends React.Component {
                   <div className="form-row">
                     <label>
                       <span className='required'>Date (mm/dd/yyyy)</span>
-                      <input type="text" name="date" style={{width: '100%'}}/>
+                      <input type="text" name="date" style={{width: '100%'}} onChange={this.formatDate.bind(this)}/>
                     </label>
                   </div>
                 </div>
@@ -552,6 +617,7 @@ class Payment extends React.Component {
       price: 550,
       discount: 0,
       errorText: '',
+      showDiscount: false
     }
   }
 
@@ -642,6 +708,12 @@ class Payment extends React.Component {
     }
   }
 
+  toggleDiscount() {
+    this.setState({
+      showDiscount: !(this.state.showDiscount)
+    });
+  }
+
   render() {
 
     let errorContainer;
@@ -660,7 +732,20 @@ class Payment extends React.Component {
               <div className="form-title-row">
                   <h1>Finalize Payment</h1>
               </div>
+
+
               <div className="form-row">
+                <div className="row">
+                  <div className="col-xs-12" style={{textAlign:'center'}}>
+                      <p className="price-text">Registration Fee: <span className="red-text">${(this.state.price * (1 - this.state.discount)).toFixed(2)}</span></p>
+                      <p className="price-text">Online Processing Fee: <span className="red-text">${((this.state.price * (1 - this.state.discount)) * .03).toFixed(2)}</span></p>
+                  </div>
+                </div>
+              </div>
+
+              <a  style={{color: '#C0282D'}} onClick={this.toggleDiscount.bind(this)}> Have a Discount Code? </a>
+
+              <div className="form-row" style={{visibility: this.state.showDiscount ? 'visible' : 'hidden'}}>
                 <div className="row">
                   <div className="col-xs-8">
                       <label>
@@ -673,18 +758,7 @@ class Payment extends React.Component {
                   </div>
                 </div>
               </div>
-
               {errorContainer}
-
-              <div className="form-row">
-                <div className="row">
-                  <div className="col-xs-12" style={{textAlign:'center'}}>
-                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Registration Fee: ${(this.state.price * (1 - this.state.discount)).toFixed(2)}</p>
-                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Online Processing Fee: ${((this.state.price * (1 - this.state.discount)) * .03).toFixed(2)}</p>
-                  </div>
-                </div>
-              </div>
-
 
               <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
               <div className="form-row" style={{textAlign: 'center'}}>
