@@ -3,6 +3,15 @@ import {render} from 'react-dom';
 import apiHelpers from '../js/api-helpers';
 // import initPaypal from '../js/payment';
 
+const parseFormValues = (array) => {
+  let retVal = {}
+  for (let i = 0; i < array.length; i++) {
+    retVal[array[i].name] = array[i].value
+  }
+
+  return retVal;
+}
+
 class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -113,13 +122,20 @@ class SelectPackage extends React.Component {
       errorText: ''
     });
 
-    let output = $('#select-package').serializeArray();
-    if (output.length !== 3) {
+    let output = {};
+
+    output.quarter = $('input[name="quarter"]:checked').val();
+    output.group = $('input[name="group"]:checked').val();
+    output.facility = $('input[name="facility"]:checked').val();
+
+    console.log(output);
+
+    if (output.quarter === undefined || output.group === undefined || output.facility === undefined) {
       this.setState({
-        errorText: 'Please make a selection for all fields'
+        errorText: 'Please provide input for all fields'
       });
     } else {
-      this.props.advance('select-package', output);
+      this.props.advance('selectPackage', output);
     }
   }
 
@@ -147,13 +163,13 @@ class SelectPackage extends React.Component {
                   <div className="form-radio-buttons">
                       <div>
                           <label>
-                              <input type="radio" name="quarter"/>
+                              <input type="radio" name="quarter" value="fall"/>
                               <span>Fall</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="quarter"/>
+                              <input type="radio" name="quarter" value="winter"/>
                               <span>Winter</span>
                           </label>
                       </div>
@@ -165,13 +181,13 @@ class SelectPackage extends React.Component {
                   <div className="form-radio-buttons">
                       <div>
                           <label>
-                              <input type="radio" name="group"/>
+                              <input type="radio" name="group" value="beginner"/>
                               <span>Beginner (Level I)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="group"/>
+                              <input type="radio" name="group" value="intermediate"/>
                               <span>Intermediate (Level II)</span>
                           </label>
                       </div>
@@ -183,19 +199,19 @@ class SelectPackage extends React.Component {
                   <div className="form-radio-buttons">
                       <div>
                           <label>
-                              <input type="radio" name="facility"/>
+                              <input type="radio" name="facility" value="dcv"/>
                               <span>Washington, DC (DCV)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="facility"/>
+                              <input type="radio" name="facility" value="balt"/>
                               <span>Baltimore, MD (BALT)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="facility"/>
+                              <input type="radio" name="facility" value="pa"/>
                               <span>Mercersburg, PA (PA)</span>
                           </label>
                       </div>
@@ -231,11 +247,12 @@ class AthleteInfo extends React.Component {
     let required = ['fname', 'lname', 'email', 'dob', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'conditions'];
     let complete = true;
 
-    let output = $('#athlete-info').serializeArray();
+    let output = parseFormValues($('#athlete-info').serializeArray());
     console.log(output);
 
-    for (let field of output) {
-      if (required.includes(field.name) && field.value.length === 0) {
+    for (let field of required) {
+      if (output[field].length === 0) {
+        console.log(field);
         this.setState({
           errorText: 'Please fill in all required fields'
         });
@@ -245,7 +262,7 @@ class AthleteInfo extends React.Component {
     }
 
     if (complete) {
-      this.props.advance('athlete-info', output);
+      this.props.advance('athleteInfo', output);
     }
 
   }
@@ -564,7 +581,7 @@ class Payment extends React.Component {
       shape: 'rect',
       color: 'silver',
       label: 'pay'
-    }
+    },
 
     payment: function(data, actions) {
       return actions.payment.create({
@@ -663,7 +680,7 @@ class Payment extends React.Component {
                 <div className="row">
                   <div className="col-xs-12" style={{textAlign:'center'}}>
                       <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Registration Fee: ${(this.state.price * (1 - this.state.discount)).toFixed(2)}</p>
-                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Online Processing Fee: ${((this.state.price * (1 - this.state.discount)).toFixed(2)) * .03}</p>
+                      <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Online Processing Fee: ${((this.state.price * (1 - this.state.discount)) * .03).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
