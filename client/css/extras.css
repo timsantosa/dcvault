@@ -6,6 +6,10 @@ a {
   color: #C0282D;
 }
 
+html {
+  pointer-events: none;
+}
+
 .video-background {
   background: #000;
   position: absolute;
@@ -401,6 +405,7 @@ a {
 }
 
 .learn-more {
+  margin: 30px;
   font-size: 10px;
   font-weight: 100;
 }
