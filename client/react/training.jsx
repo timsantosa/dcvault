@@ -28,7 +28,8 @@ class Training extends React.Component {
           </br>\
           Does not apply to equipment retnal, special training sessions, or events</br>',
           poleRental: 'Note: Poles are provided free of charge for use during DC Vault training sessions.</br>\
-            Our pole rental program allows athletes to check out one pole at a time for non-club activities. Due to the fact that a typical athlete will progress through 4-8 poles through a season, it can be costly for an athlete to purchase their own poles (which range from $375 to nearly $1000). Poles will be issued on a first-come, first-serve basis. All else being equal, the most senior athlete will have priority.'
+            Our pole rental program allows athletes to check out one pole at a time for non-club activities. Due to the fact that a typical athlete will progress through 4-8 poles through a season, it can be costly for an athlete to purchase their own poles (which range from $375 to nearly $1000). Poles will be issued on a first-come, first-serve basis. All else being equal, the most senior athlete will have priority.',
+          events: 'DC Vault will be holding various events throughout the year. Please click "See More" to view some of the upcoming events!'
       },
       showDescription: false,
       currentDescription: ''
@@ -46,61 +47,61 @@ class Training extends React.Component {
         <div className="row">
           <div className="col-xs-6 col-md-2 option-card">
             <p className="option-title">BEGINNER</p>
+            <p className="option-info">All Ages</p>
             <div className="option-price-container">
               <p className="option-price">$550</p>
               <p className="option-price-modifier">PER QUARTER</p>
             </div>
-            <p className="option-info">All Ages</p>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.beginner+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-6 col-md-2 option-card">
             <p className="option-title">INTERMEDIATE</p>
+            <p className="option-info">All Ages</p>
             <div className="option-price-container">
               <p className="option-price">$550</p>
               <p className="option-price-modifier">PER QUARTER</p>
             </div>
-            <p className="option-info">All Ages</p>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.intermediate+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-6 col-md-2 option-card">
             <p className="option-title">EMERGING ELITE</p>
+            <p className="option-info"></p>
             <div className="option-price-container">
               <p className="option-price">N/A</p>
               <p className="option-price-modifier">INVITE ONLY</p>
             </div>
-            <p className="option-info"></p>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.emerging+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-6 col-md-2 option-card">
             <p className="option-title">ELITE</p>
+            <p className="option-info"></p>
             <div className="option-price-container">
               <p className="option-price">N/A</p>
               <p className="option-price-modifier">INVITE ONLY</p>
             </div>
-            <p className="option-info"></p>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.elite+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-6 col-md-2 option-card">
             <p className="option-title">PROFESSIONAL</p>
+            <p className="option-info"></p>
             <div className="option-price-container">
               <p className="option-price">N/A</p>
               <p className="option-price-modifier">INVITE ONLY</p>
             </div>
-            <p className="option-info"></p>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.professional+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-6 col-md-2 option-card">
             <p className="option-title">YOUTH/ADULT</p>
+            <p className="option-info">Summer Only</p>
             <div className="option-price-container">
               <p className="option-price">$350</p>
               <p className="option-price-modifier">PER ATHLETE</p>
             </div>
-            <p className="option-info">Summer Only</p>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.youthAdult+'</div>'}>Details</a>
           </div>
         </div>
@@ -115,31 +116,31 @@ class Training extends React.Component {
 
           <div className="col-xs-6 col-md-2 col-md-push-3 option-card">
             <p className="option-title">SPECIAL EVENTS</p>
-            <div className="option-price-container">
-              <p className="option-price">VARIES</p>
-              <p className="option-price-modifier">SEE MORE BELOW</p>
-            </div>
             <p className="option-info"></p>
-            <a className="learn-more" href="#events">See More</a>
+            <div className="option-price-container" onClick={() => {window.location.href="#events"}}>
+              <p className="option-price">VARIES</p>
+              <p className="option-price-modifier">CLICK FOR MORE</p>
+            </div>
+            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.events+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-6 col-md-2 col-md-push-3 option-card">
             <p className="option-title">DISCOUNTS</p>
+            <p className="option-info"></p>
             <div className="option-price-container">
               <p className="option-price">VARIES</p>
               <p className="option-price-modifier">PER ATHLETE</p>
             </div>
-            <p className="option-info"></p>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.discounts+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-6 col-xs-push-3 col-md-2 col-md-push-3 option-card">
             <p className="option-title">POLE RENTAL</p>
+            <p className="option-info">Registered Athletes Only</p>
             <div className="option-price-container">
               <p className="option-price">$150</p>
               <p className="option-price-modifier">PER QUARTER</p>
             </div>
-            <p className="option-info">Registered Athletes Only</p>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.poleRental+'</div>'}>Details</a>
           </div>
 

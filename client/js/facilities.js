@@ -130,7 +130,6 @@ for (let i = 0; i < facilities.length; i++) {
       map.setCenter(locations[facilities[i]]);
       map.setZoom(14);
     }
-    refreshMarkers(markers);
   }
 }
 
@@ -139,7 +138,7 @@ window.initMap = function () {
     zoom: 8,
     center: locations.CENTER,
     scrollwheel: false,
-    mapTypeControl: false,
+    // mapTypeControl: false,
     streetViewControl: false,
     styles: window.mapStyle
   });
