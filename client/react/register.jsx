@@ -141,9 +141,12 @@ class SelectPackage extends React.Component {
     }
   }
 
-  fillInfo() {
-    this.props.advance ('selectPackage', {quarter: 'fall', group: 'beginner', facility: 'dcv'});
-  }
+  // fillInfo() {
+  //   this.props.advance ('selectPackage', {quarter: 'fall', group: 'beginner', facility: 'dcv'});
+  // }
+
+  // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
+
 
   render() {
     let errorContainer;
@@ -228,7 +231,6 @@ class SelectPackage extends React.Component {
 
               <div className="form-row">
                   <button type="button" onClick={this.continue.bind(this)}>Continue</button>
-                  <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
               </div>
 
           </form>
@@ -331,24 +333,26 @@ class AthleteInfo extends React.Component {
 
   }
 
-  fillInfo() {
-    let output = {
-      conditions: 'Medical Conditions',
-      dob: "07/12/1994",
-      email: "moores.alexd@gmail.com",
-      fname: "Alex",
-      gender: "male",
-      lname: "Moores",
-      school: "school",
-      state: "ME",
-      usatf: "6546545645"
-    }
-    output['emergency-contact'] = 'Emergency Contact Name';
-    output['emergency-phone'] = '555-555-5555';
-    output['emergency-relation'] = 'Emergency Contact Relationship';
+  // fillInfo() {
+  //   let output = {
+  //     conditions: 'Medical Conditions',
+  //     dob: "07/12/1994",
+  //     email: "moores.alexd@gmail.com",
+  //     fname: "Alex",
+  //     gender: "male",
+  //     lname: "Moores",
+  //     school: "school",
+  //     state: "ME",
+  //     usatf: "6546545645"
+  //   }
+  //   output['emergency-contact'] = 'Emergency Contact Name';
+  //   output['emergency-phone'] = '555-555-5555';
+  //   output['emergency-relation'] = 'Emergency Contact Relationship';
 
-    this.props.advance('athleteInfo', output);
-  }
+  //   this.props.advance('athleteInfo', output);
+  // }
+  // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
+
 
   render() {
     let errorContainer;
@@ -524,7 +528,6 @@ class AthleteInfo extends React.Component {
 
               <div className="form-row">
                   <button type="button" onClick={this.continue.bind(this)}>Continue</button>
-                  <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
               </div>
 
           </form>
@@ -571,9 +574,12 @@ class Agreement extends React.Component {
 
   }
 
-  fillInfo() {
-    this.props.advance('agreement', {name: 'Signatory Jones', date: '01/23/2562'});
-  }
+  // fillInfo() {
+  //   this.props.advance('agreement', {name: 'Signatory Jones', date: '01/23/2562'});
+  // }
+
+  // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
+
 
   render() {
 
@@ -623,7 +629,6 @@ class Agreement extends React.Component {
 
               <div className="form-row">
                   <button type="button" onClick={this.continue.bind(this)}>Continue</button>
-                  <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
               </div>
 
           </form>
@@ -749,9 +754,10 @@ class Payment extends React.Component {
     });
   }
 
-  fillInfo() {
-    this.props.advance('payment', {paymentId: 'paymentID==2348759012834570', payerId: 'payerID==9018245709284'})
-  }
+  // fillInfo() {
+  //   this.props.advance('payment', {paymentId: 'paymentID==2348759012834570', payerId: 'payerID==9018245709284'})
+  // }
+  // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
 
   render() {
 
@@ -802,7 +808,6 @@ class Payment extends React.Component {
               <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
               <div className="form-row" style={{textAlign: 'center'}}>
                 <div id="paypal-button-container"></div>
-                <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
               </div>
           </form>
         </div>
