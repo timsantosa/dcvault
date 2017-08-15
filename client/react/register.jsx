@@ -101,7 +101,6 @@ class Register extends React.Component {
           {this.state.currentPage}
           <ProgressBar pageNum={this.state.pageNum}/>
         </div>
-        <div id="paypal-button"></div>
       </section>
     );
   }
@@ -875,9 +874,34 @@ class ProgressBar extends React.Component {
   }
 
   render() {
+
+    let offStyle = {width: '0px', height: '0px', padding: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: '#AAA', margin: '0 auto'};
+    let onStyle = {width: '0px', height: '0px', padding: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: '#C0282D', margin: '0 auto'};
+
     return (
-      <div className="progress-bar">
-        {this.props.pageNum}
+      <div className="container" style={{marginTop: '35px'}}>
+        <div className="row">
+          <div className="col-xs-2 col-xs-offset-1" style={{textAlign: 'center'}}>
+            <div style={this.props.pageNum === 1 ? onStyle : offStyle}></div>
+            <p>Choose Training Options</p>
+          </div>
+          <div className="col-xs-2" style={{textAlign: 'center'}}>
+            <div style={this.props.pageNum === 2 ? onStyle : offStyle}></div>
+            <p>Enter Athlete Information</p>
+          </div>
+          <div className="col-xs-2" style={{textAlign: 'center'}}>
+            <div style={this.props.pageNum === 3 ? onStyle : offStyle}></div>
+            <p>Sign Waivers and Agreements</p>
+          </div>
+          <div className="col-xs-2" style={{textAlign: 'center'}}>
+            <div style={this.props.pageNum === 4 ? onStyle : offStyle}></div>
+            <p>Process Payment</p>
+          </div>
+          <div className="col-xs-2" style={{textAlign: 'center'}}>
+            <div style={this.props.pageNum === 5 ? onStyle : offStyle}></div>
+            <p>Done!</p>
+          </div>
+        </div>
       </div>
     );
   }

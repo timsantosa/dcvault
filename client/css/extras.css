@@ -129,8 +129,8 @@
 }
 
 .text-section {
-  background-color: #ddd;
   color: #222;
+  background-color: #f0f0f0;
   text-align: center;
 }
 
@@ -337,12 +337,6 @@
 
 .change-button:hover {
   text-decoration: underline;
-}
-
-.training-option {
-  text-align: center;
-  background-color: #BBB;
-  width: 95%;
 }
 
 #register {
