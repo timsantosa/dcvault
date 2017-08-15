@@ -58,7 +58,7 @@ module.exports = (app, db) => {
   });
 
   app.post('/registration/finalize', (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     if (!req.body.purchaseInfo || !req.body.token) {
       res.status(400).send({ok: false, message: 'missing purchase details'})
     } else {
@@ -83,7 +83,6 @@ module.exports = (app, db) => {
             userId: user.id
           }}).then((newAthlete) => {
             let purchaseInfo = req.body.purchaseInfo;
-            console.log(newAthlete);
             let athleteId = newAthlete[0].dataValues.id;
             let userId = newAthlete[0].dataValues.userId;
             db.tables.Purchases.create({

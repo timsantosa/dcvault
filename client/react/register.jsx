@@ -700,7 +700,11 @@ class Payment extends React.Component {
 
   continue(data) {
 
-    this.props.advance('payment', {paymentId: data.paymentID, payerId: data.payerID, discount: this.state.discountCode})
+    this.props.advance('payment', {
+      paymentId: data.paymentID,
+      payerId: data.payerID,
+      discount: this.state.discountCode
+    });
   }
 
   applyDiscount() {
@@ -790,8 +794,8 @@ class Payment extends React.Component {
                     <button type="button" onClick={this.applyDiscount.bind(this)}>Apply</button>
                   </div>
                 </div>
+                {errorContainer}
               </div>
-              {errorContainer}
 
               <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
               <div className="form-row" style={{textAlign: 'center'}}>
