@@ -19,7 +19,8 @@ class Register extends React.Component {
     this.state = {
       currentPage: '',
       pageNum: 0,
-      data: {}
+      data: {},
+      showBar: false
     }
   }
 
@@ -70,7 +71,8 @@ class Register extends React.Component {
         }
         this.setState({
           currentPage: (<SelectPackage advance={this.advance.bind(this)}/>),
-          pageNum: 1
+          pageNum: 1,
+          showBar: true
         });
       } else {
         loginButton.onclick = () => {
@@ -83,7 +85,6 @@ class Register extends React.Component {
               <div className="col-xs-12" style={{textAlign: 'center'}}>
                 <p className="subsection-header">You Must be Logged in to <span className="red-text">Register for Training</span></p>
                 <a className="red-text center-content" onClick={() => {loginButton.click()}}>Login</a>
-                <a className="red-text center-content" href='/'>Return to Home Page</a>
               </div>
             </div>
           )
@@ -96,11 +97,12 @@ class Register extends React.Component {
 
   render() {
     window.scrollTo(0, 0);
+    let progressBar = this.state.showBar ? (<ProgressBar pageNum={this.state.pageNum}/>) : '';
     return (
       <section id="register">
         <div className="containter">
           {this.state.currentPage}
-          <ProgressBar pageNum={this.state.pageNum}/>
+          {progressBar}
         </div>
       </section>
     );
