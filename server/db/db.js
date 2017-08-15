@@ -14,8 +14,9 @@ columns.users = {
 };
 
 columns.athletes = {
-  name: Sequelize.STRING,
-  email: Sequelize.STRING,
+  firstName: Sequelize.STRING,
+  lastName: Sequelize.STRING,
+  email: {type: Sequelize.STRING, unique: true},
   emergencyContactName: Sequelize.STRING,
   emergencyContactMDN: Sequelize.STRING,
   emergencyContactRelation: Sequelize.STRING,
@@ -24,7 +25,7 @@ columns.athletes = {
   gender: Sequelize.STRING,
   state: Sequelize.STRING,
   school: Sequelize.STRING,
-  isUser: Sequelize.BOOLEAN
+  medConditions: Sequelize.TEXT
   // User FK
 };
 
@@ -51,7 +52,14 @@ columns.rentals = {
 };
 
 columns.purchases = {
-  // PACKAGE FK, USER FK
+  // athleteFK, userFK
+  quarter: Sequelize.STRING,
+  group: Sequelize.STRING,
+  facility: Sequelize.STRING,
+  waiverSignatory: Sequelize.STRING,
+  waiverDate: Sequelize.STRING,
+  paymentId: Sequelize.STRING,
+  payerId: Sequelize.STRING
 };
 
 columns.sites = {
@@ -103,7 +111,7 @@ const syncTables = (schema, force) => {
   tables.Rentals.belongsTo(tables.Poles, {as: 'pole'});
 
   tables.Purchases.belongsTo(tables.Users, {as: 'user'});
-  tables.Purchases.belongsTo(tables.Packages, {as: 'package'});
+  tables.Purchases.belongsTo(tables.Athletes, {as: 'athlete'});
 
   tables.Discounts.belongsTo(tables.Users, {as: 'user'});
   tables.Discounts.belongsTo(tables.Packages, {as: 'package'});

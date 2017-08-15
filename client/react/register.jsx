@@ -32,8 +32,6 @@ class Register extends React.Component {
       data: updatedData
     });
 
-    console.log('THE CURRENT PAGE NUM IS', newPageNum);
-
     if (newPageNum === 2) {
       this.setState({
         currentPage: (<AthleteInfo advance={this.advance.bind(this)}/>)
@@ -44,13 +42,15 @@ class Register extends React.Component {
       });
     } else if (newPageNum === 4) {
       this.setState({
-        currentPage: (<Payment advance={this.advance.bind(this)}/>)
+        currentPage: (<Payment advance={this.advance.bind(this)} data={this.state.data}/>)
       });
     } else if (newPageNum === 5) {
       this.setState({
         currentPage: (<Confirmation advance={this.advance.bind(this)} data={this.state.data}/>)
       });
     }
+
+    this.forceUpdate();
 
     console.log(this.state.data);
   }
@@ -94,7 +94,7 @@ class Register extends React.Component {
   }
 
   render() {
-    console.log(this.state.currentPage)
+    window.scrollTo(0, 0);
     return (
       <section id="register">
         <div className="containter">
@@ -137,6 +137,10 @@ class SelectPackage extends React.Component {
     } else {
       this.props.advance('selectPackage', output);
     }
+  }
+
+  fillInfo() {
+    this.props.advance ('selectPackage', {quarter: 'fall', group: 'beginner', facility: 'dcv'});
   }
 
   render() {
@@ -222,6 +226,7 @@ class SelectPackage extends React.Component {
 
               <div className="form-row">
                   <button type="button" onClick={this.continue.bind(this)}>Continue</button>
+                  <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
               </div>
 
           </form>
@@ -322,6 +327,25 @@ class AthleteInfo extends React.Component {
       this.props.advance('athleteInfo', output);
     }
 
+  }
+
+  fillInfo() {
+    let output = {
+      conditions: 'Medical Conditions',
+      dob: "07/12/1994",
+      email: "moores.alexd@gmail.com",
+      fname: "Alex",
+      gender: "male",
+      lname: "Moores",
+      school: "school",
+      state: "ME",
+      usatf: "6546545645"
+    }
+    output['emergency-contact'] = 'Emergency Contact Name';
+    output['emergency-phone'] = '555-555-5555';
+    output['emergency-relation'] = 'Emergency Contact Relationship';
+
+    this.props.advance('athleteInfo', output);
   }
 
   render() {
@@ -498,6 +522,7 @@ class AthleteInfo extends React.Component {
 
               <div className="form-row">
                   <button type="button" onClick={this.continue.bind(this)}>Continue</button>
+                  <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
               </div>
 
           </form>
@@ -528,26 +553,24 @@ class Agreement extends React.Component {
       errorText: ''
     });
 
-    let required = ['name', 'date'];
-    let complete = true;
+    let output = parseFormValues($('#agreement').serializeArray());
 
-    let output = $('#agreement').serializeArray();
-    console.log(output);
-
-    for (let field of output) {
-      if (required.includes(field.name) && field.value.length === 0) {
-        this.setState({
-          errorText: 'Please fill in all required fields'
-        });
-        complete = false;
-        break;
-      }
-    }
-
-    if (complete) {
+    if (!output.hasOwnProperty('name') || !output.hasOwnProperty('date')) {
+      this.setState({
+        errorText: 'Please fill in all fields'
+      });
+    } else if (output.date.length !== 10) {
+      this.setState({
+        errorText: 'Please input a valid date'
+      });
+    } else {
       this.props.advance('agreement', output);
     }
 
+  }
+
+  fillInfo() {
+    this.props.advance('agreement', {name: 'Signatory Jones', date: '01/23/2562'});
   }
 
   render() {
@@ -598,6 +621,7 @@ class Agreement extends React.Component {
 
               <div className="form-row">
                   <button type="button" onClick={this.continue.bind(this)}>Continue</button>
+                  <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
               </div>
 
           </form>
@@ -617,7 +641,8 @@ class Payment extends React.Component {
       price: 550,
       discount: 0,
       errorText: '',
-      showDiscount: false
+      showDiscount: false,
+      discountCode: '',
     }
   }
 
@@ -632,7 +657,8 @@ class Payment extends React.Component {
 
   renderButton(amount) {
 
-    let cont = this.continue.bind(this);
+    var cont = this.continue.bind(this);
+    var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email;
 
     paypal.Button.render({
     env: 'sandbox', // sandbox | production
@@ -654,7 +680,8 @@ class Payment extends React.Component {
         payment: {
           transactions: [
             {
-              amount: { total: amount.toFixed(2), currency: 'USD' }
+              amount: { total: amount.toFixed(2), currency: 'USD' },
+              note_to_payee: paymentDescription
             }
           ]
         }
@@ -664,15 +691,16 @@ class Payment extends React.Component {
     // onAuthorize() is called when the buyer approves the payment
     onAuthorize: function(data, actions) {
       return actions.payment.execute().then(function() {
-        cont();
+        cont(data);
       });
     }
 
     }, '#paypal-button-container');
   }
 
-  continue() {
-    this.props.advance('payment', null)
+  continue(data) {
+
+    this.props.advance('payment', {paymentId: data.paymentID, payerId: data.payerID, discount: this.state.discountCode})
   }
 
   applyDiscount() {
@@ -699,7 +727,8 @@ class Payment extends React.Component {
         } else {
           let discountAmount = info.amount;
           this.setState({
-            discount: discountAmount
+            discount: discountAmount,
+            discountCode: info.code
           });
           document.getElementById('paypal-button-container').innerHTML = '';
           this.calculatePrice();
@@ -712,6 +741,10 @@ class Payment extends React.Component {
     this.setState({
       showDiscount: !(this.state.showDiscount)
     });
+  }
+
+  fillInfo() {
+    this.props.advance('payment', {paymentId: 'paymentID==2348759012834570', payerId: 'payerID==9018245709284'})
   }
 
   render() {
@@ -763,6 +796,7 @@ class Payment extends React.Component {
               <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
               <div className="form-row" style={{textAlign: 'center'}}>
                 <div id="paypal-button-container"></div>
+                <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
               </div>
           </form>
         </div>
@@ -775,20 +809,40 @@ class Confirmation extends React.Component {
   constructor(props) {
     super(props);
 
-    apiHelpers.getUserData()
-    .then((response) => {
-      if (response.data.ok) {
-        if (response.data.user.email && apiHelpers.validateEmail(response.data.user.email)) {
-          apiHelpers.sendConfirmationEmail(response.data.user.email);
-        }
-      }
-    });
+    let athleteEmail = this.props.data.athleteInfo.email;
 
-    for (let element of this.props.data['athlete-info']) {
-      if (element.name === 'email' && element.value.length !== 0 && apiHelpers.validateEmail(element.value)) {
-        apiHelpers.sendConfirmationEmail(element.value);
-      }
+    this.state = {
+      title: 'Loading...',
+      message: 'Please wait, your purchase is being processed'
     }
+
+    apiHelpers.finalizePayment(this.props.data)
+    .then((response) => {
+      if (!response.data.ok) {
+        console.log(response);
+        this.setState({
+          title: 'Uh-oh...',
+          message: 'There was an error storing your payment information. Please email it@dcvault.com to verify that your payment went through, or fix the issue if not.'
+        });
+      } else {
+        this.setState({
+          title: 'Success!',
+          message: 'Please check your email for Confirmation and Training information. Thank you!'
+        });
+        apiHelpers.getUserData()
+        .then((response) => {
+          if (response.data.ok) {
+            if (response.data.user.email && apiHelpers.validateEmail(response.data.user.email)) {
+              apiHelpers.sendConfirmationEmail(response.data.user.email);
+
+              if (response.data.user.email !== athleteEmail) {
+                apiHelpers.sendConfirmationEmail(athleteEmail);
+              }
+            }
+          }
+        });
+      }
+    })
   }
 
   render() {
@@ -797,10 +851,10 @@ class Confirmation extends React.Component {
         <div className="col-xs-12" style={{textAlign: 'center'}}>
           <form id="agreement" className="form-labels-on-top">
               <div className="form-title-row">
-                  <h1>Success!</h1>
+                  <h1>{this.state.title}</h1>
               </div>
-              <p style={{fontSize: '14px', fontWeight: 'normal'}}>Check your email for Confirmation and Training Information</p>
-              <div className="form-row">
+              <p style={{fontSize: '14px', fontWeight: 'normal'}}> {this.state.message} </p>
+              <div className="form-row" style={{textAlign: 'center'}}>
                   <button type="button" onClick={() => {window.location.href = '/'}}>Home</button>
               </div>
           </form>

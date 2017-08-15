@@ -11,6 +11,8 @@ const bodyParser = require('body-parser');
 
 module.exports = (app, db) => {
 
+  var discountsUsed = [];
+
   // External Middleware
   app.use(express.static(path.join(__dirname, '../client')));
   app.use(bodyParser.json());
@@ -53,12 +55,61 @@ module.exports = (app, db) => {
         }
       })
     }
-  })
+  });
+
+  app.post('/registration/finalize', (req, res) => {
+    console.log(req.body)
+    if (!req.body.purchaseInfo || !req.body.token) {
+      res.status(400).send({ok: false, message: 'missing purchase details'})
+    } else {
+      let user = jwt.decode(req.body.token, config.auth.secret);
+      db.tables.Users.find({where: {id: user.id, email: user.email}}).then((user) => {
+        if (!user) {
+          res.status(300).send({ok: false, message: 'bad user token'})
+        } else {
+          let athlete = req.body.purchaseInfo.athleteInfo
+          db.tables.Athletes.findOrCreate({where: {email: athlete.email}, defaults: {
+            firstName: athlete.fname,
+            lastName: athlete.lname,
+            dob: athlete.dob,
+            email: athlete.email,
+            emergencyContactName: athlete['emergency-contact'],
+            emergencyContactRelation: athlete['emergency-relation'],
+            emergencyContactMDN: athlete['emergency-phone'],
+            school: athlete.school,
+            state: athlete.state,
+            usatf: athlete.usatf,
+            gender: athlete.gender,
+            userId: user.id
+          }}).then((newAthlete) => {
+            let purchaseInfo = req.body.purchaseInfo;
+            console.log(newAthlete);
+            let athleteId = newAthlete[0].dataValues.id;
+            let userId = newAthlete[0].dataValues.userId;
+            db.tables.Purchases.create({
+              athleteId: athleteId,
+              userId: userId,
+              quarter: purchaseInfo.selectPackage.quarter,
+              group: purchaseInfo.selectPackage.group,
+              facility: purchaseInfo.selectPackage.facility,
+              waiverSignatory: purchaseInfo.agreement.name,
+              waiverDate: purchaseInfo.agreement.date,
+              paymentId: purchaseInfo.payment.paymentId,
+              payerId: purchaseInfo.payment.payerId
+            }).then(() => {
+              db.tables.Discounts.destroy({where: {code: purchaseInfo.payment.discount}});
+              res.send({ok: true, message: 'purchase record saved'});
+            })
+          })
+        }
+      })
+      .catch((error) => {
+        res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
+      });
+    }
+  });
 
   // DELETE REQ?
-  // app.post('/destroy_discount', (req, res) => {
-  //   let code = req.body.code
-  // });
 
   //End Registration Endpoints
 
@@ -105,6 +156,7 @@ module.exports = (app, db) => {
       let user = null;
       try {
         user = jwt.decode(token, config.auth.secret);
+        // console.log(user);
       } catch (e) {
 
       }
