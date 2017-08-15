@@ -15,7 +15,7 @@ if (currentPage.includes('account')) {
   render(<Login/>, document.getElementById('login'));
   render(<Register/>, document.getElementById('registration-page'));
 } else {
-  // render(<Calendar/>, document.getElementById('calendar'));
+  render(<Calendar/>, document.getElementById('calendar-container'));
   render(<Login/>, document.getElementById('login'));
   render(<Training/>, document.getElementById('training'));
 

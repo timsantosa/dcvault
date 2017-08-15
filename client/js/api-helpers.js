@@ -100,6 +100,16 @@ apiHelpers.formatPhone = (phone) => {
   return newPhone.slice(0, 12).join('');
 }
 
+apiHelpers.resendVerification = (email) => {
+  return axios.post('/users/resend', {email: email})
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  })
+}
+
 apiHelpers.sendConfirmationEmail = (email) => {
   return axios.post('/registration/confirm', {email: email});
 }

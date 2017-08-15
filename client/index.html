@@ -166,24 +166,7 @@
     <div class="container">
       <p class="section-header"><span class="red-text">Training</span> Schedule</p>
       <div class="row">
-        <div class="col-xs-12">
-          <script type="text/javascript">
-            function toggleCalendar() {
-              var calendar = document.getElementById('google-embedded-calendar');
-              var button = document.getElementById('toggle-calendar');
-              if (calendar.style.display === 'none') {
-                calendar.style.display = 'block';
-                button.innerHTML = 'Hide Calendar';
-              } else {
-                calendar.style.display = 'none';
-                button.innerHTML = 'Show Calendar';
-              }
-            }
-          </script>
-          <div id="toggle-calendar" className="red-button" onClick="toggleCalendar">
-            <span className="button-text">Show Calendar</span>
-          </div>
-          <iframe id="google-embedded-calendar" class="embed-responsive-item" src="https://calendar.google.com/calendar/embed?showTitle=0&amp;showNav=0&amp;showCalendars=0&amp;height=800&amp;wkst=1&amp;bgcolor=%23ffffff&amp;src=dcvaultt%40gmail.com&amp;color=%231B887A&amp;ctz=America%2FNew_York" style="border-width:0;display:none;" width="100%" height="400px" frameborder="0" scrolling="no"></iframe>
+        <div id="calendar-container" class="col-xs-12">
         </div>
       </div>
     </div>

@@ -130,6 +130,23 @@ module.exports = (app, db) => {
     }
   });
 
+  app.post('/users/resend', (req, res) => {
+    if (!req.body.email) {
+      res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}));
+    } else {
+      db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
+        if(!user) {
+          res.status(300).send(JSON.stringify({ok: false, message: 'user does not exist'}));
+        } else {
+          helpers.sendCode(user.verificationCode, user.email);
+          res.send({ok: true, message: 'resent'});
+        }
+      }).catch((error) => {
+        res.status(500).send({ok: false, message: 'an unknown error has occurred'});
+      })
+    }
+  })
+
   app.post('/users/authenticate', (req, res) => {
     if (!req.body.email || !req.body.password) {
       res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}));

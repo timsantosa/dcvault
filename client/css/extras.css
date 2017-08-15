@@ -7,7 +7,7 @@ a {
 }
 
 html {
-  pointer-events: none;
+  cursor: default;
 }
 
 .video-background {

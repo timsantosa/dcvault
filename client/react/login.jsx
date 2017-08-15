@@ -78,7 +78,7 @@ class Login extends React.Component {
                 this.setState({errorText: 'An unknown error occurred. Please try again'});
               }
             } else {
-              this.setState({statusText: 'Account Created! Check your email for a verification link'})
+              this.setState({statusText: 'Account Created! Check your email for a verification link. This may take several minutes.'})
             }
           });
         }
@@ -135,18 +135,38 @@ class Login extends React.Component {
     }
   }
 
+  resendCode() {
+    let email = this.refs.emailInput.value;
+    apiHelpers.resendVerification(email).then((response) => {
+      if (!response.data || !response.data.ok) {
+        document.getElementById('resend-link').innerHTML = 'An error occurred. Please reload and try again'
+      } else {
+        document.getElementById('resend-link').innerHTML = 'Code Resent.'
+      }
+    })
+  }
+
   render() { // All components have a render function in which you will return this 'HTML-like' syntax
     let confirmEmail = '';
     let confirmPassword = '';
     let forgotButton = '';
 
     let errorContainer = '';
+    let resendConfirmation = '';
     let statusContainer = '';
 
+    let resendCode = this.resendCode.bind(this);
+
     if (!(this.state.errorText.length === 0)) {
+
+      if (this.state.errorText.includes('has not been verified')) {
+        resendConfirmation = (<a id="resend-link" onClick={resendCode}>Resend Confirmation Email</a>);
+      }
+
       errorContainer = <div className='row'>
           <div className='error-container'>
             <p>{this.state.errorText}</p>
+            {resendConfirmation}
           </div>
         </div>;
     }
