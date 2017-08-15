@@ -84,7 +84,7 @@ class Register extends React.Component {
             <div className="row">
               <div className="col-xs-12" style={{textAlign: 'center'}}>
                 <p className="subsection-header">You Must be Logged in to <span className="red-text">Register for Training</span></p>
-                <a className="red-text center-content" onClick={() => {loginButton.click()}}>Login</a>
+                <a className="red-text center-content" onClick={() => {loginButton.click()}}>Login/Register</a>
               </div>
             </div>
           )
@@ -551,6 +551,21 @@ class Agreement extends React.Component {
     let date = $('input[name=date]').val();
     let dateFormatted = apiHelpers.formatDate(date);
     $('input[name=date]').val(dateFormatted);
+  }
+
+  componentDidMount() {
+    let today = new Date();
+    let year = today.getFullYear();
+    let day = today.getDate();
+    let month = today.getMonth() + 1;
+    if (day < 10) {
+      day = '0' + day;
+    }
+    if (month < 10) {
+      month = '0' + month;
+    }
+
+    $('input[name=date]').val(month + '/' + day + '/' + year);
   }
 
   continue() {

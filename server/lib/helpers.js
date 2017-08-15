@@ -21,7 +21,7 @@ module.exports.sendCode = (code, email) => {
   let link = config.server.domain + '/users/verify?code=' + code;
   let mailOptions = {
       from: '"DC Vault" <no-reply@dcvault.org>', // sender address
-      subject: 'Please Verify your Account', // Subject line
+      subject: 'DC Vault New Account Verification', // Subject line
       to: email,
       text: 'Follow the Link to Verify your New Account: ' + link, // plain text body
       html: '<a href="http://' + link + '">Click Here to Verify your Account</a>' // html body
@@ -39,7 +39,7 @@ module.exports.sendCode = (code, email) => {
 module.exports.resetPass = (password, email) => {
   let mailOptions = {
       from: '"DC Vault" <no-reply@dcvault.org>', // sender address
-      subject: 'Here is your temporary password', // Subject line
+      subject: 'DC Vault Password Reset', // Subject line
       to: email,
       text: 'Your temporary password is as follows: ' + password + '\n Please change it at your earliest convenience through your account page.' // plain text body
   };

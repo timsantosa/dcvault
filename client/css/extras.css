@@ -103,7 +103,7 @@ a {
   border-radius: 4px;
   margin-top: 10vh;
   padding: 6px 10px;
-  font-weight: 100;
+  font-weight: normal;
   font-family: Lato;
   font-size: calc(10px + .8vw);
   background-color: rgba(0, 0, 0, .35);
@@ -134,12 +134,12 @@ a {
 
 .text-section {
   color: #222;
-  background-color: #f0f0f0;
+  background-color: #ffffff;
   text-align: center;
 }
 
 #facilities {
-  background-color: #f0f0f0;
+  background-color: #fff;
 }
 
 .facilities-nav {
@@ -336,7 +336,7 @@ a {
 
 #my-account {
   min-height: 90vh;
-  background-color: #f0f0f0;
+  background-color: #fff;
 }
 
 .change-button:hover {
@@ -345,7 +345,7 @@ a {
 
 #register {
   min-height: 90vh;
-  background-color: #f0f0f0;
+  background-color: #fff;
 }
 
 .price-text {
@@ -362,7 +362,7 @@ a {
 }
 
 #training {
-  background-color: #eee;
+  background-color: #fff;
 }
 
 .option-card {
