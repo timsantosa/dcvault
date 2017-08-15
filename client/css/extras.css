@@ -361,11 +361,15 @@ a {
   border: 1px solid rgba(0, 0, 0, .15);
 }
 
+#training {
+  background-color: #eee;
+}
+
 .option-card {
   padding: 0px;
   margin: 0px;
   text-align: center;
-  background-color: #ddd;
+  background-color: #eee;
   color: #434343;
   /*border-left: 1px solid rgba(0, 0, 0, .35);
   border-right: 1px solid rgba(0, 0, 0, .35);*/
