@@ -29,7 +29,7 @@ class Training extends React.Component {
           Does not apply to equipment retnal, special training sessions, or events</br>',
           poleRental: 'Note: Poles are provided free of charge for use during DC Vault training sessions.</br>\
             Our pole rental program allows athletes to check out one pole at a time for non-club activities. Due to the fact that a typical athlete will progress through 4-8 poles through a season, it can be costly for an athlete to purchase their own poles (which range from $375 to nearly $1000). Poles will be issued on a first-come, first-serve basis. All else being equal, the most senior athlete will have priority.',
-          events: 'DC Vault will be holding various events throughout the year. Please click "See More" to view some of the upcoming events!'
+          events: 'DC Vault will be holding various events throughout the year. Please click "More Info" to view some of the upcoming events!'
       },
       showDescription: false,
       currentDescription: ''
@@ -119,7 +119,7 @@ class Training extends React.Component {
             <p className="option-info"></p>
             <div className="option-price-container" onClick={() => {window.location.href="#events"}}>
               <p className="option-price">VARIES</p>
-              <p className="option-price-modifier">CLICK FOR MORE</p>
+              <p className="option-price-modifier">MORE INFO</p>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.events+'</div>'}>Details</a>
           </div>
