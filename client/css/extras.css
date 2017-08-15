@@ -2,6 +2,10 @@
     -moz-box-sizing: border-box;
         box-sizing: border-box; }*/
 
+a {
+  color: #C0282D;
+}
+
 .video-background {
   background: #000;
   position: absolute;
@@ -354,10 +358,62 @@
   width: 100%;
   height: auto;
   margin-top: 10px;
-  border: 1px solid rgba(0, 0, 0, .25);
+  border: 1px solid rgba(0, 0, 0, .15);
 }
 
+.option-card {
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  background-color: #ddd;
+  color: #434343;
+  /*border-left: 1px solid rgba(0, 0, 0, .35);
+  border-right: 1px solid rgba(0, 0, 0, .35);*/
+  height: 100%;
+}
+
+.option-title {
+  font-size: 18px;
+}
+
+.option-price-container {
+  margin: 0 auto;
+  background-color: #999;
+  border-top: 1px solid rgba(0, 0, 0, .35);
+  border-bottom: 1px solid rgba(0, 0, 0, .35);
+  color: #434343;
+}
+
+.option-price {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0px;
+}
+
+.option-price-modifier {
+  font-size: 12px;
+  font-weight: normal;
+  margin: 0px;
+}
+
+.learn-more {
+  font-size: 10px;
+  font-weight: 100;
+}
+
+.option-info {
+  padding: 0px;
+  height: 12px;
+  font-size: 12px;
+  font-weight: 100;
+}
+
+
+
+
+
 /*FORM STYLING*/
+
 .form-labels-on-top{
     box-sizing: border-box;
     max-width: 475px;

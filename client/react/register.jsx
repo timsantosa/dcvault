@@ -82,6 +82,7 @@ class Register extends React.Component {
             <div className="row">
               <div className="col-xs-12" style={{textAlign: 'center'}}>
                 <p className="subsection-header">You Must be Logged in to <span className="red-text">Register for Training</span></p>
+                <a className="red-text center-content" onClick={() => {loginButton.click()}}>Login</a>
                 <a className="red-text center-content" href='/'>Return to Home Page</a>
               </div>
             </div>
@@ -881,23 +882,23 @@ class ProgressBar extends React.Component {
     return (
       <div className="container" style={{marginTop: '35px'}}>
         <div className="row">
-          <div className="col-xs-2 col-xs-offset-1" style={{textAlign: 'center'}}>
+          <div className="col-xs-2 col-xs-push-1" style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 1 ? onStyle : offStyle}></div>
             <p>Choose Training Options</p>
           </div>
-          <div className="col-xs-2" style={{textAlign: 'center'}}>
+          <div className="col-xs-2 col-xs-push-1" style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 2 ? onStyle : offStyle}></div>
             <p>Enter Athlete Information</p>
           </div>
-          <div className="col-xs-2" style={{textAlign: 'center'}}>
+          <div className="col-xs-2 col-xs-push-1" style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 3 ? onStyle : offStyle}></div>
             <p>Sign Waivers and Agreements</p>
           </div>
-          <div className="col-xs-2" style={{textAlign: 'center'}}>
+          <div className="col-xs-2 col-xs-push-1" style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 4 ? onStyle : offStyle}></div>
             <p>Process Payment</p>
           </div>
-          <div className="col-xs-2" style={{textAlign: 'center'}}>
+          <div className="col-xs-2 col-xs-push-1" style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 5 ? onStyle : offStyle}></div>
             <p>Done!</p>
           </div>
