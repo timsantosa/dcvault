@@ -117,15 +117,15 @@ class Training extends React.Component {
           </div>
 
           <div className="col-xs-12 col-md-4 option-card dark">
-            <p className="option-title">DISCOUNTS</p>
-            <p className="option-info"></p>
+            <p className="option-title">YOUTH/ADULT</p>
+            <p className="option-info">Summer Only</p>
             <div className="option-price-container-1">
               <div className="option-price-container-2">
-                <p className="option-price">VARIES</p>
+                <p className="option-price">$350</p>
                 <p className="option-price-modifier">PER ATHLETE</p>
               </div>
             </div>
-            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.discounts+'</div>'}>Details</a>
+            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.youthAdult+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-12 col-md-4 option-card">
@@ -141,16 +141,17 @@ class Training extends React.Component {
           </div>
 
           <div className="col-xs-12 col-md-4 option-card dark">
-            <p className="option-title">YOUTH/ADULT</p>
-            <p className="option-info">Summer Only</p>
+            <p className="option-title">DISCOUNTS</p>
+            <p className="option-info"></p>
             <div className="option-price-container-1">
               <div className="option-price-container-2">
-                <p className="option-price">$350</p>
+                <p className="option-price">VARIES</p>
                 <p className="option-price-modifier">PER ATHLETE</p>
               </div>
             </div>
-            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.youthAdult+'</div>'}>Details</a>
+            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.discounts+'</div>'}>Details</a>
           </div>
+
         </div>
 
         <div className="red-button" onClick={() => {window.location.href='/register'}} style={{marginTop: '30px'}}>
