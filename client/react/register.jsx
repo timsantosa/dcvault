@@ -688,10 +688,10 @@ class Payment extends React.Component {
     var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email;
 
     paypal.Button.render({
-    env: 'sandbox', // sandbox | production
+    env: 'production', // sandbox | production
     client: {
       sandbox:    window.configVariables.PAYPAL_CLIENT_ID,
-      production: '<insert production client id>'
+      production: window.configVariables.PAYPAL_CLIENT_ID
     },
     commit: true,
 
