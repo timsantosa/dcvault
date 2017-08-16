@@ -885,7 +885,7 @@ class Confirmation extends React.Component {
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
-          <form id="agreement" className="form-labels-on-top">
+          <form id="confirmation" className="form-labels-on-top">
               <div className="form-title-row">
                   <h1>{this.state.title}</h1>
               </div>

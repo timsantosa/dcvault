@@ -116,11 +116,34 @@ class AccountPanel extends React.Component {
                 </div>
                 <div className="body-box">
                   <Discounts discounts={this.state.discounts}/>
-                  <form id="add-discount" onSubmit={this.addCode.bind(this)}>
-                    <p>Description: <input ref="descInput" type="text" name="description"/></p>
-                    <p>Percentage (0-100): <input ref="percentInput"type="text" name="amount"/></p>
-                    <p><button type="submit">Add Code</button></p>
-                  </form>
+                    <form id="addCode" className="form-labels-on-top" onSubmit={this.addCode.bind(this)}>
+                        <div className="form-title-row">
+                            <h1>Add Code</h1>
+                        </div>
+                        <div className="row">
+                          <div className="col-xs-12 col-md-6">
+                            <div className="form-row">
+                              <label>
+                                <span className='required'>Description</span>
+                                <input type="text" name="description" ref="descInput" style={{width: '100%'}}/>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div className="col-xs-12 col-md-6">
+                            <div className="form-row">
+                              <label>
+                                <span className='required'>Percentage (0-100)</span>
+                                <input type="text" name="amount" ref="percentInput" style={{width: '100%'}}/>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="form-row">
+                            <button type="submit" onClick={this.continue.bind(this)}>Add Code</button>
+                        </div>
+
+                    </form>
                 </div>
               </div>
             ) : ''}
