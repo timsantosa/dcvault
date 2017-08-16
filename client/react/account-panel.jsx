@@ -117,9 +117,6 @@ class AccountPanel extends React.Component {
                 <div className="body-box">
                   <Discounts discounts={this.state.discounts}/>
                     <form id="addCode" className="form-labels-on-top" onSubmit={this.addCode.bind(this)}>
-                        <div className="form-title-row">
-                            <h1>Add Code</h1>
-                        </div>
                         <div className="row">
                           <div className="col-xs-12 col-md-6">
                             <div className="form-row">
@@ -139,8 +136,8 @@ class AccountPanel extends React.Component {
                             </div>
                           </div>
                         </div>
-                        <div className="form-row">
-                            <button type="submit" onClick={this.continue.bind(this)}>Add Code</button>
+                        <div className="form-row" style={{width: '100%'}}>
+                            <button type="submit" style={{margin: '0 auto'}}>Add Code</button>
                         </div>
 
                     </form>
