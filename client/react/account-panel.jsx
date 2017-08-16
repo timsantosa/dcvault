@@ -108,11 +108,11 @@ class AccountPanel extends React.Component {
                 <p><span className="item-name">Password:</span>********</p>
                 <p></p>
                 <p>Account Management is under maintenance and will not allow you to make changes. Sorry for the inconvenience</p>
-              </div>
-            </div>
 
-            <div className='red-button' onClick={this.logout.bind(this)}>
-              <span className='button-text'>Log Out</span>
+                <div className='red-button' onClick={this.logout.bind(this)}>
+                  <span className='button-text'>Log Out</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -143,31 +143,32 @@ class Purchases extends React.Component {
     } else {
       return (
         <table className="purchases-table">
-          <tr>
-            <th>Quarter</th>
-            <th>Group</th>
-            <th>Facility</th>
-            <th>Athlete</th>
-          </tr>
-          {this.props.purchases.map((purchase) => {
-            return (
-              <tr>
-                <td>
-                  {purchase.quarter.toUpperCase()}
-                </td>
-                <td>
-                  {purchase.group.toUpperCase()}
-                </td>
-                <td>
-                  {purchase.facility.toUpperCase()}
-                </td>
-                <td>
-                  {getAthlete(purchase.athleteId)}
-                </td>
-              </tr>
-            );
-          })}
-
+          <tbody>
+            <tr>
+              <th>Quarter</th>
+              <th>Group</th>
+              <th>Facility</th>
+              <th>Athlete</th>
+            </tr>
+            {this.props.purchases.map((purchase) => {
+              return (
+                <tr key={purchase.id}>
+                  <td>
+                    {purchase.quarter.toUpperCase()}
+                  </td>
+                  <td>
+                    {purchase.group.toUpperCase()}
+                  </td>
+                  <td>
+                    {purchase.facility.toUpperCase()}
+                  </td>
+                  <td>
+                    {getAthlete(purchase.athleteId)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       );
     }

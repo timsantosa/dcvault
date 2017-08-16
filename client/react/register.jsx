@@ -670,6 +670,9 @@ class Payment extends React.Component {
 
   componentDidMount() {
     this.calculatePrice();
+    $('#payment').submit((e) => {
+      e.preventDefault();
+    });
   }
 
   calculatePrice() {
@@ -795,7 +798,7 @@ class Payment extends React.Component {
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
-          <form id="agreement" className="form-labels-on-top">
+          <form id="payment" className="form-labels-on-top">
               <div className="form-title-row">
                   <h1>Finalize Payment</h1>
               </div>

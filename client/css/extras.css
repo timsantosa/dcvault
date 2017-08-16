@@ -463,7 +463,7 @@ a {
 }
 
 .account-panel-box {
-  width: 50%;
+  width: 75%;
   min-width: 300px;
   margin: 10px auto;
   border-radius: 5px;
@@ -503,6 +503,23 @@ a {
   color: #C0282D;
   font-weight: bold;
   margin: 10px;
+}
+
+.purchases-table {
+  width: 90%;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.purchases-table th {
+  font-size: 14px;
+}
+
+.purchases-table td, th {
+  font-size: 12px;
+  border: 1px solid rgba(0, 0, 0, .35);
+  padding: 10px;
+  text-align: center;
 }
 
 
