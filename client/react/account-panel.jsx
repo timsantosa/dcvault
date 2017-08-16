@@ -17,7 +17,8 @@ class AccountPanel extends React.Component {
       email: '',
       address: '',
       athletes: [],
-      purchases: []
+      purchases: [],
+      discounts: []
     }
   }
 
@@ -47,15 +48,17 @@ class AccountPanel extends React.Component {
   populateUserInfo() {
     apiHelpers.getUserData()
     .then((response) => {
-      // console.log(response.data);
+      console.log(response.data);
       if (!!response.data) {
         if (response.data.ok) {
           this.setState({
             name: response.data.user.name || 'None Entered',
             email: response.data.user.email,
             address: response.data.user.address || {line1: 'None Entered'},
+            isAdmin: response.data.user.isAdmin,
             athletes: response.data.athletes || [],
-            purchases: response.data.purchases || []
+            purchases: response.data.purchases || [],
+            discounts: response.data.discounts || []
           });
         } else {
           window.location.href = '/';
@@ -77,6 +80,18 @@ class AccountPanel extends React.Component {
     window.location.href = '/';
   }
 
+  addCode() {
+    let amount = this.refs.percentInput.value;
+    amount = parseInt(amount) / 100;
+    let description = this.refs.descInput.value;
+    if (!!amount && !!description) {
+      apiHelpers.createDiscount(description, amount)
+      .then((response) => {
+        console.log(response.data);
+      });
+    }
+  }
+
   render() {
     let purchases = this.state.purchases;
     let athletes = this.state.athletes;
@@ -93,6 +108,22 @@ class AccountPanel extends React.Component {
                 <Purchases purchases={purchases} athletes={athletes}/>
               </div>
             </div>
+
+            {this.state.isAdmin ? (
+              <div className="account-panel-box">
+                <div className="title-box">
+                  <span className="title">Discount Codes</span>
+                </div>
+                <div className="body-box">
+                  <Discounts discounts={this.state.discounts}/>
+                  <form id="add-discount" onSubmit={this.addCode.bind(this)}>
+                    <p>Description: <input ref="descInput" type="text" name="description"/></p>
+                    <p>Percentage (0-100): <input ref="percentInput"type="text" name="amount"/></p>
+                    <p><button type="submit">Add Code</button></p>
+                  </form>
+                </div>
+              </div>
+            ) : ''}
           </div>
           <div className="col-xs-12 col-md-6">
             <p className="subsection-header">Account <span className="red-text">Management</span></p>
@@ -164,6 +195,46 @@ class Purchases extends React.Component {
                   </td>
                   <td>
                     {getAthlete(purchase.athleteId)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
+    }
+  }
+}
+
+class Discounts extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+
+    if (this.props.discounts.length === 0) {
+      return (<p> None to show </p>);
+    } else {
+      return (
+        <table className="purchases-table">
+          <tbody>
+            <tr>
+              <th>Description</th>
+              <th>Code</th>
+              <th>Amount</th>
+            </tr>
+            {this.props.discounts.map((discount) => {
+              return (
+                <tr key={discount.id}>
+                  <td>
+                    {discount.type}
+                  </td>
+                  <td>
+                    {discount.code}
+                  </td>
+                  <td>
+                    {discount.amount * 100}%
                   </td>
                 </tr>
               );

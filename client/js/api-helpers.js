@@ -42,6 +42,17 @@ apiHelpers.forgotPassword = (email) => {
   })
 }
 
+apiHelpers.createDiscount = (description, amount) => {
+  let token = localStorage.getItem('token');
+  return axios.post('/discounts/create', {description: description, amount: amount, token: token})
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  })
+}
+
 apiHelpers.getUserData = () => {
   let token = localStorage.getItem('token');
   return axios.post('/users/info', {token: token})

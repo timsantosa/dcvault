@@ -57,6 +57,35 @@ module.exports = (app, db) => {
     }
   });
 
+  app.post('/discounts/create', (req, res) => {
+    if (!req.body.amount || !req.body.description || !req.body.token) {
+      res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}));
+    } else {
+      let user = {};
+      try {
+        user = jwt.decode(req.body.token, config.auth.secret);
+      } catch (e) {}
+      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((user) => {
+        if (!user || !user.isAdmin) {
+          console.log(user);
+          res.status(300).send({ok: false, message: 'unauthorized'});
+        } else {
+          let code = helpers.randString();
+          req.body.amount = req.body.amount > 1 ? 1 : req.body.amount;
+          req.body.amount = req.body.amount < 0 ? 0 : req.body.amount;
+
+          db.tables.Discounts.create({type: req.body.description, code: code, amount: req.body.amount})
+          .then((code) => {
+            res.send({ok: true, message: 'code created'});
+          })
+          .catch(() => {
+            res.status(500).send({ok: false, message: 'db error'});
+          })
+        }
+      });
+    }
+  })
+
   app.post('/registration/finalize', (req, res) => {
     // console.log(req.body)
     if (!req.body.purchaseInfo || !req.body.token) {
@@ -271,8 +300,18 @@ module.exports = (app, db) => {
               id: foundUser.id,
               email: foundUser.email,
               name: foundUser.name,
-              address: null
+              address: null,
+              isAdmin: foundUser.isAdmin
             };
+
+            let promiseList = [];
+            let discounts = [];
+            if (returnUser.isAdmin) {
+              promiseList.push(db.tables.Discounts.findAll().then((discountList) => {
+                discounts = discountList;
+              }));
+            }
+
             let athletes = [];
             let purchases = [];
             let getAthleteList = db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athleteList) => {
@@ -280,19 +319,22 @@ module.exports = (app, db) => {
                 athletes = athleteList;
               }
             });
+            promiseList.push(getAthleteList);
             let getPurchaseList = db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchaseList) => {
               if (Array.isArray(purchaseList)) {
                 purchases = purchaseList;
               }
             })
+            promiseList.push(getPurchaseList);
             let getUserAddress = db.tables.Addresses.find({where: {id: foundUser.addressId}}).then((address) => {
               if (!!address) {
                 returnUser.address = address;
               }
             });
+            promiseList.push(getUserAddress);
 
-            Promise.all([getAthleteList, getUserAddress]).then(() => {
-              res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes, purchases: purchases});
+            Promise.all(promiseList).then(() => {
+              res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes, purchases: purchases, discounts: discounts});
             });
           } else {
             res.status(300).send(JSON.stringify({ok: false, message: 'invalid user token'}));
@@ -304,6 +346,7 @@ module.exports = (app, db) => {
     }
   });
   // End Users Section
+
 
 
   // Catchall redirect to home page
