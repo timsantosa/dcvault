@@ -313,12 +313,13 @@ a {
   background-color: #C0282D;
   border-radius: 2px;
   width: 20%;
+  min-width: 100px;
   margin: 0 auto;
   text-align: center;
 }
 
 .red-button .button-text {
-  color: #DDD;
+  color: #FFF;
   font-size: 18px;
 }
 
