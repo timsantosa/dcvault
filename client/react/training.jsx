@@ -71,6 +71,18 @@ class Training extends React.Component {
           </div>
 
           <div className="col-xs-12 col-md-4 option-card dark">
+            <p className="option-title">YOUTH/ADULT</p>
+            <p className="option-info">Summer Only</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">$350</p>
+                <p className="option-price-modifier">PER ATHLETE</p>
+              </div>
+            </div>
+            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.youthAdult+'</div>'}>Details</a>
+          </div>
+
+          <div className="col-xs-12 col-md-4 option-card">
             <p className="option-title">EMERGING ELITE</p>
             <p className="option-info"></p>
             <div className="option-price-container-1">
@@ -82,7 +94,7 @@ class Training extends React.Component {
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.emerging+'</div>'}>Details</a>
           </div>
 
-          <div className="col-xs-12 col-md-4 option-card">
+          <div className="col-xs-12 col-md-4 option-card dark">
             <p className="option-title">ELITE</p>
             <p className="option-info"></p>
             <div className="option-price-container-1">
@@ -94,7 +106,7 @@ class Training extends React.Component {
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.elite+'</div>'}>Details</a>
           </div>
 
-          <div className="col-xs-12 col-md-4 option-card dark">
+          <div className="col-xs-12 col-md-4 option-card">
             <p className="option-title">PROFESSIONAL</p>
             <p className="option-info"></p>
             <div className="option-price-container-1">
@@ -104,18 +116,6 @@ class Training extends React.Component {
               </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.professional+'</div>'}>Details</a>
-          </div>
-
-          <div className="col-xs-12 col-md-4 option-card">
-            <p className="option-title">YOUTH/ADULT</p>
-            <p className="option-info">Summer Only</p>
-            <div className="option-price-container-1">
-              <div className="option-price-container-2">
-                <p className="option-price">$350</p>
-                <p className="option-price-modifier">PER ATHLETE</p>
-              </div>
-            </div>
-            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.youthAdult+'</div>'}>Details</a>
           </div>
 
           <div className="col-xs-12 col-md-4 option-card dark">

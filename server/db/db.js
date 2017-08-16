@@ -8,6 +8,7 @@ columns.users = {
   email: Sequelize.STRING,
   password: Sequelize.STRING,
   verified: {type: Sequelize.BOOLEAN, defaultValue: false},
+  isAdmin: {type: Sequelize.BOOLEAN, defaultValue: false},
   verificationCode: Sequelize.STRING,
   name: Sequelize.STRING
   // Address FK
@@ -69,12 +70,10 @@ columns.sites = {
 };
 
 columns.discounts = {
-  code: Sequelize.STRING,
-  // Optional user FK
+  code: {type: Sequelize.STRING, unique: true},
   uses: Sequelize.INTEGER,
   type: Sequelize.STRING,
   amount: Sequelize.DOUBLE
-  // package or rental FK
 };
 
 columns.addresses = {

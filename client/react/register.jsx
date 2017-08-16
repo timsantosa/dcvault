@@ -679,6 +679,8 @@ class Payment extends React.Component {
 
   renderButton(amount) {
 
+    amount = parseFloat(amount) < 10 ? 10 : amount
+
     var cont = this.continue.bind(this);
     var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email;
 
@@ -785,6 +787,11 @@ class Payment extends React.Component {
         </div>;
     }
 
+    let currentPrice = (this.state.price * (1 - this.state.discount));
+    currentPrice = currentPrice < 10 ? (10).toFixed(2) : currentPrice.toFixed(2);
+    let currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * .03).toFixed(2);
+
+
     return (
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
@@ -797,8 +804,8 @@ class Payment extends React.Component {
               <div className="form-row">
                 <div className="row">
                   <div className="col-xs-12" style={{textAlign:'center'}}>
-                      <p className="price-text">Registration Fee: <span className="red-text">${(this.state.price * (1 - this.state.discount)).toFixed(2)}</span></p>
-                      <p className="price-text">Online Processing Fee: <span className="red-text">${((this.state.price * (1 - this.state.discount)) * .03).toFixed(2)}</span></p>
+                      <p className="price-text">Registration Fee: <span className="red-text">${currentPrice}</span></p>
+                      <p className="price-text">Online Processing Fee: <span className="red-text">${currentProcessingFee}</span></p>
                   </div>
                 </div>
               </div>

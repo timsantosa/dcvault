@@ -16,7 +16,8 @@ class AccountPanel extends React.Component {
       name: '',
       email: '',
       address: '',
-      athletes: []
+      athletes: [],
+      purchases: []
     }
   }
 
@@ -46,14 +47,15 @@ class AccountPanel extends React.Component {
   populateUserInfo() {
     apiHelpers.getUserData()
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       if (!!response.data) {
         if (response.data.ok) {
           this.setState({
             name: response.data.user.name || 'None Entered',
             email: response.data.user.email,
             address: response.data.user.address || {line1: 'None Entered'},
-            athletes: response.data.athletes || []
+            athletes: response.data.athletes || [],
+            purchases: response.data.purchases || []
           });
         } else {
           window.location.href = '/';
@@ -76,32 +78,99 @@ class AccountPanel extends React.Component {
   }
 
   render() {
+    let purchases = this.state.purchases;
+    let athletes = this.state.athletes;
       return (
       <section id="my-account">
         <div className="row">
           <div className="col-xs-12 col-md-6">
             <p className="subsection-header"><span className="red-text">Athlete</span> Profile</p>
-
+            <div className="account-panel-box">
+              <div className="title-box">
+                <span className="title">My Purchases</span>
+              </div>
+              <div className="body-box">
+                <Purchases purchases={purchases} athletes={athletes}/>
+              </div>
+            </div>
           </div>
           <div className="col-xs-12 col-md-6">
             <p className="subsection-header">Account <span className="red-text">Management</span></p>
-            <p className="user-info-element">Name: <span className="red-text">{this.state.name}</span> <span className="change-button" onClick={this.updateName.bind(this)}>Change...</span></p>
-            <p className="user-info-element">Email: <span className="red-text">{this.state.email}</span></p>
-            <p className="user-info-element">Address: <span className="red-text">{this.state.address.line1}</span> <span className="change-button" onClick={this.updateAddress.bind(this)}>Change...</span></p>
-            <p className="user-info-element"><span className="red-text">{this.state.address.line2}</span></p>
-            <p className="user-info-element"><span className="red-text">{this.state.address.city}</span></p>
-            <p className="user-info-element"><span className="red-text">{this.state.address.state}</span></p>
-            <p className="user-info-element"><span className="red-text">{this.state.address.zip}</span></p>
-            <p className="user-info-element"><span className="red-text">{this.state.address.country}</span></p>
-            <div className='row'>
-              <div className='red-button' onClick={this.logout.bind(this)}>
-                <span className='button-text'>Log Out</span>
+
+            <div className="account-panel-box">
+              <div className="title-box">
+                <span className="title">My Account Details</span>
+                <span className="glyphicon glyphicon-pencil edit-button"></span>
               </div>
+              <div className="body-box">
+                <p><span className="item-name">Name:</span>{this.state.name}</p>
+                <p><span className="item-name">Email:</span>{this.state.email}</p>
+                <p><span className="item-name">Password:</span>********</p>
+                <p></p>
+                <p>Account Management is under maintenance and will not allow you to make changes. Sorry for the inconvenience</p>
+              </div>
+            </div>
+
+            <div className='red-button' onClick={this.logout.bind(this)}>
+              <span className='button-text'>Log Out</span>
             </div>
           </div>
         </div>
       </section>
     );
+  }
+}
+
+class Purchases extends React.Component {
+  constructor(props) {
+    super(props);
+
+    console.log(this.props)
+  }
+
+  getAthlete(id) {
+    for (let i = 0; i < this.props.athletes.length; i++) {
+      if (this.props.athletes[i].id === id) {
+        return (this.props.athletes[i].firstName + ' ' + this.props.athletes[i].lastName).toUpperCase();
+      }
+    }
+  }
+
+  render() {
+    let getAthlete = this.getAthlete.bind(this);
+    if (this.props.purchases.length === 0) {
+      return (<p> None to show </p>);
+    } else {
+      return (
+        <table className="purchases-table">
+          <tr>
+            <th>Quarter</th>
+            <th>Group</th>
+            <th>Facility</th>
+            <th>Athlete</th>
+          </tr>
+          {this.props.purchases.map((purchase) => {
+            return (
+              <tr>
+                <td>
+                  {purchase.quarter.toUpperCase()}
+                </td>
+                <td>
+                  {purchase.group.toUpperCase()}
+                </td>
+                <td>
+                  {purchase.facility.toUpperCase()}
+                </td>
+                <td>
+                  {getAthlete(purchase.athleteId)}
+                </td>
+              </tr>
+            );
+          })}
+
+        </table>
+      );
+    }
   }
 }
 

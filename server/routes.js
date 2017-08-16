@@ -191,7 +191,29 @@ module.exports = (app, db) => {
   });
 
   app.post('/users/update', (req, res) => {
-    // for adding new information to user accounts.
+    if (!req.body.token) {
+      res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+    } else {
+      let user = null;
+      try {
+        user = jwt.decode(token, config.auth.secret);
+      } catch (e) {}
+      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((existingUser) => {
+        if (!user) {
+          res.status(300).send(JSON.stringify({ok: false, message: 'user does not exist'}));
+        } else {
+          let newPassword = !!req.body.newInfo.password ? bcrypt.hashSync(req.body.newInfo.password) : user.password;
+          let newName = !!req.body.newInfo.name ? req.body.newInfo.name : user.name;
+          user.update({
+            password: newPassword,
+            name: newName
+          }).then((user) => {
+            let token = jwt.encode(user, config.auth.secret);
+            res.send(JSON.stringify({ok: true, message: 'user profile updated', token: token}));
+          });
+        }
+      })
+    }
   });
 
   app.get('/users/verify', (req, res) => {
@@ -252,11 +274,17 @@ module.exports = (app, db) => {
               address: null
             };
             let athletes = [];
+            let purchases = [];
             let getAthleteList = db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athleteList) => {
               if (Array.isArray(athleteList)) {
                 athletes = athleteList;
               }
             });
+            let getPurchaseList = db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchaseList) => {
+              if (Array.isArray(purchaseList)) {
+                purchases = purchaseList;
+              }
+            })
             let getUserAddress = db.tables.Addresses.find({where: {id: foundUser.addressId}}).then((address) => {
               if (!!address) {
                 returnUser.address = address;
@@ -264,7 +292,7 @@ module.exports = (app, db) => {
             });
 
             Promise.all([getAthleteList, getUserAddress]).then(() => {
-              res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes});
+              res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes, purchases: purchases});
             });
           } else {
             res.status(300).send(JSON.stringify({ok: false, message: 'invalid user token'}));

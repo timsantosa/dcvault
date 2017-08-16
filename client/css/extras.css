@@ -347,11 +347,6 @@ a {
   font-size: 12px;
 }
 
-#my-account {
-  min-height: 90vh;
-  background-color: #fff;
-}
-
 .change-button:hover {
   text-decoration: underline;
 }
@@ -462,6 +457,53 @@ a {
   width: 100vw;
 }
 
+#my-account {
+  min-height: 90vh;
+  background-color: #ddd;
+}
+
+.account-panel-box {
+  width: 50%;
+  min-width: 300px;
+  margin: 10px auto;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px #434343;
+}
+
+.account-panel-box .title-box {
+  background-color: #C0282D;
+  color: #f0f0f0;
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px 5px 0 0;
+}
+
+.account-panel-box .title {
+  font-size: 20px;
+}
+
+.account-panel-box .edit-button {
+  /*position: absolute;*/
+  font-size: 20px;
+  float: right;
+}
+
+.account-panel-box .body-box {
+  background-color: #fff;
+  border-radius: 0 0 5px 5px;
+  padding: 10px;
+}
+
+.account-panel-box .body-box p {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.account-panel-box .item-name {
+  color: #C0282D;
+  font-weight: bold;
+  margin: 10px;
+}
 
 
 /*FORM STYLING*/
