@@ -20,15 +20,15 @@ module.exports = (app, db) => {
 
   // Registration Endpoints
 
-  app.get('/create_test_code', (req, res) => {
-    db.tables.Discounts.create({
-      code: 'abcdef',
-      type: 'Military',
-      amount: .25
-    });
+  // app.get('/create_test_code', (req, res) => {
+  //   db.tables.Discounts.create({
+  //     code: 'abcdef',
+  //     type: 'Military',
+  //     amount: .25
+  //   });
 
-    res.end();
-  });
+  //   res.end();
+  // });
 
   app.post('/registration/confirm', (req, res) => {
     let email = req.body.email;

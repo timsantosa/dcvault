@@ -17,6 +17,6 @@ const app = express();
 require('./routes')(app, db); // Import all middleware and routes
 
 // Launch Server
-app.listen(config.server.port, () => {
+app.listen(config.server.port, '0.0.0.0', () => {
   console.log('Server running on port ', config.server.port)
 });
