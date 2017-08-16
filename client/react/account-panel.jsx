@@ -136,8 +136,8 @@ class AccountPanel extends React.Component {
                             </div>
                           </div>
                         </div>
-                        <div className="form-row" style={{width: '100%'}}>
-                            <button type="submit" style={{margin: '0 auto'}}>Add Code</button>
+                        <div className="form-row" >
+                            <button type="submit">Add Code</button>
                         </div>
 
                     </form>
