@@ -2,12 +2,17 @@
     -moz-box-sizing: border-box;
         box-sizing: border-box; }*/
 
-a {
-  color: #C0282D;
+* {
+  cursor:default;
 }
 
-html {
-  cursor: default;
+body {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+a {
+  color: #C0282D;
 }
 
 .video-background {
@@ -317,6 +322,10 @@ html {
   font-size: 18px;
 }
 
+.red-button:hover .button-text {
+  text-decoration: underline;
+}
+
 .error-container {
   text-align: center;
   margin: 0 auto;
@@ -370,26 +379,53 @@ html {
 }
 
 .option-card {
-  padding: 0px;
+  padding: 10px;
   margin: 0px;
   text-align: center;
-  background-color: #eee;
+  background-color: #fff;
   color: #434343;
   /*border-left: 1px solid rgba(0, 0, 0, .35);
   border-right: 1px solid rgba(0, 0, 0, .35);*/
   height: 100%;
 }
 
+.dark {
+  background-color: #434343;
+}
+
 .option-title {
   font-size: 18px;
 }
 
-.option-price-container {
-  margin: 0 auto;
-  background-color: #999;
-  border-top: 1px solid rgba(0, 0, 0, .35);
+.dark .option-title {
+  color: #aaa;
+}
+
+.option-price-container-1 {
+/*  width: 50%;
   border-bottom: 1px solid rgba(0, 0, 0, .35);
+  vertical-align: center;*/
+  margin: 0 auto;
   color: #434343;
+  background-color: #999;
+  border: 1px solid rgba(0, 0, 0, .35);
+  border-radius: 50%;
+  min-width: 100px;
+  width: 30%;
+  padding-top: 30%; /* 1:1 Aspect Ratio */
+  position: relative; /* If you want text inside of it */
+}
+
+.option-price-container-2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dark .option-price-container-1 {
+  background-color: #555;
+  color: #aaa;
 }
 
 .option-price {
@@ -399,15 +435,14 @@ html {
 }
 
 .option-price-modifier {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: normal;
   margin: 0px;
 }
 
 .learn-more {
   margin: 30px;
-  font-size: 10px;
-  font-weight: 100;
+  font-size: 12px;
 }
 
 .option-info {
@@ -417,7 +452,15 @@ html {
   font-weight: 100;
 }
 
+.dark .option-info {
+  color: #aaa;
+}
 
+#training-container {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+}
 
 
 

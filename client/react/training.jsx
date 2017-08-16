@@ -26,7 +26,7 @@ class Training extends React.Component {
           25% - DCPS Students </br>\
           25% - Family Discount </br>\
           </br>\
-          Does not apply to equipment retnal, special training sessions, or events</br>',
+          Does not apply to equipment rental, special training sessions, or events</br>',
           poleRental: 'Note: Poles are provided free of charge for use during DC Vault training sessions.</br>\
             Our pole rental program allows athletes to check out one pole at a time for non-club activities. Due to the fact that a typical athlete will progress through 4-8 poles through a season, it can be costly for an athlete to purchase their own poles (which range from $375 to nearly $1000). Poles will be issued on a first-come, first-serve basis. All else being equal, the most senior athlete will have priority.',
           events: 'DC Vault will be holding various events throughout the year. Please click "More Info" to view some of the upcoming events!'
@@ -42,114 +42,129 @@ class Training extends React.Component {
 
   render() { // All components have a render function in which you will return this 'HTML-like' syntax
     return (
-      <div className="container">
+      <div id="training-container" className="container">
         <p className="section-header">Training <span className="red-text">Options</span></p>
-        <div className="row">
-          <div className="col-xs-6 col-md-2 option-card">
+        <div className="row" style={{width: '100%', margin: '0'}}>
+          <div className="col-xs-12 col-md-4 option-card dark">
             <p className="option-title">BEGINNER</p>
             <p className="option-info">All Ages</p>
-            <div className="option-price-container">
-              <p className="option-price">$550</p>
-              <p className="option-price-modifier">PER QUARTER</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">$550</p>
+                <p className="option-price-modifier">PER QUARTER</p>
+              </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.beginner+'</div>'}>Details</a>
           </div>
 
-          <div className="col-xs-6 col-md-2 option-card">
+          <div className="col-xs-12 col-md-4 option-card">
             <p className="option-title">INTERMEDIATE</p>
             <p className="option-info">All Ages</p>
-            <div className="option-price-container">
-              <p className="option-price">$550</p>
-              <p className="option-price-modifier">PER QUARTER</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">$550</p>
+                <p className="option-price-modifier">PER QUARTER</p>
+              </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.intermediate+'</div>'}>Details</a>
           </div>
 
-          <div className="col-xs-6 col-md-2 option-card">
+          <div className="col-xs-12 col-md-4 option-card dark">
             <p className="option-title">EMERGING ELITE</p>
             <p className="option-info"></p>
-            <div className="option-price-container">
-              <p className="option-price">N/A</p>
-              <p className="option-price-modifier">INVITE ONLY</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">N/A</p>
+                <p className="option-price-modifier">INVITE ONLY</p>
+              </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.emerging+'</div>'}>Details</a>
           </div>
 
-          <div className="col-xs-6 col-md-2 option-card">
+          <div className="col-xs-12 col-md-4 option-card">
             <p className="option-title">ELITE</p>
             <p className="option-info"></p>
-            <div className="option-price-container">
-              <p className="option-price">N/A</p>
-              <p className="option-price-modifier">INVITE ONLY</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">N/A</p>
+                <p className="option-price-modifier">INVITE ONLY</p>
+              </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.elite+'</div>'}>Details</a>
           </div>
 
-          <div className="col-xs-6 col-md-2 option-card">
+          <div className="col-xs-12 col-md-4 option-card dark">
             <p className="option-title">PROFESSIONAL</p>
             <p className="option-info"></p>
-            <div className="option-price-container">
-              <p className="option-price">N/A</p>
-              <p className="option-price-modifier">INVITE ONLY</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">N/A</p>
+                <p className="option-price-modifier">INVITE ONLY</p>
+              </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.professional+'</div>'}>Details</a>
           </div>
-
-          <div className="col-xs-6 col-md-2 option-card">
-            <p className="option-title">YOUTH/ADULT</p>
-            <p className="option-info">Summer Only</p>
-            <div className="option-price-container">
-              <p className="option-price">$350</p>
-              <p className="option-price-modifier">PER ATHLETE</p>
-            </div>
-            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.youthAdult+'</div>'}>Details</a>
-          </div>
-        </div>
-        <div className="row" style={{marginTop: '20px'}}>
-          <div className="red-button" onClick={() => {window.location.href='/register'}}>
-            <span className="button-text">SIGN UP</span>
-          </div>
-        </div>
-
-        <p className="subsection-header" style={{marginTop: '75px', marginBottom: '15px'}}><span className="red-text">Other</span> Options</p>
-        <div className="row">
-
-          <div className="col-xs-6 col-md-2 col-md-push-3 option-card">
+          <div className="col-xs-12 col-md-4 option-card">
             <p className="option-title">SPECIAL EVENTS</p>
             <p className="option-info"></p>
-            <div className="option-price-container" onClick={() => {window.location.href="#events"}}>
-              <p className="option-price">VARIES</p>
-              <p className="option-price-modifier">MORE INFO</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2" onClick={() => {window.location.href="#events"}}>
+                <p className="option-price">VARIES</p>
+                <p className="option-price-modifier">MORE INFO</p>
+              </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.events+'</div>'}>Details</a>
           </div>
 
-          <div className="col-xs-6 col-md-2 col-md-push-3 option-card">
+          <div className="col-xs-12 col-md-4 option-card dark">
             <p className="option-title">DISCOUNTS</p>
             <p className="option-info"></p>
-            <div className="option-price-container">
-              <p className="option-price">VARIES</p>
-              <p className="option-price-modifier">PER ATHLETE</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">VARIES</p>
+                <p className="option-price-modifier">PER ATHLETE</p>
+              </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.discounts+'</div>'}>Details</a>
           </div>
 
-          <div className="col-xs-6 col-xs-push-3 col-md-2 col-md-push-3 option-card">
+          <div className="col-xs-12 col-md-4 option-card">
             <p className="option-title">POLE RENTAL</p>
             <p className="option-info">Registered Athletes Only</p>
-            <div className="option-price-container">
-              <p className="option-price">$150</p>
-              <p className="option-price-modifier">PER QUARTER</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">$150</p>
+                <p className="option-price-modifier">PER QUARTER</p>
+              </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.poleRental+'</div>'}>Details</a>
           </div>
 
+          <div className="col-xs-12 col-md-4 option-card dark">
+            <p className="option-title">YOUTH/ADULT</p>
+            <p className="option-info">Summer Only</p>
+            <div className="option-price-container-1">
+              <div className="option-price-container-2">
+                <p className="option-price">$350</p>
+                <p className="option-price-modifier">PER ATHLETE</p>
+              </div>
+            </div>
+            <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.youthAdult+'</div>'}>Details</a>
+          </div>
         </div>
+
+        <div className="red-button" onClick={() => {window.location.href='/register'}} style={{marginTop: '30px'}}>
+          <span className="button-text">Sign Up</span>
+        </div>
+
         <ReactTooltip html={true}/>
       </div>
     );
   }
 }
+
+/*
+*/
 
 class DescriptionModal extends React.Component {
   constructor(props) {
