@@ -153,7 +153,6 @@ class Training extends React.Component {
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.discounts+'</div>'}>Details</a>
           </div>
-
         </div>
 
         <div className="red-button" onClick={() => {window.location.href='/register'}} style={{marginTop: '30px'}}>
