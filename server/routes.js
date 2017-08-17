@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt-nodejs');
 const helpers = require('./lib/helpers');
 const config = require('./config/config');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 
 module.exports = (app, db) => {
@@ -17,6 +18,7 @@ module.exports = (app, db) => {
   app.use(express.static(path.join(__dirname, '../client')));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(morgan('dev'));
 
   // Registration Endpoints
 
