@@ -7,20 +7,20 @@ const path = require('path');
 const transporter = nodemailer.createTransport({
     host: config.email.server,
     port: config.email.port,
-    secure: true, // secure:true for port 465, secure:false for port 587
+    secure: false, // secure:true for port 465, secure:false for port 587
     auth: {
         user: config.email.username,
         pass: config.email.password
     },
     tls: {
-      rejectUnauthorized: false
+      ciphers: 'SSLv3'
     }
 });
 
 module.exports.sendCode = (code, email) => {
   let link = config.server.domain + '/users/verify?code=' + code;
   let mailOptions = {
-      from: '"DC Vault" <no-reply@dcvault.org>', // sender address
+      from: '"DC Vault" <'+ config.email.username +'>', // sender address
       subject: 'DC Vault New Account Verification', // Subject line
       to: email,
       text: 'Follow the Link to Verify your New Account: ' + link, // plain text body
@@ -38,7 +38,7 @@ module.exports.sendCode = (code, email) => {
 
 module.exports.resetPass = (password, email) => {
   let mailOptions = {
-      from: '"DC Vault" <no-reply@dcvault.org>', // sender address
+      from: '"DC Vault" <'+ config.email.username +'>', // sender address
       subject: 'DC Vault Password Reset', // Subject line
       to: email,
       text: 'Your temporary password is as follows: ' + password + '\n Please change it at your earliest convenience through your account page.' // plain text body
@@ -54,7 +54,7 @@ module.exports.resetPass = (password, email) => {
 
 module.exports.sendConfirmationEmails = (email) => {
     let mailOptions = {
-      from: '"DC Vault" <no-reply@dcvault.org>', // sender address
+      from: '"DC Vault" <'+ config.email.username +'>', // sender address
       subject: 'Welcome to DC Vault', // Subject line
       to: email,
       html: '<p>Thank you for registering with DC Vault. Please review the content below closely and let us know if you have any questions.</p>\
