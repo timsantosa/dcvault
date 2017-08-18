@@ -26,8 +26,8 @@ module.exports.sendCode = (code, email) => {
       text: 'Follow the Link to Verify your New Account: ' + link, // plain text body
       html: '<p>Thank you for registering a DC Vault profile!</p>\
       <p>Your username is: ' + email + '</p>\
-      <p>To verify your account, click the link below or copy/paste the following into your browser\'s URL bar: ' + link + '\
-      <a href="http://' + link + '">Click Here to Verify your Account</a>' // html body
+      <p>To verify your account, click the link below or copy/paste the following into your browser\'s URL bar: ' + link + '</p>\
+      <p><a href="http://' + link + '">Click Here to Verify your Account</a></p>' // html body
   };
 
   // send mail with defined transport object
