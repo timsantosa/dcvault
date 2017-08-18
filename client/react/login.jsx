@@ -78,7 +78,7 @@ class Login extends React.Component {
                 this.setState({errorText: 'An unknown error occurred. Please try again'});
               }
             } else {
-              this.setState({statusText: 'Account Created! Check your email for a verification link. This may take several minutes.'})
+              this.setState({statusText: 'Account Created! Check your email for a verification link. This may take several minutes, and you may have to check your spam folder'});
             }
           });
         }
