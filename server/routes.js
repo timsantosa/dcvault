@@ -111,7 +111,8 @@ module.exports = (app, db) => {
             state: athlete.state,
             usatf: athlete.usatf,
             gender: athlete.gender,
-            userId: user.id
+            userId: user.id,
+            medConditions: athlete.conditions
           }}).then((newAthlete) => {
             let purchaseInfo = req.body.purchaseInfo;
             let athleteId = newAthlete[0].dataValues.id;
