@@ -70,7 +70,7 @@ module.exports = (app, db) => {
       db.tables.Users.find({where: {email: user.email, password: user.password}}).then((user) => {
         if (!user || !user.isAdmin) {
           console.log(user);
-          res.status(300).send({ok: false, message: 'unauthorized'});
+          res.status(403).send({ok: false, message: 'unauthorized'});
         } else {
           let code = helpers.randString();
           req.body.amount = req.body.amount > 1 ? 1 : req.body.amount;
@@ -96,7 +96,7 @@ module.exports = (app, db) => {
       let user = jwt.decode(req.body.token, config.auth.secret);
       db.tables.Users.find({where: {id: user.id, email: user.email}}).then((user) => {
         if (!user) {
-          res.status(300).send({ok: false, message: 'bad user token'})
+          res.status(403).send({ok: false, message: 'bad user token'})
         } else {
           let athlete = req.body.purchaseInfo.athleteInfo
           db.tables.Athletes.findOrCreate({where: {email: athlete.email}, defaults: {
@@ -167,7 +167,7 @@ module.exports = (app, db) => {
     } else {
       db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
         if(!user) {
-          res.status(300).send(JSON.stringify({ok: false, message: 'user does not exist'}));
+          res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}));
         } else {
           helpers.sendCode(user.verificationCode, user.email);
           res.send({ok: true, message: 'resent'});
@@ -184,9 +184,9 @@ module.exports = (app, db) => {
     } else {
       db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
         if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
-          res.status(300).send(JSON.stringify({ok: false, message: 'username or password incorrect'}));
+          res.status(403).send(JSON.stringify({ok: false, message: 'username or password incorrect'}));
         } else if (!user.verified) {
-          res.status(300).send(JSON.stringify({ok: false, message: 'unverified'}));
+          res.status(403).send(JSON.stringify({ok: false, message: 'unverified'}));
         } else {
           let token = jwt.encode(user, config.auth.secret);
           res.send(JSON.stringify({ok: true, message: 'user authenticated', token: token}));
@@ -198,7 +198,7 @@ module.exports = (app, db) => {
   app.post('/users/token', (req, res) => {
     let token = req.body.token;
     if (!token) {
-      res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+      res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}));
     } else {
       let user = null;
       try {
@@ -212,18 +212,18 @@ module.exports = (app, db) => {
           if (!!foundUser) {
             res.send(JSON.stringify({ok: true, message: 'user authenticated', token: token}));
           } else {
-            res.status(300).send(JSON.stringify({ok: false, message: 'invalid user token'}));
+            res.status(403).send(JSON.stringify({ok: false, message: 'invalid user token'}));
           }
         });
       } else {
-        res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+        res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}));
       }
     }
   });
 
   app.post('/users/update', (req, res) => {
     if (!req.body.token) {
-      res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+      res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}));
     } else {
       let user = null;
       try {
@@ -231,7 +231,7 @@ module.exports = (app, db) => {
       } catch (e) {}
       db.tables.Users.find({where: {email: user.email, password: user.password}}).then((existingUser) => {
         if (!user) {
-          res.status(300).send(JSON.stringify({ok: false, message: 'user does not exist'}));
+          res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}));
         } else {
           let newPassword = !!req.body.newInfo.password ? bcrypt.hashSync(req.body.newInfo.password) : user.password;
           let newName = !!req.body.newInfo.name ? req.body.newInfo.name : user.name;
@@ -273,7 +273,7 @@ module.exports = (app, db) => {
     } else {
       db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
         if (!user) {
-          res.status(300).send(JSON.stringify({ok: false, message: 'user does not exist'}));
+          res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}));
         } else {
           let newPass = helpers.randString()
           db.tables.Users.update({password: bcrypt.hashSync(newPass)}, {where: {id: user.id}}).then(() => {
@@ -288,7 +288,7 @@ module.exports = (app, db) => {
   app.post('/users/info', (req, res) => {
     let token = req.body.token;
     if (!token) {
-      res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+      res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}));
     } else {
       let user = null;
       try {
@@ -339,11 +339,11 @@ module.exports = (app, db) => {
               res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes, purchases: purchases, discounts: discounts});
             });
           } else {
-            res.status(300).send(JSON.stringify({ok: false, message: 'invalid user token'}));
+            res.status(403).send(JSON.stringify({ok: false, message: 'invalid user token'}));
           }
         });
       } else {
-        res.status(300).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+        res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}));
       }
     }
   });
