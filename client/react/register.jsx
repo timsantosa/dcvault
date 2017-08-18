@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
-import apiHelpers from '../js/api-helpers';
+import apiHelpers from './api-helpers';
 // import initPaypal from '../js/payment';
 
 const parseFormValues = (array) => {
@@ -262,7 +262,7 @@ class AthleteInfo extends React.Component {
     let usatf = $('input[name=usatf]').val().split('');
     let usatfFormatted = []
     for (let digit of usatf) {
-      if (('0123456789').includes(digit)) {
+      if (('0123456789').indexOf(digit) !== -1) {
         usatfFormatted.push(digit);
       }
     }

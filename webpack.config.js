@@ -15,15 +15,19 @@ var config = {
 
   module : {
     loaders : [
-      {
-        test : /\.jsx$/,
-        include : APP_DIR,
-        loader : 'babel-loader'
-      },
-      {
-        test : /\.js$/,
-        include : APP_DIR,
-        loader : 'babel-loader'
+       {
+        loader: "babel-loader",
+
+        include: [
+          APP_DIR
+        ],
+
+        test: /\.jsx?$/,
+
+        query: {
+          plugins: ['transform-runtime'],
+          presets: ['es2015', 'react']
+        }
       }
     ]
   }

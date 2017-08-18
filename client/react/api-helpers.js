@@ -87,7 +87,7 @@ apiHelpers.formatDate = (date) => {
     if (newDate.length === 2 || newDate.length === 5) {
       newDate.push('/');
     }
-    if (validDigits.includes(date[i])) {
+    if (validDigits.indexOf(date[i]) !== -1) {
       newDate.push(date[i]);
     }
   }
@@ -103,7 +103,7 @@ apiHelpers.formatPhone = (phone) => {
     if (newPhone.length === 3 || newPhone.length === 7) {
       newPhone.push('-');
     }
-    if (validDigits.includes(phone[i])) {
+    if (validDigits.indexOf(phone[i]) !== -1) {
       newPhone.push(phone[i]);
     }
   }

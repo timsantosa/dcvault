@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
-import apiHelpers from '../js/api-helpers';
+import apiHelpers from './api-helpers';
 
 class AccountPanel extends React.Component {
 

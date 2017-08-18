@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
-import apiHelpers from '../js/api-helpers';
+import apiHelpers from './api-helpers';
 
 class Login extends React.Component {
 
@@ -10,7 +10,7 @@ class Login extends React.Component {
     this.state = {
       isRegister: false,
       errorText: '',
-      statusText: window.location.hash.includes('justVerified=true') ? 'Account Verified! Please log in' : ''
+      statusText: window.location.hash.indexOf('justVerified=true') !== -1 ? 'Account Verified! Please log in' : ''
     };
   }
 
@@ -159,7 +159,7 @@ class Login extends React.Component {
 
     if (!(this.state.errorText.length === 0)) {
 
-      if (this.state.errorText.includes('has not been verified')) {
+      if (this.state.errorText.indexOf('has not been verified') !== -1) {
         resendConfirmation = (<a id="resend-link" onClick={resendCode}>Resend Confirmation Email</a>);
       }
 
