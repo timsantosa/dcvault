@@ -28,6 +28,7 @@ apiHelpers.verifyToken = () => {
     return true;
   })
   .catch((error) => {
+    localStorage.removeItem('token');
     return false;
   });
 }
