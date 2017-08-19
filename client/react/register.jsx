@@ -224,6 +224,12 @@ class SelectPackage extends React.Component {
                               <span>Mercersburg, PA (PA)</span>
                           </label>
                       </div>
+                      <div>
+                          <label>
+                              <input type="radio" name="facility" value="prep"/>
+                              <span>Georgetown Prep (PREP)</span>
+                          </label>
+                      </div>
                   </div>
               </div>
 
