@@ -14,10 +14,9 @@ class Training extends React.Component {
         emerging: 'Emerging Elite, Level III athletes focus on mastering secondary phases of the vault. Class is held on weekends and at multiple times during the week. Athletes participate in a 6-month comprehensive training program designed to produce maximum level of performance during the competitive season. Classes include static and dynamic stretching, biomechanically focused warm-up, secondary phase drills and vaulting, extensive speed and strength conditioning and equipment setup/take-down.',
         elite: 'Elite, Level IV athletes focus on high level refinement of secondary phases of the vault, as well as mastering tertiary phases of the vault. Athletes participate in a 9-month comprehensive training program designed to produce two seasonal peaks in performance (indoor and outdoor championships) and to transition athletes to professional level training.',
         professional: 'Professional, Level V athletes work in private session on a personalized, comprehensive, year-round training program. Technical focus is on mastering tertiary phases of the vault, with strong emphasis placed on high level refinement of energy transitions. Speed and strength development is customized for the individual athlete to produce peak performance during championship competitions. It incorporates recovery phases and non-traditional range of motion and biomechanical movements for stabilization, technical consistency and injury prevention.',
-        youthAdult: 'Youth Classes (ages 8-14) and Adult Classes (ages 21+)</br>\
-          $350 - Summer 1 / $350 - Summer 2 / $600 - Both Summer Sessions</br>\
-          Classes are offered during two periods during the summer quarter for Beginner and Intermediate students.</br>\
-          Classes are held twice a week in the evenings for a 4 week period (see schedule) and cover all primary phases of the vault, to include pole carry and approach, plant and takeoff, swing, turn.',
+        youthAdult: '​Youth Classes (14 and under)</br>\
+          Adult Classes (21+)</br>\
+          Cl​​as​s​es specifically ​designed​ ​for​ beginner and intermediate youth and adults are offered at our DC Vault site​. Classes cover all primary phases of the vault, to include pole carry​/​approach, plant​/​takeoff, swing​/​turn.​',
         discounts: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as... </br>\
           </br>\
           10% - DC Residents </br>\
@@ -72,7 +71,7 @@ class Training extends React.Component {
 
           <div className="col-xs-12 col-md-4 option-card dark">
             <p className="option-title">YOUTH/ADULT</p>
-            <p className="option-info">Summer Only</p>
+            <p className="option-info">SIGNUP SOON</p>
             <div className="option-price-container-1">
               <div className="option-price-container-2">
                 <p className="option-price">$350</p>
