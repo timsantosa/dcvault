@@ -117,7 +117,12 @@ class SelectPackage extends React.Component {
     this.state = {
       errorText: '',
       youthAdult: false,
-      checkedGroup: ''
+      checkedGroup: '',
+      showInvite: false,
+      showEmergingElite: false,
+      showElite: false,
+      showProfessional: false,
+      inviteCode: null
     }
   }
 
@@ -131,6 +136,9 @@ class SelectPackage extends React.Component {
     output.quarter = $('input[name="quarter"]:checked').val();
     output.group = $('input[name="group"]:checked').val();
     output.facility = $('input[name="facility"]:checked').val();
+    if (this.state.inviteCode) {
+      output.invite = this.state.inviteCode;
+    }
 
     console.log(output);
 
@@ -168,6 +176,59 @@ class SelectPackage extends React.Component {
     }
   }
 
+  toggleInvite() {
+    let show = this.state.showInvite;
+    this.setState({
+      showInvite: !show
+    });
+  }
+
+  applyInvite() {
+    this.setState({
+      errorText: ''
+    });
+    let code = this.refs.inviteBox.value;
+
+    if (code.length === 0) {
+      this.setState({
+        errorText: 'You did not enter a code'
+      });
+    } else {
+      apiHelpers.applyInvite(code)
+      .then((response) => {
+        let info = response.data;
+        if (!info || !info.ok) {
+          this.setState({
+            errorText: 'Invalid or Expired Code'
+          })
+        } else {
+          let level = info.invite.level;
+          this.setState({
+            inviteCode: code
+          });
+
+          if (level === 3) {
+            this.setState({
+              showEmergingElite: true
+            });
+          } else if (level === 4) {
+            this.setState({
+              showElite: true
+            });
+          } else if (level === 5) {
+            this.setState({
+              showProfessional: true
+            });
+          } else {
+            this.setState({
+              errorText: 'There is an error with this code. Please contact it@dcvault.org'
+            });
+          }
+        }
+      })
+    }
+  }
+
   render() {
     let errorContainer;
     if (!(this.state.errorText.length === 0)) {
@@ -175,11 +236,13 @@ class SelectPackage extends React.Component {
           <div className='error-container'>
             <p>{this.state.errorText}</p>
           </div>
-
         </div>;
     }
 
+    let extraOption = this.state.extraOption;
+
     return (
+
       <div className="row">
         <div className="col-xs-12" style={{textAlign: 'center'}}>
             <form id="select-package" className="form-labels-on-top">
@@ -226,6 +289,24 @@ class SelectPackage extends React.Component {
                               <span>Intermediate (Level II)</span>
                           </label>
                       </div>
+                      <div style={{display: this.state.showEmergingElite ? 'block' : 'none'}}>
+                          <label>
+                              <input type="radio" name="group" value="emerging-elite" checked={this.state.checkedGroup === 'emerging-elite'} onChange={this.adjustOptions.bind(this)}/>
+                              <span>Emerging Elite (Level III)</span>
+                          </label>
+                      </div>
+                      <div style={{display: this.state.showElite ? 'block' : 'none'}}>
+                          <label>
+                              <input type="radio" name="group" value="elite" checked={this.state.checkedGroup === 'elite'} onChange={this.adjustOptions.bind(this)}/>
+                              <span>Elite (Level IV)</span>
+                          </label>
+                      </div>
+                      <div style={{display: this.state.showProfessional ? 'block' : 'none'}}>
+                          <label>
+                              <input type="radio" name="group" value="professional" checked={this.state.checkedGroup === 'professional'} onChange={this.adjustOptions.bind(this)}/>
+                              <span>Professional (Level V)</span>
+                          </label>
+                      </div>
                   </div>
               </div>
 
@@ -257,6 +338,21 @@ class SelectPackage extends React.Component {
                           </label>
                       </div>
                   </div>
+              </div>
+
+              <a  style={{color: '#C0282D'}} onClick={this.toggleInvite.bind(this)}> Have an Invite Code? </a>
+              <div className="form-row" style={{display: this.state.showInvite ? 'block' : 'none'}}>
+                <div className="row">
+                  <div className="col-xs-8">
+                      <label>
+                      <span>Invite Code</span>
+                      <input ref="inviteBox" type="text" name="invite" style={{width: '100%'}}/>
+                    </label>
+                  </div>
+                  <div className="col-xs-4">
+                    <button type="button" onClick={this.applyInvite.bind(this)}>Apply</button>
+                  </div>
+                </div>
               </div>
 
               {errorContainer}
@@ -730,9 +826,9 @@ class Payment extends React.Component {
     var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email;
 
     paypal.Button.render({
-    env: 'production', // sandbox | production
+    env: window.configVariables.PAYPAL_MODE, // sandbox | production
     client: {
-      sandbox:    window.configVariables.PAYPAL_CLIENT_ID,
+      sandbox:    window.configVariables.PAYPAL_SANDBOX_ID,
       production: window.configVariables.PAYPAL_CLIENT_ID
     },
     commit: true,
@@ -857,7 +953,7 @@ class Payment extends React.Component {
 
               <a  style={{color: '#C0282D'}} onClick={this.toggleDiscount.bind(this)}> Have a Discount Code? </a>
 
-              <div className="form-row" style={{visibility: this.state.showDiscount ? 'visible' : 'hidden'}}>
+              <div className="form-row" style={{display: this.state.showDiscount ? 'block' : 'none'}}>
                 <div className="row">
                   <div className="col-xs-8">
                       <label>

@@ -18,7 +18,8 @@ class AccountPanel extends React.Component {
       address: '',
       athletes: [],
       purchases: [],
-      discounts: []
+      discounts: [],
+      invites: []
     }
   }
 
@@ -58,7 +59,8 @@ class AccountPanel extends React.Component {
             isAdmin: response.data.user.isAdmin,
             athletes: response.data.athletes || [],
             purchases: response.data.purchases || [],
-            discounts: response.data.discounts || []
+            discounts: response.data.discounts || [],
+            invites: response.data.invites || []
           });
         } else {
           window.location.href = '/';
@@ -80,16 +82,35 @@ class AccountPanel extends React.Component {
     window.location.href = '/';
   }
 
-  addCode() {
+  addCode(e) {
+    e.preventDefault();
     let amount = this.refs.percentInput.value;
     amount = parseInt(amount) / 100;
     let description = this.refs.descInput.value;
     if (!!amount && !!description) {
       apiHelpers.createDiscount(description, amount)
       .then((response) => {
-        console.log(response.data);
+        window.location.reload();
       });
     }
+  }
+
+  addInvite(e) {
+    e.preventDefault();
+    let level = this.refs.levelInput.value;
+    let description = this.refs.inviteDescInput.value;
+
+    if (level > 5 || level < 3) {
+      alert('Level must be 3, 4, or 5');
+    } else {
+      if (!!level && !!description) {
+        apiHelpers.createInvite(description, level)
+        .then((response) => {
+          window.location.reload();
+        });
+      }
+    }
+
   }
 
   render() {
@@ -132,6 +153,42 @@ class AccountPanel extends React.Component {
                               <label>
                                 <span className='required'>Percentage (0-100)</span>
                                 <input type="text" name="amount" ref="percentInput" style={{width: '100%'}}/>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="form-row" >
+                            <button type="submit">Add Code</button>
+                        </div>
+
+                    </form>
+                </div>
+              </div>
+            ) : ''}
+
+            {this.state.isAdmin ? (
+              <div className="account-panel-box">
+                <div className="title-box">
+                  <span className="title">Invite Codes</span>
+                </div>
+                <div className="body-box">
+                  <Invites invites={this.state.invites}/>
+                    <form id="addInvite" className="form-labels-on-top" onSubmit={this.addInvite.bind(this)}>
+                        <div className="row">
+                          <div className="col-xs-12 col-md-6">
+                            <div className="form-row">
+                              <label>
+                                <span className='required'>Description</span>
+                                <input type="text" name="description" ref="inviteDescInput" style={{width: '100%'}}/>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div className="col-xs-12 col-md-6">
+                            <div className="form-row">
+                              <label>
+                                <span className='required'>Level (3-5)</span>
+                                <input type="text" name="amount" ref="levelInput" style={{width: '100%'}}/>
                               </label>
                             </div>
                           </div>
@@ -255,6 +312,46 @@ class Discounts extends React.Component {
                   </td>
                   <td>
                     {discount.amount * 100}%
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
+    }
+  }
+}
+
+class Invites extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+
+    if (this.props.invites.length === 0) {
+      return (<p> None to show </p>);
+    } else {
+      return (
+        <table className="purchases-table">
+          <tbody>
+            <tr>
+              <th>Description</th>
+              <th>Code</th>
+              <th>Level</th>
+            </tr>
+            {this.props.invites.map((invite) => {
+              return (
+                <tr key={invite.id}>
+                  <td>
+                    {invite.type}
+                  </td>
+                  <td>
+                    {invite.code}
+                  </td>
+                  <td>
+                    {invite.level}
                   </td>
                 </tr>
               );

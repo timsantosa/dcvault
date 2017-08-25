@@ -54,6 +54,17 @@ apiHelpers.createDiscount = (description, amount) => {
   })
 }
 
+apiHelpers.createInvite = (description, level) => {
+  let token = localStorage.getItem('token');
+  return axios.post('/invites/create', {description: description, level: level, token: token})
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  })
+}
+
 apiHelpers.getUserData = () => {
   let token = localStorage.getItem('token');
   return axios.post('/users/info', {token: token})
@@ -128,6 +139,16 @@ apiHelpers.sendConfirmationEmail = (email) => {
 
 apiHelpers.getDiscountAmount = (code) => {
   return axios.post('/registration/discount', {code: code})
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  })
+}
+
+apiHelpers.applyInvite = (code) => {
+  return axios.post('/registration/invite', {code: code})
   .then((response) => {
     return response;
   })

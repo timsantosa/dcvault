@@ -13,6 +13,7 @@ const morgan = require('morgan');
 module.exports = (app, db) => {
 
   var discountsUsed = [];
+  var invitesUsed = [];
 
   // External Middleware
   app.use(express.static(path.join(__dirname, '../client')));
@@ -27,7 +28,13 @@ module.exports = (app, db) => {
     if (!code) {
       res.status(400).send({ok: false, message: 'no code given'});
     } else {
-
+      db.tables.Invites.find({where: {code: code}}).then((invite) => {
+        if (!invite) {
+          res.status(400).send({ok: false, message: 'not a valid code'});
+        } else {
+          res.send({ok: true, message: 'code accepted', invite: invite});
+        }
+      });
     }
   });
 
@@ -57,6 +64,32 @@ module.exports = (app, db) => {
       })
     }
   });
+
+  app.post('/invites/create', (req, res) => {
+    if (!req.body.level || !req.body.description || !req.body.token) {
+      res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}));
+    } else {
+      let user = {};
+      try {
+        user = jwt.decode(req.body.token, config.auth.secret);
+      } catch (e) {}
+      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((user) => {
+        if (!user || !user.isAdmin) {
+          res.status(403).send({ok: false, message: 'unauthorized'});
+        } else {
+          let code = helpers.randString();
+
+          db.tables.Invites.create({type: req.body.description, code: code, level: req.body.level})
+          .then((code) => {
+            res.send({ok: true, message: 'code created'});
+          })
+          .catch(() => {
+            res.status(500).send({ok: false, message: 'db error'});
+          })
+        }
+      });
+    }
+  })
 
   app.post('/discounts/create', (req, res) => {
     if (!req.body.amount || !req.body.description || !req.body.token) {
@@ -127,6 +160,7 @@ module.exports = (app, db) => {
               paymentId: purchaseInfo.payment.paymentId,
               payerId: purchaseInfo.payment.payerId
             }).then(() => {
+              db.tables.Invites.destroy({where: {code: purchaseInfo.selectPackage.invite}});
               db.tables.Discounts.destroy({where: {code: purchaseInfo.payment.discount}});
               res.send({ok: true, message: 'purchase record saved'});
             })
@@ -134,7 +168,7 @@ module.exports = (app, db) => {
         }
       })
       .catch((error) => {
-        res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
+        res.status(500).send({ok: false, message: 'a db error has occurred', error: error});
       });
     }
   });
@@ -308,11 +342,7 @@ module.exports = (app, db) => {
 
             let promiseList = [];
             let discounts = [];
-            if (returnUser.isAdmin) {
-              promiseList.push(db.tables.Discounts.findAll().then((discountList) => {
-                discounts = discountList;
-              }));
-            }
+            let invites = [];
 
             let athletes = [];
             let purchases = [];
@@ -322,21 +352,44 @@ module.exports = (app, db) => {
               }
             });
             promiseList.push(getAthleteList);
-            let getPurchaseList = db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchaseList) => {
-              if (Array.isArray(purchaseList)) {
+
+            if (!returnUser.isAdmin) {
+              promiseList.push(db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athleteList) => {
+                if (Array.isArray(athleteList)) {
+                  athletes = athleteList;
+                }
+              }));
+            } else {
+              promiseList.push(db.tables.Athletes.findAll().then((athleteList) => {
+                athletes = athleteList;
+              }));
+            }
+
+
+            if (!returnUser.isAdmin) {
+              promiseList.push(db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchaseList) => {
+                if (Array.isArray(purchaseList)) {
+                  purchases = purchaseList;
+                }
+              }));
+            } else {
+              promiseList.push(db.tables.Purchases.findAll().then((purchaseList) => {
                 purchases = purchaseList;
-              }
-            })
-            promiseList.push(getPurchaseList);
-            let getUserAddress = db.tables.Addresses.find({where: {id: foundUser.addressId}}).then((address) => {
-              if (!!address) {
-                returnUser.address = address;
-              }
-            });
-            promiseList.push(getUserAddress);
+              }));
+            }
+
+
+            if (returnUser.isAdmin) {
+              promiseList.push(db.tables.Discounts.findAll().then((discountList) => {
+                discounts = discountList;
+              }));
+              promiseList.push(db.tables.Invites.findAll().then((inviteList) => {
+                invites = inviteList;
+              }));
+            }
 
             Promise.all(promiseList).then(() => {
-              res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes, purchases: purchases, discounts: discounts});
+              res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes, purchases: purchases, discounts: discounts, invites: invites});
             });
           } else {
             res.status(403).send(JSON.stringify({ok: false, message: 'invalid user token'}));

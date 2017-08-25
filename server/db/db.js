@@ -76,6 +76,12 @@ columns.discounts = {
   amount: Sequelize.DOUBLE
 };
 
+columns.invites = {
+  code: {type: Sequelize.STRING, unique: true},
+  type: Sequelize.STRING,
+  level: Sequelize.INTEGER
+}
+
 columns.addresses = {
   line1: Sequelize.STRING,
   line2: Sequelize.STRING,
@@ -97,6 +103,7 @@ const syncTables = (schema, force) => {
   tables.Purchases = schema.define('purchase', columns.purchases);
   tables.Sites = schema.define('site', columns.sites);
   tables.Discounts = schema.define('discount', columns.discounts);
+  tables.Invites = schema.define('invite', columns.invites);
   tables.Addresses = schema.define('address', columns.addresses);
 
 
