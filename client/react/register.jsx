@@ -115,7 +115,9 @@ class SelectPackage extends React.Component {
     super(props);
 
     this.state = {
-      errorText: ''
+      errorText: '',
+      youthAdult: false,
+      checkedGroup: ''
     }
   }
 
@@ -147,6 +149,24 @@ class SelectPackage extends React.Component {
 
   // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
 
+  adjustOptions() {
+    let group = $('input[name="group"]:checked').val();
+    this.setState({
+      checkedGroup: group
+    });
+
+    if (group === 'youth-adult') {
+      this.setState({
+        youthAdult: true
+      });
+      $('input[name="quarter"][value="fall"]').prop('checked', true);
+      $('input[name="facility"][value="dcv"]').prop('checked', true);
+    } else {
+      this.setState({
+        youthAdult: false
+      });
+    }
+  }
 
   render() {
     let errorContainer;
@@ -178,7 +198,7 @@ class SelectPackage extends React.Component {
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="quarter" value="winter"/>
+                              <input type="radio" name="quarter" value="winter" disabled={this.state.youthAdult}/>
                               <span>Winter</span>
                           </label>
                       </div>
@@ -190,13 +210,19 @@ class SelectPackage extends React.Component {
                   <div className="form-radio-buttons">
                       <div>
                           <label>
-                              <input type="radio" name="group" value="beginner"/>
+                              <input type="radio" name="group" value="youth-adult" checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)}/>
+                              <span>Youth/Adult</span>
+                          </label>
+                      </div>
+                      <div>
+                          <label>
+                              <input type="radio" name="group" value="beginner" checked={this.state.checkedGroup === 'beginner'} onChange={this.adjustOptions.bind(this)}/>
                               <span>Beginner (Level I)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="group" value="intermediate"/>
+                              <input type="radio" name="group" value="intermediate" checked={this.state.checkedGroup === 'intermediate'} onChange={this.adjustOptions.bind(this)}/>
                               <span>Intermediate (Level II)</span>
                           </label>
                       </div>
@@ -214,19 +240,19 @@ class SelectPackage extends React.Component {
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="facility" value="balt"/>
+                              <input type="radio" name="facility" value="balt" disabled={this.state.youthAdult}/>
                               <span>Baltimore, MD (BALT)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="facility" value="pa"/>
+                              <input type="radio" name="facility" value="pa" disabled={this.state.youthAdult}/>
                               <span>Mercersburg, PA (PA)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="facility" value="prep"/>
+                              <input type="radio" name="facility" value="prep" disabled={this.state.youthAdult}/>
                               <span>North Bethesda, MD (PREP)</span>
                           </label>
                       </div>
@@ -664,9 +690,19 @@ class Agreement extends React.Component {
 class Payment extends React.Component {
   constructor(props) {
     super(props);
+    let price;
+    let group = this.props.data.selectPackage.group;
+    if (group === 'youth-adult') {
+      price = 350;
+    } else if (group === 'elite' || group === 'professional') {
+      price = 0;
+    } else {
+      price = 550;
+    }
+
 
     this.state = {
-      price: 550,
+      price: price,
       discount: 0,
       errorText: '',
       showDiscount: false,
@@ -688,7 +724,7 @@ class Payment extends React.Component {
 
   renderButton(amount) {
 
-    amount = parseFloat(amount) < 10 ? 10 : amount
+    amount = parseFloat(amount) < 10 ? 10 : amount;
 
     var cont = this.continue.bind(this);
     var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email;

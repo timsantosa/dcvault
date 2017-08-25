@@ -22,15 +22,14 @@ module.exports = (app, db) => {
 
   // Registration Endpoints
 
-  // app.get('/create_test_code', (req, res) => {
-  //   db.tables.Discounts.create({
-  //     code: 'abcdef',
-  //     type: 'Military',
-  //     amount: .25
-  //   });
+  app.post('/registration/invite', (req, res) => {
+    let code = req.body.code;
+    if (!code) {
+      res.status(400).send({ok: false, message: 'no code given'});
+    } else {
 
-  //   res.end();
-  // });
+    }
+  });
 
   app.post('/registration/confirm', (req, res) => {
     let email = req.body.email;
