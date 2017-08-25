@@ -51,7 +51,7 @@ class Training extends React.Component {
           25% - Family Discount </br>\
           </br>\
           Does not apply to equipment rental, special training sessions, or events</br>\
-          Please contact Coach Luthy (eluthy@dcvault.org) to apply for a discount',
+          Please contact us (dcvault@dcvault.org) to apply for a discount',
           poleRental: 'Note: Poles are provided free of charge for use during DC Vault training sessions.</br>\
             Our pole rental program allows athletes to check out one pole at a time for non-club activities. Due to the fact that a typical athlete will progress through 4-8 poles through a season, it can be costly for an athlete to purchase their own poles (which range from $375 to nearly $1000). Poles will be issued on a first-come, first-serve basis. All else being equal, the most senior athlete will have priority.',
           events: 'DC Vault will be holding various events throughout the year. Please click "More Info" to view some of the upcoming events!'
