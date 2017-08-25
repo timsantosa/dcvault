@@ -9,12 +9,14 @@ class Training extends React.Component {
 
     this.state = {
       descriptions: {
-        beginner: 'Beginner, Level I athletes focus on developing primary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary phase drills and vaulting and equipment setup/takedown.',
-        intermediate: 'Intermediate, Level II athletes focus on mastering primary phases of the vault and basic introduction of secondary phases of the vault; Class is held on weekends. Classes include static and dynamic stretching, biomechanically focused warm-up, primary and secondary phase drills and vaulting, introductory speed and strength conditioning and equipment setup/takedown.',
+        beginner: '3-month course </br>\
+        Beginner, Level I athletes focus on developing primary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary phase drills and vaulting and equipment setup/takedown.',
+        intermediate: 'Intermediate, Level II athletes focus on mastering primary phases of the vault and basic introduction of secondary phases of the vault; Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary and secondary phase drills and vaulting, introductory speed and strength conditioning and equipment setup/takedown.',
         emerging: 'Emerging Elite, Level III athletes focus on mastering secondary phases of the vault. Class is held on weekends and at multiple times during the week. Athletes participate in a 6-month comprehensive training program designed to produce maximum level of performance during the competitive season. Classes include static and dynamic stretching, biomechanically focused warm-up, secondary phase drills and vaulting, extensive speed and strength conditioning and equipment setup/take-down.',
         elite: 'Elite, Level IV athletes focus on high level refinement of secondary phases of the vault, as well as mastering tertiary phases of the vault. Athletes participate in a 9-month comprehensive training program designed to produce two seasonal peaks in performance (indoor and outdoor championships) and to transition athletes to professional level training.',
         professional: 'Professional, Level V athletes work in private session on a personalized, comprehensive, year-round training program. Technical focus is on mastering tertiary phases of the vault, with strong emphasis placed on high level refinement of energy transitions. Speed and strength development is customized for the individual athlete to produce peak performance during championship competitions. It incorporates recovery phases and non-traditional range of motion and biomechanical movements for stabilization, technical consistency and injury prevention.',
-        youthAdult: '​Youth Classes (14 and under)</br>\
+        youthAdult: '​6-week course</br>\
+        Youth Classes (14 and under)</br>\
           Adult Classes (21+)</br>\
           Cl​​as​s​es specifically ​designed​ ​for​ beginner and intermediate youth and adults are offered at our DC Vault site​. Classes cover all primary phases of the vault, to include pole carry​/​approach, plant​/​takeoff, swing​/​turn.​',
         discounts: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as... </br>\
@@ -26,7 +28,7 @@ class Training extends React.Component {
           25% - Family Discount </br>\
           </br>\
           Does not apply to equipment rental, special training sessions, or events</br>\
-          Please contact us to apply for a discount',
+          Please contact Coach Luthy (eluthy@dcvault.org) to apply for a discount',
           poleRental: 'Note: Poles are provided free of charge for use during DC Vault training sessions.</br>\
             Our pole rental program allows athletes to check out one pole at a time for non-club activities. Due to the fact that a typical athlete will progress through 4-8 poles through a season, it can be costly for an athlete to purchase their own poles (which range from $375 to nearly $1000). Poles will be issued on a first-come, first-serve basis. All else being equal, the most senior athlete will have priority.',
           events: 'DC Vault will be holding various events throughout the year. Please click "More Info" to view some of the upcoming events!'
@@ -71,11 +73,11 @@ class Training extends React.Component {
 
           <div className="col-xs-12 col-md-4 option-card dark">
             <p className="option-title">YOUTH/ADULT</p>
-            <p className="option-info">SIGNUP SOON</p>
+            <p className="option-info">SIGNUP NOW</p>
             <div className="option-price-container-1">
               <div className="option-price-container-2">
                 <p className="option-price">$350</p>
-                <p className="option-price-modifier">PER ATHLETE</p>
+                <p className="option-price-modifier">PER COURSE</p>
               </div>
             </div>
             <a className="learn-more" data-tip={'<div style="max-width: 250px">'+this.state.descriptions.youthAdult+'</div>'}>Details</a>
