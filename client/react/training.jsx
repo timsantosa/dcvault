@@ -13,7 +13,6 @@ class Training extends React.Component {
         beginner: '3-month course</br>\
           ​Ages: All Ages</br>\
           Location Options: DCV, BALT, PREP, PA​</br>\
-          ​Class Offerings: Athletes of All Ages can register for a beginner course held at one of the following training locations... DCV, BALT, PREP or PA.</br>\
           Beginner, Level I athletes focus on developing primary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary phase drills and vaulting and equipment setup/takedown.',
 
         intermediate: '3-month course</br>\
