@@ -120,6 +120,8 @@ module.exports = (app, db) => {
     }
   })
 
+
+
   app.post('/registration/finalize', (req, res) => {
     // console.log(req.body)
     if (!req.body.purchaseInfo || !req.body.token) {
@@ -131,24 +133,31 @@ module.exports = (app, db) => {
           res.status(403).send({ok: false, message: 'bad user token'})
         } else {
           let athlete = req.body.purchaseInfo.athleteInfo
-          db.tables.Athletes.findOrCreate({where: {email: athlete.email}, defaults: {
-            firstName: athlete.fname,
-            lastName: athlete.lname,
-            dob: athlete.dob,
-            email: athlete.email,
-            emergencyContactName: athlete['emergency-contact'],
-            emergencyContactRelation: athlete['emergency-relation'],
-            emergencyContactMDN: athlete['emergency-phone'],
-            school: athlete.school,
-            state: athlete.state,
-            usatf: athlete.usatf,
-            gender: athlete.gender,
-            userId: user.id,
-            medConditions: athlete.conditions
-          }}).then((newAthlete) => {
+          db.tables.Athletes.findOne({where: {firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob}}).then((foundAthlete) => {
+            let athleteData = {
+              firstName: athlete.fname,
+              lastName: athlete.lname,
+              dob: athlete.dob,
+              email: athlete.email,
+              emergencyContactName: athlete['emergency-contact'],
+              emergencyContactRelation: athlete['emergency-relation'],
+              emergencyContactMDN: athlete['emergency-phone'],
+              school: athlete.school,
+              state: athlete.state,
+              usatf: athlete.usatf,
+              gender: athlete.gender,
+              userId: user.id,
+              medConditions: athlete.conditions
+            };
+            if (!foundAthlete) {
+              return db.tables.Athletes.create(athleteData);
+            } else {
+              return foundAthlete.update(athleteData);
+            }
+          }).then((newAthlete) => {
             let purchaseInfo = req.body.purchaseInfo;
-            let athleteId = newAthlete[0].dataValues.id;
-            let userId = newAthlete[0].dataValues.userId;
+            let athleteId = newAthlete.dataValues.id;
+            let userId = newAthlete.dataValues.userId;
             db.tables.Purchases.create({
               athleteId: athleteId,
               userId: userId,

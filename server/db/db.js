@@ -17,7 +17,7 @@ columns.users = {
 columns.athletes = {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
-  email: {type: Sequelize.STRING, unique: true},
+  email: {type: Sequelize.STRING, unique: false},
   emergencyContactName: Sequelize.STRING,
   emergencyContactMDN: Sequelize.STRING,
   emergencyContactRelation: Sequelize.STRING,
