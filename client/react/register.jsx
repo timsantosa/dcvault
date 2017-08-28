@@ -796,6 +796,14 @@ class Payment extends React.Component {
       price = 550;
     }
 
+    let quarter = this.props.data.selectPackage.quarter;
+    let now = new Date();
+    if (quarter === 'fall' && now.getMonth() >= 8 && now.getFullYear === 2017) {
+      price += 25;
+    } else if (quarter === 'winter' && ((now.getMonth >= 9 && now.getFullYear === 2017) || (now.getFullYear > 2017))) {
+      price += 25;
+    }
+
 
     this.state = {
       price: price,
