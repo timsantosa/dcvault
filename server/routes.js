@@ -118,7 +118,7 @@ module.exports = (app, db) => {
         }
       });
     }
-  })
+  });
 
 
 

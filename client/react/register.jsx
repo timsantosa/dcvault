@@ -375,15 +375,19 @@ class AthleteInfo extends React.Component {
       errorText: []
     };
   }
-
+format
   formatDOB() {
     let dob = $('input[name=dob]').val();
     let dobFormatted = apiHelpers.formatDate(dob);
     $('input[name=dob]').val(dobFormatted);
+    // $('input[name=dob]').setSelectionRange(dobFormatted.length, dobFormatted.length);
   }
 
   formatPhone() {
-    $('input[name=emergency-phone]').val(apiHelpers.formatPhone($('input[name=emergency-phone]').val()));
+    let phoneFormatted = apiHelpers.formatPhone($('input[name=emergency-phone]').val());
+    $('input[name=emergency-phone]').val(phoneFormatted);
+    // $('input[name=emergency-phone]').setSelectionRange(phoneFormatted.length, phoneFormatted.length);
+
   }
 
   formatUSATF() {
@@ -679,6 +683,8 @@ class Agreement extends React.Component {
     let date = $('input[name=date]').val();
     let dateFormatted = apiHelpers.formatDate(date);
     $('input[name=date]').val(dateFormatted);
+    // $('input[name=date]').setSelectionRange(dateFormatted.length, dateFormatted.length);
+
   }
 
   componentDidMount() {
@@ -798,10 +804,11 @@ class Payment extends React.Component {
 
     let quarter = this.props.data.selectPackage.quarter;
     let now = new Date();
+    let lateFee = 0;
     if (quarter === 'fall' && now.getMonth() >= 8 && now.getFullYear === 2017) {
-      price += 25;
+      lateFee = 25;
     } else if (quarter === 'winter' && ((now.getMonth >= 9 && now.getFullYear === 2017) || (now.getFullYear > 2017))) {
-      price += 25;
+      lateFee = 25;
     }
 
 
@@ -811,6 +818,7 @@ class Payment extends React.Component {
       errorText: '',
       showDiscount: false,
       discountCode: '',
+      lateFee: lateFee
     }
   }
 
@@ -822,7 +830,8 @@ class Payment extends React.Component {
   }
 
   calculatePrice() {
-    let price = (this.state.price * (1 - this.state.discount)) * 1.03
+    let price = (this.state.price * (1 - this.state.discount)) * 1.03;
+    price += this.state.lateFee;
     this.renderButton(price);
   }
 
@@ -939,6 +948,7 @@ class Payment extends React.Component {
     let currentPrice = (this.state.price * (1 - this.state.discount));
     currentPrice = currentPrice < 10 ? (10).toFixed(2) : currentPrice.toFixed(2);
     let currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * .03).toFixed(2);
+    let lateFee = this.state.lateFee;
 
 
     return (
@@ -955,6 +965,11 @@ class Payment extends React.Component {
                   <div className="col-xs-12" style={{textAlign:'center'}}>
                       <p className="price-text">Registration Fee: <span className="red-text">${currentPrice}</span></p>
                       <p className="price-text">Online Processing Fee: <span className="red-text">${currentProcessingFee}</span></p>
+                      {() => {
+                        if (lateFee > 0) {
+                          return (<p className="price-text">Late Fee: <span className="red-text">${lateFee}</span></p>);
+                        }
+                      }}
                   </div>
                 </div>
               </div>
