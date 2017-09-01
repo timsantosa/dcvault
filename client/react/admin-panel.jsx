@@ -76,19 +76,6 @@ class AdminPanel extends React.Component {
     })
   }
 
-  updateName() {
-    // UPDATE NAME FIELD HERE FOR USER
-  }
-
-  updateAddress() {
-    // UPDATE ADDRESS FIELD HERE FOR USER
-  }
-
-  logout() {
-    window.localStorage.removeItem('token');
-    window.location.href = '/';
-  }
-
   addCode(e) {
     e.preventDefault();
     let amount = this.refs.percentInput.value;
@@ -107,7 +94,7 @@ class AdminPanel extends React.Component {
     let level = this.refs.levelInput.value;
     let description = this.refs.inviteDescInput.value;
 
-    if (level > 5 || level < 3) {
+    if (!(level <= 5 && level >= 3)) {
       alert('Level must be 3, 4, or 5');
     } else {
       if (!!level && !!description) {
@@ -117,7 +104,6 @@ class AdminPanel extends React.Component {
         });
       }
     }
-
   }
 
                 // <Purchases purchases={purchases} athletes={athletes}/>

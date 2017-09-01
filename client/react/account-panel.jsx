@@ -83,37 +83,6 @@ class AccountPanel extends React.Component {
     window.location.href = '/';
   }
 
-  addCode(e) {
-    e.preventDefault();
-    let amount = this.refs.percentInput.value;
-    amount = parseInt(amount) / 100;
-    let description = this.refs.descInput.value;
-    if (!!amount && !!description) {
-      apiHelpers.createDiscount(description, amount)
-      .then((response) => {
-        window.location.reload();
-      });
-    }
-  }
-
-  addInvite(e) {
-    e.preventDefault();
-    let level = this.refs.levelInput.value;
-    let description = this.refs.inviteDescInput.value;
-
-    if (level > 5 || level < 3) {
-      alert('Level must be 3, 4, or 5');
-    } else {
-      if (!!level && !!description) {
-        apiHelpers.createInvite(description, level)
-        .then((response) => {
-          window.location.reload();
-        });
-      }
-    }
-
-  }
-
   render() {
     let purchases = this.state.purchases;
     let athletes = this.state.athletes;
@@ -131,7 +100,24 @@ class AccountPanel extends React.Component {
                 <Purchases purchases={purchases} athletes={athletes} user={user}/>
               </div>
             </div>
+            {this.state.isAdmin ? (
+              <div className="account-panel-box">
+                <div className="title-box">
+                  <span className="title">Admin Panel</span>
+                </div>
+                <div className="body-box">
+                  <p>
+                    It appears you are an administrator. To view your Administrator Panel, click below.
+                  </p>
+                  <div className='red-button' onClick={() => {window.location.href='/admin'}}>
+                    <span className='button-text'>Go</span>
+                  </div>
+                </div>
+              </div>
+            ) : ''}
           </div>
+
+
           <div className="col-xs-12 col-md-6">
             <p className="subsection-header">Account <span className="red-text">Management</span></p>
 
@@ -196,7 +182,7 @@ class Purchases extends React.Component {
                       {purchase.quarter.toUpperCase()}
                     </td>
                     <td>
-                      {purchase.group.toUpperCase()}
+                      {purchase.group === 'youth-adult' ? ('YOUTH OR ADULT') : purchase.group.toUpperCase()}
                     </td>
                     <td>
                       {purchase.facility.toUpperCase()}
