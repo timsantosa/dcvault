@@ -53,6 +53,7 @@ class AccountPanel extends React.Component {
       if (!!response.data) {
         if (response.data.ok) {
           this.setState({
+            user: response.data.user || {},
             name: response.data.user.name || 'None Entered',
             email: response.data.user.email,
             address: response.data.user.address || {line1: 'None Entered'},
@@ -116,6 +117,7 @@ class AccountPanel extends React.Component {
   render() {
     let purchases = this.state.purchases;
     let athletes = this.state.athletes;
+    let user = this.state.user;
       return (
       <section id="my-account">
         <div className="row">
@@ -126,81 +128,9 @@ class AccountPanel extends React.Component {
                 <span className="title">My Purchases</span>
               </div>
               <div className="body-box">
-                <Purchases purchases={purchases} athletes={athletes}/>
+                <Purchases purchases={purchases} athletes={athletes} user={user}/>
               </div>
             </div>
-
-            {this.state.isAdmin ? (
-              <div className="account-panel-box">
-                <div className="title-box">
-                  <span className="title">Discount Codes</span>
-                </div>
-                <div className="body-box">
-                  <Discounts discounts={this.state.discounts}/>
-                    <form id="addCode" className="form-labels-on-top" onSubmit={this.addCode.bind(this)}>
-                        <div className="row">
-                          <div className="col-xs-12 col-md-6">
-                            <div className="form-row">
-                              <label>
-                                <span className='required'>Description</span>
-                                <input type="text" name="description" ref="descInput" style={{width: '100%'}}/>
-                              </label>
-                            </div>
-                          </div>
-
-                          <div className="col-xs-12 col-md-6">
-                            <div className="form-row">
-                              <label>
-                                <span className='required'>Percentage (0-100)</span>
-                                <input type="text" name="amount" ref="percentInput" style={{width: '100%'}}/>
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="form-row" >
-                            <button type="submit">Add Code</button>
-                        </div>
-
-                    </form>
-                </div>
-              </div>
-            ) : ''}
-
-            {this.state.isAdmin ? (
-              <div className="account-panel-box">
-                <div className="title-box">
-                  <span className="title">Invite Codes</span>
-                </div>
-                <div className="body-box">
-                  <Invites invites={this.state.invites}/>
-                    <form id="addInvite" className="form-labels-on-top" onSubmit={this.addInvite.bind(this)}>
-                        <div className="row">
-                          <div className="col-xs-12 col-md-6">
-                            <div className="form-row">
-                              <label>
-                                <span className='required'>Description</span>
-                                <input type="text" name="description" ref="inviteDescInput" style={{width: '100%'}}/>
-                              </label>
-                            </div>
-                          </div>
-
-                          <div className="col-xs-12 col-md-6">
-                            <div className="form-row">
-                              <label>
-                                <span className='required'>Level (3-5)</span>
-                                <input type="text" name="amount" ref="levelInput" style={{width: '100%'}}/>
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="form-row" >
-                            <button type="submit">Add Code</button>
-                        </div>
-
-                    </form>
-                </div>
-              </div>
-            ) : ''}
           </div>
           <div className="col-xs-12 col-md-6">
             <p className="subsection-header">Account <span className="red-text">Management</span></p>
@@ -259,102 +189,24 @@ class Purchases extends React.Component {
               <th>Athlete</th>
             </tr>
             {this.props.purchases.map((purchase) => {
-              return (
-                <tr key={purchase.id}>
-                  <td>
-                    {purchase.quarter.toUpperCase()}
-                  </td>
-                  <td>
-                    {purchase.group.toUpperCase()}
-                  </td>
-                  <td>
-                    {purchase.facility.toUpperCase()}
-                  </td>
-                  <td>
-                    {getAthlete(purchase.athleteId)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      );
-    }
-  }
-}
-
-class Discounts extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-
-    if (this.props.discounts.length === 0) {
-      return (<p> None to show </p>);
-    } else {
-      return (
-        <table className="purchases-table">
-          <tbody>
-            <tr>
-              <th>Description</th>
-              <th>Code</th>
-              <th>Amount</th>
-            </tr>
-            {this.props.discounts.map((discount) => {
-              return (
-                <tr key={discount.id}>
-                  <td>
-                    {discount.type}
-                  </td>
-                  <td>
-                    {discount.code}
-                  </td>
-                  <td>
-                    {discount.amount * 100}%
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      );
-    }
-  }
-}
-
-class Invites extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-
-    if (this.props.invites.length === 0) {
-      return (<p> None to show </p>);
-    } else {
-      return (
-        <table className="purchases-table">
-          <tbody>
-            <tr>
-              <th>Description</th>
-              <th>Code</th>
-              <th>Level</th>
-            </tr>
-            {this.props.invites.map((invite) => {
-              return (
-                <tr key={invite.id}>
-                  <td>
-                    {invite.type}
-                  </td>
-                  <td>
-                    {invite.code}
-                  </td>
-                  <td>
-                    {invite.level}
-                  </td>
-                </tr>
-              );
+              if (purchase.userId === this.props.user.id) {
+                return (
+                  <tr key={purchase.id}>
+                    <td>
+                      {purchase.quarter.toUpperCase()}
+                    </td>
+                    <td>
+                      {purchase.group.toUpperCase()}
+                    </td>
+                    <td>
+                      {purchase.facility.toUpperCase()}
+                    </td>
+                    <td>
+                      {getAthlete(purchase.athleteId)}
+                    </td>
+                  </tr>
+                );
+              }
             })}
           </tbody>
         </table>
