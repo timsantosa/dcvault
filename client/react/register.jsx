@@ -805,12 +805,11 @@ class Payment extends React.Component {
     let quarter = this.props.data.selectPackage.quarter;
     let now = new Date();
     let lateFee = 0;
-    if (quarter === 'fall' && now.getMonth() >= 8 && now.getFullYear === 2017) {
+    if (quarter === 'fall' && now.getMonth() >= 8 && now.getFullYear() === 2017) {
       lateFee = 25;
-    } else if (quarter === 'winter' && ((now.getMonth >= 9 && now.getFullYear === 2017) || (now.getFullYear > 2017))) {
+    } else if (quarter === 'winter' && ((now.getMonth() >= 9 && now.getFullYear() === 2017) || (now.getFullYear() > 2017))) {
       lateFee = 25;
     }
-
 
     this.state = {
       price: price,
@@ -965,11 +964,7 @@ class Payment extends React.Component {
                   <div className="col-xs-12" style={{textAlign:'center'}}>
                       <p className="price-text">Registration Fee: <span className="red-text">${currentPrice}</span></p>
                       <p className="price-text">Online Processing Fee: <span className="red-text">${currentProcessingFee}</span></p>
-                      {() => {
-                        if (lateFee > 0) {
-                          return (<p className="price-text">Late Fee: <span className="red-text">${lateFee}</span></p>);
-                        }
-                      }}
+                      {lateFee > 0 ? (<p className="price-text">Late Fee: <span className="red-text">${lateFee.toFixed(2)}</span></p>) : ''}
                   </div>
                 </div>
               </div>
