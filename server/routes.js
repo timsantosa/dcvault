@@ -21,6 +21,18 @@ module.exports = (app, db) => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(morgan('dev'));
 
+  // Misc endpoints
+
+  app.post('/contact', (req, res) => {
+    let to = req.body.to;
+    let from = req.body.from;
+    let text = req.body.text;
+    let subject = req.body.subject;
+
+    helpers.sendWithReplyTo(from, to, subject, text);
+    res.end();
+  });
+
   // Registration Endpoints
 
   app.post('/registration/invite', (req, res) => {

@@ -98,3 +98,21 @@ module.exports.randString = (len) => {
   }
   return retVal;
 }
+
+
+module.exports.sendWithReplyTo = (from, to, subject, text) => {
+    let mailOptions = {
+      from: '"DC Vault Support" <'+ config.email.username +'>', // sender address
+      replyTo: from,
+      subject: subject, // Subject line
+      to: to,
+      text: text // plain text body
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          return console.log(error);
+      }
+      console.log('Message %s sent to %s response: %s', info.messageId, email, info.response);
+  });
+}

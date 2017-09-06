@@ -245,7 +245,7 @@ class Login extends React.Component {
           {errorContainer}
 
           <div className='row'>
-            <div className='red-button' onClick={this.submit.bind(this)}>
+            <div className='red-button' onClick={this.submit.bind(this)} tabIndex='0'>
               <span className='button-text'>GO ></span>
             </div>
           </div>

@@ -100,6 +100,7 @@ class AccountPanel extends React.Component {
                 <Purchases purchases={purchases} athletes={athletes} user={user}/>
               </div>
             </div>
+
             {this.state.isAdmin ? (
               <div className="account-panel-box">
                 <div className="title-box">
@@ -115,6 +116,7 @@ class AccountPanel extends React.Component {
                 </div>
               </div>
             ) : ''}
+
           </div>
 
 
