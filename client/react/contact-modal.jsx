@@ -109,7 +109,7 @@ class ContactModal extends React.Component {
                 Type of inquiry:
               </div>
               <div className='col-xs-7 login-modal-element'>
-                <select name='inquiry' ref='inquiryType' defaultValue={this.props.preSelect}>
+                <select name='inquiry' ref='inquiryType' defaultValue={this.props.preSelect} className='login-input'>
                   <option value=''>Select...</option>
                   <option value='technical'>Technical Issue</option>
                   <option value='discount'>Discount Code</option>
