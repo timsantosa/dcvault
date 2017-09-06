@@ -44,6 +44,9 @@ class ContactModal extends React.Component {
         subject = 'General Inquiry';
       }
 
+      let bodyHeader = 'User Email: ' + email + '\nUser Full Name: ' + name + '\n\n\n';
+      body = bodyHeader + body;
+
       this.setState({statusText: 'Sending email. Please wait...'})
       apiHelpers.contactForm(name, email, recipients, subject, body)
       .then((response) => {
