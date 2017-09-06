@@ -14,7 +14,7 @@ let hashString = window.location.hash;
 let contactDiv = document.getElementById('contact-modal');
 let contactButton = document.getElementById('contact-button');
 
-render(<ContactModal/>, contactDiv);
+render(<ContactModal preSelect={''}/>, contactDiv);
 
 let contactClose = document.getElementById('contact-menu-close');
 

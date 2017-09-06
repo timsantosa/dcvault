@@ -13,14 +13,46 @@ class ContactModal extends React.Component {
   }
 
   submit() {
+    this.setState({errorText: '', statusText: ''});
+
+
     let name = this.refs.nameInput.value;
     let email = this.refs.emailInput.value;
-    let subject = this.state.inquiryType.value;
-    let body = this.state.emailBodyInput.value;
+    let subject = this.refs.inquiryType.value;
+    let body = this.refs.emailBodyInput.value;
+
+    // console.log('Email: %s Name: %s Subject: %s body: %s', email, name, subject, body);
+
     if (!apiHelpers.validateEmail(email)) {
       this.setState({errorText: 'That is not a valid email address'});
     } else if (name.length === 0 || email.length === 0 || subject.length === 0 || body.length === 0) {
       this.setState({errorText: 'Please fill in all fields'});
+    } else {
+      // body = 'User Full Name: ' + name + '\n\nMessage:\n' + body;
+      let recipients = ['dcvault@dcvault.org'];
+      if (subject === 'technical') {
+        recipients.push('it@dcvault.org');
+      }
+
+      if (subject === 'technical') {
+        subject = 'Technical Issue';
+      } else if (subject === 'discount') {
+        subject = 'Discount Code Inquiry';
+      } else if (subject === 'invite') {
+        subject = 'Training Invitation Inquiry';
+      } else {
+        subject = 'General Inquiry';
+      }
+
+      this.setState({statusText: 'Sending email. Please wait...'})
+      apiHelpers.contactForm(name, email, recipients, subject, body)
+      .then((response) => {
+        if (!response.data.ok) {
+          this.setState({errorText: 'An unknown error has occurred. Please try again later. If the problem persists, please email IT@DCVault.org directly'})
+        } else {
+          this.setState({statusText: 'Email sent successfully. We will get back to you as soon as we can.'})
+        }
+      })
     }
   }
 
@@ -32,7 +64,6 @@ class ContactModal extends React.Component {
       errorContainer = <div className='row'>
           <div className='error-container'>
             <p>{this.state.errorText}</p>
-            {resendConfirmation}
           </div>
         </div>;
     }
@@ -78,9 +109,9 @@ class ContactModal extends React.Component {
                 Type of inquiry:
               </div>
               <div className='col-xs-7 login-modal-element'>
-                <select name='inquiry' ref='inquiryType'>
+                <select name='inquiry' ref='inquiryType' defaultValue={this.props.preSelect}>
                   <option value=''>Select...</option>
-                  <option value='techincal'>Technical Issue</option>
+                  <option value='technical'>Technical Issue</option>
                   <option value='discount'>Discount Code</option>
                   <option value='invite'>Training Group Invitation</option>
                   <option value='general'>General Inquiry</option>
@@ -90,12 +121,15 @@ class ContactModal extends React.Component {
 
             <div className='row'>
               <div className='col-xs-12 login-modal-element required'>
-                Please describe your inquiry with as much information as you can:
+                Please describe your inquiry with as much information as you can offer:
               </div>
               <div className='col-xs-12 login-modal-element'>
                 <textarea rows='10' className='login-input' ref='emailBodyInput'/>
               </div>
             </div>
+
+            {statusContainer}
+            {errorContainer}
 
             <div className='row'>
               <div className='red-button' onClick={this.submit.bind(this)} tabIndex='0'>

@@ -157,4 +157,14 @@ apiHelpers.applyInvite = (code) => {
   })
 }
 
+apiHelpers.contactForm = (name, from, to, subject, text) => {
+  return axios.post('/contact', {name: name, from: from, to: to, subject: subject, text: text})
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  })
+}
+
 export default apiHelpers;

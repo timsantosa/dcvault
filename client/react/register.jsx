@@ -83,7 +83,7 @@ class Register extends React.Component {
           currentPage: (
             <div className="row">
               <div className="col-xs-12" style={{textAlign: 'center'}}>
-                <p className="subsection-header">You Must be Logged in to <span className="red-text">Register for Training</span></p>
+                <p className="">You Must be Logged in to <span className="red-text">Register for Training</span></p>
                 <a className="red-text center-content" onClick={() => {loginButton.click()}}>Login/Register</a>
               </div>
             </div>
@@ -101,6 +101,11 @@ class Register extends React.Component {
     return (
       <section id="register">
         <div className="containter">
+          <div className="row">
+            <div className="col-xs-12" style={{textAlign: 'center'}}>
+              <p className="info-text">If you have any trouble registering, or wish to clarify any of the information, please <a className="red-text" onClick={() => {document.getElementById('contact-button').click()}}>contact us</a></p>
+            </div>
+          </div>
           {this.state.currentPage}
           {progressBar}
         </div>

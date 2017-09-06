@@ -28,9 +28,18 @@ module.exports = (app, db) => {
     let from = req.body.from;
     let text = req.body.text;
     let subject = req.body.subject;
+    let name = req.body.name;
 
-    helpers.sendWithReplyTo(from, to, subject, text);
-    res.end();
+    if (!to || !from || !text || !subject || !name) {
+      res.status(400).send({ok: false, message: 'incomplete request'})
+    } else {
+      helpers.sendWithReplyTo(name, from, to, subject, text).then(() => {
+        res.send({ok: true, message: 'email sent successfully'});
+      }, (err) => {
+        console.log(err);
+        res.status(500).send({ok: false, message: 'server error'});
+      });
+    }
   });
 
   // Registration Endpoints
