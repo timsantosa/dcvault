@@ -172,11 +172,19 @@ class Login extends React.Component {
     }
 
     if (!(this.state.statusText.length === 0)) {
-      statusContainer = <div className='row'>
-          <div className='status-container'>
-            <p>{this.state.statusText}</p>
-          </div>
-        </div>;
+      if (this.state.statusText.indexOf('spam') !== -1) {
+        statusContainer = <div className='row'>
+            <div className='status-container'>
+              <p>Account Created! Check your email for a verification link. This may take several minutes, and <span style={{textDecoration: 'underline'}}>you may have to check your spam folder</span></p>
+            </div>
+          </div>;
+      } else {
+        statusContainer = <div className='row'>
+            <div className='status-container'>
+              <p>{this.state.statusText}</p>
+            </div>
+          </div>;
+      }
     }
 
     if (this.state.isRegister) {

@@ -5,6 +5,9 @@ window.mapStyle = [
         "stylers": [
             {
                 "visibility": "off"
+            },
+            {
+                "color": "#222222"
             }
         ]
     },
@@ -13,7 +16,7 @@ window.mapStyle = [
         "elementType": "labels.text.fill",
         "stylers": [
             {
-                "color": "#444444"
+                "color": "#000000"
             }
         ]
     },

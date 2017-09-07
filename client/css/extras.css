@@ -476,6 +476,13 @@ a {
   font-size: 14px;
 }
 
+.nav-logo {
+  height: 8vh;
+  position: absolute;
+  top: 1vh;
+  left: 3vh;
+}
+
 .account-panel-box {
   width: 75%;
   min-width: 300px;

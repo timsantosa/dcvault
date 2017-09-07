@@ -181,6 +181,10 @@ class Training extends React.Component {
         <div className="red-button" onClick={() => {window.location.href='/register'}} style={{marginTop: '30px'}}>
           <span className="button-text">Sign Up</span>
         </div>
+        <div className='center-content' style={{marginTop: '15px'}}>
+          <p className="info-text" style={{textAlign: 'center'}}>To apply for a discount code or training group invitation, please <a className="red-text" onClick={() => {document.getElementById('contact-button').click()}}>contact us</a></p>
+        </div>
+
 
         <ReactTooltip html={true}/>
       </div>

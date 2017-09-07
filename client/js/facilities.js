@@ -129,6 +129,8 @@ for (let i = 0; i < facilities.length; i++) {
       this.className = 'facility-tab facility-tab-selected';
       map.setCenter(locations[facilities[i]]);
       map.setZoom(14);
+      // window.mapStyle[0].stylers[0].visibility = 'on';
+      // map.setOptions({styles: window.mapStyle});
     }
   }
 }
