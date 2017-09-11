@@ -123,9 +123,10 @@ p {
 @media (min-width: 768px) {
 
   .navbar-default .navbar-right {
-    /*min-height: 10vh;*/
+    min-height: 10vh;
     display: flex;
     align-items: center;
+    /*border: 1px solid green;*/
   }
   .navbar-default {
     background-color: rgba(43, 43, 43, .35);

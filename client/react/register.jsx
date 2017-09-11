@@ -377,7 +377,8 @@ class AthleteInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorText: []
+      errorText: [],
+      showUSATFinfo: false
     };
   }
 format
@@ -490,6 +491,12 @@ format
   // }
   // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
 
+  toggleUSATFinfo() {
+    let current = this.state.showUSATFinfo;
+    this.setState({
+      showUSATFinfo: !current
+    });
+  }
 
   render() {
     let errorContainer;
@@ -548,7 +555,17 @@ format
 
               <div className="form-row">
                   <label>
-                      <span className='required'>Athlete USATF Number</span>
+                    <div className='row'>
+                      <div className='col-xs-10'>
+                        <span className='required'>Athlete USATF Number</span>
+                      </div>
+                      <div className='col-xs-2'>
+                        <span onClick={this.toggleUSATFinfo.bind(this)} style={{color: '#C0282D'}}>?</span>
+                      </div>
+                    </div>
+                      <p className='info-text' style={{display: this.state.showUSATFinfo ? 'block' : 'none'}}>
+                        For more information on USATF numbers, go to <a style={{color: '#C0282D'}} href="https://usatf.org">USATF.org</a>. If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} href="https://www.usatf.org/membership/help/number.asp">here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} href="http://www.usatf.org/Products---Services/Individual-Memberships.aspx">here</a>.
+                      </p>
                       <input type="text" name="usatf" onChange={this.formatUSATF.bind(this)}/>
                   </label>
               </div>
