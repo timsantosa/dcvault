@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import apiHelpers from './api-helpers';
 import Reactable from 'reactable';
+import SuperTable from './super-table.jsx';
 
 var Table = Reactable.Table;
 
@@ -22,7 +23,8 @@ class AdminPanel extends React.Component {
       athletes: [],
       purchases: [],
       discounts: [],
-      invites: []
+      invites: [],
+      displayData: []
     }
   }
 
@@ -64,7 +66,8 @@ class AdminPanel extends React.Component {
               athletes: response.data.athletes || [],
               purchases: response.data.purchases || [],
               discounts: response.data.discounts || [],
-              invites: response.data.invites || []
+              invites: response.data.invites || [],
+              displayData: this.combineData(response.data.athletes, response.data.purchases)
             });
           } else {
             window.location.href = '/';
@@ -74,6 +77,26 @@ class AdminPanel extends React.Component {
         }
       }
     })
+  }
+
+  combineData(athletes, purchases) {
+    let returnArr = [];
+    for (let i = 0; i < purchases.length; i++) {
+      let athleteId = purchases[i].athleteId;
+      for (let j = 0; j < athletes.length; j++) {
+        if (athletes[j].id === athleteId) {
+          let purchaseClone = JSON.parse(JSON.stringify(purchases[i]));
+          let athleteClone = JSON.parse(JSON.stringify(athletes[j]));
+          for (let key in athleteClone) {
+            if (!(purchaseClone.hasOwnProperty(key))) {
+              purchaseClone[key] = athleteClone[key];
+            }
+          }
+          returnArr.push(purchaseClone);
+        }
+      }
+    }
+    return returnArr;
   }
 
   addCode(e) {
@@ -106,10 +129,24 @@ class AdminPanel extends React.Component {
     }
   }
 
-                // <Purchases purchases={purchases} athletes={athletes}/>
+        // <div className="row">
+        //   <div className="col-xs-12">
+        //     <div className="account-panel-box">
+        //       <div className="title-box">
+        //         <span className="title">Purchases</span>
+        //       </div>
+        //       <div className="body-box">
+        //         <Table data={purchases} sortable={true}/>
+        //       </div>
+        //     </div>
+        //   </div>
+        // </div>
+
+
   render() {
     let purchases = this.state.purchases;
     let athletes = this.state.athletes;
+    console.log(athletes);
       return (
       <section id="my-account">
 
@@ -122,26 +159,11 @@ class AdminPanel extends React.Component {
                 <span className="title">Athletes</span>
               </div>
               <div className="body-box">
-                <Table data={athletes} sortable={true}/>
+                <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'quarter', 'emergencyContactMDN']}/>
               </div>
             </div>
           </div>
         </div>
-
-        <div className="row">
-          <div className="col-xs-12">
-            <div className="account-panel-box">
-              <div className="title-box">
-                <span className="title">Purchases</span>
-              </div>
-              <div className="body-box">
-                <Table data={purchases} sortable={true}/>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
 
         <div className="row">
           <div className="col-xs-12 col-md-6">
