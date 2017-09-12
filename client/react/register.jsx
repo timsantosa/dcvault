@@ -564,7 +564,7 @@ format
                       </div>
                     </div>
                       <p className='info-text' style={{display: this.state.showUSATFinfo ? 'block' : 'none'}}>
-                        For more information on USATF numbers, go to <a style={{color: '#C0282D'}} href="https://usatf.org">USATF.org</a>. If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} href="https://www.usatf.org/membership/help/number.asp">here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} href="http://www.usatf.org/Products---Services/Individual-Memberships.aspx">here</a>.
+                        For more information on USATF numbers, go to <a style={{color: '#C0282D'}} target='_blank' href="https://usatf.org">USATF.org</a>. If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} target='_blank' href="https://www.usatf.org/membership/help/number.asp">here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} target='_blank' href="http://www.usatf.org/Products---Services/Individual-Memberships.aspx">here</a>.
                       </p>
                       <input type="text" name="usatf" onChange={this.formatUSATF.bind(this)}/>
                   </label>
