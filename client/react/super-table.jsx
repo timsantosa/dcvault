@@ -177,7 +177,6 @@ class SuperTable extends React.Component {
             })}
           </tbody>
         </table>
-        <a onClick={() => {console.log(this.state)}}>state</a>
       </div>
     );
   }
