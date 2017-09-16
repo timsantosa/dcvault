@@ -26,6 +26,23 @@ class SuperTable extends React.Component {
     return keys;
   }
 
+  componentDidMount() {
+    let storedCols = window.localStorage.getItem('SuperTableCols');
+    if (Array.isArray(storedCols)) {
+      let matchesProps = true;
+      storedCols.map((col, index) {
+        if (this.state.keys.indexOf(col) === -1) {
+          matchesProps = false;
+        }
+      });
+      if (matchesProps) {
+        this.setState({
+          shownColumns: storedCols
+        });
+      }
+    }
+  }
+
   componentWillReceiveProps(newProps) {
     if (JSON.stringify(this.props) !== JSON.stringify(newProps)) {
       this.setState({
@@ -115,6 +132,7 @@ class SuperTable extends React.Component {
     this.setState({
       shownColumns: currentArr
     });
+    window.localStorage.setItem('SuperTableCols', currentArr);
   }
 
   sortBy(key) {
