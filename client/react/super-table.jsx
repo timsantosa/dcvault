@@ -26,52 +26,69 @@ class SuperTable extends React.Component {
     return keys;
   }
 
-  componentDidMount() {
+  getStoredCols(keys) {
     let storedCols = window.localStorage.getItem('SuperTableCols');
-    if (Array.isArray(storedCols)) {
-      let matchesProps = true;
-      storedCols.map((col, index) {
-        if (this.state.keys.indexOf(col) === -1) {
-          matchesProps = false;
-        }
-      });
-      if (matchesProps) {
-        this.setState({
-          shownColumns: storedCols
+    try {
+      storedCols = JSON.parse(storedCols);
+      if (Array.isArray(storedCols)) {
+        let matchesProps = true;
+        storedCols.map((col, index) => {
+          if (keys.indexOf(col) === -1) {
+            matchesProps = false;
+          }
         });
+        if (matchesProps) {
+          return storedCols;
+        }
       }
+    } catch (e) {
+      console.log('unable to retrieve column prefs');
     }
   }
 
   componentWillReceiveProps(newProps) {
     if (JSON.stringify(this.props) !== JSON.stringify(newProps)) {
+      let shownColumns;
+      let storedCols = this.getStoredCols(this.getKeys(newProps.data));
+      if (!storedCols) {
+        shownColumns = newProps.shownColumns || this.getKeys(newProps.data);
+      } else {
+        shownColumns = storedCols.slice();
+      }
       this.setState({
-        data: newProps.data,
+        data: JSON.parse(JSON.stringify(newProps.data)),
         keys: this.getKeys(newProps.data),
         currentlySorted: '',
-        shownColumns: newProps.shownColumns || this.getKeys(newProps.data)
+        shownColumns: shownColumns
       });
     }
   }
 
   exportCSV() {
     let rows = [];
+    if (this.refs.allDataCheckbox.checked) {
+      let firstRow = JSON.parse(JSON.stringify(this.state.keys));
+      rows.push(firstRow.slice());
+      this.state.data.map((fullRow, index) => {
+        rows.push(Object.values(fullRow).join(','));
+      });
+    } else {
+      let firstRow = [];
+      this.state.shownColumns.map((key, index) => {
+        firstRow.push(key);
+      });
+      rows.push(firstRow.join(','));
 
-    let firstRow = [];
-    this.state.shownColumns.map((key, index) => {
-      firstRow.push(key);
-    });
-    rows.push(firstRow.join(','));
-
-    this.state.data.map((row, dataIndex) => {
-      if (this.passesFilter(row)) {
-        let outputRow = [];
-        this.state.shownColumns.map((key, keyIndex) => {
-          outputRow.push(row[key] || '');
-        });
-        rows.push(outputRow.join(','));
-      }
-    });
+      this.state.data.map((row, dataIndex) => {
+        if (this.passesFilter(row)) {
+          let outputRow = [];
+          this.state.shownColumns.map((key, keyIndex) => {
+            outputRow.push(row[key] || '');
+          });
+          rows.push(outputRow.join(','));
+        }
+      });
+    }
 
     let csvContent = 'data:text/csv;charset=utf-8,' + rows.join('\n');
     let link = document.createElement('a');
@@ -89,7 +106,7 @@ class SuperTable extends React.Component {
   exportColumn(key) {
     let exportArr = [];
     this.state.data.map((row, index) => {
-      if (row[key]) {
+      if (row[key] && this.passesFilter(row)) {
         exportArr.push(row[key]);
       }
     })
@@ -132,7 +149,31 @@ class SuperTable extends React.Component {
     this.setState({
       shownColumns: currentArr
     });
-    window.localStorage.setItem('SuperTableCols', currentArr);
+    window.localStorage.setItem('SuperTableCols', JSON.stringify(currentArr));
+  }
+
+  showAll() {
+    let shownColumns = this.state.keys.slice();
+    this.setState({
+      shownColumns: shownColumns
+    });
+    window.localStorage.setItem('SuperTableCols', JSON.stringify(shownColumns));
+  }
+
+  hideAll() {
+    let shownColumns = [];
+    this.setState({
+      shownColumns: shownColumns
+    })
+    window.localStorage.setItem('SuperTableCols', JSON.stringify(shownColumns));
+  }
+
+  restoreDefaults() {
+    let shownColumns = this.props.shownColumns || this.state.keys.slice();
+    this.setState({
+      shownColumns: shownColumns
+    })
+    window.localStorage.setItem('SuperTableCols', JSON.stringify(shownColumns));
   }
 
   sortBy(key) {
@@ -172,11 +213,18 @@ class SuperTable extends React.Component {
   render() {
 
     return (
-      <div>
-        <ColumnSelector keys={this.state.keys} toggleColumn={this.toggleColumn.bind(this)}/>
-        <ColumnFilter keys={this.state.keys} updateFilter={this.updateFilter.bind(this)}/>
-        <ColumnExport keys={this.state.keys} exportColumn={this.exportColumn.bind(this)}/>
-        <a onClick={this.exportCSV.bind(this)}>Export CSV</a>
+      <div className='SuperTable'>
+        <div className='row'>
+          <div className='col-xs-12 col-md-4' style={{marginBottom: '25px'}}>
+            <ColumnSelector keys={this.state.keys} toggleColumn={this.toggleColumn.bind(this)} shownColumns={this.state.shownColumns} showAll={this.showAll.bind(this)} hideAll={this.hideAll.bind(this)} restoreDefaults={this.restoreDefaults.bind(this)}/>
+          </div>
+          <div className='col-xs-12 col-md-4' style={{marginBottom: '25px'}}>
+            <ColumnFilter keys={this.state.keys} updateFilter={this.updateFilter.bind(this)}/>
+          </div>
+          <div className='col-xs-12 col-md-4' style={{marginBottom: '25px'}}>
+            <ColumnExport keys={this.state.keys} exportColumn={this.exportColumn.bind(this)}/>
+          </div>
+        </div>
         <table>
           <thead><tr>
             {this.state.keys.map((key, index) => {
@@ -195,6 +243,8 @@ class SuperTable extends React.Component {
             })}
           </tbody>
         </table>
+        <input ref='allDataCheckbox' type='checkbox'/> Export ALL data
+        <a style={{display: 'block'}} onClick={this.exportCSV.bind(this)}>Export CSV of Table</a>
       </div>
     );
   }
@@ -239,15 +289,29 @@ class ColumnSelector extends React.Component {
   }
 
   render() {
+    let linkText;
+    if (this.state.view) {
+      linkText = 'Hide Column Toggles';
+    } else {
+      linkText = 'Show Column Toggles';
+    }
     return (
       <div>
-        <a onClick={this.toggleView.bind(this)}> Edit Shown Columns </a>
+        <a onClick={this.toggleView.bind(this)}>{linkText}</a>
 
-        <div style={{display: this.state.view ? 'block' : 'none'}} className='row'>
+        <div style={{display: this.state.view ? 'block' : 'none', maxHeight: '300px', overflowY: 'scroll', overflowX: 'hidden', border: '1px solid rgba(0, 0, 0, .25'}}>
+          <a style={{display: 'block'}} onClick={this.props.showAll}>Show All</a>
+          <a style={{display: 'block'}} onClick={this.props.hideAll}>Hide All</a>
+          <a style={{display: 'block'}} onClick={this.props.restoreDefaults}>Restore Defaults</a>
+          <p>Toggleable Columns:</p>
             {this.props.keys.map((key, index) => {
+              let style = {margin: '10px'};
+              if (this.props.shownColumns.indexOf(key) === -1) {
+                style.textDecoration = 'line-through';
+              }
               return(
-                <div key={index} className="col-xs-4 col-md-2">
-                  <a style={{margin: '10px'}} onClick={() => {this.props.toggleColumn(key)}}>{key}</a>
+                <div key={index} style={{display: 'block', width: '100%'}} className="col-xs-4 col-md-2">
+                  <a style={style} onClick={() => {this.props.toggleColumn(key)}}>{key}</a>
                 </div>
               );
             })}
@@ -277,14 +341,14 @@ class ColumnFilter extends React.Component {
   render() {
     return (
       <div>
-        Filter:
+        <p>Search by Column:</p>
         <select ref='key'>
           {this.props.keys.map((key, index) => {
             return (<option key={index} name={key}>{key}</option>)
           })}
         </select>
         <input type='text' ref='value' onChange={this.updateFilter.bind(this)}/>
-        <a onClick={this.clearFilter.bind(this)}>Clear</a>
+        <button onClick={this.clearFilter.bind(this)}>Clear</button>
       </div>
     );
   }
@@ -332,7 +396,7 @@ class ColumnExport extends React.Component {
 
     return (
       <div>
-        Export Column:
+        <p>Copy Column Contents:</p>
         <select ref='key'>
           {this.props.keys.map((key, index) => {
             return (<option key={index} name={key}>{key}</option>)

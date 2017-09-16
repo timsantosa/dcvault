@@ -54,7 +54,6 @@ class AdminPanel extends React.Component {
   populateUserInfo() {
     apiHelpers.getUserData()
     .then((response) => {
-      console.log(response.data);
       if (!!response.data) {
         if (response.data.ok) {
           if (response.data.user.isAdmin) {
@@ -90,6 +89,8 @@ class AdminPanel extends React.Component {
           for (let key in athleteClone) {
             if (!(purchaseClone.hasOwnProperty(key))) {
               purchaseClone[key] = athleteClone[key];
+            } else if (key.toUpperCase().indexOf('ID') === -1) {
+              purchaseClone['athlete_'+key] = athleteClone[key];
             }
           }
           returnArr.push(purchaseClone);
@@ -146,7 +147,6 @@ class AdminPanel extends React.Component {
   render() {
     let purchases = this.state.purchases;
     let athletes = this.state.athletes;
-    console.log(athletes);
       return (
       <section id="my-account">
 
@@ -156,7 +156,7 @@ class AdminPanel extends React.Component {
           <div className="col-xs-12">
             <div className="account-panel-box">
               <div className="title-box">
-                <span className="title">Athletes</span>
+                <span className="title">Registered Athletes</span>
               </div>
               <div className="body-box">
                 <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'quarter', 'emergencyContactMDN']}/>
@@ -245,8 +245,6 @@ class AdminPanel extends React.Component {
 class Purchases extends React.Component {
   constructor(props) {
     super(props);
-
-    console.log(this.props)
   }
 
   getAthlete(id) {

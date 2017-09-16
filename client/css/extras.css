@@ -546,6 +546,13 @@ a {
   border-collapse: collapse;
 }
 
+.SuperTable p {
+  font-size: 10px;
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+
 /*FORM STYLING*/
 
 .form-labels-on-top{
