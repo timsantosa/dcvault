@@ -140,9 +140,13 @@ const fillDb = (numEntries) => {
   }
 }
 
-db.syncTables(schema, true).then(() => {
-  fillDb(50);
-});
+if (config.misc.isTest) {
+  db.syncTables(schema, true).then(() => {
+    fillDb(50);
+  });
+} else {
+  console.log('THIS NOT A TEST VERSION, REFUSE TO OVERWRITE DB');
+}
 
 
 
