@@ -141,6 +141,16 @@ class AccountPanel extends React.Component {
               </div>
             </div>
           </div>
+          <div className="col-xs-12 col-md-6">
+            <div className="account-panel-box">
+              <div classname='title-box'>
+                <span className='title'>Training Information</span>
+              </div>
+              <div className='body-box'>
+                <a href='../files/quarterly-conditioning.pdf'>Quarterly Training Guide</a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     );
