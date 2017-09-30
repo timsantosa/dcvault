@@ -21,6 +21,28 @@ apiHelpers.register = (email, password) => {
   })
 }
 
+apiHelpers.deleteDiscount = (id) => {
+  let token = localStorage.getItem('token');
+  return axios.post('/discounts/delete', {token: token, discountId: id})
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  });
+}
+
+apiHelpers.deleteInvite = (id) => {
+  let token = localStorage.getItem('token');
+  return axios.post('/invites/delete', {token: token, inviteId: id})
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  });
+}
+
 apiHelpers.verifyToken = () => {
   let token = localStorage.getItem('token');
   return axios.post('/users/token', {token: token})

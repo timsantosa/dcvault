@@ -192,7 +192,7 @@ class AccountPanel extends React.Component {
                 {statusContainer}
 
                 <p>
-                  To edit your account information, click the pen icon in the top right</p>
+                  To edit your account information, click the pen icon in the top right
                 </p>
 
                 <div style={{display: this.state.isEditing ? 'none' : 'block'}}  className='red-button' onClick={this.logout.bind(this)}>

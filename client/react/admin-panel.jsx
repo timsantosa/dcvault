@@ -130,20 +130,6 @@ class AdminPanel extends React.Component {
     }
   }
 
-        // <div className="row">
-        //   <div className="col-xs-12">
-        //     <div className="account-panel-box">
-        //       <div className="title-box">
-        //         <span className="title">Purchases</span>
-        //       </div>
-        //       <div className="body-box">
-        //         <Table data={purchases} sortable={true}/>
-        //       </div>
-        //     </div>
-        //   </div>
-        // </div>
-
-
   render() {
     let purchases = this.state.purchases;
     let athletes = this.state.athletes;
@@ -297,38 +283,87 @@ class Purchases extends React.Component {
 class Discounts extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      errorText: '',
+      statusText: ''
+    }
+  }
+
+  deleteCode(index) {
+    this.setState({
+      errorText: '',
+      statusText: ''
+    });
+    apiHelpers.deleteDiscount(index)
+    .then((response) => {
+      if (response.data.ok) {
+        this.setState({
+          statusText: 'Code Deleted'
+        });
+        setTimeout(window.location.reload(), 5000);
+      } else {
+        this.setState({
+          errorText: 'An error has occurred'
+        });
+      }
+    })
   }
 
   render() {
+
+    let errorContainer = '';
+    let statusContainer = '';
+    if (this.state.errorText.length > 0) {
+      errorContainer = (
+        <div className='error-container'>
+          <p>{this.state.errorText}</p>
+        </div>
+      );
+    }
+    if (this.state.statusText.length > 0) {
+      statusContainer = (
+        <div className='status-container'>
+          <p>{this.state.statusText}</p>
+        </div>
+      );
+    }
 
     if (this.props.discounts.length === 0) {
       return (<p> None to show </p>);
     } else {
       return (
-        <table className="purchases-table">
-          <tbody>
-            <tr>
-              <th>Description</th>
-              <th>Code</th>
-              <th>Amount</th>
-            </tr>
-            {this.props.discounts.map((discount) => {
-              return (
-                <tr key={discount.id}>
-                  <td>
-                    {discount.type}
-                  </td>
-                  <td>
-                    {discount.code}
-                  </td>
-                  <td>
-                    {discount.amount * 100}%
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div>
+          <table className="purchases-table">
+            <tbody>
+              <tr>
+                <th>Description</th>
+                <th>Code</th>
+                <th>Amount</th>
+                <th>Delete</th>
+              </tr>
+              {this.props.discounts.map((discount, index) => {
+                return (
+                  <tr key={discount.id}>
+                    <td>
+                      {discount.type}
+                    </td>
+                    <td>
+                      {discount.code}
+                    </td>
+                    <td>
+                      {discount.amount * 100}%
+                    </td>
+                    <td>
+                      <span className="glyphicon glyphicon-remove edit-button" onClick={() => {this.deleteCode.bind(this)(discount.id)}}></span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {errorContainer}
+          {statusContainer}
+        </div>
       );
     }
   }
@@ -337,38 +372,87 @@ class Discounts extends React.Component {
 class Invites extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      errorText: '',
+      statusText: ''
+    }
+  }
+
+  deleteCode(index) {
+    this.setState({
+      errorText: '',
+      statusText: ''
+    });
+    apiHelpers.deleteInvite(index)
+    .then((response) => {
+      if (response.data.ok) {
+        this.setState({
+          statusText: 'Code Deleted'
+        });
+        setTimeout(window.location.reload(), 5000);
+      } else {
+        this.setState({
+          errorText: 'An error has occurred'
+        });
+      }
+    })
   }
 
   render() {
+
+    let errorContainer = '';
+    let statusContainer = '';
+    if (this.state.errorText.length > 0) {
+      errorContainer = (
+        <div className='error-container'>
+          <p>{this.state.errorText}</p>
+        </div>
+      );
+    }
+    if (this.state.statusText.length > 0) {
+      statusContainer = (
+        <div className='status-container'>
+          <p>{this.state.statusText}</p>
+        </div>
+      );
+    }
 
     if (this.props.invites.length === 0) {
       return (<p> None to show </p>);
     } else {
       return (
-        <table className="purchases-table">
-          <tbody>
-            <tr>
-              <th>Description</th>
-              <th>Code</th>
-              <th>Level</th>
-            </tr>
-            {this.props.invites.map((invite) => {
-              return (
-                <tr key={invite.id}>
-                  <td>
-                    {invite.type}
-                  </td>
-                  <td>
-                    {invite.code}
-                  </td>
-                  <td>
-                    {invite.level}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div>
+          <table className="purchases-table">
+            <tbody>
+              <tr>
+                <th>Description</th>
+                <th>Code</th>
+                <th>Level</th>
+                <th>Delete</th>
+              </tr>
+              {this.props.invites.map((invite) => {
+                return (
+                  <tr key={invite.id}>
+                    <td>
+                      {invite.type}
+                    </td>
+                    <td>
+                      {invite.code}
+                    </td>
+                    <td>
+                      {invite.level}
+                    </td>
+                    <td>
+                      <span className="glyphicon glyphicon-remove edit-button" onClick={() => {this.deleteCode.bind(this)(invite.id)}}></span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          {errorContainer}
+          {statusContainer}
+          </table>
+        </div>
       );
     }
   }

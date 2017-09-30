@@ -435,7 +435,57 @@ module.exports = (app, db) => {
   });
   // End Users Section
 
+  // Admin Endpoints
 
+  app.post('/discounts/delete', (req, res) => {
+    console.log(req.body);
+    let token = req.body.token;
+    let discountId = req.body.discountId;
+    if (!token) {
+      res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+    } else {
+      let user = null;
+      try {
+        user = jwt.decode(token, config.auth.secret);
+      } catch (e) {}
+      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
+        if (foundUser.isAdmin) {
+          db.tables.Discounts.destroy({where: {id: discountId}}).then((numDeleted) => {
+            if (numDeleted !== 0) {
+              res.status(200).send({ok: true, message: 'discount code deleted'});
+            } else {
+              res.status(400).send({ok: false, message: 'discount code not found'});
+            }
+          })
+        }
+      })
+    }
+  });
+
+  app.post('/invites/delete', (req, res) => {
+    console.log(req.body);
+    let token = req.body.token;
+    let inviteId = req.body.inviteId;
+    if (!token) {
+      res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}));
+    } else {
+      let user = null;
+      try {
+        user = jwt.decode(token, config.auth.secret);
+      } catch (e) {}
+      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
+        if (foundUser.isAdmin) {
+          db.tables.Invites.destroy({where: {id: inviteId}}).then((numDeleted) => {
+            if (numDeleted !== 0) {
+              res.status(200).send({ok: true, message: 'discount code deleted'});
+            } else {
+              res.status(400).send({ok: false, message: 'discount code not found'});
+            }
+          })
+        }
+      })
+    }
+  });
 
   // Catchall redirect to home page
   app.get('*', (req, res) => {
