@@ -289,17 +289,20 @@ module.exports = (app, db) => {
     if (!req.body.token) {
       res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}));
     } else {
+      let token = req.body.token;
       let user = null;
       try {
         user = jwt.decode(token, config.auth.secret);
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
       db.tables.Users.find({where: {email: user.email, password: user.password}}).then((existingUser) => {
         if (!user) {
           res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}));
         } else {
           let newPassword = !!req.body.newInfo.password ? bcrypt.hashSync(req.body.newInfo.password) : user.password;
           let newName = !!req.body.newInfo.name ? req.body.newInfo.name : user.name;
-          user.update({
+          existingUser.update({
             password: newPassword,
             name: newName
           }).then((user) => {

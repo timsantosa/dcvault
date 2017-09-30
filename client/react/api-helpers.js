@@ -33,6 +33,23 @@ apiHelpers.verifyToken = () => {
   });
 }
 
+apiHelpers.editUserInfo = (name, password) => {
+  let newInfo = {};
+  let token = localStorage.getItem('token');
+  if (!!name) {
+    newInfo.name = name;
+  }
+  if (!!password) {
+    newInfo.password = password;
+  }
+  return axios.post('/users/update', {token: token, newInfo: newInfo})
+  .then((response) => {
+    return response
+  }).catch((error) => {
+    return error.response
+  })
+}
+
 apiHelpers.forgotPassword = (email) => {
   return axios.post('/users/forgot', {email: email})
   .then((response) => {

@@ -19,7 +19,10 @@ class AccountPanel extends React.Component {
       athletes: [],
       purchases: [],
       discounts: [],
-      invites: []
+      invites: [],
+      isEditing: false,
+      errorText: '',
+      statusText: ''
     }
   }
 
@@ -46,6 +49,44 @@ class AccountPanel extends React.Component {
     });
   }
 
+  editUserInfo() {
+    let current = this.state.isEditing;
+    this.setState({
+      isEditing: !current
+    });
+  }
+
+  updateUserInfo() {
+    this.setState({
+      errorText: '',
+      statusText: ''
+    });
+
+    let password = this.refs.passwordChange.value;
+    let passwordConf = this.refs.passwordChangeConfirm.value;
+    let name = this.refs.nameChange.value;
+
+    if (password !== passwordConf) {
+      this.setState({
+        errorText: 'New passwords do not match'
+      })
+    } else {
+      apiHelpers.editUserInfo(name, password)
+      .then((response) => {
+        if (!response.data.ok) {
+          this.setState({
+            errorText: 'An error has occurred. Please try again later'
+          })
+        } else {
+          this.setState({
+            statusText: 'Your account has been updated. You will be logged out in 10 seconds. Please log in again for the changes to take effect'
+          });
+          setTimeout(this.logout.bind(this), 10000);
+        }
+      })
+    }
+  }
+
   populateUserInfo() {
     apiHelpers.getUserData()
     .then((response) => {
@@ -70,14 +111,6 @@ class AccountPanel extends React.Component {
     })
   }
 
-  updateName() {
-    // UPDATE NAME FIELD HERE FOR USER
-  }
-
-  updateAddress() {
-    // UPDATE ADDRESS FIELD HERE FOR USER
-  }
-
   logout() {
     window.localStorage.removeItem('token');
     window.location.href = '/';
@@ -87,6 +120,22 @@ class AccountPanel extends React.Component {
     let purchases = this.state.purchases;
     let athletes = this.state.athletes;
     let user = this.state.user;
+    let errorContainer = '';
+    let statusContainer = '';
+    if (this.state.errorText.length > 0) {
+      errorContainer = (
+        <div className='error-container'>
+          <p>{this.state.errorText}</p>
+        </div>
+      );
+    }
+    if (this.state.statusText.length > 0) {
+      statusContainer = (
+        <div className='status-container'>
+          <p>{this.state.statusText}</p>
+        </div>
+      );
+    }
       return (
       <section id="my-account">
         <div className="row">
@@ -100,7 +149,57 @@ class AccountPanel extends React.Component {
                 <Purchases purchases={purchases} athletes={athletes} user={user}/>
               </div>
             </div>
+            <div className="account-panel-box">
+              <div className="title-box">
+                <span className="title">Training Information</span>
+              </div>
+              <div className="body-box">
+                <ul>
+                  <li><a href="/files/quarterly-conditioning.pdf" download>Quarterly Conditioning Guide</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
+
+          <div className="col-xs-12 col-md-6">
+            <p className="subsection-header">Account <span className="red-text">Management</span></p>
+
+            <div className="account-panel-box">
+              <div className="title-box">
+                <span className="title">My Account Details</span>
+                <span style={{display: this.state.isEditing ? 'none' : 'inline-block'}} className="glyphicon glyphicon-pencil edit-button" onClick={this.editUserInfo.bind(this)}></span>
+                <span style={{display: this.state.isEditing ? 'inline-block' : 'none'}} className="glyphicon glyphicon-remove edit-button" onClick={this.editUserInfo.bind(this)}></span>
+              </div>
+              <div className="body-box">
+                <p><span className="item-name">Name:</span>
+                  <span style={{display: this.state.isEditing ? 'none' : 'inline-block'}}>{this.state.name}</span>
+                  <input ref='nameChange' style={{display: this.state.isEditing ? 'inline-block' : 'none'}}/>
+                </p>
+                <p><span className="item-name">Email:</span>{this.state.email}</p>
+                <p><span className="item-name">Password:</span>
+                  <span style={{display: this.state.isEditing ? 'none' : 'inline-block'}}>********</span>
+                  <input ref='passwordChange' style={{display: this.state.isEditing ? 'inline-block' : 'none'}} type='password'/>
+                  <span style={{display: this.state.isEditing ? 'block' : 'none'}}></span>
+                  <span className='item-name' style={{display: this.state.isEditing ? 'inline-block' : 'none'}}>Confirm:</span>
+                  <input ref='passwordChangeConfirm' style={{display: this.state.isEditing ? 'inline-block' : 'none'}} type='password'/>
+                </p>
+
+                <div className='red-button' style={{display: this.state.isEditing ? 'block' : 'none'}} onClick={this.updateUserInfo.bind(this)}>
+                  <span className='button-text'>Update</span>
+                </div>
+                {errorContainer}
+                {statusContainer}
+
+                <p>
+                  To edit your account information, click the pen icon in the top right</p>
+                </p>
+
+                <div style={{display: this.state.isEditing ? 'none' : 'block'}}  className='red-button' onClick={this.logout.bind(this)}>
+                  <span className='button-text'>Log Out</span>
+                </div>
+              </div>
+            </div>
             {this.state.isAdmin ? (
               <div className="account-panel-box">
                 <div className="title-box">
@@ -116,40 +215,6 @@ class AccountPanel extends React.Component {
                 </div>
               </div>
             ) : ''}
-
-          </div>
-
-
-          <div className="col-xs-12 col-md-6">
-            <p className="subsection-header">Account <span className="red-text">Management</span></p>
-
-            <div className="account-panel-box">
-              <div className="title-box">
-                <span className="title">My Account Details</span>
-                <span className="glyphicon glyphicon-pencil edit-button"></span>
-              </div>
-              <div className="body-box">
-                <p><span className="item-name">Name:</span>{this.state.name}</p>
-                <p><span className="item-name">Email:</span>{this.state.email}</p>
-                <p><span className="item-name">Password:</span>********</p>
-                <p></p>
-                <p>Account Management is under maintenance and will not allow you to make changes. Sorry for the inconvenience</p>
-
-                <div className='red-button' onClick={this.logout.bind(this)}>
-                  <span className='button-text'>Log Out</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-xs-12 col-md-6">
-            <div className="account-panel-box">
-              <div classname='title-box'>
-                <span className='title'>Training Information</span>
-              </div>
-              <div className='body-box'>
-                <a href='../files/quarterly-conditioning.pdf'>Quarterly Training Guide</a>
-              </div>
-            </div>
           </div>
         </div>
       </section>
