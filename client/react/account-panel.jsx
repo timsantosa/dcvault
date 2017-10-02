@@ -191,7 +191,7 @@ class AccountPanel extends React.Component {
                 {errorContainer}
                 {statusContainer}
 
-                <p>
+                <p style={{display: this.state.isEditing ? 'none' : 'block'}}>
                   To edit your account information, click the pen icon in the top right
                 </p>
 
