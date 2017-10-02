@@ -300,7 +300,7 @@ class Discounts extends React.Component {
         this.setState({
           statusText: 'Code Deleted'
         });
-        setTimeout(window.location.reload(), 5000);
+        setTimeout(window.location.reload(), 5000 );
       } else {
         this.setState({
           errorText: 'An error has occurred'
@@ -389,7 +389,7 @@ class Invites extends React.Component {
         this.setState({
           statusText: 'Code Deleted'
         });
-        setTimeout(window.location.reload(), 5000);
+        setTimeout(window.location.reload, 5000 );
       } else {
         this.setState({
           errorText: 'An error has occurred'
