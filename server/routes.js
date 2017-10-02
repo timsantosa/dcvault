@@ -365,65 +365,35 @@ module.exports = (app, db) => {
       if (!!user) {
         db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
           if (!!foundUser) {
-            let returnUser = {
-              id: foundUser.id,
-              email: foundUser.email,
-              name: foundUser.name,
-              address: null,
-              isAdmin: foundUser.isAdmin
-            };
-
-            let promiseList = [];
-            let discounts = [];
-            let invites = [];
-
-            let athletes = [];
-            let purchases = [];
-            let getAthleteList = db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athleteList) => {
-              if (Array.isArray(athleteList)) {
-                athletes = athleteList;
-              }
-            });
-            promiseList.push(getAthleteList);
-
-            if (!returnUser.isAdmin) {
-              promiseList.push(db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athleteList) => {
-                if (Array.isArray(athleteList)) {
-                  athletes = athleteList;
-                }
-              }));
+            if (foundUser.isAdmin) {
+              db.tables.Purchases.findAll().then((purchases) => {
+                db.tables.Athletes.findAll().then((athletes) => {
+                  db.tables.Invites.findAll().then((invites) => {
+                    db.tables.Discounts.findAll().then((discounts) => {
+                      let user = {
+                        id: foundUser.id,
+                        email: foundUser.email,
+                        name: foundUser.name,
+                        isAdmin: foundUser.isAdmin
+                      }
+                      res.status(200).send({ok: true, message: 'found user info', user: user, athletes: athletes, invites: invites, discounts: discounts, purchases: purchases});
+                    });
+                  });
+                });
+              });
             } else {
-              promiseList.push(db.tables.Athletes.findAll().then((athleteList) => {
-                athletes = athleteList;
-              }));
+              db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchases) => {
+                db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athletes) => {
+                  let user = {
+                    id: foundUser.id,
+                    email: foundUser.email,
+                    name: foundUser.name,
+                    isAdmin: foundUser.isAdmin
+                  }
+                  res.status(200).send({ok: true, message: 'found user info', athletes: athletes, purchases: purchases});
+                })
+              })
             }
-
-
-            if (!returnUser.isAdmin) {
-              promiseList.push(db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchaseList) => {
-                if (Array.isArray(purchaseList)) {
-                  purchases = purchaseList;
-                }
-              }));
-            } else {
-              promiseList.push(db.tables.Purchases.findAll().then((purchaseList) => {
-                purchases = purchaseList;
-              }));
-            }
-
-
-            if (returnUser.isAdmin) {
-              promiseList.push(db.tables.Discounts.findAll().then((discountList) => {
-                discounts = discountList;
-              }));
-              promiseList.push(db.tables.Invites.findAll().then((inviteList) => {
-                invites = inviteList;
-              }));
-            }
-
-            Promise.all(promiseList).then(() => {
-              res.json({ok: true, message: 'found user info', user: returnUser, athletes: athletes, purchases: purchases, discounts: discounts, invites: invites});
-            });
           } else {
             res.status(403).send(JSON.stringify({ok: false, message: 'invalid user token'}));
           }
