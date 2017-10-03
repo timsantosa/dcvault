@@ -69,7 +69,6 @@ a {
   font-weight: 500;
   line-height: 26.4px;
   text-align: center;
-  /*margin-top: 25%;*/
 }
 
 .red-text {
@@ -97,7 +96,6 @@ a {
   padding-top: 25%;
   padding-bottom: 25%;
 
-  /*align-items: center;*/
   height: 10px;
   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
   min-height: 100vh; /* These two lines are counted as one :-)       */
@@ -131,10 +129,6 @@ a {
   border: 1px solid white;
   border-radius: 26px;
 }
-
-/*.bottom-gap {
-  margin-bottom: 30%;
-}*/
 
 .learn-more-button , .learn-more-button:focus {
   border: 1px solid white;
@@ -432,8 +426,6 @@ a {
   text-align: center;
   background-color: #fff;
   color: #434343;
-  /*border-left: 1px solid rgba(0, 0, 0, .35);
-  border-right: 1px solid rgba(0, 0, 0, .35);*/
   height: 100%;
 }
 
@@ -450,9 +442,6 @@ a {
 }
 
 .option-price-container-1 {
-/*  width: 50%;
-  border-bottom: 1px solid rgba(0, 0, 0, .35);
-  vertical-align: center;*/
   margin: 0 auto;
   color: #434343;
   background-color: #999;
