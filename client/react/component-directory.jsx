@@ -7,6 +7,7 @@ import Training from './training.jsx';
 import Register from './register.jsx';
 import AdminPanel from './admin-panel.jsx';
 import ContactModal from './contact-modal.jsx';
+import AboutUs from './about-us.jsx';
 
 let currentPage = window.location.pathname;
 let hashString = window.location.hash;
@@ -68,6 +69,7 @@ if (currentPage.indexOf('account') !== -1) {
   render(<Calendar/>, document.getElementById('calendar-container'));
   render(<Login/>, document.getElementById('login'));
   render(<Training/>, document.getElementById('training'));
+  render(<AboutUs/>, document.getElementById('about-us'));
 
   if (hashString.indexOf('justVerified=true') !== -1) {
     let loginDiv = document.getElementById('login');

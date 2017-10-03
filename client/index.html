@@ -85,29 +85,26 @@
 
     <div class="container">
       <div class="row">
-        <div class='vertical-container'>
-          <div class="col-xs-12 vertical-center center-content">
-             <p class='welcome-banner'>WELCOME TO <span class="red-text">DC VAULT</span></p>
-             <p class="content-text">Over <span id="medal-number" class="red-text">0</span> Championship Medalists!
-             <p class="glyphicon glyphicon-volume-off" id="mute-button"></p>
-            <!-- Counter -->
-            <script type="text/javascript">
-              var actualCount = 211 // The actual number of medals
-              var time = 15000 // The amount of time in ms to count
-              var count = document.getElementById('medal-number');
-              var countUp = function(countTo, delay, current) {
-                if (current === countTo) {
-                  return 0;
-                }
-                setTimeout(function() {countUp(countTo, delay, current + 1)}, delay);
-                count.innerHTML = current + 1;
+        <div class="col-xs-12 vertical-center center-content">
+           <p class='welcome-banner'>WELCOME TO <span class="red-text">DC VAULT</span></p>
+           <p class="content-text">Over <span id="medal-number" class="red-text">0</span> Championship Medalists!
+           <p class="glyphicon glyphicon-volume-off" id="mute-button"></p>
+          <!-- Counter -->
+          <script type="text/javascript">
+            var actualCount = 211 // The actual number of medals
+            var time = 15000 // The amount of time in ms to count
+            var count = document.getElementById('medal-number');
+            var countUp = function(countTo, delay, current) {
+              if (current === countTo) {
+                return 0;
               }
-              var delay = time/actualCount;
-              countUp(actualCount, delay, 0);
-            </script>
-
-            <a href="#intro" class="learn-more-button page-scroll">Learn More</a>
-          </div>
+              setTimeout(function() {countUp(countTo, delay, current + 1)}, delay);
+              count.innerHTML = current + 1;
+            }
+            var delay = time/actualCount;
+            countUp(actualCount, delay, 0);
+          </script>
+          <a href="#intro" class="learn-more-button page-scroll">Learn More</a>
         </div>
       </div>
     </div>
@@ -163,6 +160,10 @@
     <div class="container">
 
     </div>
+  </section>
+
+  <section id="about-us">
+
   </section>
 
   <section id="schedule">

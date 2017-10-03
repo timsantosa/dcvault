@@ -585,6 +585,60 @@ a {
   display: block;
 }
 
+#about-us {
+  margin: 0;
+  padding: 0;
+}
+
+.carousel {
+  width: 100%;
+  height: 60vh;
+}
+
+.active-image, .second-image, .third-image, .fourth-image {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  transition: width 2s, left 2s;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 70%;
+}
+
+.second-image, .third-image, .fourth-image {
+  border-left: 1px solid rgba(0, 0, 0, .85);
+}
+
+.active-image {
+  left: 0;
+}
+
+.second-image {
+  left: 70%;
+}
+
+.third-image {
+  left: 85%;
+}
+
+.fourth-image {
+  left: 100%;
+}
+
+.carousel-title {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+}
+
+.carousel-title > p {
+  font-size: 30px;
+  white-space: nowrap;
+  font-family: Raleway;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+}
 /*FORM STYLING*/
 
 .form-labels-on-top{
