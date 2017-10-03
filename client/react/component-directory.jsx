@@ -28,6 +28,35 @@ contactClose.onclick = () => {
   contactDiv.style.visibility = 'hidden';
 };
 
+let socialButton = document.getElementById('social-button');
+let socialIcons = document.getElementsByClassName('social-link');
+let socialLinkDiv = document.getElementsByClassName('social-links');
+
+socialButton.onclick = () => {
+  socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
+  setTimeout(() => {
+    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
+  }, 500);
+  setTimeout(() => {
+    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
+  }, 1000);
+    setTimeout(() => {
+    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
+  }, 1500);
+  setTimeout(() => {
+    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
+  }, 2000);
+    setTimeout(() => {
+    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
+  }, 2500);
+  setTimeout(() => {
+    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
+  }, 3000);
+    setTimeout(() => {
+    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
+  }, 3500);
+}
+
 if (currentPage.indexOf('account') !== -1) {
   render(<AccountPanel/>, document.getElementById('account-panel'));
 } else if (currentPage.indexOf('register') !== -1) {

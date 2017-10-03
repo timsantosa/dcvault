@@ -77,11 +77,24 @@ a {
 }
 
 .vertical-center {
+  height: 10px;
   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
   min-height: 100vh; /* These two lines are counted as one :-)       */
 
+  display: -ms-flexbox;
+  display: -webkit-flex;
   display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+
+  -ms-flex-pack: center;
+
   align-items: center;
+}
+
+.vertical-center > * {
+ box-sizing: border-box;
 }
 
 .test-border {
@@ -90,8 +103,11 @@ a {
 
 .center-content {
   display: flex;
+  display: -ms-flexbox;
   justify-content: center;
+  -ms-flex-pack: justify;
   flex-direction: column;
+  -ms-flex-direction: column;
 }
 
 .content-text {
@@ -201,16 +217,30 @@ a {
   text-align: center;
 }
 
+.social-link {
+  display: inline-block;
+  width: 33%;
+}
+
 .social-links {
   display: flex;
+  display: -ms-flexbox;
+  -ms-flex: 1 0 auto;
   flex-direction: row;
+  -ms-flex-direction: row;
   justify-content: center;
+  -ms-flex-pack: center;
   margin-top: 3vh;
+  padding: 15px 0px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0);
+  transition: background .25s;
 }
 
 .social-icon {
   width: 50%;
   margin: 0px 10px;
+  display: inline-block;
 }
 
 .footer-contact-info p {
