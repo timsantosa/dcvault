@@ -111,18 +111,6 @@ var textBox = document.getElementById('facilities-text-box');
 var facilities = Object.keys(textValues);
 facilities.shift(); // Removes "default" as a clickable option
 
-// facilities.map(function(fac) {
-//   var facility = fac;
-//     for (var j = 0; j < facilities.length; j++) { // Reset bg color of all, reset bouncing of all
-//       document.getElementById(facilities[j]).className = 'facility-tab';
-//     }
-
-//     if (current === facility) {
-//       current = 'DEVAULT'
-//     }
-// })
-
-// for (var index = 0; index < facilities.length; index++) {
 facilities.map(function (facility, index) {
   document.getElementById(facility).onclick = function () {
     for (var j = 0; j < facilities.length; j++) { // Reset bg color of all
@@ -142,7 +130,7 @@ facilities.map(function (facility, index) {
       map.setZoom(14);
     }
   }
-})
+});
 
 window.initMap = function () {
   map = new google.maps.Map(document.getElementById('map'), {
