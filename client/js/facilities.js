@@ -1,4 +1,4 @@
-const textValues = {
+var textValues = {
   DEFAULT: 'Through a variety of partnerships, DC Vault provides training at 7 facilities in the Washington, DC metropolitan area. Each facility has been uniquely outfitted with a wide array of specialized equipment provided by the club, allowing for training targeted to athletes of all skill levels.',
 
   NCS: '<p class="minor-heading">National <span class="red-text">Cathedral</span> Site (NCS)</p>\
@@ -57,7 +57,7 @@ PA: '<p class="minor-heading"><span class="red-text">Mercersburg</span> Academy 
 <p class="content-text smaller-text">Indoor training site, primarily used for PA based Level-I and Level-II developmental training.</p>'
 };
 
-const locations = {
+var locations = {
   NCS: {lat: 38.927475, lng: -77.068477},
   CUA: {lat: 38.942606, lng: -76.998025},
   PREP: {lat: 39.032617, lng: -77.108889},
@@ -67,7 +67,7 @@ const locations = {
   PA: {lat: 39.828266, lng: -77.900424}
 }
 
-const tooltips = {
+var tooltips = {
   NCS: 'National Cathedral',
   CUA: 'Catholic University of America',
   PREP: 'Georgetown Preparatory School',
@@ -86,7 +86,7 @@ var boundingBox = {
   maxLng: locations[Object.keys(locations)[0]].lng
 };
 
-for (let key in locations) {
+for (var key in locations) {
   if (locations[key].lat < boundingBox.minLat) {
     boundingBox.minLat = locations[key].lat;
   } else if (locations[key].lat > boundingBox.maxLat) {
@@ -111,29 +111,38 @@ var textBox = document.getElementById('facilities-text-box');
 var facilities = Object.keys(textValues);
 facilities.shift(); // Removes "default" as a clickable option
 
-for (let i = 0; i < facilities.length; i++) {
-  document.getElementById(facilities[i]).onclick = function () {
+// facilities.map(function(fac) {
+//   var facility = fac;
+//     for (var j = 0; j < facilities.length; j++) { // Reset bg color of all, reset bouncing of all
+//       document.getElementById(facilities[j]).className = 'facility-tab';
+//     }
 
-    for (var j = 0; j < facilities.length; j++) { // Reset bg color of all, reset bouncing of all
+//     if (current === facility) {
+//       current = 'DEVAULT'
+//     }
+// })
+
+// for (var index = 0; index < facilities.length; index++) {
+facilities.map(function (facility, index) {
+  document.getElementById(facility).onclick = function () {
+    for (var j = 0; j < facilities.length; j++) { // Reset bg color of all
       document.getElementById(facilities[j]).className = 'facility-tab';
     }
 
-    if (current === facilities[i]) {
+    if (current === facility) {
       current = 'DEFAULT';
       textBox.innerHTML = textValues.DEFAULT;
       map.setCenter(locations.CENTER);
       map.setZoom(8);
     } else {
-      current = facilities[i];
-      textBox.innerHTML = textValues[facilities[i]];
+      current = facility;
+      textBox.innerHTML = textValues[facility];
       this.className = 'facility-tab facility-tab-selected';
-      map.setCenter(locations[facilities[i]]);
+      map.setCenter(locations[facility]);
       map.setZoom(14);
-      // window.mapStyle[0].stylers[0].visibility = 'on';
-      // map.setOptions({styles: window.mapStyle});
     }
   }
-}
+})
 
 window.initMap = function () {
   map = new google.maps.Map(document.getElementById('map'), {

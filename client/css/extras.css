@@ -69,7 +69,7 @@ a {
   font-weight: 500;
   line-height: 26.4px;
   text-align: center;
-  margin-top: 25%;
+  /*margin-top: 25%;*/
 }
 
 .red-text {
@@ -93,6 +93,9 @@ a {
   -webkit-box-align: center;
 
   -ms-flex-pack: justify;
+
+  padding-top: 25%;
+  padding-bottom: 25%;
 
   /*align-items: center;*/
   height: 10px;
@@ -129,9 +132,9 @@ a {
   border-radius: 26px;
 }
 
-.bottom-gap {
+/*.bottom-gap {
   margin-bottom: 30%;
-}
+}*/
 
 .learn-more-button , .learn-more-button:focus {
   border: 1px solid white;
