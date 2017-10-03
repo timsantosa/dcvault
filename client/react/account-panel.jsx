@@ -151,11 +151,12 @@ class AccountPanel extends React.Component {
             </div>
             <div className="account-panel-box">
               <div className="title-box">
-                <span className="title">Training Information</span>
+                <span className="title">Resources</span>
               </div>
               <div className="body-box">
                 <ul>
                   <li><a href="/files/quarterly-conditioning.pdf" download>Quarterly Conditioning Guide</a></li>
+                  <li><a href="/files/parking-pass.pdf" download>DCV Parking Pass</a></li>
                 </ul>
               </div>
             </div>

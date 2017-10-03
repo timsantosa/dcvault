@@ -77,6 +77,10 @@ module.exports.sendConfirmationEmails = (email) => {
         {
           filename: 'DC Vault Quarterly Pole Vault Conditioning L-I_L-II.pdf',
           path: __dirname + '/../files/quarterly-conditioning.pdf'
+        },
+        {
+          filename: 'DC Vault Parking Pass.pdf',
+          path: __dirname + '/../files/parking-pass.pdf'
         }
       ]
   };
