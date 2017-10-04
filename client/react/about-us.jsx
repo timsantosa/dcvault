@@ -9,32 +9,41 @@ class AboutUs extends React.Component {
       content: [
         {
           image: 'imageone.jpg',
-          text: 'Image One Text'
+          text: 'Who We Are',
+          link: 'who-we-are'
         },
         {
           image: 'imagetwo.jpg',
-          text: 'Image Two Text'
+          text: 'Athletes Around the World',
+          link: 'around-the-world'
         },
         {
           image: 'imagethree.jpg',
-          text: 'Image Three Text'
+          text: 'Meet Our Staff',
+          link: 'Staff'
         },
         {
           image: 'imagefour.jpg',
-          text: 'Image Four Text'
+          text: 'Photo Gallery',
+          link: 'gallery'
         },
         {
           image: 'imagefive.jpg',
-          text: 'Image Five Text'
+          text: 'Our Partners',
+          link: 'partners'
         }
       ],
       active: 0,
-      delay: 5000
+      delay: 5000,
+      timer: null,
+      resetTimer: null,
     };
   }
 
   componentDidMount() {
-    setTimeout(this.shiftImages.bind(this), this.state.delay - 2000);
+    this.setState({
+      timer: setTimeout(this.shiftImages.bind(this), this.state.delay - 2000)
+    });
   }
 
   shiftImages() {
@@ -43,35 +52,57 @@ class AboutUs extends React.Component {
     let third = document.getElementsByClassName('third-image')[0];
     let fourth = document.getElementsByClassName('fourth-image')[0];
 
-    active.style.transition = null;
     second.style.transition = null;
     third.style.transition = null;
     fourth.style.transition = null;
 
-    // active.style.left = '-80%';
     second.style.left = '0';
     third.style.left = '70%';
     fourth.style.left = '85%';
+    this.setState({
+      resetTimer: setTimeout(() => {
+        this.resetCarousel.bind(this)();
+        let len = this.state.content.length;
+        let current = this.state.active;
+        this.setState({
+          active: (current + 1) % len
+        });
+      }, 2000)
+    })
 
-    setTimeout(() => {
-      active.style.transition = 'none';
-      second.style.transition = 'none';
-      third.style.transition = 'none';
-      fourth.style.transition = 'none';
+    this.setState({
+      timer: setTimeout(this.shiftImages.bind(this), this.state.delay)
+    });
+  }
 
-      active.style.left = null;
-      second.style.left = null;
-      third.style.left = null;
-      fourth.style.left = null;
+  resetCarousel() {
+    let active = document.getElementsByClassName('active-image')[0];
+    let second = document.getElementsByClassName('second-image')[0];
+    let third = document.getElementsByClassName('third-image')[0];
+    let fourth = document.getElementsByClassName('fourth-image')[0];
 
-      let len = this.state.content.length;
-      let current = this.state.active;
-      this.setState({
-        active: (current + 1) % len
-      });
-    }, 2000);
+    second.style.transition = 'none';
+    third.style.transition = 'none';
+    fourth.style.transition = 'none';
 
-    setTimeout(this.shiftImages.bind(this), this.state.delay);
+    second.style.left = null;
+    third.style.left = null;
+    fourth.style.left = null;
+  }
+
+  setCarousel(index) {
+    clearTimeout(this.state.timer);
+    clearTimeout(this.state.resetTimer);
+
+    this.setState({
+      active: (index - 1) % this.state.content.length
+    });
+
+    this.resetCarousel();
+
+    this.setState({
+      timer: setTimeout(this.shiftImages.bind(this), 0)
+    });
   }
 
   render() {
@@ -86,17 +117,17 @@ class AboutUs extends React.Component {
             <p>{this.state.content[this.state.active].text}</p>
           </div>
         </div>
-        <div className='second-image'  style={{backgroundImage: 'url(../img/carousel/' + this.state.content[(this.state.active+1)%len].image + ')'}}>
+        <div className='second-image'  style={{backgroundImage: 'url(../img/carousel/' + this.state.content[(this.state.active+1)%len].image + ')'}} onClick={() => {this.setCarousel.bind(this)(this.state.active + 1)}}>
           <div className='carousel-title'>
             <p>{this.state.content[(this.state.active + 1)%len].text}</p>
           </div>
         </div>
-        <div className='third-image' style={{backgroundImage: 'url(../img/carousel/' + this.state.content[(this.state.active+2)%len].image + ')'}}>
+        <div className='third-image' style={{backgroundImage: 'url(../img/carousel/' + this.state.content[(this.state.active+2)%len].image + ')'}} onClick={() => {this.setCarousel.bind(this)(this.state.active + 2)}}>
           <div className='carousel-title'>
             <p>{this.state.content[(this.state.active + 2)%len].text}</p>
           </div>
         </div>
-        <div className='fourth-image' style={{backgroundImage: 'url(../img/carousel/' + this.state.content[(this.state.active+3)%len].image + ')'}}>
+        <div className='fourth-image' style={{backgroundImage: 'url(../img/carousel/' + this.state.content[(this.state.active+3)%len].image + ')'}} onClick={() => {this.setCarousel.bind(this)(this.state.active + 3)}}>
           <div className='carousel-title'>
             <p>{this.state.content[(this.state.active + 3)%len].text}</p>
           </div>
