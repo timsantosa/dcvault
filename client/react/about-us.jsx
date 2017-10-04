@@ -56,9 +56,9 @@ class AboutUs extends React.Component {
     third.style.transition = null;
     fourth.style.transition = null;
 
-    second.style.left = '0';
-    third.style.left = '70%';
-    fourth.style.left = '85%';
+    second.style.transform = 'translateX(-70%)';
+    third.style.transform = 'translateX(-15%)';
+    fourth.style.transform = 'translateX(-15%)';
     this.setState({
       resetTimer: setTimeout(() => {
         this.resetCarousel.bind(this)();
@@ -85,9 +85,9 @@ class AboutUs extends React.Component {
     third.style.transition = 'none';
     fourth.style.transition = 'none';
 
-    second.style.left = null;
-    third.style.left = null;
-    fourth.style.left = null;
+    second.style.transform = null;
+    third.style.transform = null;
+    fourth.style.transform = null;
   }
 
   setCarousel(index) {
