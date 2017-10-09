@@ -663,12 +663,12 @@ a {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-size: 55px;
+  font-size: 45px;
   white-space: nowrap;
   font-family: Raleway;
   font-weight: 700;
   color: white;
-  /*text-transform: uppercase;*/
+  text-shadow: 5px 5px rgba(0, 0, 0, .45);
 }
 
 .partner-title {
