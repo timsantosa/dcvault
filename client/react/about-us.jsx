@@ -20,7 +20,7 @@ class AboutUs extends React.Component {
         {
           image: 'imagethree.jpg',
           text: 'Meet Our Staff',
-          link: 'Staff'
+          link: 'staff'
         },
         {
           image: 'imagefour.jpg',
