@@ -8,6 +8,7 @@ import Register from './register.jsx';
 import AdminPanel from './admin-panel.jsx';
 import ContactModal from './contact-modal.jsx';
 import AboutUs from './about-us.jsx';
+import Gallery from './gallery.jsx';
 
 let currentPage = window.location.pathname;
 let hashString = window.location.hash;
@@ -72,7 +73,7 @@ if (currentPage.indexOf('account') !== -1) {
 } else if (currentPage.indexOf('around-the-world') !== -1) {
 
 } else if (currentPage.indexOf('gallery') !== -1) {
-
+  render(<Gallery/>, document.getElementById('gallery'));
 } else if (currentPage.indexOf('who-we-are') !== -1) {
 
 } else {

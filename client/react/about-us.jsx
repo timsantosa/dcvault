@@ -34,7 +34,7 @@ class AboutUs extends React.Component {
         }
       ],
       active: 0,
-      delay: 5000,
+      delay: 7000,
       timer: null,
       resetTimer: null,
     };
@@ -59,6 +59,7 @@ class AboutUs extends React.Component {
     second.style.transform = 'translateX(-70%)';
     third.style.transform = 'translateX(-15%)';
     fourth.style.transform = 'translateX(-15%)';
+
     this.setState({
       resetTimer: setTimeout(() => {
         this.resetCarousel.bind(this)();

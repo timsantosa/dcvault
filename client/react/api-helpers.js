@@ -206,4 +206,24 @@ apiHelpers.contactForm = (name, from, to, subject, text) => {
   })
 }
 
+apiHelpers.getFacebookImages = (albumId) => {
+  // axios.get('https://graph.facebook.com/oauth/access_token?client_id=' + window.configVariables.FACEBOOK_APP_ID + '&client_secret=' + window.configVariables.FACEBOOK_APP_SECRET + '&grant_type=client_credentials')
+  // .then((response) => {
+  //   let facebookToken = response.data.access_token;
+  //   return axios.get('https://graph')
+  // })
+  // .catch((error) => {
+  //   console.log('Error fetching token');
+  // })
+
+
+  return axios.get('https://graph.facebook.com/' + albumId + '/photos?access_token=' + window.configVariables.FACEBOOK_APP_ID + '|' + window.configVariables.FACEBOOK_APP_SECRET)
+  .then((response) => {
+    return response;
+  })
+  .catch((error) => {
+    return error.response;
+  });
+}
+
 export default apiHelpers;

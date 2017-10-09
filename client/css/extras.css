@@ -698,6 +698,50 @@ a {
   background-color: rgba(0, 0, 0, .35);
 }
 
+.gallery-img-container {
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+  padding: 3px;
+  margin: 30px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, .25);
+}
+
+.gallery-img-container img {
+  min-width: 100%;
+  min-height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.zoom-image {
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, .75);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 110vh;
+  width: 100vw;
+}
+
+.zoomed-image {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.close-image {
+  color: white;
+  position: fixed;
+  height: 25px;
+  width: 25px;
+  top: 100px;
+  right: 100px;
+}
 /*FORM STYLING*/
 
 .form-labels-on-top{
