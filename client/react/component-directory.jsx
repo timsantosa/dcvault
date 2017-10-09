@@ -65,6 +65,16 @@ if (currentPage.indexOf('account') !== -1) {
   render(<Register/>, document.getElementById('registration-page'));
 } else if (currentPage.indexOf('admin') !== -1) {
   render(<AdminPanel/>, document.getElementById('admin-panel'));
+} else if (currentPage.indexOf('partners') !== -1) {
+
+} else if (currentPage.indexOf('staff') !== -1) {
+
+} else if (currentPage.indexOf('around-the-world') !== -1) {
+
+} else if (currentPage.indexOf('gallery') !== -1) {
+
+} else if (currentPage.indexOf('who-we-are') !== -1) {
+
 } else {
   render(<Calendar/>, document.getElementById('calendar-container'));
   render(<Login/>, document.getElementById('login'));

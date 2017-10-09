@@ -592,7 +592,8 @@ a {
 
 .carousel {
   width: 100%;
-  height: 40vh;
+  height: 45vh;
+  max-height: 500px;
 }
 
 .active-image, .second-image, .third-image, .fourth-image {
@@ -647,9 +648,11 @@ a {
 
 .page-header {
   margin: 0;
+  padding: 0;
   position: relative;
   width: 100%;
   height: 50vh;
+  min-height: 400px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -662,11 +665,10 @@ a {
   transform: translate(-50%, -50%);
   font-size: 55px;
   white-space: nowrap;
-  font-family: Lato;
+  font-family: Raleway;
   font-weight: 700;
   color: white;
-  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
 }
 
 .partner-title {
@@ -687,6 +689,15 @@ a {
   background-position: center;
   min-height: 200px;
 }
+
+.fade-div {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, .35);
+}
+
 /*FORM STYLING*/
 
 .form-labels-on-top{

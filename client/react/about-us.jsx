@@ -10,27 +10,27 @@ class AboutUs extends React.Component {
         {
           image: 'imageone.jpg',
           text: 'Who We Are',
-          link: 'who-we-are'
+          link: '/who-we-are'
         },
         {
           image: 'imagetwo.jpg',
           text: 'Athletes Around the World',
-          link: 'around-the-world'
+          link: '/around-the-world'
         },
         {
           image: 'imagethree.jpg',
           text: 'Meet Our Staff',
-          link: 'staff'
+          link: '/staff'
         },
         {
           image: 'imagefour.jpg',
           text: 'Photo Gallery',
-          link: 'gallery'
+          link: '/gallery'
         },
         {
           image: 'imagefive.jpg',
           text: 'Our Partners',
-          link: 'partners'
+          link: '/partners'
         }
       ],
       active: 0,
@@ -112,7 +112,7 @@ class AboutUs extends React.Component {
 
     return (
       <div className='container carousel'>
-        <div className='active-image' style={{backgroundImage: 'url(../img/carousel/' + this.state.content[this.state.active].image + ')'}}>
+        <div className='active-image' style={{backgroundImage: 'url(../img/carousel/' + this.state.content[this.state.active].image + ')'}} onClick={() => {window.location.href = this.state.content[this.state.active].link}}>
           <div className='carousel-title'>
             <p>{this.state.content[this.state.active].text}</p>
           </div>
