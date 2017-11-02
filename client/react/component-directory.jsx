@@ -9,6 +9,7 @@ import AdminPanel from './admin-panel.jsx';
 import ContactModal from './contact-modal.jsx';
 import AboutUs from './about-us.jsx';
 import Gallery from './gallery.jsx';
+import Staff from './staff.jsx';
 
 let currentPage = window.location.pathname;
 let hashString = window.location.hash;
@@ -69,7 +70,7 @@ if (currentPage.indexOf('account') !== -1) {
 } else if (currentPage.indexOf('partners') !== -1) {
 
 } else if (currentPage.indexOf('staff') !== -1) {
-
+  render(<Staff/>, document.getElementById('staff-body'));
 } else if (currentPage.indexOf('around-the-world') !== -1) {
 
 } else if (currentPage.indexOf('gallery') !== -1) {
