@@ -742,6 +742,46 @@ a {
   top: 100px;
   right: 100px;
 }
+
+.athlete-container {
+  background-color: #F8F8F8;
+}
+
+.athlete-name p {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.athlete-image {
+  width: 100%;
+  height: auto;
+  margin: 15px;
+  border-radius: 5px;
+}
+
+.athlete-info p {
+  font-size: 14px;
+  font-family: Lato;
+}
+
+.athlete-info-container {
+  padding: 15px;
+}
+
+.athlete-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.athlete-country {
+  font-size: 14px;
+  font-family: Lato;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 15px;
+  font-style: italic;
+}
 /*FORM STYLING*/
 
 .form-labels-on-top{
