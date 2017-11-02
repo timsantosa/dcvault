@@ -36,7 +36,7 @@ class Gallery extends React.Component {
           <div className="row">
             {this.state.returnedPhotos.map((photo, index) => {
               return (
-                <div key={index} className="col-xs-6 col-md-4">
+                <div key={index} className="col-xs-12 col-md-4">
                   <div className='gallery-img-container'>
                     <img src={'https://graph.facebook.com/' + photo.id + '/picture'} onClick={() => {this.zoomImage.bind(this)(photo.id)}}/>
                   </div>
