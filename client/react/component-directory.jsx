@@ -61,7 +61,7 @@ if (currentPage.indexOf('account') !== -1) {
   render(<AccountPanel/>, document.getElementById('account-panel'));
 } else if (currentPage.indexOf('register') !== -1) {
   render(<Login/>, document.getElementById('login'));
-  render(<Register/>, document.getElementById('registration-page'));
+  // render(<Register/>, document.getElementById('registration-page'));
 } else if (currentPage.indexOf('admin') !== -1) {
   render(<AdminPanel/>, document.getElementById('admin-panel'));
 } else {
