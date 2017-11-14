@@ -829,7 +829,7 @@ class Payment extends React.Component {
     let lateFee = 0;
     if (quarter === 'fall' && now.getMonth() >= 8 && now.getFullYear() === 2017) {
       lateFee = 25;
-    } else if (quarter === 'winter' && ((now.getMonth() >= 9 && now.getFullYear() === 2017) || (now.getFullYear() > 2017))) {
+    } else if (quarter === 'winter' && ((now.getMonth() >= 10 && now.getFullYear() === 2017) || (now.getFullYear() > 2017))) {
       lateFee = 25;
     }
 
