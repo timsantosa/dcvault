@@ -98,8 +98,13 @@ class Register extends React.Component {
       <section id="register">
         <div className="containter">
           <div className="row">
-            <div className="col-xs-12" style={{textAlign: 'center'}}>
-              <p className="info-text">If you have any trouble registering, or wish to clarify any of the information, please <a className="red-text" onClick={() => {document.getElementById('contact-button').click()}}>contact us</a></p>
+            <div className="col-xs-12 col-md-6 col-md-push-3">
+              <p className="info-text" style={{textAlign: 'center', fontStyle: 'italic'}}>If you have any trouble registering, wish to clarify any of the information, or would like to learn more about <span className="red-text">Private Lessons</span> or our many available <span className="red-text">Discounts</span>, please <a className="red-text" onClick={() => {document.getElementById('contact-button').click()}}>click here</a> to contact us.</p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-xs-12 col-md-6 col-md-push-3">
+              <p className="info-text" style={{textAlign: 'center', fontStyle: 'italic'}}><span className="red-text">Please Note:</span> Registration opens on the 15th of the month prior to a given quarter, and closes on the 1st of the second month of the quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
             </div>
           </div>
           {this.state.currentPage}
@@ -319,9 +324,6 @@ class SelectPackage extends React.Component {
                       </div>
                       )
                     })}
-                    <div className="col-xs-12" style={{textAlign: 'center', fontStyle: 'italic', fontWeight: '300', fontSize: '8px'}}>
-                      <p className="info-text">Registration for a given quarter begins on the 15th of the month prior, and ends on the 1st of the second month</p>
-                    </div>
                   </div>
               </div>
 
@@ -1095,7 +1097,7 @@ class Confirmation extends React.Component {
       if (!response.data.ok) {
         this.setState({
           title: 'Uh-oh...',
-          message: 'There was an error storing your payment information. Please email it@dcvault.com to verify that your payment went through, or fix the issue if not.'
+          message: 'There was an error storing your payment information. Please email it@dcvault.com to verify that your payment went through, or recieve help to fix the issue if not.'
         });
       } else {
         this.setState({
