@@ -889,7 +889,7 @@ class Payment extends React.Component {
     }
 
     let quarter = this.props.data.selectPackage.quarter;
-    let now = new Date(2017, 11, 2, 0, 0, 0, 0);
+    let now = new Date();
     let month = now.getMonth() + 1
     let lateFee = 0;
 
