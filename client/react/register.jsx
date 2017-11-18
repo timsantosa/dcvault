@@ -130,7 +130,13 @@ class SelectPackage extends React.Component {
       showElite: false,
       showProfessional: false,
       inviteCode: null,
-      quarters: [],
+      quarters: [
+        {name: 'Summer', value: 'summer'},
+        {name: 'Fall', value: 'fall'},
+        {name: 'Winter', value: 'winter'},
+        {name: 'Spring', value: 'spring'}
+      ],
+      activeQuarter: '',
       availableFacilities: {
         dcv: true,
         balt: true,
@@ -167,30 +173,30 @@ class SelectPackage extends React.Component {
     let today = new Date()
     let month = today.getMonth() + 1
     let day = today.getDate()
-    let quarters = []
+    let activeQuarter = ''
 
 
     if ((month === 11 && day >= 15) || month > 11 && month < 2) {
-      quarters.push({name: 'Winter', value: 'winter'})
+      activeQuarter = 'winter'
       this.setState({
         showYouthAdult: false
       })
     }
 
     if ((month === 2 && day >= 15) || month > 2 && month < 4) {
-      quarters.push({name: 'Spring', value: 'spring'})
+      activeQuarter = 'spring'
     }
 
     if ((month === 8 && day >= 15) || month > 8 && month < 10) {
-      quarters.push({name: 'Fall', value: 'fall'})
+      activeQuarter = 'fall'
     }
 
     if ((month === 5 && day >= 15) || month > 5 && month < 7) {
-      quarters.push({name: 'Summer', value: 'summer'})
+      activeQuarter = 'summer'
     }
 
     this.setState({
-      quarters: quarters
+      activeQuarter: activeQuarter
     })
   }
 
@@ -318,7 +324,7 @@ class SelectPackage extends React.Component {
                       return (
                         <div key={index}>
                           <label>
-                              <input type="radio" name='quarter' value={quarter.value}/>
+                              <input type="radio" name='quarter' value={quarter.value} disabled={context.state.activeQuarter !== quarter.value}/>
                               <span>{quarter.name}</span>
                           </label>
                       </div>
