@@ -974,8 +974,6 @@ class Payment extends React.Component {
 
   applyDiscount() {
 
-    console.log('applying discount', this.refs.discountBox.value);
-
     this.setState({
       errorText: ''
     });
@@ -1095,7 +1093,6 @@ class Confirmation extends React.Component {
     apiHelpers.finalizePayment(this.props.data)
     .then((response) => {
       if (!response.data.ok) {
-        console.log(response);
         this.setState({
           title: 'Uh-oh...',
           message: 'There was an error storing your payment information. Please email it@dcvault.com to verify that your payment went through, or fix the issue if not.'
