@@ -57,6 +57,7 @@ class Training extends React.Component {
         },
         {
           title: 'Professional',
+          priceModifier: 'INVITE ONLY',
           location: 'DCV, NCS, PG',
           duration: 'Year-round program',
           description: 'Professional, Level V athletes work in private session on a personalized, comprehensive, year-round training program. Technical focus is on mastering tertiary phases of the vault, with strong emphasis placed on high level refinement of energy transitions. Speed and strength development is customized for the individual athlete to produce peak performance during championship competitions. It incorporates recovery phases and non-traditional range of motion and biomechanical movements for stabilization, technical consistency and injury prevention.'
