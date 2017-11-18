@@ -52,8 +52,6 @@ class Register extends React.Component {
     }
 
     this.forceUpdate();
-
-    console.log(this.state.data);
   }
 
   componentDidMount() {
@@ -89,8 +87,6 @@ class Register extends React.Component {
             </div>
           )
         });
-
-        console.log(this.state.currentPage);
       }
     });
   }
@@ -121,13 +117,21 @@ class SelectPackage extends React.Component {
 
     this.state = {
       errorText: '',
+      showYouthAdult: true,
       youthAdult: false,
       checkedGroup: '',
       showInvite: false,
       showEmergingElite: false,
       showElite: false,
       showProfessional: false,
-      inviteCode: null
+      inviteCode: null,
+      quarters: [],
+      availableFacilities: {
+        dcv: true,
+        balt: true,
+        pa: true,
+        prep: true
+      }
     }
   }
 
@@ -145,8 +149,6 @@ class SelectPackage extends React.Component {
       output.invite = this.state.inviteCode;
     }
 
-    console.log(output);
-
     if (output.quarter === undefined || output.group === undefined || output.facility === undefined) {
       this.setState({
         errorText: 'Please fill in all required fields'
@@ -154,6 +156,37 @@ class SelectPackage extends React.Component {
     } else {
       this.props.advance('selectPackage', output);
     }
+  }
+
+  componentDidMount() {
+    let today = new Date()
+    let month = today.getMonth() + 1
+    let day = today.getDate()
+    let quarters = []
+
+
+    if ((month === 11 && day >= 15) || month > 11 && month < 2) {
+      quarters.push({name: 'Winter', value: 'winter'})
+      this.setState({
+        showYouthAdult: false
+      })
+    }
+
+    if ((month === 2 && day >= 15) || month > 2 && month < 4) {
+      quarters.push({name: 'Spring', value: 'spring'})
+    }
+
+    if ((month === 8 && day >= 15) || month > 8 && month < 10) {
+      quarters.push({name: 'Fall', value: 'fall'})
+    }
+
+    if ((month === 5 && day >= 15) || month > 5 && month < 7) {
+      quarters.push({name: 'Summer', value: 'summer'})
+    }
+
+    this.setState({
+      quarters: quarters
+    })
   }
 
   // fillInfo() {
@@ -170,14 +203,31 @@ class SelectPackage extends React.Component {
 
     if (group === 'youth-adult') {
       this.setState({
-        youthAdult: true
-      });
-      $('input[name="quarter"][value="fall"]').prop('checked', true);
-      $('input[name="facility"][value="dcv"]').prop('checked', true);
+        availableFacilities: {
+          dcv: true,
+          balt: false,
+          pa: false,
+          prep: false
+        }
+      })
+    } else if (group === 'emerging-elite' || group === 'elite') {
+      this.setState({
+        availableFacilities: {
+          dcv: true,
+          balt: false,
+          pa: false,
+          prep: false
+        }
+      })
     } else {
       this.setState({
-        youthAdult: false
-      });
+        availableFacilities: {
+          dcv: true,
+          balt: true,
+          pa: true,
+          prep: true
+        }
+      })
     }
   }
 
@@ -245,6 +295,7 @@ class SelectPackage extends React.Component {
     }
 
     let extraOption = this.state.extraOption;
+    let context = this
 
     return (
 
@@ -258,30 +309,35 @@ class SelectPackage extends React.Component {
               <div className="form-row">
                   <label><span className='required'>Quarter</span></label>
                   <div className="form-radio-buttons">
-                      <div>
+                    { this.state.quarters.map((quarter, index) => {
+                      return (
+                        <div key={index}>
                           <label>
-                              <input type="radio" name="quarter" value="fall"/>
-                              <span>Fall</span>
+                              <input type="radio" name='quarter' value={quarter.value}/>
+                              <span>{quarter.name}</span>
                           </label>
                       </div>
-                      <div>
-                          <label>
-                              <input type="radio" name="quarter" value="winter" disabled={this.state.youthAdult}/>
-                              <span>Winter</span>
-                          </label>
-                      </div>
+                      )
+                    })}
+                    <div className="col-xs-12" style={{textAlign: 'center', fontStyle: 'italic', fontWeight: '300', fontSize: '8px'}}>
+                      <p className="info-text">Registration for a given quarter begins on the 15th of the month prior, and ends on the 1st of the second month</p>
+                    </div>
                   </div>
               </div>
 
               <div className="form-row">
                   <label><span className='required'>Training Group</span></label>
                   <div className="form-radio-buttons">
-                      <div>
-                          <label>
+                      { () => {
+                        if (context.state.showYouthAdult) {
+                          return (<div>
+                            <label>
                               <input type="radio" name="group" value="youth-adult" checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)}/>
                               <span>Youth/Adult</span>
-                          </label>
-                      </div>
+                            </label>
+                          </div>)
+                        }
+                      }}
                       <div>
                           <label>
                               <input type="radio" name="group" value="beginner" checked={this.state.checkedGroup === 'beginner'} onChange={this.adjustOptions.bind(this)}/>
@@ -320,25 +376,25 @@ class SelectPackage extends React.Component {
                   <div className="form-radio-buttons">
                       <div>
                           <label>
-                              <input type="radio" name="facility" value="dcv"/>
+                              <input type="radio" name="facility" value="dcv" disabled={!this.state.availableFacilities.dcv}/>
                               <span>Washington, DC (DCV)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="facility" value="balt" disabled={this.state.youthAdult}/>
+                              <input type="radio" name="facility" value="balt" disabled={!this.state.availableFacilities.balt}/>
                               <span>Baltimore, MD (BALT)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="facility" value="pa" disabled={this.state.youthAdult}/>
+                              <input type="radio" name="facility" value="pa" disabled={!this.state.availableFacilities.pa}/>
                               <span>Mercersburg, PA (PA)</span>
                           </label>
                       </div>
                       <div>
                           <label>
-                              <input type="radio" name="facility" value="prep" disabled={this.state.youthAdult}/>
+                              <input type="radio" name="facility" value="prep" disabled={!this.state.availableFacilities.prep}/>
                               <span>North Bethesda, MD (PREP)</span>
                           </label>
                       </div>
@@ -825,12 +881,18 @@ class Payment extends React.Component {
     }
 
     let quarter = this.props.data.selectPackage.quarter;
-    let now = new Date();
+    let now = new Date(2017, 11, 2, 0, 0, 0, 0);
+    let month = now.getMonth() + 1
     let lateFee = 0;
-    if (quarter === 'fall' && now.getMonth() >= 8 && now.getFullYear() === 2017) {
-      lateFee = 25;
-    } else if (quarter === 'winter' && ((now.getMonth() >= 11 && now.getFullYear() === 2017) || (now.getFullYear() > 2017))) {
-      lateFee = 25;
+
+    if (quarter === 'winter' && month === 12) {
+      lateFee = 25
+    } else if (quarter === 'spring' && month === 4) {
+      lateFee = 25
+    } else if (quarter === 'summer' && month === 6) {
+      lateFee = 25
+    } else if (quarter === 'fall' && month === 9) {
+      lateFee = 25
     }
 
     this.state = {
