@@ -102,13 +102,13 @@ class Register extends React.Component {
               <p className="info-text" style={{textAlign: 'center', fontStyle: 'italic'}}>If you have any trouble registering, wish to clarify any of the information, or would like to learn more about <span className="red-text">Private Lessons</span> or our many available <span className="red-text">Discounts</span>, please <a className="red-text" onClick={() => {document.getElementById('contact-button').click()}}>click here</a> to contact us.</p>
             </div>
           </div>
+          {this.state.currentPage}
+          {progressBar}
           <div className="row">
             <div className="col-xs-12 col-md-6 col-md-push-3">
               <p className="info-text" style={{textAlign: 'center', fontStyle: 'italic'}}><span className="red-text">Please Note:</span> Registration opens on the 15th of the month prior to a given quarter, and closes on the 1st of the second month of the quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
             </div>
           </div>
-          {this.state.currentPage}
-          {progressBar}
         </div>
       </section>
     );
