@@ -23,7 +23,7 @@ class Training extends React.Component {
           title: 'Beginner',
           ages: 'All Ages',
           price: '$550',
-          priceModifier: 'PER QUARTER',
+          priceModifier: 'PER QTR',
           location: 'DCV, PREP, BALT, PA',
           duration: '3-month course',
           dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
@@ -33,7 +33,7 @@ class Training extends React.Component {
           title: 'Intermediate',
           ages: 'All Ages',
           price: '$550',
-          priceModifier: 'PER QUARTER',
+          priceModifier: 'PER QTR',
           location: 'DCV, PREP, BALT, PA',
           duration: '3-month course',
           dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
@@ -63,16 +63,18 @@ class Training extends React.Component {
         },
         {
           title: 'Discounts',
+          priceModifier: 'BY REQUEST',
           description: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as...</br>10% - DC Residents</br>10% - Active Duty Military</br>10% - Full Time College Student</br>25% - DCPS Students</br>25% - Family Discount</br>Does not apply to equipment rental, special training sessions, or events. Discounts cannot be combined.</br>Please contact us (dcvault@dcvault.org) to apply for a discount code.'
         },
         {
           title: 'Private Lessons',
+          priceModifier: 'BY REQUEST',
           description: '1 hour in duration, offered for all skill levels. Private lessons are limited in availability. Please contact us for scheduling.'
         },
         {
           title: 'Pole Rental',
           price: '$150',
-          priceModifier: 'PER QUARTER',
+          priceModifier: 'PER QTR',
           description: 'Note - Poles are provided FREE OF CHARGE for use during DC Vault classes.</br>As a typical athlete will progress through 3-6 poles during a season, the cost of purchasing poles (ranging from $300-$800 each) can add up quickly. Our pole rental program allows athletes to check out one pole at a time for non-club related activities, such as high school practice or competition.'
         }
       ],
