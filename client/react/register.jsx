@@ -176,7 +176,7 @@ class SelectPackage extends React.Component {
     let activeQuarter = ''
 
 
-    if ((month === 11 && day >= 15) || month > 11 && month < 2) {
+    if ((month === 11 && day >= 15) || (month > 11 || month < 2)) {
       activeQuarter = 'winter'
       this.setState({
         showYouthAdult: false
@@ -195,6 +195,7 @@ class SelectPackage extends React.Component {
       activeQuarter = 'summer'
     }
 
+    console.log('month:', month, 'day:', day, 'activequarter:', activeQuarter)
     this.setState({
       activeQuarter: activeQuarter
     })
