@@ -19,7 +19,8 @@ class Register extends React.Component {
       currentPage: '',
       pageNum: 0,
       data: {},
-      showBar: false
+      showBar: false,
+      registrationOpen: false
     }
   }
 
@@ -55,6 +56,32 @@ class Register extends React.Component {
 
   componentDidMount () {
     this.isLoggedIn()
+
+    let today = new Date()
+    let month = today.getMonth() + 1
+    let day = today.getDate()
+
+    let registrationOpen = false
+
+    if ((month === 11 && day >= 15) || month === 12) {
+      registrationOpen = true
+    }
+
+    if ((month === 2 && day >= 15) || month === 3) {
+      registrationOpen = true
+    }
+
+    if ((month === 5 && day >= 15) || month === 6) {
+      registrationOpen = true
+    }
+
+    if ((month === 8 && day >= 15) || month === 9) {
+      registrationOpen = true
+    }
+
+    this.setState({
+      registrationOpen: registrationOpen
+    })
   }
 
   isLoggedIn () {
@@ -93,24 +120,40 @@ class Register extends React.Component {
   render () {
     window.scrollTo(0, 0)
     let progressBar = this.state.showBar ? (<ProgressBar pageNum={this.state.pageNum} />) : ''
-    return (
-      <section id='register'>
-        <div className='containter'>
-          <div className='row'>
-            <div className='col-xs-12 col-md-6 col-md-push-3'>
-              <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>If you have any trouble registering, wish to clarify any of the information, or would like to learn more about <span className='red-text'>Private Lessons</span> or our many available <span className='red-text'>Discounts</span>, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>click here</a> to contact us.</p>
+    if (this.state.registrationOpen) {
+      return (
+        <section id='register'>
+          <div className='containter'>
+            <div className='row'>
+              <div className='col-xs-12 col-md-6 col-md-push-3'>
+                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>If you have any trouble registering, wish to clarify any of the information, or would like to learn more about <span className='red-text'>Private Lessons</span> or our many available <span className='red-text'>Discounts</span>, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>click here</a> to contact us.</p>
+              </div>
+            </div>
+            {this.state.currentPage}
+            {progressBar}
+            <div className='row'>
+              <div className='col-xs-12 col-md-6 col-md-push-3'>
+                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Registration opens on the 15th of the month prior to a given quarter, and closes on the 1st of the second month of the quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
+              </div>
             </div>
           </div>
-          {this.state.currentPage}
-          {progressBar}
-          <div className='row'>
-            <div className='col-xs-12 col-md-6 col-md-push-3'>
-              <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Registration opens on the 15th of the month prior to a given quarter, and closes on the 1st of the second month of the quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
+        </section>
+      )
+    } else {
+      return (
+        <section style={{minHeight: '90vh'}}>
+          <div className='container'>
+            <div className='row'>
+              <div className='col-xs-12 col-md-6 col-md-push-3'>
+                <p className='section-header'><span className='red-text'>DC Vault</span> Registration</p>
+                <p className='content-text intro-text' style={{textAlign: 'justify'}}>Registration for training will re-open <span className='red-text'>15 days prior</span> to the start of the next quarter, and will close on the <span className='red-text'>1st of the second month</span> of the quarter. A <span className='red-text'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training. <span className='red-text'>Thank you</span>.</p>
+                <p className='content-text intro-text' style={{textAlign: 'right'}}>- DC <span className='red-text'>Vault</span></p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    )
+        </section>
+      )
+    }
   }
 }
 
@@ -173,23 +216,23 @@ class SelectPackage extends React.Component {
     let day = today.getDate()
     let activeQuarter = ''
 
-    if ((month === 11 && day >= 15) || (month > 11 || month < 2)) {
+    if ((month === 11 && day >= 15) || month === 12) {
       activeQuarter = 'winter'
       this.setState({
         showYouthAdult: false
       })
     }
 
-    if (((month === 2 && day >= 15) || month > 2) && month < 4) {
+    if ((month === 2 && day >= 15) || month === 3) {
       activeQuarter = 'spring'
     }
 
-    if (((month === 8 && day >= 15) || month > 8) && month < 10) {
-      activeQuarter = 'fall'
+    if ((month === 5 && day >= 15) || month === 6) {
+      activeQuarter = 'summer'
     }
 
-    if (((month === 5 && day >= 15) || month > 5) && month < 7) {
-      activeQuarter = 'summer'
+    if ((month === 8 && day >= 15) || month === 9) {
+      activeQuarter = 'fall'
     }
 
     console.log('month:', month, 'day:', day, 'activequarter:', activeQuarter)
@@ -304,7 +347,6 @@ class SelectPackage extends React.Component {
     }
 
     let context = this
-
     return (
 
       <div className='row'>
