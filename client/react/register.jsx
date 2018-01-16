@@ -63,19 +63,10 @@ class Register extends React.Component {
 
     let registrationOpen = false
 
-    if ((month === 11 && day >= 15) || month === 12) {
-      registrationOpen = true
-    }
+    let startMonths = [11, 2, 5, 8]
+    let activeMonths = [12, 3, 6, 9]
 
-    if ((month === 2 && day >= 15) || month === 3) {
-      registrationOpen = true
-    }
-
-    if ((month === 5 && day >= 15) || month === 6) {
-      registrationOpen = true
-    }
-
-    if ((month === 8 && day >= 15) || month === 9) {
+    if ((day >= 15 && startMonths.indexOf(month) !== -1) || activeMonths.indexOf(month) !== -1) {
       registrationOpen = true
     }
 
@@ -146,7 +137,7 @@ class Register extends React.Component {
             <div className='row'>
               <div className='col-xs-12 col-md-6 col-md-push-3'>
                 <p className='section-header'><span className='red-text'>DC Vault</span> Registration</p>
-                <p className='content-text intro-text' style={{textAlign: 'justify'}}>Registration for training will re-open <span className='red-text'>15 days prior</span> to the start of the next quarter, and will close on the <span className='red-text'>1st of the second month</span> of the quarter. A <span className='red-text'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training. <span className='red-text'>Thank you</span>.</p>
+                <p className='content-text intro-text' style={{textAlign: 'justify'}}>Registration for training will re-open <span className='red-text'>15 days prior</span> to the start of the next quarter, and will close on the <span className='red-text'>1st of the second month</span> of the quarter. A <span className='red-text'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training, and do not hesitate to <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a> if you have any questions. <span className='red-text'>Thank you</span>.</p>
                 <p className='content-text intro-text' style={{textAlign: 'right'}}>- DC <span className='red-text'>Vault</span></p>
               </div>
             </div>
