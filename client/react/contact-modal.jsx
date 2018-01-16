@@ -1,10 +1,9 @@
-import React from 'react';
-import {render} from 'react-dom';
-import apiHelpers from './api-helpers';
+import React from 'react'
+import apiHelpers from './api-helpers'
 
 class ContactModal extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
 
     this.state = {
       errorText: '',
@@ -12,42 +11,41 @@ class ContactModal extends React.Component {
     }
   }
 
-  submit() {
-    this.setState({errorText: '', statusText: ''});
+  submit () {
+    this.setState({errorText: '', statusText: ''})
 
-
-    let name = this.refs.nameInput.value;
-    let email = this.refs.emailInput.value;
-    let subject = this.refs.inquiryType.value;
-    let body = this.refs.emailBodyInput.value;
+    let name = this.refs.nameInput.value
+    let email = this.refs.emailInput.value
+    let subject = this.refs.inquiryType.value
+    let body = this.refs.emailBodyInput.value
 
     // console.log('Email: %s Name: %s Subject: %s body: %s', email, name, subject, body);
 
     if (!apiHelpers.validateEmail(email)) {
-      this.setState({errorText: 'That is not a valid email address'});
+      this.setState({errorText: 'That is not a valid email address'})
     } else if (name.length === 0 || email.length === 0 || subject.length === 0 || body.length === 0) {
-      this.setState({errorText: 'Please fill in all fields'});
+      this.setState({errorText: 'Please fill in all fields'})
     } else {
       // body = 'User Full Name: ' + name + '\n\nMessage:\n' + body;
-      let recipients = ['dcvault@dcvault.org'];
+      let recipients = ['dcvault@dcvault.org']
       if (subject === 'technical') {
-        recipients.push('it@dcvault.org');
+        recipients.push('it@dcvault.org')
       }
 
       if (subject === 'technical') {
-        subject = 'Technical Issue';
+        subject = 'Technical Issue'
       } else if (subject === 'discount') {
-        subject = 'Discount Code Inquiry';
+        subject = 'Discount Code Inquiry'
       } else if (subject === 'private') {
-        subject = 'Private Lesson Request';
+        subject = 'Private Lesson Request'
       } else if (subject === 'invite') {
-        subject = 'Training Invitation Inquiry';
+        subject = 'Training Invitation Inquiry'
       } else {
-        subject = 'General Inquiry';
+        subject = 'General Inquiry'
       }
 
-      let bodyHeader = 'User Email: ' + email + '\nUser Full Name: ' + name + '\n\n\n';
-      body = bodyHeader + body;
+      let bodyHeader = 'User Email: ' + email + '\nUser Full Name: ' + name + '\n\n\n'
+      body = bodyHeader + body
 
       this.setState({statusText: 'Sending email. Please wait...'})
       apiHelpers.contactForm(name, email, recipients, subject, body)
@@ -61,24 +59,24 @@ class ContactModal extends React.Component {
     }
   }
 
-  render() {
-    let errorContainer = '';
-    let statusContainer = '';
+  render () {
+    let errorContainer = ''
+    let statusContainer = ''
 
     if (!(this.state.errorText.length === 0)) {
       errorContainer = <div className='row'>
-          <div className='error-container'>
-            <p>{this.state.errorText}</p>
-          </div>
-        </div>;
+        <div className='error-container'>
+          <p>{this.state.errorText}</p>
+        </div>
+      </div>
     }
 
     if (!(this.state.statusText.length === 0)) {
       statusContainer = <div className='row'>
-          <div className='status-container'>
-            <p>{this.state.statusText}</p>
-          </div>
-        </div>;
+        <div className='status-container'>
+          <p>{this.state.statusText}</p>
+        </div>
+      </div>
     }
 
     return (
@@ -86,7 +84,7 @@ class ContactModal extends React.Component {
         <div className='login-modal'>
           <div className='row' style={{backgroundColor: '#BBB', margin: '0px', borderRadius: '2px 2px 0px 0px'}}>
             <div className='col-xs-12 login-modal-element'>
-              <span className="red-text"> Contact DC Vault </span>
+              <span className='red-text'> Contact DC Vault </span>
             </div>
           </div>
 
@@ -96,7 +94,7 @@ class ContactModal extends React.Component {
                 Full Name:
               </div>
               <div className='col-xs-7 login-modal-element'>
-                <input className='login-input' type='text' ref='nameInput'/>
+                <input className='login-input' type='text' ref='nameInput' />
               </div>
             </div>
 
@@ -105,7 +103,7 @@ class ContactModal extends React.Component {
                 Email Address:
               </div>
               <div className='col-xs-7 login-modal-element'>
-                <input className='login-input' type='text' ref='emailInput'/>
+                <input className='login-input' type='text' ref='emailInput' />
               </div>
             </div>
 
@@ -130,7 +128,7 @@ class ContactModal extends React.Component {
                 Please describe your inquiry with as much information as you can offer:
               </div>
               <div className='col-xs-12 login-modal-element'>
-                <textarea rows='10' className='login-input' ref='emailBodyInput'/>
+                <textarea rows='10' className='login-input' ref='emailBodyInput' />
               </div>
             </div>
 
@@ -144,16 +142,15 @@ class ContactModal extends React.Component {
             </div>
           </form>
 
-
-          <div className="row">
+          <div className='row'>
             <div className='col-xs-12 login-modal-element'>
               <a id='contact-menu-close' className='smaller-text' style={{marginTop: '25px'}}>CLOSE</a>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default ContactModal;
+export default ContactModal

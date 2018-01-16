@@ -1,20 +1,15 @@
-import React from 'react';
-import {render} from 'react-dom';
-import apiHelpers from './api-helpers';
-import Reactable from 'reactable';
-import SuperTable from './super-table.jsx';
-
-var Table = Reactable.Table;
+import React from 'react'
+import apiHelpers from './api-helpers'
+import SuperTable from './super-table.jsx'
 
 class AdminPanel extends React.Component {
-
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     apiHelpers.verifyToken().then((answer) => {
       if (!answer) {
-        window.location.href = '/';
+        window.location.href = '/'
       }
-    });
+    })
 
     this.state = {
       name: '',
@@ -28,33 +23,33 @@ class AdminPanel extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.isLoggedIn();
-    this.populateUserInfo();
+  componentDidMount () {
+    this.isLoggedIn()
+    this.populateUserInfo()
   }
 
-  isLoggedIn() {
-    const loginDiv = document.getElementById('login');
-    const loginButton = document.getElementById('login-button');
+  isLoggedIn () {
+    const loginDiv = document.getElementById('login')
+    const loginButton = document.getElementById('login-button')
     apiHelpers.verifyToken().then((answer) => {
       if (answer) {
-        loginButton.innerHTML = 'My Account';
+        loginButton.innerHTML = 'My Account'
         loginButton.onclick = () => {
-          window.location.href = '/account';
+          window.location.href = '/account'
         }
       } else {
         loginButton.onclick = () => {
-          loginDiv.style.opacity = 1;
-          loginDiv.style.visibility = 'visible';
-        };
+          loginDiv.style.opacity = 1
+          loginDiv.style.visibility = 'visible'
+        }
       }
-    });
+    })
   }
 
-  populateUserInfo() {
+  populateUserInfo () {
     apiHelpers.getUserData()
     .then((response) => {
-      if (!!response.data) {
+      if (response.data) {
         if (response.data.ok) {
           if (response.data.user.isAdmin) {
             this.setState({
@@ -67,221 +62,167 @@ class AdminPanel extends React.Component {
               discounts: response.data.discounts || [],
               invites: response.data.invites || [],
               displayData: this.combineData(response.data.athletes, response.data.purchases)
-            });
+            })
           } else {
-            window.location.href = '/';
+            window.location.href = '/'
           }
         } else {
-          window.location.href = '/';
+          window.location.href = '/'
         }
       }
     })
   }
 
-  combineData(athletes, purchases) {
-    let returnArr = [];
+  combineData (athletes, purchases) {
+    let returnArr = []
     for (let i = 0; i < purchases.length; i++) {
-      let athleteId = purchases[i].athleteId;
+      let athleteId = purchases[i].athleteId
       for (let j = 0; j < athletes.length; j++) {
         if (athletes[j].id === athleteId) {
-          let purchaseClone = JSON.parse(JSON.stringify(purchases[i]));
-          let athleteClone = JSON.parse(JSON.stringify(athletes[j]));
+          let purchaseClone = JSON.parse(JSON.stringify(purchases[i]))
+          let athleteClone = JSON.parse(JSON.stringify(athletes[j]))
           for (let key in athleteClone) {
             if (!(purchaseClone.hasOwnProperty(key))) {
-              purchaseClone[key] = athleteClone[key];
+              purchaseClone[key] = athleteClone[key]
             } else if (key.toUpperCase().indexOf('ID') === -1) {
-              purchaseClone['athlete_'+key] = athleteClone[key];
+              purchaseClone['athlete_' + key] = athleteClone[key]
             }
           }
-          returnArr.push(purchaseClone);
+          returnArr.push(purchaseClone)
         }
       }
     }
-    return returnArr;
+    return returnArr
   }
 
-  addCode(e) {
-    e.preventDefault();
-    let amount = this.refs.percentInput.value;
-    amount = parseInt(amount) / 100;
-    let description = this.refs.descInput.value;
+  addCode (e) {
+    e.preventDefault()
+    let amount = this.refs.percentInput.value
+    amount = parseInt(amount) / 100
+    let description = this.refs.descInput.value
     if (!!amount && !!description) {
       apiHelpers.createDiscount(description, amount)
       .then((response) => {
-        window.location.reload();
-      });
+        window.location.reload()
+      })
     }
   }
 
-  addInvite(e) {
-    e.preventDefault();
-    let level = this.refs.levelInput.value;
-    let description = this.refs.inviteDescInput.value;
+  addInvite (e) {
+    e.preventDefault()
+    let level = this.refs.levelInput.value
+    let description = this.refs.inviteDescInput.value
 
     if (!(level <= 5 && level >= 3)) {
-      alert('Level must be 3, 4, or 5');
+      window.alert('Level must be 3, 4, or 5')
     } else {
       if (!!level && !!description) {
         apiHelpers.createInvite(description, level)
         .then((response) => {
-          window.location.reload();
-        });
+          window.location.reload()
+        })
       }
     }
   }
 
-  render() {
-    let purchases = this.state.purchases;
-    let athletes = this.state.athletes;
-      return (
-      <section id="my-account">
+  render () {
+    return (
+      <section id='my-account'>
 
-      <p className="subsection-header"><span className="red-text">Admin</span> Panel</p>
+        <p className='subsection-header'><span className='red-text'>Admin</span> Panel</p>
 
-        <div className="row">
-          <div className="col-xs-12">
-            <div className="account-panel-box">
-              <div className="title-box">
-                <span className="title">Registered Athletes</span>
+        <div className='row'>
+          <div className='col-xs-12'>
+            <div className='account-panel-box'>
+              <div className='title-box'>
+                <span className='title'>Registered Athletes</span>
               </div>
-              <div className="body-box">
-                <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'quarter', 'emergencyContactMDN']}/>
+              <div className='body-box'>
+                <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'quarter', 'emergencyContactMDN']} />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-xs-12 col-md-6">
-            <div className="account-panel-box">
-              <div className="title-box">
-                <span className="title">Discount Codes</span>
+        <div className='row'>
+          <div className='col-xs-12 col-md-6'>
+            <div className='account-panel-box'>
+              <div className='title-box'>
+                <span className='title'>Discount Codes</span>
               </div>
-              <div className="body-box">
-                <Discounts discounts={this.state.discounts}/>
-                  <form id="addCode" className="form-labels-on-top" onSubmit={this.addCode.bind(this)}>
-                      <div className="row">
-                        <div className="col-xs-12 col-md-6">
-                          <div className="form-row">
-                            <label>
-                              <span className='required'>Description</span>
-                              <input type="text" name="description" ref="descInput" style={{width: '100%'}}/>
-                            </label>
-                          </div>
-                        </div>
-
-                        <div className="col-xs-12 col-md-6">
-                          <div className="form-row">
-                            <label>
-                              <span className='required'>Percentage (0-100)</span>
-                              <input type="text" name="amount" ref="percentInput" style={{width: '100%'}}/>
-                            </label>
-                          </div>
-                        </div>
+              <div className='body-box'>
+                <Discounts discounts={this.state.discounts} />
+                <form id='addCode' className='form-labels-on-top' onSubmit={this.addCode.bind(this)}>
+                  <div className='row'>
+                    <div className='col-xs-12 col-md-6'>
+                      <div className='form-row'>
+                        <label>
+                          <span className='required'>Description</span>
+                          <input type='text' name='description' ref='descInput' style={{width: '100%'}} />
+                        </label>
                       </div>
-                      <div className="form-row" >
-                          <button type="submit">Add Code</button>
-                      </div>
+                    </div>
 
-                  </form>
+                    <div className='col-xs-12 col-md-6'>
+                      <div className='form-row'>
+                        <label>
+                          <span className='required'>Percentage (0-100)</span>
+                          <input type='text' name='amount' ref='percentInput' style={{width: '100%'}} />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='form-row' >
+                    <button type='submit'>Add Code</button>
+                  </div>
+
+                </form>
               </div>
             </div>
           </div>
-          <div className="col-xs-12 col-md-6">
-            <div className="account-panel-box">
-              <div className="title-box">
-                <span className="title">Invite Codes</span>
+          <div className='col-xs-12 col-md-6'>
+            <div className='account-panel-box'>
+              <div className='title-box'>
+                <span className='title'>Invite Codes</span>
               </div>
-              <div className="body-box">
-                <Invites invites={this.state.invites}/>
-                  <form id="addInvite" className="form-labels-on-top" onSubmit={this.addInvite.bind(this)}>
-                      <div className="row">
-                        <div className="col-xs-12 col-md-6">
-                          <div className="form-row">
-                            <label>
-                              <span className='required'>Description</span>
-                              <input type="text" name="description" ref="inviteDescInput" style={{width: '100%'}}/>
-                            </label>
-                          </div>
-                        </div>
-
-                        <div className="col-xs-12 col-md-6">
-                          <div className="form-row">
-                            <label>
-                              <span className='required'>Level (3-5)</span>
-                              <input type="text" name="amount" ref="levelInput" style={{width: '100%'}}/>
-                            </label>
-                          </div>
-                        </div>
+              <div className='body-box'>
+                <Invites invites={this.state.invites} />
+                <form id='addInvite' className='form-labels-on-top' onSubmit={this.addInvite.bind(this)}>
+                  <div className='row'>
+                    <div className='col-xs-12 col-md-6'>
+                      <div className='form-row'>
+                        <label>
+                          <span className='required'>Description</span>
+                          <input type='text' name='description' ref='inviteDescInput' style={{width: '100%'}} />
+                        </label>
                       </div>
-                      <div className="form-row" >
-                          <button type="submit">Add Code</button>
-                      </div>
+                    </div>
 
-                  </form>
+                    <div className='col-xs-12 col-md-6'>
+                      <div className='form-row'>
+                        <label>
+                          <span className='required'>Level (3-5)</span>
+                          <input type='text' name='amount' ref='levelInput' style={{width: '100%'}} />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='form-row' >
+                    <button type='submit'>Add Code</button>
+                  </div>
+
+                </form>
               </div>
             </div>
           </div>
         </div>
       </section>
-    );
-  }
-}
-
-class Purchases extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  getAthlete(id) {
-    for (let i = 0; i < this.props.athletes.length; i++) {
-      if (this.props.athletes[i].id === id) {
-        return (this.props.athletes[i].firstName + ' ' + this.props.athletes[i].lastName).toUpperCase();
-      }
-    }
-  }
-
-  render() {
-    let getAthlete = this.getAthlete.bind(this);
-    if (this.props.purchases.length === 0) {
-      return (<p> None to show </p>);
-    } else {
-      return (
-        <table className="purchases-table">
-          <tbody>
-            <tr>
-              <th>Quarter</th>
-              <th>Group</th>
-              <th>Facility</th>
-              <th>Athlete</th>
-            </tr>
-            {this.props.purchases.map((purchase) => {
-              return (
-                <tr key={purchase.id}>
-                  <td>
-                    {purchase.quarter.toUpperCase()}
-                  </td>
-                  <td>
-                    {purchase.group.toUpperCase()}
-                  </td>
-                  <td>
-                    {purchase.facility.toUpperCase()}
-                  </td>
-                  <td>
-                    {getAthlete(purchase.athleteId)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      );
-    }
+    )
   }
 }
 
 class Discounts extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       errorText: '',
@@ -289,51 +230,50 @@ class Discounts extends React.Component {
     }
   }
 
-  deleteCode(index) {
+  deleteCode (index) {
     this.setState({
       errorText: '',
       statusText: ''
-    });
+    })
     apiHelpers.deleteDiscount(index)
     .then((response) => {
       if (response.data.ok) {
         this.setState({
           statusText: 'Code Deleted'
-        });
-          setTimeout(() => {window.location.reload()}, 2000);
+        })
+        setTimeout(() => { window.location.reload() }, 2000)
       } else {
         this.setState({
           errorText: 'An error has occurred'
-        });
+        })
       }
     })
   }
 
-  render() {
-
-    let errorContainer = '';
-    let statusContainer = '';
+  render () {
+    let errorContainer = ''
+    let statusContainer = ''
     if (this.state.errorText.length > 0) {
       errorContainer = (
         <div className='error-container'>
           <p>{this.state.errorText}</p>
         </div>
-      );
+      )
     }
     if (this.state.statusText.length > 0) {
       statusContainer = (
         <div className='status-container'>
           <p>{this.state.statusText}</p>
         </div>
-      );
+      )
     }
 
     if (this.props.discounts.length === 0) {
-      return (<p> None to show </p>);
+      return (<p> None to show </p>)
     } else {
       return (
         <div>
-          <table className="purchases-table">
+          <table className='purchases-table'>
             <tbody>
               <tr>
                 <th>Description</th>
@@ -354,23 +294,23 @@ class Discounts extends React.Component {
                       {discount.amount * 100}%
                     </td>
                     <td>
-                      <span className="glyphicon glyphicon-remove edit-button" onClick={() => {this.deleteCode.bind(this)(discount.id)}}></span>
+                      <span className='glyphicon glyphicon-remove edit-button' onClick={() => { this.deleteCode.bind(this)(discount.id) }} />
                     </td>
                   </tr>
-                );
+                )
               })}
             </tbody>
           </table>
           {errorContainer}
           {statusContainer}
         </div>
-      );
+      )
     }
   }
 }
 
 class Invites extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       errorText: '',
@@ -378,51 +318,50 @@ class Invites extends React.Component {
     }
   }
 
-  deleteCode(index) {
+  deleteCode (index) {
     this.setState({
       errorText: '',
       statusText: ''
-    });
+    })
     apiHelpers.deleteInvite(index)
     .then((response) => {
       if (response.data.ok) {
         this.setState({
           statusText: 'Code Deleted'
-        });
-          setTimeout(() => {window.location.reload()}, 2000);
+        })
+        setTimeout(() => { window.location.reload() }, 2000)
       } else {
         this.setState({
           errorText: 'An error has occurred'
-        });
+        })
       }
     })
   }
 
-  render() {
-
-    let errorContainer = '';
-    let statusContainer = '';
+  render () {
+    let errorContainer = ''
+    let statusContainer = ''
     if (this.state.errorText.length > 0) {
       errorContainer = (
         <div className='error-container'>
           <p>{this.state.errorText}</p>
         </div>
-      );
+      )
     }
     if (this.state.statusText.length > 0) {
       statusContainer = (
         <div className='status-container'>
           <p>{this.state.statusText}</p>
         </div>
-      );
+      )
     }
 
     if (this.props.invites.length === 0) {
-      return (<p> None to show </p>);
+      return (<p> None to show </p>)
     } else {
       return (
         <div>
-          <table className="purchases-table">
+          <table className='purchases-table'>
             <tbody>
               <tr>
                 <th>Description</th>
@@ -443,19 +382,19 @@ class Invites extends React.Component {
                       {invite.level}
                     </td>
                     <td>
-                      <span className="glyphicon glyphicon-remove edit-button" onClick={() => {this.deleteCode.bind(this)(invite.id)}}></span>
+                      <span className='glyphicon glyphicon-remove edit-button' onClick={() => { this.deleteCode.bind(this)(invite.id) }} />
                     </td>
                   </tr>
-                );
+                )
               })}
             </tbody>
-          {errorContainer}
-          {statusContainer}
+            {errorContainer}
+            {statusContainer}
           </table>
         </div>
-      );
+      )
     }
   }
 }
 
-export default AdminPanel;
+export default AdminPanel

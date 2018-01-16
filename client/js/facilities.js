@@ -49,13 +49,13 @@ var textValues = {
 <p class="content-text" style="font-weight: bold">What</p>\
 <p class="content-text smaller-text">Outdoor Pole Vault Training Center located on East Capitol street near the RFK Stadium. Used for training entry level through elite athletes, youth through adult, in group and private settings.</p>',
 
-PA: '<p class="minor-heading"><span class="red-text">Mercersburg</span> Academy (PA)</p>\
+  PA: '<p class="minor-heading"><span class="red-text">Mercersburg</span> Academy (PA)</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
 <p class="content-text smaller-text">Mercersburg Academy</p>\
 <p class="content-text smaller-text">300 Ease Seminary Street, Mercersburg, PA 17236</p>\
 <p class="content-text" style="font-weight: bold">What</p>\
 <p class="content-text smaller-text">Indoor training site, primarily used for PA based Level-I and Level-II developmental training.</p>'
-};
+}
 
 var locations = {
   NCS: {lat: 38.927475, lng: -77.068477},
@@ -84,71 +84,71 @@ var boundingBox = {
   maxLat: locations[Object.keys(locations)[0]].lat,
   minLng: locations[Object.keys(locations)[0]].lng,
   maxLng: locations[Object.keys(locations)[0]].lng
-};
+}
 
 for (var key in locations) {
   if (locations[key].lat < boundingBox.minLat) {
-    boundingBox.minLat = locations[key].lat;
+    boundingBox.minLat = locations[key].lat
   } else if (locations[key].lat > boundingBox.maxLat) {
-    boundingBox.maxLat = locations[key].lat;
+    boundingBox.maxLat = locations[key].lat
   }
 
   if (locations[key].lng < boundingBox.minLng) {
-    boundingBox.minLng = locations[key].lng;
+    boundingBox.minLng = locations[key].lng
   } else if (locations[key].lng > boundingBox.maxLng) {
-    boundingBox.maxLng = locations[key].lng;
+    boundingBox.maxLng = locations[key].lng
   }
 }
 
-locations.CENTER = {lat: (boundingBox.maxLat + boundingBox.minLat) / 2, lng: (boundingBox.maxLng + boundingBox.minLng) / 2};
+locations.CENTER = {lat: (boundingBox.maxLat + boundingBox.minLat) / 2, lng: (boundingBox.maxLng + boundingBox.minLng) / 2}
 
 // End calculate center
 
-var map, markers;
+var map, markers // eslint-disable-line
 
-var current = 'DEFAULT';
-var textBox = document.getElementById('facilities-text-box');
-var facilities = Object.keys(textValues);
-facilities.shift(); // Removes "default" as a clickable option
+var current = 'DEFAULT'
+var textBox = document.getElementById('facilities-text-box')
+var facilities = Object.keys(textValues)
+facilities.shift() // Removes "default" as a clickable option
 
 facilities.map(function (facility, index) {
   document.getElementById(facility).onclick = function () {
     for (var j = 0; j < facilities.length; j++) { // Reset bg color of all
-      document.getElementById(facilities[j]).className = 'facility-tab';
+      document.getElementById(facilities[j]).className = 'facility-tab'
     }
 
     if (current === facility) {
-      current = 'DEFAULT';
-      textBox.innerHTML = textValues.DEFAULT;
-      map.setCenter(locations.CENTER);
-      map.setZoom(8);
+      current = 'DEFAULT'
+      textBox.innerHTML = textValues.DEFAULT
+      map.setCenter(locations.CENTER)
+      map.setZoom(8)
     } else {
-      current = facility;
-      textBox.innerHTML = textValues[facility];
-      this.className = 'facility-tab facility-tab-selected';
-      map.setCenter(locations[facility]);
-      map.setZoom(14);
+      current = facility
+      textBox.innerHTML = textValues[facility]
+      this.className = 'facility-tab facility-tab-selected'
+      map.setCenter(locations[facility])
+      map.setZoom(14)
     }
   }
-});
+})
 
 window.initMap = function () {
-  map = new google.maps.Map(document.getElementById('map'), {
+  map = new window.google.maps.Map(document.getElementById('map'), {
     zoom: 8,
     center: locations.CENTER,
     scrollwheel: false,
     // mapTypeControl: false,
     streetViewControl: false,
     styles: window.mapStyle
-  });
+  })
 
   markers = {
-    NCS: new google.maps.Marker({position: locations.NCS, map: map, title: tooltips.NCS}),
-    CUA: new google.maps.Marker({position: locations.CUA, map: map, title: tooltips.CUA}),
-    PREP: new google.maps.Marker({position: locations.PREP, map: map, title: tooltips.PREP}),
-    PG: new google.maps.Marker({position: locations.PG, map: map, title: tooltips.PG}),
-    BALT: new google.maps.Marker({position: locations.BALT, map: map, title: tooltips.BALT}),
-    DCV: new google.maps.Marker({position: locations.DCV, map: map, title: tooltips.DCV}),
-    PA: new google.maps.Marker({position: locations.PA, map: map, title: tooltips.PA})
+    NCS: new window.google.maps.Marker({position: locations.NCS, map: map, title: tooltips.NCS}),
+    CUA: new window.google.maps.Marker({position: locations.CUA, map: map, title: tooltips.CUA}),
+    PREP: new window.google.maps.Marker({position: locations.PREP, map: map, title: tooltips.PREP}),
+    PG: new window.google.maps.Marker({position: locations.PG, map: map, title: tooltips.PG}),
+    BALT: new window.google.maps.Marker({position: locations.BALT, map: map, title: tooltips.BALT}),
+    DCV: new window.google.maps.Marker({position: locations.DCV, map: map, title: tooltips.DCV}),
+    PA: new window.google.maps.Marker({position: locations.PA, map: map, title: tooltips.PA})
   }
 }

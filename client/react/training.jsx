@@ -1,11 +1,9 @@
-import React from 'react';
-import {render} from 'react-dom';
-import ReactTooltip from 'react-tooltip';
+import React from 'react'
+import ReactTooltip from 'react-tooltip'
 
 class Training extends React.Component {
-
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
 
     this.state = {
       trainingCards: [
@@ -81,44 +79,40 @@ class Training extends React.Component {
       ],
       showDescription: false,
       currentDescription: ''
-    };
+    }
   }
 
-  componentDidMount() {
+  componentDidMount () {
 
   }
 
-  render() { // All components have a render function in which you will return this 'HTML-like' syntax
+  render () { // All components have a render function in which you will return this 'HTML-like' syntax
     return (
-      <div id="training-container" className="container">
-        <p className="section-header">Training <span className="red-text">Options</span></p>
-        <div className="row" style={{width: '100%', margin: '0'}}>
+      <div id='training-container' className='container'>
+        <p className='section-header'>Training <span className='red-text'>Options</span></p>
+        <div className='row' style={{width: '100%', margin: '0'}}>
           {
             this.state.trainingCards.map((card, index) => {
               return (
-                <TrainingCard card={card} index={index} key={index}/>
+                <TrainingCard card={card} index={index} key={index} />
               )
             })
           }
         </div>
-        <div className="red-button" onClick={() => {window.location.href='/register'}} style={{marginTop: '30px'}}>
-          <span className="button-text">Sign Up</span>
+        <div className='red-button' onClick={() => { window.location.href = '/register' }} style={{marginTop: '30px'}}>
+          <span className='button-text'>Sign Up</span>
         </div>
         <div className='center-content' style={{marginTop: '15px'}}>
-          <p className="info-text" style={{textAlign: 'center'}}>To apply for a discount code or training group invitation, please <a className="red-text" onClick={() => {document.getElementById('contact-button').click()}}>contact us</a></p>
+          <p className='info-text' style={{textAlign: 'center'}}>To apply for a discount code or training group invitation, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a></p>
         </div>
-        <ReactTooltip html={true}/>
+        <ReactTooltip html />
       </div>
-    );
+    )
   }
 }
 
 class TrainingCard extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
+  render () {
     let card = this.props.card
     let index = this.props.index
 
@@ -142,29 +136,18 @@ class TrainingCard extends React.Component {
     descriptionString += card.description
     return (
       <div className={classString}>
-        <p className="option-title">{card.title}</p>
-        <p className="option-info">{card.ages ? card.ages : ''}</p>
-        <div className="option-price-container-1">
-          <div className="option-price-container-2">
-            <p className="option-price">{card.price ? card.price : 'N/A'}</p>
-            <p className="option-price-modifier">{card.priceModifier ? card.priceModifier : ''}</p>
+        <p className='option-title'>{card.title}</p>
+        <p className='option-info'>{card.ages ? card.ages : ''}</p>
+        <div className='option-price-container-1'>
+          <div className='option-price-container-2'>
+            <p className='option-price'>{card.price ? card.price : 'N/A'}</p>
+            <p className='option-price-modifier'>{card.priceModifier ? card.priceModifier : ''}</p>
           </div>
         </div>
-        <a className="learn-more" data-tip={'<div style="max-width: 250px">' + descriptionString + '</div>'}>Details</a>
+        <a className='learn-more' data-tip={'<div style="max-width: 250px">' + descriptionString + '</div>'}>Details</a>
       </div>
     )
   }
 }
 
-/*
-*/
-
-class DescriptionModal extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-
-}
-
-export default Training;
+export default Training
