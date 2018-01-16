@@ -19,8 +19,6 @@ class ContactModal extends React.Component {
     let subject = this.refs.inquiryType.value
     let body = this.refs.emailBodyInput.value
 
-    // console.log('Email: %s Name: %s Subject: %s body: %s', email, name, subject, body);
-
     if (!apiHelpers.validateEmail(email)) {
       this.setState({errorText: 'That is not a valid email address'})
     } else if (name.length === 0 || email.length === 0 || subject.length === 0 || body.length === 0) {

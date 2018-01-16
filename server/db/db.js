@@ -1,8 +1,8 @@
-'use strict';
-const Sequelize = require('sequelize');
+'use strict'
+const Sequelize = require('sequelize')
 
-let tables = {};
-let columns = {};
+let tables = {}
+let columns = {}
 
 columns.users = {
   email: Sequelize.STRING,
@@ -12,7 +12,7 @@ columns.users = {
   verificationCode: Sequelize.STRING,
   name: Sequelize.STRING
   // Address FK
-};
+}
 
 columns.athletes = {
   firstName: Sequelize.STRING,
@@ -28,7 +28,7 @@ columns.athletes = {
   school: Sequelize.STRING,
   medConditions: Sequelize.TEXT
   // User FK
-};
+}
 
 columns.poles = {
   brand: Sequelize.STRING,
@@ -38,19 +38,19 @@ columns.poles = {
   damage: Sequelize.TEXT,
   note: Sequelize.TEXT,
   price: Sequelize.DOUBLE
-};
+}
 
 columns.packages = {
   name: Sequelize.STRING,
   quarter: Sequelize.INTEGER,
   year: Sequelize.INTEGER,
   price: Sequelize.DOUBLE
-};
+}
 
 columns.rentals = {
   // POLE FK, USER FK
   quarter: Sequelize.INTEGER
-};
+}
 
 columns.purchases = {
   // athleteFK, userFK
@@ -61,20 +61,20 @@ columns.purchases = {
   waiverDate: Sequelize.STRING,
   paymentId: Sequelize.STRING,
   payerId: Sequelize.STRING
-};
+}
 
 columns.sites = {
   name: Sequelize.STRING,
   description: Sequelize.TEXT
   // Address FK
-};
+}
 
 columns.discounts = {
   code: {type: Sequelize.STRING, unique: true},
   uses: Sequelize.INTEGER,
   type: Sequelize.STRING,
   amount: Sequelize.DOUBLE
-};
+}
 
 columns.invites = {
   code: {type: Sequelize.STRING, unique: true},
@@ -89,44 +89,42 @@ columns.addresses = {
   state: Sequelize.STRING,
   zip: Sequelize.STRING,
   country: Sequelize.STRING
-};
-
+}
 
 const syncTables = (schema, force) => {
-  var force = !!force;
+  force = !!force
 
-  tables.Users = schema.define('user', columns.users);
-  tables.Athletes = schema.define('athlete', columns.athletes);
-  tables.Poles = schema.define('pole', columns.poles);
-  tables.Packages = schema.define('package', columns.packages);
-  tables.Rentals = schema.define('rental', columns.rentals);
-  tables.Purchases = schema.define('purchase', columns.purchases);
-  tables.Sites = schema.define('site', columns.sites);
-  tables.Discounts = schema.define('discount', columns.discounts);
-  tables.Invites = schema.define('invite', columns.invites);
-  tables.Addresses = schema.define('address', columns.addresses);
+  tables.Users = schema.define('user', columns.users)
+  tables.Athletes = schema.define('athlete', columns.athletes)
+  tables.Poles = schema.define('pole', columns.poles)
+  tables.Packages = schema.define('package', columns.packages)
+  tables.Rentals = schema.define('rental', columns.rentals)
+  tables.Purchases = schema.define('purchase', columns.purchases)
+  tables.Sites = schema.define('site', columns.sites)
+  tables.Discounts = schema.define('discount', columns.discounts)
+  tables.Invites = schema.define('invite', columns.invites)
+  tables.Addresses = schema.define('address', columns.addresses)
 
+  tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
-  tables.Users.belongsTo(tables.Addresses, {as: 'address'});
+  tables.Sites.belongsTo(tables.Sites, {as: 'address'})
 
-  tables.Sites.belongsTo(tables.Sites, {as: 'address'});
+  tables.Athletes.belongsTo(tables.Users, {as: 'user'})
 
-  tables.Athletes.belongsTo(tables.Users, {as: 'user'});
+  tables.Rentals.belongsTo(tables.Users, {as: 'user'})
+  tables.Rentals.belongsTo(tables.Poles, {as: 'pole'})
 
-  tables.Rentals.belongsTo(tables.Users, {as: 'user'});
-  tables.Rentals.belongsTo(tables.Poles, {as: 'pole'});
+  tables.Purchases.belongsTo(tables.Users, {as: 'user'})
+  tables.Purchases.belongsTo(tables.Athletes, {as: 'athlete'})
 
-  tables.Purchases.belongsTo(tables.Users, {as: 'user'});
-  tables.Purchases.belongsTo(tables.Athletes, {as: 'athlete'});
+  tables.Discounts.belongsTo(tables.Users, {as: 'user'})
+  tables.Discounts.belongsTo(tables.Packages, {as: 'package'})
+  tables.Discounts.belongsTo(tables.Rentals, {as: 'rental'})
 
-  tables.Discounts.belongsTo(tables.Users, {as: 'user'});
-  tables.Discounts.belongsTo(tables.Packages, {as: 'package'});
-  tables.Discounts.belongsTo(tables.Rentals, {as: 'rental'});
-
-  return schema.sync({force: force});
+  return schema.sync({force: force})
 }
 
 module.exports = {
   tables: tables,
   syncTables: syncTables
-};
+}

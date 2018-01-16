@@ -41,7 +41,7 @@ class SuperTable extends React.Component {
         }
       }
     } catch (e) {
-      console.log('unable to retrieve column prefs')
+      console.error('unable to retrieve column prefs')
     }
   }
 
@@ -376,7 +376,7 @@ class ColumnExport extends React.Component {
         this.setState({msg: ''})
       }, 3000)
     } catch (e) {
-      console.log('unable to copy\n', e)
+      console.error('unable to copy\n', e)
     }
   }
 
