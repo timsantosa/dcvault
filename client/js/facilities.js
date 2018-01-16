@@ -1,3 +1,5 @@
+/* eslint-disable no-multi-str */
+
 var textValues = {
   DEFAULT: 'Through a variety of partnerships, DC Vault provides training at 7 facilities in the Washington, DC metropolitan area. Each facility has been uniquely outfitted with a wide array of specialized equipment provided by the club, allowing for training targeted to athletes of all skill levels.',
 
