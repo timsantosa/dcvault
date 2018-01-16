@@ -226,7 +226,6 @@ class SelectPackage extends React.Component {
       activeQuarter = 'fall'
     }
 
-    console.log('month:', month, 'day:', day, 'activequarter:', activeQuarter)
     this.setState({
       activeQuarter: activeQuarter
     })
