@@ -158,12 +158,10 @@ module.exports = (app, db) => {
         user = jwt.decode(req.body.token, config.auth.secret)
       } catch (e) {}
       db.tables.Users.find({where: {id: user.id}}).then(user => {
-        user = {id: 1}
         if (!user) {
           res.status(400).send({ok: false, message: 'bad user token'})
         } else {
           db.tables.Athletes.find({where: {id: req.body.athleteId}}).then(athlete => {
-            athlete = {id: 1, userId: 1}
             if (!athlete || athlete.userId !== user.id) {
               res.status(400).send({ok: false, message: 'athlete not found'})
             } else {
