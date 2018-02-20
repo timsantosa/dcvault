@@ -34,10 +34,16 @@ columns.poles = {
   brand: Sequelize.STRING,
   length: Sequelize.STRING,
   weight: Sequelize.STRING,
-  flex: Sequelize.STRING,
-  damage: Sequelize.TEXT,
+  damaged: Sequelize.BOOLEAN,
+  missing: Sequelize.BOOLEAN,
+  needsTip: Sequelize.BOOLEAN,
+  broken: Sequelize.BOOLEAN,
   note: Sequelize.TEXT,
-  price: Sequelize.DOUBLE
+  rented: Sequelize.BOOLEAN
+}
+
+columns.rentals = {
+  expiration: Sequelize.DATE
 }
 
 columns.packages = {
@@ -45,11 +51,6 @@ columns.packages = {
   quarter: Sequelize.INTEGER,
   year: Sequelize.INTEGER,
   price: Sequelize.DOUBLE
-}
-
-columns.rentals = {
-  // POLE FK, USER FK
-  quarter: Sequelize.INTEGER
 }
 
 columns.purchases = {
@@ -111,7 +112,7 @@ const syncTables = (schema, force) => {
 
   tables.Athletes.belongsTo(tables.Users, {as: 'user'})
 
-  tables.Rentals.belongsTo(tables.Users, {as: 'user'})
+  tables.Rentals.belongsTo(tables.Athletes, {as: 'athlete'})
   tables.Rentals.belongsTo(tables.Poles, {as: 'pole'})
 
   tables.Purchases.belongsTo(tables.Users, {as: 'user'})
