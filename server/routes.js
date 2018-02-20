@@ -69,7 +69,7 @@ module.exports = (app, db) => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else if (!newPole) {
-          res.status(400).send({ok: false, message: 'bad request'})
+          res.status(400).send({ok: false, message: 'bad JSON in newPole'})
         } else {
           db.tables.Poles.create(newPole).then(newPole => {
             res.send({ok: true, message: 'pole record added successfully', newPole})

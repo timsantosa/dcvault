@@ -32,8 +32,9 @@ columns.athletes = {
 
 columns.poles = {
   brand: Sequelize.STRING,
-  length: Sequelize.STRING,
-  weight: Sequelize.STRING,
+  feet: Sequelize.INTEGER,
+  inches: {type: Sequelize.INTEGER, defaultValue: 0},
+  weight: Sequelize.INTEGER,
   location: Sequelize.STRING,
   damaged: {type: Sequelize.BOOLEAN, defaultValue: false},
   missing: {type: Sequelize.BOOLEAN, defaultValue: false},
