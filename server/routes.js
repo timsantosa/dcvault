@@ -200,12 +200,35 @@ module.exports = (app, db) => {
         } else {
           let rental, pole
           let p1 = db.tables.Poles.find({where: {id: req.body.poleId}}).then(foundPole => { pole = foundPole })
-          let p2 = db.tables.Rentals.find({where: {id: req.body.poleId}}).then(foundRental => { rental = foundRental })
+          let p2 = db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(foundRental => { rental = foundRental })
           Promise.all([p1, p2]).then(() => {
             if (!rental || !pole) {
               res.status(400).send({ok: false, message: 'record not found'})
             } else {
               rental.update({poleId: pole.id}).then(newRental => {
+                res.send({ok: true, message: 'rental updated', newRental})
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+
+  app.post('/rentals/end', (req, res) => {
+    if (!req.body.token || !req.body.rentalId) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          db.tables.Rentals.find({where: {id: req.body.rentalId}}).then((rental) => {
+            if (!rental) {
+              res.status(400).send({ok: false, message: 'record not found'})
+            } else {
+              rental.update({poleId: null}).then(newRental => {
                 res.send({ok: true, message: 'rental updated', newRental})
               })
             }
