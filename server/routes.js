@@ -121,9 +121,13 @@ module.exports = (app, db) => {
         res.status(400).send({ok: false, message: 'bad request'})
       } else {
         db.tables.Poles.find({where: {id: updatedPole.id}}).then(foundPole => {
-          foundPole.update(updatedPole).then(updatedPole => {
-            res.send({ok: true, message: 'pole record updated successfully', updatedPole})
-          })
+          if (!foundPole) {
+            res.status(400).send({ok: false, message: 'pole not found'})
+          } else {
+            foundPole.update(updatedPole).then(updatedPole => {
+              res.send({ok: true, message: 'pole record updated successfully', updatedPole})
+            })
+          }
         })
       }
     }
