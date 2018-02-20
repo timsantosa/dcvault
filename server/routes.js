@@ -199,14 +199,18 @@ module.exports = (app, db) => {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
           let rental, pole
-          let p1 = db.tables.Poles.find({where: {id: req.body.poleId}}).then(foundPole => { pole = foundPole })
+          let p1 = db.tables.Poles.find({where: {id: req.body.poleId}}).then(foundPole => {
+            pole = foundPole
+          })
           let p2 = db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(foundRental => { rental = foundRental })
           Promise.all([p1, p2]).then(() => {
             if (!rental || !pole) {
               res.status(400).send({ok: false, message: 'record not found'})
             } else {
-              rental.update({poleId: pole.id}).then(newRental => {
-                res.send({ok: true, message: 'rental updated', newRental})
+              rental.update({poleId: pole.id}).then(updatedRental => {
+                pole.update({rented: true}).then((updatedPole) => {
+                  res.send({ok: true, message: 'rental updated', updatedRental, updatedPole})
+                })
               })
             }
           })
@@ -224,14 +228,18 @@ module.exports = (app, db) => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
-          db.tables.Rentals.find({where: {id: req.body.rentalId}}).then((rental) => {
-            if (!rental) {
-              res.status(400).send({ok: false, message: 'record not found'})
-            } else {
-              rental.update({poleId: null}).then(newRental => {
-                res.send({ok: true, message: 'rental updated', newRental})
-              })
-            }
+          db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(rental => {
+            rental.getPole().then(pole => {
+              if (!rental || !pole) {
+                res.status(400).send({ok: false, message: 'record not found'})
+              } else {
+                rental.update({poleId: null}).then(updatedRental => {
+                  pole.update({rented: false}).then((updatedPole) => {
+                    res.send({ok: true, message: 'rental ended', updatedRental, updatedPole})
+                  })
+                })
+              }
+            })
           })
         }
       })

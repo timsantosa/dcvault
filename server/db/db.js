@@ -34,6 +34,7 @@ columns.poles = {
   brand: Sequelize.STRING,
   length: Sequelize.STRING,
   weight: Sequelize.STRING,
+  location: Sequelize.STRING,
   damaged: {type: Sequelize.BOOLEAN, defaultValue: false},
   missing: {type: Sequelize.BOOLEAN, defaultValue: false},
   needsTip: {type: Sequelize.BOOLEAN, defaultValue: false},

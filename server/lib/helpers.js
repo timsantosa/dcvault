@@ -5,6 +5,7 @@
 const nodemailer = require('nodemailer')
 const config = require('../config/config')
 const path = require('path')
+const jwt = require('jwt-simple')
 
 const transporter = nodemailer.createTransport({
   host: config.email.server,
@@ -22,7 +23,7 @@ const transporter = nodemailer.createTransport({
 module.exports.decodeUser = (token) => {
   let user = {}
   try {
-    user = JSON.parse(token)
+    user = jwt.decode(token, config.auth.secret)
   } catch (e) {}
   return user
 }
