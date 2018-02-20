@@ -34,12 +34,12 @@ columns.poles = {
   brand: Sequelize.STRING,
   length: Sequelize.STRING,
   weight: Sequelize.STRING,
-  damaged: Sequelize.BOOLEAN,
-  missing: Sequelize.BOOLEAN,
-  needsTip: Sequelize.BOOLEAN,
-  broken: Sequelize.BOOLEAN,
+  damaged: {type: Sequelize.BOOLEAN, defaultValue: false},
+  missing: {type: Sequelize.BOOLEAN, defaultValue: false},
+  needsTip: {type: Sequelize.BOOLEAN, defaultValue: false},
+  broken: {type: Sequelize.BOOLEAN, defaultValue: false},
   note: Sequelize.TEXT,
-  rented: Sequelize.BOOLEAN
+  rented: {type: Sequelize.BOOLEAN, defaultValue: false}
 }
 
 columns.rentals = {
