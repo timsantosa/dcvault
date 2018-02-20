@@ -19,6 +19,14 @@ const transporter = nodemailer.createTransport({
   }
 })
 
+module.exports.decodeUser = (token) => {
+  let user = {}
+  try {
+    user = JSON.parse(token)
+  } catch (e) {}
+  return user
+}
+
 module.exports.sendCode = (code, email) => {
   let link = config.server.domain + '/users/verify?code=' + code
   let mailOptions = {

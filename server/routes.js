@@ -43,17 +43,16 @@ module.exports = (app, db) => {
     if (!req.body.token) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
-      let user = {}
-      try {
-        user = jwt.decode(req.body.token, config.auth.secret)
-      } catch (e) {}
-      if (!user.isAdmin) {
-        res.status(300).send({ok: false, message: 'unauthorized'})
-      } else {
-        db.tables.Poles.findAll().then(poles => {
-          res.send({ok: true, message: 'pole list request accepted', poles})
-        })
-      }
+      let user = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: user.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          db.tables.Poles.findAll().then(poles => {
+            res.send({ok: true, message: 'pole list request accepted', poles})
+          })
+        }
+      })
     }
   })
 
@@ -65,19 +64,18 @@ module.exports = (app, db) => {
       try {
         newPole = JSON.parse(req.body.newPole)
       } catch (e) {}
-      let user = {}
-      try {
-        user = jwt.decode(req.body.token, config.auth.secret)
-      } catch (e) {}
-      if (!user.isAdmin) {
-        res.status(300).send({ok: false, message: 'unauthorized'})
-      } else if (!newPole) {
-        res.status(400).send({ok: false, message: 'bad request'})
-      } else {
-        db.tables.Poles.create(newPole).then(newPole => {
-          res.send({ok: true, message: 'pole record added successfully', newPole})
-        })
-      }
+      let user = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: user.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else if (!newPole) {
+          res.status(400).send({ok: false, message: 'bad request'})
+        } else {
+          db.tables.Poles.create(newPole).then(newPole => {
+            res.send({ok: true, message: 'pole record added successfully', newPole})
+          })
+        }
+      })
     }
   })
 
@@ -85,17 +83,16 @@ module.exports = (app, db) => {
     if (!req.body.token || !req.body.poleId) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
-      let user = {}
-      try {
-        user = jwt.decode(req.body.token, config.auth.secret)
-      } catch (e) {}
-      if (!user.isAdmin) {
-        res.status(300).send({ok: false, message: 'unauthorized'})
-      } else {
-        db.tables.Poles.destroy({where: {id: req.body.poleId}}).then(oldPole => {
-          res.send({ok: true, message: 'pole record deleted successfully', oldPole})
-        })
-      }
+      let user = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: user.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          db.tables.Poles.destroy({where: {id: req.body.poleId}}).then(oldPole => {
+            res.send({ok: true, message: 'pole record deleted successfully', oldPole})
+          })
+        }
+      })
     }
   })
 
@@ -107,25 +104,24 @@ module.exports = (app, db) => {
       try {
         updatedPole = JSON.parse(req.body.updatedPole)
       } catch (e) {}
-      let user = {}
-      try {
-        user = jwt.decode(req.body.token, config.auth.secret)
-      } catch (e) {}
-      if (!user.isAdmin) {
-        res.status(300).send({ok: false, message: 'unauthorized'})
-      } else if (!updatedPole) {
-        res.status(400).send({ok: false, message: 'bad request'})
-      } else {
-        db.tables.Poles.find({where: {id: updatedPole.id}}).then(foundPole => {
-          if (!foundPole) {
-            res.status(400).send({ok: false, message: 'pole not found'})
-          } else {
-            foundPole.update(updatedPole).then(updatedPole => {
-              res.send({ok: true, message: 'pole record updated successfully', updatedPole})
-            })
-          }
-        })
-      }
+      let user = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: user.id}}).then(user => {
+        if (!user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else if (!updatedPole) {
+          res.status(400).send({ok: false, message: 'bad request'})
+        } else {
+          db.tables.Poles.find({where: {id: updatedPole.id}}).then(foundPole => {
+            if (!foundPole) {
+              res.status(400).send({ok: false, message: 'pole not found'})
+            } else {
+              foundPole.update(updatedPole).then(updatedPole => {
+                res.send({ok: true, message: 'pole record updated successfully', updatedPole})
+              })
+            }
+          })
+        }
+      })
     }
   })
 
@@ -186,7 +182,6 @@ module.exports = (app, db) => {
                 } else {
                   expiration = new Date(Date.now() + 1209600000)
                 }
-                console.log(expiration)
                 db.tables.Rentals.create({expiration, athleteId: athlete.id}).then(rental => {
                   res.send({ok: true, message: 'rental request created', rental})
                 })
@@ -195,6 +190,14 @@ module.exports = (app, db) => {
           })
         }
       })
+    }
+  })
+
+  app.post('/rentals/fullfill', (req, res) => {
+    if (!req.body.token || !req.body.rentalId || !req.body.poleId) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+
     }
   })
 
