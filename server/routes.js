@@ -37,6 +37,98 @@ module.exports = (app, db) => {
     }
   })
 
+  // Pole Endpoints
+
+  app.post('/poles/list', (req, res) => {
+    if (!req.body.token) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let user = {}
+      try {
+        user = jwt.decode(req.body.token, config.auth.secret)
+      } catch (e) {}
+      user.isAdmin = true
+      if (!user.isAdmin) {
+        res.status(300).send({ok: false, message: 'unauthorized'})
+      } else {
+        db.tables.Poles.findAll().then(poles => {
+          res.send({ok: true, message: 'pole list request accepted', poles})
+        })
+      }
+    }
+  })
+
+  app.post('/poles/add', (req, res) => {
+    if (!req.body.token || !req.body.newPole) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let newPole = null
+      try {
+        newPole = JSON.parse(req.body.newPole)
+      } catch (e) {}
+      let user = {}
+      try {
+        user = jwt.decode(req.body.token, config.auth.secret)
+      } catch (e) {}
+      user.isAdmin = true
+      if (!user.isAdmin) {
+        res.status(300).send({ok: false, message: 'unauthorized'})
+      } else if (!newPole) {
+        res.status(400).send({ok: false, message: 'bad request'})
+      } else {
+        db.tables.Poles.create(newPole).then(newPole => {
+          res.send({ok: true, message: 'pole record added successfully', newPole})
+        })
+      }
+    }
+  })
+
+  app.post('/poles/delete', (req, res) => {
+    if (!req.body.token || !req.body.poleId) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let user = {}
+      try {
+        user = jwt.decode(req.body.token, config.auth.secret)
+      } catch (e) {}
+      user.isAdmin = true
+      if (!user.isAdmin) {
+        res.status(300).send({ok: false, message: 'unauthorized'})
+      } else {
+        db.tables.Poles.destroy({where: {id: req.body.poleId}}).then(oldPole => {
+          res.send({ok: true, message: 'pole record deleted successfully', oldPole})
+        })
+      }
+    }
+  })
+
+  app.post('/poles/update', (req, res) => {
+    if (!req.body.token || !req.body.updatedPole) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let updatedPole = null
+      try {
+        updatedPole = JSON.parse(req.body.updatedPole)
+      } catch (e) {}
+      let user = {}
+      try {
+        user = jwt.decode(req.body.token, config.auth.secret)
+      } catch (e) {}
+      user.isAdmin = true
+      if (!user.isAdmin) {
+        res.status(300).send({ok: false, message: 'unauthorized'})
+      } else if (!updatedPole) {
+        res.status(400).send({ok: false, message: 'bad request'})
+      } else {
+        db.tables.Poles.find({where: {id: updatedPole.id}}).then(foundPole => {
+          foundPole.update(updatedPole).then(updatedPole => {
+            res.send({ok: true, message: 'pole record updated successfully', updatedPole})
+          })
+        })
+      }
+    }
+  })
+
   // Registration Endpoints
 
   app.post('/registration/invite', (req, res) => {
@@ -382,7 +474,7 @@ module.exports = (app, db) => {
                     name: foundUser.name,
                     isAdmin: foundUser.isAdmin
                   }
-                  res.status(200).send({ok: true, message: 'found user info', athletes: athletes, purchases: purchases})
+                  res.status(200).send({ok: true, message: 'found user info', athletes: athletes, purchases: purchases, user})
                 })
               })
             }
