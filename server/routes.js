@@ -43,8 +43,8 @@ module.exports = (app, db) => {
     if (!req.body.token) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
-      let user = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: user.id}}).then(user => {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
@@ -64,8 +64,8 @@ module.exports = (app, db) => {
       try {
         newPole = JSON.parse(req.body.newPole)
       } catch (e) {}
-      let user = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: user.id}}).then(user => {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else if (!newPole) {
@@ -83,8 +83,8 @@ module.exports = (app, db) => {
     if (!req.body.token || !req.body.poleId) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
-      let user = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: user.id}}).then(user => {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
@@ -104,8 +104,8 @@ module.exports = (app, db) => {
       try {
         updatedPole = JSON.parse(req.body.updatedPole)
       } catch (e) {}
-      let user = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: user.id}}).then(user => {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
         if (!user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else if (!updatedPole) {
@@ -131,17 +131,16 @@ module.exports = (app, db) => {
     if (!req.body.token) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
-      let user = {}
-      try {
-        user = jwt.decode(req.body.token, config.auth.secret)
-      } catch (e) {}
-      if (!user.isAdmin) {
-        res.status(300).send({ok: false, message: 'unauthorized'})
-      } else {
-        db.tables.Rentals.findAll().then(poles => {
-          res.send({ok: true, message: 'rental list request accepted', poles})
-        })
-      }
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          db.tables.Rentals.findAll().then(poles => {
+            res.send({ok: true, message: 'rental list request accepted', poles})
+          })
+        }
+      })
     }
   })
 
@@ -149,11 +148,8 @@ module.exports = (app, db) => {
     if (!req.body.token || !req.body.athleteId || !req.body.request) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
-      let user = {}
-      try {
-        user = jwt.decode(req.body.token, config.auth.secret)
-      } catch (e) {}
-      db.tables.Users.find({where: {id: user.id}}).then(user => {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
         if (!user) {
           res.status(400).send({ok: false, message: 'bad user token'})
         } else {
@@ -193,11 +189,29 @@ module.exports = (app, db) => {
     }
   })
 
-  app.post('/rentals/fullfill', (req, res) => {
+  app.post('/rentals/fulfill', (req, res) => {
     if (!req.body.token || !req.body.rentalId || !req.body.poleId) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
-
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          let rental, pole
+          let p1 = db.tables.Poles.find({where: {id: req.body.poleId}}).then(foundPole => { pole = foundPole })
+          let p2 = db.tables.Rentals.find({where: {id: req.body.poleId}}).then(foundRental => { rental = foundRental })
+          Promise.all([p1, p2]).then(() => {
+            if (!rental || !pole) {
+              res.status(400).send({ok: false, message: 'record not found'})
+            } else {
+              rental.update({poleId: pole.id}).then(newRental => {
+                res.send({ok: true, message: 'rental updated', newRental})
+              })
+            }
+          })
+        }
+      })
     }
   })
 
