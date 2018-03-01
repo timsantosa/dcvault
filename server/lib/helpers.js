@@ -5,6 +5,7 @@
 const nodemailer = require('nodemailer')
 const config = require('../config/config')
 const path = require('path')
+const jwt = require('jwt-simple')
 
 const transporter = nodemailer.createTransport({
   host: config.email.server,
@@ -18,6 +19,14 @@ const transporter = nodemailer.createTransport({
     ciphers: 'SSLv3'
   }
 })
+
+module.exports.decodeUser = (token) => {
+  let user = {}
+  try {
+    user = jwt.decode(token, config.auth.secret)
+  } catch (e) {}
+  return user
+}
 
 module.exports.sendCode = (code, email) => {
   let link = config.server.domain + '/users/verify?code=' + code

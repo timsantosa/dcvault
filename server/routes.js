@@ -37,6 +37,215 @@ module.exports = (app, db) => {
     }
   })
 
+  // Pole Endpoints
+
+  app.post('/poles/list', (req, res) => {
+    if (!req.body.token) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          db.tables.Poles.findAll().then(poles => {
+            res.send({ok: true, message: 'pole list request accepted', poles})
+          })
+        }
+      })
+    }
+  })
+
+  app.post('/poles/add', (req, res) => {
+    if (!req.body.token || !req.body.newPole) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let newPole = null
+      try {
+        newPole = JSON.parse(req.body.newPole)
+      } catch (e) {}
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else if (!newPole) {
+          res.status(400).send({ok: false, message: 'bad JSON in newPole'})
+        } else {
+          db.tables.Poles.create(newPole).then(newPole => {
+            res.send({ok: true, message: 'pole record added successfully', newPole})
+          })
+        }
+      })
+    }
+  })
+
+  app.post('/poles/delete', (req, res) => {
+    if (!req.body.token || !req.body.poleId) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          db.tables.Poles.destroy({where: {id: req.body.poleId}}).then(oldPole => {
+            res.send({ok: true, message: 'pole record deleted successfully', oldPole})
+          })
+        }
+      })
+    }
+  })
+
+  app.post('/poles/update', (req, res) => {
+    if (!req.body.token || !req.body.updatedPole) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let updatedPole = null
+      try {
+        updatedPole = JSON.parse(req.body.updatedPole)
+      } catch (e) {}
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else if (!updatedPole) {
+          res.status(400).send({ok: false, message: 'bad request'})
+        } else {
+          db.tables.Poles.find({where: {id: updatedPole.id}}).then(foundPole => {
+            if (!foundPole) {
+              res.status(400).send({ok: false, message: 'pole not found'})
+            } else {
+              foundPole.update(updatedPole).then(updatedPole => {
+                res.send({ok: true, message: 'pole record updated successfully', updatedPole})
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+
+  // Rental Endpoints
+
+  app.post('/rentals/list', (req, res) => {
+    if (!req.body.token) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          db.tables.Rentals.findAll().then(poles => {
+            res.send({ok: true, message: 'rental list request accepted', poles})
+          })
+        }
+      })
+    }
+  })
+
+  app.post('/rentals/request', (req, res) => {
+    if (!req.body.token || !req.body.athleteId || !req.body.request) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user) {
+          res.status(400).send({ok: false, message: 'bad user token'})
+        } else {
+          db.tables.Athletes.find({where: {id: req.body.athleteId}}).then(athlete => {
+            if (!athlete || athlete.userId !== user.id) {
+              res.status(400).send({ok: false, message: 'athlete not found'})
+            } else {
+              let request = null
+              try {
+                request = JSON.parse(req.body.request)
+              } catch (e) {}
+              if (!request) {
+                res.status(400).send({ok: false, message: 'bad rental request body'})
+              } else {
+                let expiration = 0
+                if (request.type === 'quarter') {
+                  if (request.quarter === 'winter') {
+                    expiration = new Date(request.year + 1, 2, 1)
+                  } else if (request.quarter === 'spring') {
+                    expiration = new Date(request.year, 5, 1)
+                  } else if (request.quarter === 'summer') {
+                    expiration = new Date(request.year, 8, 1)
+                  } else {
+                    expiration = new Date(request.year, 11, 1)
+                  }
+                } else {
+                  expiration = new Date(Date.now() + 1209600000)
+                }
+                db.tables.Rentals.create({expiration, athleteId: athlete.id}).then(rental => {
+                  res.send({ok: true, message: 'rental request created', rental})
+                })
+              }
+            }
+          })
+        }
+      })
+    }
+  })
+
+  app.post('/rentals/fulfill', (req, res) => {
+    if (!req.body.token || !req.body.rentalId || !req.body.poleId) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          let rental, pole
+          let p1 = db.tables.Poles.find({where: {id: req.body.poleId}}).then(foundPole => {
+            pole = foundPole
+          })
+          let p2 = db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(foundRental => { rental = foundRental })
+          Promise.all([p1, p2]).then(() => {
+            if (!rental || !pole) {
+              res.status(400).send({ok: false, message: 'record not found'})
+            } else {
+              rental.update({poleId: pole.id}).then(updatedRental => {
+                pole.update({rented: true}).then((updatedPole) => {
+                  res.send({ok: true, message: 'rental updated', updatedRental, updatedPole})
+                })
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+
+  app.post('/rentals/end', (req, res) => {
+    if (!req.body.token || !req.body.rentalId) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else {
+          db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(rental => {
+            rental.getPole().then(pole => {
+              if (!rental || !pole) {
+                res.status(400).send({ok: false, message: 'record not found'})
+              } else {
+                rental.update({poleId: null}).then(updatedRental => {
+                  pole.update({rented: false}).then((updatedPole) => {
+                    res.send({ok: true, message: 'rental ended', updatedRental, updatedPole})
+                  })
+                })
+              }
+            })
+          })
+        }
+      })
+    }
+  })
+
   // Registration Endpoints
 
   app.post('/registration/invite', (req, res) => {
@@ -382,7 +591,7 @@ module.exports = (app, db) => {
                     name: foundUser.name,
                     isAdmin: foundUser.isAdmin
                   }
-                  res.status(200).send({ok: true, message: 'found user info', athletes: athletes, purchases: purchases})
+                  res.status(200).send({ok: true, message: 'found user info', athletes: athletes, purchases: purchases, user})
                 })
               })
             }

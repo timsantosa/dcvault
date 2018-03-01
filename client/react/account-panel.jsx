@@ -1,5 +1,6 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+const $ = window.$
 
 class AccountPanel extends React.Component {
   constructor (props) {
@@ -157,6 +158,14 @@ class AccountPanel extends React.Component {
                 </ul>
               </div>
             </div>
+            <div className='account-panel-box'>
+              <div className='title-box'>
+                <span className='title'>Pole Rental</span>
+              </div>
+              <div className='body-box'>
+                <PoleRental user={user} />
+              </div>
+            </div>
           </div>
 
           <div className='col-xs-12 col-md-6'>
@@ -215,6 +224,53 @@ class AccountPanel extends React.Component {
           </div>
         </div>
       </section>
+    )
+  }
+}
+
+class PoleRental extends React.Component {
+  constructor (props) {
+    super(props)
+  }
+
+  submit () {
+    let output = {}
+    output.type = $('input[name="type"]:checked').val()
+
+    console.log('clicked button:', output.type)
+  }
+
+  render () {
+    return (
+      <div className='pole-rental'>
+        <p>
+          To request a pole rental, select one of the options below
+        </p>
+        <div style={{textAlign: 'center'}}>
+          <form className='form-labels-on-top' style={{padding: '8px', boxShadow: 'none'}}>
+            <div className='form-row'>
+              <label><span className='required'>Rental Type</span></label>
+              <div className='form-radio-buttons'>
+                <div>
+                  <label>
+                    <input type='radio' name='type' value='quarterly' />
+                    <span>Quarterly</span>
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input type='radio' name='type' value='oneTime' />
+                    <span>One-time</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div className='red-button' style={{marginTop: '16px', marginBottom: '16px'}} onClick={this.submit.bind(this)}>
+            <span className='button-text'>Request Rental</span>
+          </div>
+        </div>
+      </div>
     )
   }
 }

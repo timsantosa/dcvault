@@ -326,6 +326,33 @@ class SelectPackage extends React.Component {
     }
   }
 
+/*
+                { () => {
+                  console.log('checking', this.state.showYouthAdult)
+                  if (context.state.showYouthAdult) {
+                    return (<div>
+                      <label>
+                        <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
+                        <span>Youth/Adult</span>
+                      </label>
+                    </div>)
+                  }
+                }}
+
+                <div>
+                  <label>
+                    <input type='radio' name='facility' value='balt' disabled={!this.state.availableFacilities.balt} />
+                    <span>Baltimore, MD (BALT)</span>
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input type='radio' name='facility' value='pa' disabled={!this.state.availableFacilities.pa} />
+                    <span>Mercersburg, PA (PA)</span>
+                  </label>
+                </div>
+*/
+
   render () {
     let errorContainer
     if (!(this.state.errorText.length === 0)) {
@@ -337,6 +364,15 @@ class SelectPackage extends React.Component {
     }
 
     let context = this
+    let youthAdultOption
+    if (this.state.showYouthAdult) {
+      youthAdultOption = (<div>
+        <label>
+          <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
+          <span>Youth/Adult</span>
+        </label>
+      </div>)
+    }
     return (
 
       <div className='row'>
@@ -365,16 +401,7 @@ class SelectPackage extends React.Component {
             <div className='form-row'>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                { () => {
-                  if (context.state.showYouthAdult) {
-                    return (<div>
-                      <label>
-                        <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
-                        <span>Youth/Adult</span>
-                      </label>
-                    </div>)
-                  }
-                }}
+                {youthAdultOption}
                 <div>
                   <label>
                     <input type='radio' name='group' value='beginner' checked={this.state.checkedGroup === 'beginner'} onChange={this.adjustOptions.bind(this)} />
@@ -415,18 +442,6 @@ class SelectPackage extends React.Component {
                   <label>
                     <input type='radio' name='facility' value='dcv' disabled={!this.state.availableFacilities.dcv} />
                     <span>Washington, DC (DCV)</span>
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='facility' value='balt' disabled={!this.state.availableFacilities.balt} />
-                    <span>Baltimore, MD (BALT)</span>
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='facility' value='pa' disabled={!this.state.availableFacilities.pa} />
-                    <span>Mercersburg, PA (PA)</span>
                   </label>
                 </div>
                 <div>
