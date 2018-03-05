@@ -929,7 +929,7 @@ class Payment extends React.Component {
 
     if (quarter === 'winter' && month === 12) {
       lateFee = 25
-    } else if (quarter === 'spring' && month === 4) {
+    } else if (quarter === 'spring' && month === 3) {
       lateFee = 25
     } else if (quarter === 'summer' && month === 6) {
       lateFee = 25
