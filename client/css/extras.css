@@ -306,7 +306,7 @@ a {
   margin: 10px;
   padding: 0px;
   max-height: 80vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .login-modal .row {
@@ -346,6 +346,64 @@ a {
 
 .login-input {
   width: 80%;
+}
+
+.generic-modal {
+  position: fixed;
+  min-width: 300px;
+  width: 30%;
+  background-color: #DDD;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+  margin: 10px;
+  padding: 0px;
+  border-radius: 8px;
+}
+
+.generic-modal__title__container { 
+  position: relative;
+  background-color: #C0282D;
+  margin: 0px;
+  height: 48px;
+  border-radius: 8px 8px 0 0;
+}
+
+.generic-modal__title {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  text-align: center;
+  color: white;
+}
+.generic-modal__title p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.generic-modal__content {
+  padding: 16px;
+}
+
+.generic-modal__content__container {
+  max-height: 70vh;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.generic-modal__close-btn {
+  position: absolute;
+  right: 16px;
+  font-size: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.generic-modal__content__container {
+  width: 100%;
 }
 
 .forgot-button {

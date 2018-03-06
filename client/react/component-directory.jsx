@@ -7,6 +7,7 @@ import Training from './training.jsx'
 import Register from './register.jsx'
 import AdminPanel from './admin-panel.jsx'
 import ContactModal from './contact-modal.jsx'
+import GenericModal from './generic-modal.jsx'
 
 let currentPage = window.location.pathname
 let hashString = window.location.hash
