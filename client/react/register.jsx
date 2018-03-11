@@ -915,7 +915,7 @@ class Payment extends React.Component {
     let price
     let group = this.props.data.selectPackage.group
     if (group === 'youth-adult') {
-      price = 350
+      price = 175
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else {
