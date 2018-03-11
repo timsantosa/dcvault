@@ -585,6 +585,10 @@ a {
   display: block;
 }
 
+.progress-text p {
+  font-size: 12px;
+}
+
 /*FORM STYLING*/
 
 .form-labels-on-top{

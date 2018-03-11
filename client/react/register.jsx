@@ -1181,23 +1181,23 @@ class ProgressBar extends React.Component {
     return (
       <div className='container' style={{marginTop: '35px'}}>
         <div className='row'>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 1 ? onStyle : offStyle} />
-            <p>Choose Training Options</p>
+            <p>Packages</p>
           </div>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 2 ? onStyle : offStyle} />
-            <p>Enter Athlete Information</p>
+            <p>Athlete</p>
           </div>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 3 ? onStyle : offStyle} />
-            <p>Sign Waivers and Agreements</p>
+            <p>Agreement</p>
           </div>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 4 ? onStyle : offStyle} />
-            <p>Process Payment</p>
+            <p>Payment</p>
           </div>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 5 ? onStyle : offStyle} />
             <p>Done!</p>
           </div>
