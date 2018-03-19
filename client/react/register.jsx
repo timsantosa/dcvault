@@ -956,12 +956,13 @@ class Payment extends React.Component {
 
   calculatePrice () {
     let price = (this.state.price * (1 - this.state.discount)) * 1.03
+    price = parseFloat(price) < 10 ? 10 : price
     price += this.state.lateFee
     this.renderButton(price)
   }
 
   renderButton (amount) {
-    amount = parseFloat(amount) < 10 ? 10 : amount
+    amount = parseFloat(amount)
 
     var cont = this.continue.bind(this)
     var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email
