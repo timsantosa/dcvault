@@ -14,7 +14,7 @@ class GenericModal extends React.Component {
           <div className='row generic-modal__title__container'>
             <div className='col-xs-12 generic-modal__title'>
               <p>{this.props.title}</p>
-              <i className='glyphicon glyphicon-remove generic-modal__close-btn' onClick={this.props.onClose ? this.props.onClose() : () => {}} />
+              <i className='glyphicon glyphicon-remove generic-modal__close-btn' onClick={this.props.hasOwnProperty('onClose') ? this.props.onClose : () => {}} />
             </div>
           </div>
           <div className='row generic-modal__content__container'>

@@ -1,5 +1,6 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+import GenericModal from './generic-modal.jsx'
 const $ = window.$
 
 class AccountPanel extends React.Component {
@@ -231,16 +232,44 @@ class AccountPanel extends React.Component {
 class PoleRental extends React.Component {
   constructor (props) {
     super(props)
+
+    this.state = {
+      openModal: false
+    }
   }
 
   submit () {
     let output = {}
     output.type = $('input[name="type"]:checked').val()
+    let selected = false
+    if (output.type === 'quarterly') {
+      this.setState({
+        period: 'quarterly'
+      })
+      selected = true
+    } else if (output.type === 'oneTime') {
+      this.setState({
+        period: 'oneTime'
+      })
+      selected = true
+    }
 
-    console.log('clicked button:', output.type)
+    if (selected) {
+      this.setState({
+        openModal: true
+      })
+    }
+  }
+
+  closeModal () {
+    console.log('closing modal')
+    this.setState({
+      openModal: false
+    })
   }
 
   render () {
+    const openModal = this.state.openModal
     return (
       <div className='pole-rental'>
         <p>
@@ -270,6 +299,88 @@ class PoleRental extends React.Component {
             <span className='button-text'>Request Rental</span>
           </div>
         </div>
+        {openModal ? (<GenericModal style={{zIndex: 9999}} title={'Request Rental'} onClose={this.closeModal.bind(this)} childComponent={<PoleRentalPurchase period={this.state.period} />} />) : ''}
+      </div>
+    )
+  }
+}
+
+class PoleRentalPurchase extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      price: 0
+    }
+  }
+
+  componentDidMount () {
+    if (this.props.period === 'quarterly') {
+      this.setState({
+        price: 150.00,
+        periodDisplay: 'Quarterly'
+      })
+    } else if (this.props.period === 'oneTime') {
+      this.setState({
+        price: 75.00,
+        periodDisplay: 'One Time'
+      })
+    }
+    this.renderButton()
+  }
+
+  continue (data) {
+    console.log(data)
+  }
+
+  renderButton () {
+    let amount = this.state.price
+
+    var cont = this.continue.bind(this)
+    var paymentDescription = 'Pole rental: ' + this.state.periodDisplay
+
+    paypal.Button.render({ // eslint-disable-line
+      env: window.configVariables.PAYPAL_MODE, // sandbox | production
+      client: {
+        sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
+        production: window.configVariables.PAYPAL_CLIENT_ID
+      },
+      commit: true,
+
+      style: {
+        size: 'responsive',
+        shape: 'rect',
+        color: 'silver',
+        label: 'pay'
+      },
+
+      payment: function (data, actions) {
+        return actions.payment.create({
+          payment: {
+            transactions: [
+              {
+                amount: { total: amount.toFixed(2), currency: 'USD' },
+                note_to_payee: paymentDescription
+              }
+            ]
+          }
+        })
+      },
+
+    // onAuthorize() is called when the buyer approves the payment
+      onAuthorize: function (data, actions) {
+        return actions.payment.execute().then(function () {
+          cont(data)
+        })
+      }
+
+    }, '#paypal-button-container')
+  }
+
+  render () {
+    return (
+      <div style={{textAlign: 'center'}}>
+        <p> The fee for a <span className='red-text'>{this.state.periodDisplay}</span> rental is ${this.state.price.toFixed(2)}</p>
+        <div id='paypal-button-container' />
       </div>
     )
   }
