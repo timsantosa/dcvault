@@ -57,21 +57,21 @@ class Register extends React.Component {
   componentDidMount () {
     this.isLoggedIn()
 
-    let today = new Date()
-    let month = today.getMonth() + 1
-    let day = today.getDate()
+    // let today = new Date()
+    // let month = today.getMonth() + 1
+    // let day = today.getDate()
 
-    let registrationOpen = false
+    // let registrationOpen = false
 
-    let startMonths = [11, 2, 5, 8]
-    let activeMonths = [12, 3, 6, 9]
+    // let startMonths = [11, 2, 5, 8]
+    // let activeMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-    if ((day >= 15 && startMonths.indexOf(month) !== -1) || activeMonths.indexOf(month) !== -1) {
-      registrationOpen = true
-    }
+    // if ((day >= 15 && startMonths.indexOf(month) !== -1) || activeMonths.indexOf(month) !== -1) {
+    //   registrationOpen = true
+    // }
 
     this.setState({
-      registrationOpen: registrationOpen
+      registrationOpen: true
     })
   }
 
@@ -137,7 +137,7 @@ class Register extends React.Component {
             <div className='row'>
               <div className='col-xs-12 col-md-6 col-md-push-3'>
                 <p className='section-header'><span className='red-text'>DC Vault</span> Registration</p>
-                <p className='content-text intro-text' style={{textAlign: 'justify'}}>Registration for training will re-open <span className='red-text'>15 days prior</span> to the start of the next quarter, and will close on the <span className='red-text'>1st of the second month</span> of the quarter. A <span className='red-text'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training, and don't hesitate to <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a> if you have any questions. <span className='red-text'>Thank you</span>.</p>
+                <p className='content-text intro-text' style={{textAlign: 'justify'}}>Registration for training will re-open <span className='red-text'>15 days prior</span> to the start of the upcoming quarter. A <span className='red-text'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training, and don't hesitate to <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a> if you have any questions. <span className='red-text'>Thank you</span>.</p>
                 <p className='content-text intro-text' style={{textAlign: 'right'}}>- DC <span className='red-text'>Vault</span></p>
               </div>
             </div>
@@ -207,22 +207,22 @@ class SelectPackage extends React.Component {
     let day = today.getDate()
     let activeQuarter = ''
 
-    if ((month === 11 && day >= 15) || month === 12) {
+    if ((month === 11 && day >= 15) || month === 12 || month === 1 || month === 2) {
       activeQuarter = 'winter'
       this.setState({
         showYouthAdult: false
       })
     }
 
-    if ((month === 2 && day >= 15) || month === 3) {
+    if ((month === 2 && day >= 15) || month === 3 || month === 4 || month === 5) {
       activeQuarter = 'spring'
     }
 
-    if ((month === 5 && day >= 15) || month === 6) {
+    if ((month === 5 && day >= 15) || month === 6 || month === 7 || month === 8) {
       activeQuarter = 'summer'
     }
 
-    if ((month === 8 && day >= 15) || month === 9) {
+    if ((month === 8 && day >= 15) || month === 9 || month === 10 || month === 11) {
       activeQuarter = 'fall'
     }
 
