@@ -83,7 +83,7 @@ window.fillPoles = () => {
     '{"brand":"UCS","needsTip":false,"missing":false,"broken":false,"weight":200,"feet":17,"inches":0,"note":""}' ]
 
   poles.forEach(pole => {
-    apiHelpers.addPole(pole)
+    apiHelpers.addPole(JSON.parse(pole))
   })
 }
 
