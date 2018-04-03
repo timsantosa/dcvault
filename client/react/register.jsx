@@ -124,7 +124,7 @@ class Register extends React.Component {
             {progressBar}
             <div className='row'>
               <div className='col-xs-12 col-md-6 col-md-push-3'>
-                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Registration opens on the 15th of the month prior to a given quarter, and closes on the 1st of the second month of the quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
+                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Registration opens on the 15th of the month prior to a given quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
               </div>
             </div>
           </div>
