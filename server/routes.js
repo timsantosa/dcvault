@@ -145,7 +145,7 @@ module.exports = (app, db) => {
   })
 
   app.post('/rentals/request', (req, res) => {
-    if (!req.body.token || !req.body.athleteId || !req.body.period) {
+    if (!req.body.token || !req.body.athleteId || !req.body.period || !req.body.quarter) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
@@ -163,11 +163,11 @@ module.exports = (app, db) => {
               }
               let expiration
               if (request.type === 'quarterly') {
-                if (request.quarter === 'winter') {
+                if (req.body.quarter === 'winter') {
                   expiration = new Date(request.year + 1, 2, 1)
-                } else if (request.quarter === 'spring') {
+                } else if (req.body.quarter === 'spring') {
                   expiration = new Date(request.year, 5, 1)
-                } else if (request.quarter === 'summer') {
+                } else if (req.body.quarter === 'summer') {
                   expiration = new Date(request.year, 8, 1)
                 } else {
                   expiration = new Date(request.year, 11, 1)
@@ -226,8 +226,12 @@ module.exports = (app, db) => {
         } else {
           db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(rental => {
             rental.getPole().then(pole => {
-              if (!rental || !pole) {
+              if (!rental) {
                 res.status(400).send({ok: false, message: 'record not found'})
+              } else if (!pole) {
+                rental.destroy().then(numDestroyed => {
+                  res.send({ok: true, message: 'rental ended', updatedPole: null})
+                })
               } else {
                 rental.destroy().then(numDestroyed => {
                   pole.update({rented: false}).then((updatedPole) => {
