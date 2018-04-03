@@ -1,11 +1,12 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
 import SuperTable from './super-table.jsx'
+const $ = window.$
 
 class AdminPanel extends React.Component {
   constructor (props) {
     super(props)
-    apiHelpers.verifyToken().then((answer) => {
+    apiHelpers.isAdmin().then((answer) => {
       if (!answer) {
         window.location.href = '/'
       }
@@ -52,6 +53,8 @@ class AdminPanel extends React.Component {
       if (response.data) {
         if (response.data.ok) {
           if (response.data.user.isAdmin) {
+            let combinedData = this.combineData(response.data.athletes, response.data.purchases)
+            let filteredData = this.filterByCurrentQuarter(combinedData)
             this.setState({
               name: response.data.user.name || 'None Entered',
               email: response.data.user.email,
@@ -61,7 +64,9 @@ class AdminPanel extends React.Component {
               purchases: response.data.purchases || [],
               discounts: response.data.discounts || [],
               invites: response.data.invites || [],
-              displayData: this.combineData(response.data.athletes, response.data.purchases)
+              displayData: filteredData,
+              filteredData: filteredData,
+              fullData: combinedData
             })
           } else {
             window.location.href = '/'
@@ -70,6 +75,15 @@ class AdminPanel extends React.Component {
           window.location.href = '/'
         }
       }
+    })
+  }
+
+  filterByCurrentQuarter (arr) {
+    let quarter = apiHelpers.getCurrentQuarter()
+    let currentYear = (new Date()).getFullYear()
+    return arr.filter(record => {
+      let recordYear = new Date(record.createdAt).getFullYear()
+      return (recordYear === currentYear && record.quarter === quarter)
     })
   }
 
@@ -125,6 +139,19 @@ class AdminPanel extends React.Component {
     }
   }
 
+  toggleOldRecords () {
+    let checked = $('#showOld').is(':checked')
+    if (checked) {
+      this.setState({
+        displayData: this.state.fullData
+      })
+    } else {
+      this.setState({
+        displayData: this.state.filteredData
+      })
+    }
+  }
+
   render () {
     return (
       <section id='my-account'>
@@ -138,6 +165,7 @@ class AdminPanel extends React.Component {
                 <span className='title'>Registered Athletes</span>
               </div>
               <div className='body-box'>
+                <input id='showOld' type='checkbox' onChange={this.toggleOldRecords.bind(this)} /> Show Old Records
                 <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'quarter', 'emergencyContactMDN']} />
               </div>
             </div>

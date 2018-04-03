@@ -136,8 +136,8 @@ module.exports = (app, db) => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
-          db.tables.Rentals.findAll().then(poles => {
-            res.send({ok: true, message: 'rental list request accepted', poles})
+          db.tables.Rentals.findAll().then(rentals => {
+            res.send({ok: true, message: 'rental list request accepted', rentals})
           })
         }
       })
@@ -145,7 +145,7 @@ module.exports = (app, db) => {
   })
 
   app.post('/rentals/request', (req, res) => {
-    if (!req.body.token || !req.body.athleteId || !req.body.request) {
+    if (!req.body.token || !req.body.athleteId || !req.body.period) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
@@ -154,34 +154,30 @@ module.exports = (app, db) => {
           res.status(400).send({ok: false, message: 'bad user token'})
         } else {
           db.tables.Athletes.find({where: {id: req.body.athleteId}}).then(athlete => {
-            if (!athlete || athlete.userId !== user.id) {
+            if (!athlete || (!user.isAdmin && athlete.userId !== user.id)) {
               res.status(400).send({ok: false, message: 'athlete not found'})
             } else {
-              let request = null
-              try {
-                request = JSON.parse(req.body.request)
-              } catch (e) {}
-              if (!request) {
-                res.status(400).send({ok: false, message: 'bad rental request body'})
-              } else {
-                let expiration = 0
-                if (request.type === 'quarter') {
-                  if (request.quarter === 'winter') {
-                    expiration = new Date(request.year + 1, 2, 1)
-                  } else if (request.quarter === 'spring') {
-                    expiration = new Date(request.year, 5, 1)
-                  } else if (request.quarter === 'summer') {
-                    expiration = new Date(request.year, 8, 1)
-                  } else {
-                    expiration = new Date(request.year, 11, 1)
-                  }
-                } else {
-                  expiration = new Date(Date.now() + 1209600000)
-                }
-                db.tables.Rentals.create({expiration, athleteId: athlete.id}).then(rental => {
-                  res.send({ok: true, message: 'rental request created', rental})
-                })
+              let request = {
+                type: req.body.period,
+                year: (new Date()).getFullYear()
               }
+              let expiration
+              if (request.type === 'quarterly') {
+                if (request.quarter === 'winter') {
+                  expiration = new Date(request.year + 1, 2, 1)
+                } else if (request.quarter === 'spring') {
+                  expiration = new Date(request.year, 5, 1)
+                } else if (request.quarter === 'summer') {
+                  expiration = new Date(request.year, 8, 1)
+                } else {
+                  expiration = new Date(request.year, 11, 1)
+                }
+              } else {
+                expiration = new Date(Date.now() + 1209600000)
+              }
+              db.tables.Rentals.create({expiration, athleteId: athlete.id}).then(rental => {
+                res.send({ok: true, message: 'rental request created', rental})
+              })
             }
           })
         }
@@ -601,6 +597,30 @@ module.exports = (app, db) => {
         })
       } else {
         res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}))
+      }
+    }
+  })
+
+  app.post('/users/isadmin', (req, res) => {
+    let token = req.body.token
+    if (!token) {
+      res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}))
+    } else {
+      let user = null
+      try {
+        user = jwt.decode(token, config.auth.secret)
+      } catch (e) {
+      }
+      if (!user) {
+        res.status(403).send(JSON.stringify({ok: false, message: 'invalid user token'}))
+      } else {
+        db.tables.Users.find({where: {id: user.id}}).then(foundUser => {
+          if (foundUser) {
+            res.send({ok: true, isAdmin: user.isAdmin, message: 'user Found'})
+          } else {
+            res.status(403).send({ok: false, message: 'user not found'})
+          }
+        })
       }
     }
   })

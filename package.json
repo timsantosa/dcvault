@@ -10,6 +10,7 @@
   "scripts": {
     "test": "mocha -R spec test/*.js",
     "build": "./node_modules/.bin/webpack -d",
+    "watch": "./node_modules/.bin/webpack -d --watch",
     "prod": "./node_modules/.bin/webpack -p",
     "start": "nodemon ./server/app.js | tee -a 'server.log'",
     "quick": "npm run build && npm start"

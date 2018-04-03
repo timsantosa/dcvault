@@ -645,6 +645,17 @@ a {
   display: block;
 }
 
+.pole-request__row {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  border-bottom: 1px solid rgba(0, 0, 0, .3);
+}
+
+.pole-request__item {
+  display: inline-block;
+}
+ 
 /*FORM STYLING*/
 
 .form-labels-on-top{

@@ -3,6 +3,43 @@ const axios = window.axios
 
 let apiHelpers = {}
 
+const getToken = () => {
+  return window.localStorage.getItem('token')
+}
+
+apiHelpers.parseFormValues = (array) => {
+  let retVal = {}
+  for (let i = 0; i < array.length; i++) {
+    retVal[array[i].name] = array[i].value
+  }
+
+  return retVal
+}
+
+apiHelpers.getCurrentQuarter = () => {
+  let month = (new Date()).getMonth() + 1
+  if (month === 12 || month === 1 || month === 2) {
+    return 'winter'
+  } else if (month <= 5 && month >= 3) {
+    return 'spring'
+  } else if (month <= 8 && month >= 6) {
+    return 'summer'
+  } else {
+    return 'fall'
+  }
+}
+
+apiHelpers.isAdmin = () => {
+  let token = getToken()
+  return axios.post('/users/isadmin', {token})
+  .then((response) => {
+    return response.data.ok && response.data.isAdmin
+  }).catch((error) => { //eslint-disable-line
+    window.localStorage.removeItem('token')
+    return false
+  })
+}
+
 apiHelpers.login = (email, password) => {
   return axios.post('/users/authenticate', {email: email, password: password})
   .then((response) => {
@@ -23,7 +60,7 @@ apiHelpers.register = (email, password) => {
 }
 
 apiHelpers.deleteDiscount = (id) => {
-  let token = window.localStorage.getItem('token')
+  let token = getToken()
   return axios.post('/discounts/delete', {token: token, discountId: id})
   .then((response) => {
     return response
@@ -34,7 +71,7 @@ apiHelpers.deleteDiscount = (id) => {
 }
 
 apiHelpers.deleteInvite = (id) => {
-  let token = window.localStorage.getItem('token')
+  let token = getToken()
   return axios.post('/invites/delete', {token: token, inviteId: id})
   .then((response) => {
     return response
@@ -45,7 +82,7 @@ apiHelpers.deleteInvite = (id) => {
 }
 
 apiHelpers.verifyToken = () => {
-  let token = window.localStorage.getItem('token')
+  let token = getToken()
   return axios.post('/users/token', {token: token})
   .then((response) => {
     return true
@@ -58,7 +95,7 @@ apiHelpers.verifyToken = () => {
 
 apiHelpers.editUserInfo = (name, password) => {
   let newInfo = {}
-  let token = window.localStorage.getItem('token')
+  let token = getToken()
   if (name) {
     newInfo.name = name
   }
@@ -84,7 +121,7 @@ apiHelpers.forgotPassword = (email) => {
 }
 
 apiHelpers.createDiscount = (description, amount) => {
-  let token = window.localStorage.getItem('token')
+  let token = getToken()
   return axios.post('/discounts/create', {description: description, amount: amount, token: token})
   .then((response) => {
     return response
@@ -95,7 +132,7 @@ apiHelpers.createDiscount = (description, amount) => {
 }
 
 apiHelpers.createInvite = (description, level) => {
-  let token = window.localStorage.getItem('token')
+  let token = getToken()
   return axios.post('/invites/create', {description: description, level: level, token: token})
   .then((response) => {
     return response
@@ -106,7 +143,7 @@ apiHelpers.createInvite = (description, level) => {
 }
 
 apiHelpers.getUserData = () => {
-  let token = window.localStorage.getItem('token')
+  let token = getToken()
   return axios.post('/users/info', {token: token})
   .then((response) => {
     return response
@@ -117,7 +154,7 @@ apiHelpers.getUserData = () => {
 }
 
 apiHelpers.finalizePayment = (purchaseInfo) => {
-  let token = window.localStorage.getItem('token')
+  let token = getToken()
   return axios.post('/registration/finalize', {purchaseInfo: purchaseInfo, token: token})
   .then((response) => {
     return response
@@ -199,6 +236,39 @@ apiHelpers.applyInvite = (code) => {
 
 apiHelpers.contactForm = (name, from, to, subject, text) => {
   return axios.post('/contact', {name: name, from: from, to: to, subject: subject, text: text})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
+apiHelpers.requestPole = (athleteId, period) => {
+  let token = getToken()
+  return axios.post('/rentals/request', {token, athleteId, period})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
+apiHelpers.getPoles = () => {
+  let token = getToken()
+  return axios.post('/poles/list', {token})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
+apiHelpers.getRentals = () => {
+  let token = getToken()
+  return axios.post('/rentals/list', {token})
   .then((response) => {
     return response
   })
