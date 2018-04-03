@@ -689,6 +689,12 @@ a {
   justify-content: space-around;
 }
 
+.multi-btn-container {
+  display: flex;
+  margin-top: 16px;
+  justify-content: space-around;
+}
+
 .pole-info__edit-btns {
   display: flex;
   margin-top: 16px;

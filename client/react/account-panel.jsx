@@ -216,11 +216,13 @@ class AccountPanel extends React.Component {
                   <p>
                     It appears you are an administrator. To view your Administrator Panel, click below.
                   </p>
-                  <div className='red-button' onClick={() => { window.location.href = '/admin' }}>
-                    <span className='button-text'>Admin</span>
-                  </div>
-                  <div className='red-button' onClick={() => { window.location.href = '/poles' }}>
-                    <span className='button-text'>Poles</span>
+                  <div className='multi-btn-container'>
+                    <div className='red-button' onClick={() => { window.location.href = '/admin' }}>
+                      <span className='button-text'>Admin</span>
+                    </div>
+                    <div className='red-button' onClick={() => { window.location.href = '/poles' }}>
+                      <span className='button-text'>Poles</span>
+                    </div>
                   </div>
                 </div>
               </div>
