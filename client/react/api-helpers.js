@@ -310,6 +310,17 @@ apiHelpers.getRentals = () => {
   })
 }
 
+apiHelpers.endRental = (rentalId) => {
+  let token = getToken()
+  return axios.post('/rentals/end', {token, rentalId})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
 apiHelpers.assignPole = (request, pole) => {
   let token = getToken()
   return axios.post('/rentals/fulfill', {token, rentalId: request.id, poleId: pole.id})
