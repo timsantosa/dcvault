@@ -266,9 +266,31 @@ apiHelpers.getPoles = () => {
   })
 }
 
-apiHelpers.updatePole = (updatedPole) => {
+apiHelpers.updatePole = (pole) => {
   let token = getToken()
-  return axios.post('/poles/update', {token, updatedPole: JSON.stringify(updatedPole)})
+  return axios.post('/poles/update', {token, updatedPole: JSON.stringify(pole)})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
+apiHelpers.addPole = (pole) => {
+  let token = getToken()
+  return axios.post('/poles/add', {token, newPole: JSON.stringify(pole)})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
+apiHelpers.deletePole = (poleId) => {
+  let token = getToken()
+  return axios.post('/poles/delete', {token, poleId})
   .then((response) => {
     return response
   })

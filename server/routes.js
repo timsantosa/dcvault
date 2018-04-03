@@ -229,9 +229,9 @@ module.exports = (app, db) => {
               if (!rental || !pole) {
                 res.status(400).send({ok: false, message: 'record not found'})
               } else {
-                rental.update({poleId: null}).then(updatedRental => {
+                rental.destroy().then(numDestroyed => {
                   pole.update({rented: false}).then((updatedPole) => {
-                    res.send({ok: true, message: 'rental ended', updatedRental, updatedPole})
+                    res.send({ok: true, message: 'rental ended', updatedPole})
                   })
                 })
               }

@@ -691,6 +691,7 @@ a {
 
 .pole-info__edit-btns {
   display: flex;
+  margin-top: 16px;
   justify-content: space-around;
 }
 
