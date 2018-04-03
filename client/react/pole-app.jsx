@@ -217,8 +217,8 @@ class PoleApp extends React.Component {
               <div className='title-box'>
                 <span className='title'>Rentals</span>
               </div>
-              <div className='body-box' style={{display: this.getRentalData().length ? 'block' : 'none'}}>
-                <SuperTable data={this.getRentalData()} extraAction actionInfo={{title: 'End Rental', iconClass: 'glyphicon glyphicon-remove'}} callback={this.endRental.bind(this)} shownColumns={['athlete', 'expiration', 'pole']} />
+              <div className='body-box'>
+                <SuperTable style={{display: this.getRentalData().length ? 'block' : 'none'}} data={this.getRentalData()} extraAction actionInfo={{title: 'End Rental', iconClass: 'glyphicon glyphicon-remove'}} callback={this.endRental.bind(this)} shownColumns={['athlete', 'expiration', 'pole']} />
               </div>
             </div>
           </div>
