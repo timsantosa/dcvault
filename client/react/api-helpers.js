@@ -266,9 +266,31 @@ apiHelpers.getPoles = () => {
   })
 }
 
+apiHelpers.updatePole = (updatedPole) => {
+  let token = getToken()
+  return axios.post('/poles/update', {token, updatedPole: JSON.stringify(updatedPole)})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
 apiHelpers.getRentals = () => {
   let token = getToken()
   return axios.post('/rentals/list', {token})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
+apiHelpers.assignPole = (request, pole) => {
+  let token = getToken()
+  return axios.post('/rentals/fulfill', {token, rentalId: request.id, poleId: pole.id})
   .then((response) => {
     return response
   })

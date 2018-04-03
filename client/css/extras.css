@@ -649,13 +649,51 @@ a {
   display: flex;
   justify-content: space-around;
   flex-direction: row;
-  border-bottom: 1px solid rgba(0, 0, 0, .3);
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
 
 .pole-request__item {
   display: inline-block;
 }
  
+.pole-viewer__container {
+  width: 100%;
+  background-color: white;
+  padding: 16px;
+  border-radius: 5px;
+}
+
+.pole-viewer__container > table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.pole-viewer__container td {
+  text-align: center;
+}
+
+.pole-info__container {
+
+}
+
+.flex-around {
+  width: 100%;
+  display: flex;
+  justify-content: space-arounds
+}
+
+.pole-info__element {
+  border-bottom: 1px solid rgba(0, 0, 0, .3);
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.pole-info__edit-btns {
+  display: flex;
+  justify-content: space-around;
+}
+
 /*FORM STYLING*/
 
 .form-labels-on-top{
