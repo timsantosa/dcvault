@@ -243,8 +243,8 @@ class PoleRental extends React.Component {
       athletes: [],
       errorText: '',
       rentalOptions: [
-        {name: 'oneTime', displayName: 'One Time'},
-        {name: 'quarterly', displayName: 'Quarterly'}
+        {name: 'oneTime', displayName: 'One Time', displayPrice: '$75'},
+        {name: 'quarterly', displayName: 'Quarterly', displayPrice: '$150'}
       ]
     }
 
@@ -322,7 +322,7 @@ class PoleRental extends React.Component {
                 <select name='type'>
                   {
                     this.state.rentalOptions.map(option => {
-                      return (<option key={option.name} value={option.name}>{option.displayName}</option>)
+                      return (<option key={option.name} value={option.name}>{option.displayName}: {option.displayPrice}</option>)
                     })
                   }
                 </select>
@@ -404,8 +404,7 @@ class PoleRentalPurchase extends React.Component {
   }
 
   renderButton () {
-    let amount = this.state.price
-    console.log('amount: ', amount)
+    let amount = 1.03 * this.state.price
 
     var cont = this.continue.bind(this)
     var paymentDescription = 'Pole rental: ' + this.state.periodDisplay + '; Athlete: ' + this.props.athlete.firstName + ' ' + this.props.athlete.lastName
@@ -452,7 +451,8 @@ class PoleRentalPurchase extends React.Component {
     if (!this.state.successfulPayment && !this.state.failedPayment) {
       return (
         <div style={{textAlign: 'center'}}>
-          <p> The fee for a <span className='red-text'>{this.state.periodDisplay}</span> rental is ${this.state.price.toFixed(2)}</p>
+          <p><span className='red-text'>{this.state.periodDisplay} rental:</span> ${this.state.price.toFixed(2)}</p>
+          <p><span className='red-text'>Online Transaction Fee:</span> ${(this.state.price * 0.03).toFixed(2)}</p>
           <div id='paypal-button-container' />
         </div>
       )

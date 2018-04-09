@@ -483,6 +483,22 @@ class PoleViewer extends React.Component {
     })
   }
 
+  getRowClass (pole) {
+    if (pole.missing) {
+      return 'pole-viewer__missing'
+    } else if (pole.broken) {
+      return 'pole-viewer__broken'
+    } else if (pole.rented) {
+      return 'pole-viewer__rented'
+    } else if (pole.needsTip) {
+      return 'pole-viewer__needs-tip'
+    } else if (pole.damaged) {
+      return 'pole-viewer__damaged'
+    } else {
+      return 'pole-viewer__pole'
+    }
+  }
+
   render () {
     return (
       <div className='pole-viewer__container'>
@@ -498,7 +514,7 @@ class PoleViewer extends React.Component {
           <tbody>
             {this.state.poles.map(pole => {
               return (
-                <tr key={pole.id}>
+                <tr key={pole.id} className={this.getRowClass(pole)}>
                   <td>{pole.brand}</td>
                   <td>{pole.feet + '\'' + pole.inches + '"'}</td>
                   <td>{pole.weight}</td>

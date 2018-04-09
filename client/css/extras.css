@@ -711,6 +711,30 @@ a {
   display: flex;
   justify-content: space-between;
 }
+
+.pole-viewer__pole {
+
+}
+
+.pole-viewer__rented {
+  background-color: rgba(150, 150, 150, .35);
+}
+
+.pole-viewer__missing {
+  background-color: rgba(192, 40, 45, .35);
+}
+
+.pole-viewer__broken {
+  background-color: rgba(192, 40, 45, .35);
+}
+
+.pole-viewer__damaged {
+  background-color: rgba(210, 100, 0, .35);
+}
+
+.pole-viwer__needs-tip {
+
+}
 /*FORM STYLING*/
 
 .form-labels-on-top{
