@@ -413,10 +413,10 @@ class PoleInfo extends React.Component {
           <div className='pole-info__element'><span className='red-text'>Weight:</span>{this.props.pole.weight}</div>
           <div className='pole-info__element'><span className='red-text'>Location:</span>{this.props.pole.location}</div>
           <div className='pole-info__element'><span className='red-text'>Rented:</span>{this.getIcon(this.props.pole.rented)}</div>
-          <div className='pole-info__element'><span className='red-text'>Damaged:</span>{this.getIcon(this.props.pole.damaged)}</div>
-          <div className='pole-info__element'><span className='red-text'>Missing:</span>{this.getIcon(this.props.pole.missing)}</div>
           <div className='pole-info__element'><span className='red-text'>Needs Tip:</span>{this.getIcon(this.props.pole.needsTip)}</div>
+          <div className='pole-info__element'><span className='red-text'>Damaged:</span>{this.getIcon(this.props.pole.damaged)}</div>
           <div className='pole-info__element'><span className='red-text'>Broken:</span>{this.getIcon(this.props.pole.broken)}</div>
+          <div className='pole-info__element'><span className='red-text'>Missing:</span>{this.getIcon(this.props.pole.missing)}</div>
           <div className='pole-info__element'><span className='red-text'>Note:</span>{this.props.pole.note}</div>
 
           <div className='pole-info__edit-btns'>
