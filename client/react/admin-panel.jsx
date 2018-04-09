@@ -112,7 +112,7 @@ class AdminPanel extends React.Component {
   addCode (e) {
     e.preventDefault()
     let amount = this.refs.percentInput.value
-    amount = parseInt(amount) / 100
+    amount = parseFloat(amount) / 100
     let description = this.refs.descInput.value
     if (!!amount && !!description) {
       apiHelpers.createDiscount(description, amount)

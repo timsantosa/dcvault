@@ -50,21 +50,21 @@ class Register extends React.Component {
   componentDidMount () {
     this.isLoggedIn()
 
-    let today = new Date()
-    let month = today.getMonth() + 1
-    let day = today.getDate()
+    // let today = new Date()
+    // let month = today.getMonth() + 1
+    // let day = today.getDate()
 
-    let registrationOpen = false
+    // let registrationOpen = false
 
-    let startMonths = [11, 2, 5, 8]
-    let activeMonths = [12, 3, 6, 9]
+    // let startMonths = [11, 2, 5, 8]
+    // let activeMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-    if ((day >= 15 && startMonths.indexOf(month) !== -1) || activeMonths.indexOf(month) !== -1) {
-      registrationOpen = true
-    }
+    // if ((day >= 15 && startMonths.indexOf(month) !== -1) || activeMonths.indexOf(month) !== -1) {
+    //   registrationOpen = true
+    // }
 
     this.setState({
-      registrationOpen: registrationOpen
+      registrationOpen: true
     })
   }
 
@@ -117,7 +117,7 @@ class Register extends React.Component {
             {progressBar}
             <div className='row'>
               <div className='col-xs-12 col-md-6 col-md-push-3'>
-                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Registration opens on the 15th of the month prior to a given quarter, and closes on the 1st of the second month of the quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
+                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Registration opens on the 15th of the month prior to a given quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@ class Register extends React.Component {
             <div className='row'>
               <div className='col-xs-12 col-md-6 col-md-push-3'>
                 <p className='section-header'><span className='red-text'>DC Vault</span> Registration</p>
-                <p className='content-text intro-text' style={{textAlign: 'justify'}}>Registration for training will re-open <span className='red-text'>15 days prior</span> to the start of the next quarter, and will close on the <span className='red-text'>1st of the second month</span> of the quarter. A <span className='red-text'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training, and don't hesitate to <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a> if you have any questions. <span className='red-text'>Thank you</span>.</p>
+                <p className='content-text intro-text' style={{textAlign: 'justify'}}>Registration for training will re-open <span className='red-text'>15 days prior</span> to the start of the upcoming quarter. A <span className='red-text'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training, and don't hesitate to <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a> if you have any questions. <span className='red-text'>Thank you</span>.</p>
                 <p className='content-text intro-text' style={{textAlign: 'right'}}>- DC <span className='red-text'>Vault</span></p>
               </div>
             </div>
@@ -200,22 +200,22 @@ class SelectPackage extends React.Component {
     let day = today.getDate()
     let activeQuarter = ''
 
-    if ((month === 11 && day >= 15) || month === 12) {
+    if ((month === 11 && day >= 15) || month === 12 || month === 1 || month === 2) {
       activeQuarter = 'winter'
       this.setState({
         showYouthAdult: false
       })
     }
 
-    if ((month === 2 && day >= 15) || month === 3) {
+    if ((month === 2 && day >= 15) || month === 3 || month === 4 || month === 5) {
       activeQuarter = 'spring'
     }
 
-    if ((month === 5 && day >= 15) || month === 6) {
+    if ((month === 5 && day >= 15) || month === 6 || month === 7 || month === 8) {
       activeQuarter = 'summer'
     }
 
-    if ((month === 8 && day >= 15) || month === 9) {
+    if ((month === 8 && day >= 15) || month === 9 || month === 10 || month === 11) {
       activeQuarter = 'fall'
     }
 
@@ -319,6 +319,33 @@ class SelectPackage extends React.Component {
     }
   }
 
+/*
+                { () => {
+                  console.log('checking', this.state.showYouthAdult)
+                  if (context.state.showYouthAdult) {
+                    return (<div>
+                      <label>
+                        <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
+                        <span>Youth/Adult</span>
+                      </label>
+                    </div>)
+                  }
+                }}
+
+                <div>
+                  <label>
+                    <input type='radio' name='facility' value='balt' disabled={!this.state.availableFacilities.balt} />
+                    <span>Baltimore, MD (BALT)</span>
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <input type='radio' name='facility' value='pa' disabled={!this.state.availableFacilities.pa} />
+                    <span>Mercersburg, PA (PA)</span>
+                  </label>
+                </div>
+*/
+
   render () {
     let errorContainer
     if (!(this.state.errorText.length === 0)) {
@@ -330,6 +357,15 @@ class SelectPackage extends React.Component {
     }
 
     let context = this
+    let youthAdultOption
+    if (this.state.showYouthAdult) {
+      youthAdultOption = (<div>
+        <label>
+          <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
+          <span>Youth/Adult</span>
+        </label>
+      </div>)
+    }
     return (
 
       <div className='row'>
@@ -358,16 +394,7 @@ class SelectPackage extends React.Component {
             <div className='form-row'>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                { () => {
-                  if (context.state.showYouthAdult) {
-                    return (<div>
-                      <label>
-                        <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
-                        <span>Youth/Adult</span>
-                      </label>
-                    </div>)
-                  }
-                }}
+                {youthAdultOption}
                 <div>
                   <label>
                     <input type='radio' name='group' value='beginner' checked={this.state.checkedGroup === 'beginner'} onChange={this.adjustOptions.bind(this)} />
@@ -408,18 +435,6 @@ class SelectPackage extends React.Component {
                   <label>
                     <input type='radio' name='facility' value='dcv' disabled={!this.state.availableFacilities.dcv} />
                     <span>Washington, DC (DCV)</span>
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='facility' value='balt' disabled={!this.state.availableFacilities.balt} />
-                    <span>Baltimore, MD (BALT)</span>
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='facility' value='pa' disabled={!this.state.availableFacilities.pa} />
-                    <span>Mercersburg, PA (PA)</span>
                   </label>
                 </div>
                 <div>
@@ -893,7 +908,7 @@ class Payment extends React.Component {
     let price
     let group = this.props.data.selectPackage.group
     if (group === 'youth-adult') {
-      price = 350
+      price = 175
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else {
@@ -907,7 +922,7 @@ class Payment extends React.Component {
 
     if (quarter === 'winter' && month === 12) {
       lateFee = 25
-    } else if (quarter === 'spring' && month === 4) {
+    } else if (quarter === 'spring' && month === 3) {
       lateFee = 25
     } else if (quarter === 'summer' && month === 6) {
       lateFee = 25
@@ -934,12 +949,13 @@ class Payment extends React.Component {
 
   calculatePrice () {
     let price = (this.state.price * (1 - this.state.discount)) * 1.03
+    price = parseFloat(price) < 10 ? 10 : price
     price += this.state.lateFee
     this.renderButton(price)
   }
 
   renderButton (amount) {
-    amount = parseFloat(amount) < 10 ? 10 : amount
+    amount = parseFloat(amount)
 
     var cont = this.continue.bind(this)
     var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email
@@ -1159,23 +1175,23 @@ class ProgressBar extends React.Component {
     return (
       <div className='container' style={{marginTop: '35px'}}>
         <div className='row'>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 1 ? onStyle : offStyle} />
-            <p>Choose Training Options</p>
+            <p>Packages</p>
           </div>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 2 ? onStyle : offStyle} />
-            <p>Enter Athlete Information</p>
+            <p>Athlete</p>
           </div>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 3 ? onStyle : offStyle} />
-            <p>Sign Waivers and Agreements</p>
+            <p>Agreement</p>
           </div>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 4 ? onStyle : offStyle} />
-            <p>Process Payment</p>
+            <p>Payment</p>
           </div>
-          <div className='col-xs-2 col-xs-push-1' style={{textAlign: 'center'}}>
+          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
             <div style={this.props.pageNum === 5 ? onStyle : offStyle} />
             <p>Done!</p>
           </div>

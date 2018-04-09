@@ -3,6 +3,17 @@ import apiHelpers from './api-helpers'
 import GenericModal from './generic-modal.jsx'
 const $ = window.$
 
+/*
+            <div className='account-panel-box'>
+              <div className='title-box'>
+                <span className='title'>Pole Rental</span>
+              </div>
+              <div className='body-box'>
+                <PoleRental user={user} />
+              </div>
+            </div>
+*/
+
 class AccountPanel extends React.Component {
   constructor (props) {
     super(props)
@@ -157,14 +168,6 @@ class AccountPanel extends React.Component {
                   <li><a href='/files/quarterly-conditioning.pdf' download>Quarterly Conditioning Guide</a></li>
                   <li><a href='/files/parking-pass.pdf' download>DCV Parking Pass</a></li>
                 </ul>
-              </div>
-            </div>
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>Pole Rental</span>
-              </div>
-              <div className='body-box'>
-                <PoleRental user={user} />
               </div>
             </div>
           </div>

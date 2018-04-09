@@ -63,7 +63,7 @@ class Training extends React.Component {
         {
           title: 'Discounts',
           priceModifier: 'BY REQUEST',
-          description: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as...</br>10% - DC Residents</br>10% - Active Duty Military</br>10% - Full Time College Student</br>25% - DCPS Students</br>25% - Family Discount</br>Does not apply to equipment rental, special training sessions, or events. Discounts cannot be combined.</br>Please contact us (dcvault@dcvault.org) to apply for a discount code.'
+          description: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as...</br>10% - DC Residents</br>20% - Active Duty and Retired Military</br>10% - Full Time College Student</br>25% - DCPS Students</br>25% - Family Discount</br>Does not apply to equipment rental, special training sessions, or events. Discounts cannot be combined.</br>Please contact us (dcvault@dcvault.org) to apply for a discount code.'
         },
         {
           title: 'Private Lessons',
