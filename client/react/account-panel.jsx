@@ -392,7 +392,7 @@ class PoleRentalPurchase extends React.Component {
       if (res.data.ok) {
         this.setState({
           successfulPayment: true,
-          statusText: 'Your request has been processed! Please instruct the athlete to see Coach Luthy at the next training session'
+          statusText: 'Your request has been processed. Please see the head coach at your next training session to check out your Pole'
         })
       } else {
         this.setState({

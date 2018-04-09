@@ -673,20 +673,21 @@ a {
 }
 
 .pole-info__container {
-
+  text-align: left;
+  padding: 8px 16px;
 }
 
 .flex-around {
   width: 100%;
   display: flex;
-  justify-content: space-arounds
+  justify-content: space-around;
 }
 
 .pole-info__element {
   border-bottom: 1px solid rgba(0, 0, 0, .3);
   display: flex;
   width: 100%;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .multi-btn-container {
@@ -701,6 +702,15 @@ a {
   justify-content: space-around;
 }
 
+#edit-pole-info {
+  text-align: left;
+  padding: 8px 16px;
+}
+
+.pole-info__edit-form {
+  display: flex;
+  justify-content: space-between;
+}
 /*FORM STYLING*/
 
 .form-labels-on-top{

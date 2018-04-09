@@ -328,67 +328,67 @@ class PoleInfo extends React.Component {
         <div className='pole-info__container'>
           <form id='edit-pole-info'>
             <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
                 <span>Brand:</span>
                 <input type='text' name='brand' style={{marginLeft: '16px'}} defaultValue={this.props.pole.brand} />
               </label>
             </div>
             <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
                 <span>Feet:</span>
                 <input type='text' name='feet' style={{marginLeft: '16px'}} defaultValue={this.props.pole.feet} />
               </label>
             </div>
             <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
                 <span>Inches:</span>
                 <input type='text' name='inches' style={{marginLeft: '16px'}} defaultValue={this.props.pole.inches} />
               </label>
             </div>
             <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
                 <span>Weight:</span>
                 <input type='text' name='weight' style={{marginLeft: '16px'}} defaultValue={this.props.pole.weight} />
               </label>
             </div>
             <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
                 <span>Location:</span>
                 <input type='text' name='location' style={{marginLeft: '16px'}} defaultValue={this.props.pole.location} />
               </label>
             </div>
             <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
                 <span>Rented:</span>
                 <input type='checkbox' id='pole-is-rented' defaultChecked={this.props.pole.rented} disabled />
               </label>
             </div>
             <div className='form-row'>
-              <label>
-                <span>Damaged:</span>
-                <input type='checkbox' id='pole-is-damaged' defaultChecked={this.props.pole.damaged} />
-              </label>
-            </div>
-            <div className='form-row'>
-              <label>
-                <span>Missing:</span>
-                <input type='checkbox' id='pole-is-missing' defaultChecked={this.props.pole.missing} />
-              </label>
-            </div>
-            <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
                 <span>Needs Tip:</span>
                 <input type='checkbox' id='pole-is-needsTip' defaultChecked={this.props.pole.needsTip} />
               </label>
             </div>
             <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
+                <span>Damaged:</span>
+                <input type='checkbox' id='pole-is-damaged' defaultChecked={this.props.pole.damaged} />
+              </label>
+            </div>
+            <div className='form-row'>
+              <label className='pole-info__edit-form'>
                 <span>Broken:</span>
                 <input type='checkbox' id='pole-is-broken' defaultChecked={this.props.pole.broken} />
               </label>
             </div>
             <div className='form-row'>
-              <label>
+              <label className='pole-info__edit-form'>
+                <span>Missing:</span>
+                <input type='checkbox' id='pole-is-missing' defaultChecked={this.props.pole.missing} />
+              </label>
+            </div>
+            <div className='form-row'>
+              <label className='pole-info__edit-form'>
                 <span>Note:</span>
                 <input type='text' name='note' style={{marginLeft: '16px'}} defaultValue={this.props.pole.note} />
               </label>
