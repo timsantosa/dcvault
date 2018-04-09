@@ -404,6 +404,44 @@ module.exports = (app, db) => {
     }
   })
 
+  app.get('/registration/options', (req, res) => {
+    db.tables.TrainingOptions.find({where: {id: 1}}).then(options => {
+      if (!options) {
+        res.status(400).send({ok: false, message: 'record not found'})
+      } else {
+        res.send({ok: true, message: 'retrieved training options', options})
+      }
+    }).catch(e => {
+      res.status(500).send({ok: false, message: 'an internal error has ocurred'})
+    })
+  })
+
+  app.post('/registration/options', (req, res) => {
+    db.tables.TrainingOptions.find({where: {id: 1}}).then(options => {
+      if (!options) {
+        let options = {
+          fall: false,
+          winter: false,
+          spring: false,
+          summer: true,
+          youthAdult: true,
+          dcv: false,
+          balt: false,
+          prep: false,
+          ncs: false,
+          cua: false,
+          pg: false,
+          pa: false
+        }
+        db.tables.TrainingOptions.create()
+      } else {
+        res.send({ok: true, message: 'retrieved training options', options})
+      }
+    }).catch(e => {
+      res.status(500).send({ok: false, message: 'an internal error has ocurred'})
+    })
+  })
+
   // DELETE REQ?
 
   // End Registration Endpoints
@@ -569,6 +607,21 @@ module.exports = (app, db) => {
             if (foundUser.isAdmin) {
               db.tables.Purchases.findAll().then((purchases) => {
                 db.tables.Athletes.findAll().then((athletes) => {
+                  let quarter = helpers.getCurrentQuarter()
+                  let year = new Date().getFullYear()
+                  athletes = athletes.map(athlete => {
+                    let currentlyRegistered = false
+                    for (let i = 0; i < purchases.length; i++) {
+                      let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
+                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter === quarter && purchaseYear === year) {
+                        console.log(athlete.firstName, athlete.lastName)
+                        currentlyRegistered = true
+                        break
+                      }
+                    }
+                    athlete.dataValues.currentlyRegistered = currentlyRegistered
+                    return athlete
+                  })
                   db.tables.Invites.findAll().then((invites) => {
                     db.tables.Discounts.findAll().then((discounts) => {
                       let user = {
@@ -585,6 +638,21 @@ module.exports = (app, db) => {
             } else {
               db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchases) => {
                 db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athletes) => {
+                  let quarter = helpers.getCurrentQuarter()
+                  let year = new Date().getFullYear()
+                  athletes = athletes.map(athlete => {
+                    let currentlyRegistered = false
+                    for (let i = 0; i < purchases.length; i++) {
+                      let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
+                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter === quarter && purchaseYear === year) {
+                        console.log(athlete.firstName, athlete.lastName)
+                        currentlyRegistered = true
+                        break
+                      }
+                    }
+                    athlete.dataValues.currentlyRegistered = currentlyRegistered
+                    return athlete
+                  })
                   let user = {
                     id: foundUser.id,
                     email: foundUser.email,

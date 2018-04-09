@@ -257,6 +257,7 @@ class PoleRental extends React.Component {
         this.setState({
           athletes: res.data.athletes.slice()
         })
+        console.log(res.data.athletes)
       } else {
         this.setState({
           errorText: 'We could not retrieve any athletes for this account. Please refresh and try again. If the issue persists, please contact us'
@@ -334,7 +335,7 @@ class PoleRental extends React.Component {
                   <span className='required'>Select Athlete</span>
                   <select name='athlete'>
                     {
-                      this.state.athletes.map(athlete => {
+                      this.state.athletes.filter(athlete => athlete.currentlyRegistered).map(athlete => {
                         return (<option key={athlete.id} value={athlete.id}>{athlete.firstName + ' ' + athlete.lastName}</option>)
                       })
                     }
