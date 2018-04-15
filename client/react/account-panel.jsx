@@ -3,17 +3,6 @@ import apiHelpers from './api-helpers'
 import GenericModal from './generic-modal.jsx'
 const $ = window.$
 
-/*
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>Pole Rental</span>
-              </div>
-              <div className='body-box'>
-                <PoleRental user={user} />
-              </div>
-            </div>
-*/
-
 class AccountPanel extends React.Component {
   constructor (props) {
     super(props)
@@ -170,6 +159,14 @@ class AccountPanel extends React.Component {
                 </ul>
               </div>
             </div>
+            <div className='account-panel-box'>
+              <div className='title-box'>
+                <span className='title'>Pole Rental</span>
+              </div>
+              <div className='body-box'>
+                <PoleRental user={user} />
+              </div>
+            </div>
           </div>
 
           <div className='col-xs-12 col-md-6'>
@@ -260,7 +257,6 @@ class PoleRental extends React.Component {
         this.setState({
           athletes: res.data.athletes.slice()
         })
-        console.log(res.data.athletes)
       } else {
         this.setState({
           errorText: 'We could not retrieve any athletes for this account. Please refresh and try again. If the issue persists, please contact us'
@@ -284,7 +280,6 @@ class PoleRental extends React.Component {
     let output = apiHelpers.parseFormValues($('#rental-info').serializeArray())
     // output.type = $('input[name="type"]:checked').val()
     let selected = false
-    console.log(output)
     if (output.type === 'quarterly') {
       this.setState({
         period: 'quarterly'
@@ -305,7 +300,6 @@ class PoleRental extends React.Component {
   }
 
   closeModal () {
-    console.log('closing modal')
     this.setState({
       openModal: false
     })
@@ -392,7 +386,6 @@ class PoleRentalPurchase extends React.Component {
 
   continue (data) {
     apiHelpers.requestPole(this.props.athlete.id, this.props.period).then(res => {
-      console.log('Rental Request Respoonse:', res)
       if (res.data.ok) {
         this.setState({
           successfulPayment: true,

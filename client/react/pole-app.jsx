@@ -244,7 +244,7 @@ class PoleApp extends React.Component {
          : null}
         {this.state.showRentalModal
           ? <GenericModal title='Rental Information' onClose={this.closeRentalModal.bind(this)} childComponent={
-            <RentalInfo rentalData={this.state.activeRental} rental={this.state.activeRental} pole={this.getById(this.state.poles, this.state.activeRental.poleId)} athlete={this.getById(this.state.athletes, this.state.activeRental.athleteId)} />
+            <RentalInfo rentalData={this.state.activeRental} rental={this.state.activeRental} pole={this.getById(this.state.poles, this.state.activeRental.poleId)} athlete={this.getById(this.state.athletes, this.state.activeRental.athleteId)} onClose={this.closeRentalModal.bind(this)} populateData={this.populateData.bind(this)} />
           } />
          : null}
       </section>
@@ -275,6 +275,7 @@ class RentalInfo extends React.Component {
         if (res.data.ok) {
           window.alert('Rental ended')
           this.props.onClose()
+          this.props.populateData()
         } else {
           window.alert('An error occurred, please try again')
         }
