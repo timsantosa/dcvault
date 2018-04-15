@@ -166,7 +166,7 @@ class PoleApp extends React.Component {
     this.poleInfo({})
   }
 
-  viewInfo (row) {
+  viewRentalInfo (row) {
     this.setState({showRentalModal: true, activeRental: this.getById(this.state.rentals, row.rentalId)})
   }
 
@@ -179,7 +179,7 @@ class PoleApp extends React.Component {
   }
 
   getRentalData () {
-    return this.state.rentals.map(rental => {
+    return this.state.rentals.filter(rental => rental.poleId !== null).map(rental => {
       return {
         rentalId: rental.id,
         athleteId: rental.id,
@@ -226,7 +226,7 @@ class PoleApp extends React.Component {
               </div>
               <div className='body-box'>
                 <div style={{display: this.getRentalData().length ? 'block' : 'none'}}>
-                  <SuperTable data={this.getRentalData()} extraAction actionInfo={{title: 'More', iconClass: 'glyphicon glyphicon-chevron-right'}} callback={this.viewInfo.bind(this)} shownColumns={['athlete', 'expiration', 'pole']} />
+                  <SuperTable data={this.getRentalData()} extraAction actionInfo={{title: 'More', iconClass: 'glyphicon glyphicon-chevron-right'}} callback={this.viewRentalInfo.bind(this)} shownColumns={['athlete', 'expiration', 'pole']} />
                 </div>
               </div>
             </div>
