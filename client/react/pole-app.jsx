@@ -244,7 +244,7 @@ class PoleApp extends React.Component {
          : null}
         {this.state.showRentalModal
           ? <GenericModal title='Rental Information' onClose={this.closeRentalModal.bind(this)} childComponent={
-            <RentalInfo rentalData={this.state.activeRental} rental={this.state.activeRental} pole={this.getById(this.state.poles, this.state.activeRental.poleId)} athlete={this.getById(this.state.athletes, this.state.activeRental.athleteId)} onClose={this.closeRentalModal.bind(this)} populateData={this.populateData.bind(this)} />
+            <RentalInfo rentalData={this.state.activeRental} rental={this.state.activeRental} pole={this.getById(this.state.poles, this.state.activeRental.poleId)} athlete={this.getById(this.state.athletes, this.state.activeRental.athleteId)} onClose={this.closeRentalModal.bind(this)} poleList={this.state.poles} populateData={this.populateData.bind(this)} />
           } />
          : null}
       </section>
@@ -256,7 +256,9 @@ class RentalInfo extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+      showSelectionModal: false
+    }
   }
 
   getBoolStr () {
@@ -283,6 +285,41 @@ class RentalInfo extends React.Component {
     }
   }
 
+  showSelectionModal () {
+    this.setState({
+      showSelectionModal: true
+    })
+  }
+
+  closeSelectionModal () {
+    this.setState({
+      showSelectionModal: false
+    })
+  }
+
+  assignPole (pole) {
+    let updatedPole = JSON.parse(JSON.stringify(this.props.pole))
+    updatedPole.rented = false
+    apiHelpers.updatePole(updatedPole).then(poleRes => {
+      if (poleRes.data.ok) {
+        let updatedRental = JSON.parse(JSON.stringify(this.props.rental))
+        updatedRental.poleId = pole.id
+        apiHelpers.updateRental(updatedRental).then(rentalRes => {
+          if (rentalRes.data.ok) {
+            window.alert('rental updated')
+            this.closeSelectionModal()
+            this.props.onClose()
+            this.props.populateData()
+          } else {
+            window.alert('An error occurred, please try again')
+          }
+        })
+      } else {
+        window.alert('An error occurred, please try again')
+      }
+    })
+  }
+
   render () {
     return (
       <div className='pole-info__container'>
@@ -301,7 +338,15 @@ class RentalInfo extends React.Component {
           <div className='red-button' onClick={this.endRental.bind(this)}>
             <span className='button-text'>End</span>
           </div>
+          <div className='red-button' onClick={this.showSelectionModal.bind(this)}>
+            <span className='button-text'>Swap</span>
+          </div>
         </div>
+        {this.state.showSelectionModal
+          ? <GenericModal title='Choose Pole' onClose={this.closeSelectionModal.bind(this)} childComponent={(
+            <PoleViewer poles={this.props.poleList} hasAction callback={this.assignPole.bind(this)} />
+          )} />
+         : null}
       </div>
     )
   }

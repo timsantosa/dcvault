@@ -234,6 +234,17 @@ apiHelpers.applyInvite = (code) => {
   })
 }
 
+apiHelpers.updateRental = (updatedRental) => {
+  let token = getToken()
+  return axios.post('/rentals/update', {token, updatedRental: JSON.stringify(updatedRental)})
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
 apiHelpers.contactForm = (name, from, to, subject, text) => {
   return axios.post('/contact', {name: name, from: from, to: to, subject: subject, text: text})
   .then((response) => {

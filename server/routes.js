@@ -31,7 +31,6 @@ module.exports = (app, db) => {
       helpers.sendWithReplyTo(name, from, to, subject, text).then(() => {
         res.send({ok: true, message: 'email sent successfully'})
       }, (err) => {
-        console.log(err)
         res.status(500).send({ok: false, message: 'server error'})
       })
     }
@@ -246,6 +245,35 @@ module.exports = (app, db) => {
     }
   })
 
+  app.post('/rentals/update', (req, res) => {
+    if (!req.body.token || !req.body.updatedRental) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        let updatedRental = null
+        try {
+          updatedRental = JSON.parse(req.body.updatedRental)
+        } catch (e) {}
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else if (!updatedRental) {
+          res.status(400).send({ok: false, message: 'bad rental object'})
+        } else {
+          db.tables.Rentals.find({where: {id: updatedRental.id}}).then(rental => {
+            if (!rental) {
+              res.status(400).send({ok: false, message: 'record not found'})
+            } else {
+              rental.update(updatedRental).then(newRental => {
+                res.send({ok: true, message: 'record updated', newRental})
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+
   // Registration Endpoints
 
   app.post('/registration/invite', (req, res) => {
@@ -325,7 +353,6 @@ module.exports = (app, db) => {
       } catch (e) {}
       db.tables.Users.find({where: {email: user.email, password: user.password}}).then((user) => {
         if (!user || !user.isAdmin) {
-          console.log(user)
           res.status(403).send({ok: false, message: 'unauthorized'})
         } else {
           let code = helpers.randString()
@@ -345,7 +372,6 @@ module.exports = (app, db) => {
   })
 
   app.post('/registration/finalize', (req, res) => {
-    // console.log(req.body)
     if (!req.body.purchaseInfo || !req.body.token) {
       res.status(400).send({ok: false, message: 'missing purchase details'})
     } else {
@@ -506,7 +532,6 @@ module.exports = (app, db) => {
       let user = null
       try {
         user = jwt.decode(token, config.auth.secret)
-        // console.log(user);
       } catch (e) {
 
       }
@@ -533,7 +558,6 @@ module.exports = (app, db) => {
       try {
         user = jwt.decode(token, config.auth.secret)
       } catch (e) {
-        console.log(e)
       }
       db.tables.Users.find({where: {email: user.email, password: user.password}}).then((existingUser) => {
         if (!user) {
@@ -614,7 +638,6 @@ module.exports = (app, db) => {
                     for (let i = 0; i < purchases.length; i++) {
                       let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
                       if (purchases[i].athleteId === athlete.id && purchases[i].quarter === quarter && purchaseYear === year) {
-                        console.log(athlete.firstName, athlete.lastName)
                         currentlyRegistered = true
                         break
                       }
@@ -645,7 +668,6 @@ module.exports = (app, db) => {
                     for (let i = 0; i < purchases.length; i++) {
                       let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
                       if (purchases[i].athleteId === athlete.id && purchases[i].quarter === quarter && purchaseYear === year) {
-                        console.log(athlete.firstName, athlete.lastName)
                         currentlyRegistered = true
                         break
                       }
@@ -701,7 +723,6 @@ module.exports = (app, db) => {
   // Admin Endpoints
 
   app.post('/discounts/delete', (req, res) => {
-    console.log(req.body)
     let token = req.body.token
     let discountId = req.body.discountId
     if (!token) {
@@ -726,7 +747,6 @@ module.exports = (app, db) => {
   })
 
   app.post('/invites/delete', (req, res) => {
-    console.log(req.body)
     let token = req.body.token
     let inviteId = req.body.inviteId
     if (!token) {
