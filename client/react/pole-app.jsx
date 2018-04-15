@@ -212,22 +212,22 @@ class PoleApp extends React.Component {
 
             <div className='account-panel-box'>
               <div className='title-box'>
-                <span className='title'>Poles</span>
-              </div>
-              <div className='body-box'>
-                <PoleViewer poles={this.state.poles} hasAction callback={this.poleInfo.bind(this)} />
-                <a onClick={this.addPole.bind(this)}>+ Add Pole</a>
-              </div>
-            </div>
-
-            <div className='account-panel-box'>
-              <div className='title-box'>
                 <span className='title'>Rentals</span>
               </div>
               <div className='body-box'>
                 <div style={{display: this.getRentalData().length ? 'block' : 'none'}}>
                   <SuperTable data={this.getRentalData()} extraAction actionInfo={{title: 'More', iconClass: 'glyphicon glyphicon-chevron-right'}} callback={this.viewRentalInfo.bind(this)} shownColumns={['athlete', 'expiration', 'pole']} />
                 </div>
+              </div>
+            </div>
+
+            <div className='account-panel-box'>
+              <div className='title-box'>
+                <span className='title'>Poles</span>
+              </div>
+              <div className='body-box'>
+                <PoleViewer poles={this.state.poles} hasAction callback={this.poleInfo.bind(this)} />
+                <a onClick={this.addPole.bind(this)}>+ Add Pole</a>
               </div>
             </div>
           </div>
