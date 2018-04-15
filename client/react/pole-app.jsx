@@ -306,10 +306,18 @@ class RentalInfo extends React.Component {
         updatedRental.poleId = pole.id
         apiHelpers.updateRental(updatedRental).then(rentalRes => {
           if (rentalRes.data.ok) {
-            window.alert('rental updated')
-            this.closeSelectionModal()
-            this.props.onClose()
-            this.props.populateData()
+            let rentedPole = JSON.parse(JSON.stringify(pole))
+            rentedPole.rented = true
+            apiHelpers.updatePole(rentedPole).then(rentedPoleRes => {
+              if (rentedPoleRes.data.ok) {
+                window.alert('Rental updated')
+                this.closeSelectionModal()
+                this.props.onClose()
+                this.props.populateData()
+              } else {
+                window.alert('An error occurred, please try again')
+              }
+            })
           } else {
             window.alert('An error occurred, please try again')
           }
