@@ -22,8 +22,10 @@ class PoleApp extends React.Component {
       athletes: [],
       showSelectionModal: false,
       showInfoModal: false,
+      showRentalModal: false,
       activeRequest: null,
-      activePole: null
+      activePole: null,
+      activeRental: null
     }
   }
 
@@ -125,6 +127,13 @@ class PoleApp extends React.Component {
       activePole: null
     })
   }
+
+  closeRentalModal () {
+    this.setState({
+      showRentalModal: false,
+      activeRental: null
+    })
+  }
   poleInfo (pole) {
     this.setState({
       showInfoModal: true,
@@ -157,17 +166,15 @@ class PoleApp extends React.Component {
     this.poleInfo({})
   }
 
-  endRental (row) {
-    if (window.confirm('End Rental?')) {
-      apiHelpers.endRental(row.rentalId).then(res => {
-        console.log(res)
-        if (res.data.ok) {
-          window.alert('Rental ended')
-        } else {
-          window.alert('An error occurred, please try again')
-        }
-        this.populateData()
-      })
+  viewInfo (row) {
+    this.setState({showRentalModal: true, activeRental: this.getById(this.state.rentals, row.rentalId)})
+  }
+
+  getById (list, id) {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].id === id) {
+        return list[i]
+      }
     }
   }
 
@@ -219,7 +226,7 @@ class PoleApp extends React.Component {
               </div>
               <div className='body-box'>
                 <div style={{display: this.getRentalData().length ? 'block' : 'none'}}>
-                  <SuperTable data={this.getRentalData()} extraAction actionInfo={{title: 'End Rental', iconClass: 'glyphicon glyphicon-remove'}} callback={this.endRental.bind(this)} shownColumns={['athlete', 'expiration', 'pole']} />
+                  <SuperTable data={this.getRentalData()} extraAction actionInfo={{title: 'More', iconClass: 'glyphicon glyphicon-chevron-right'}} callback={this.viewInfo.bind(this)} shownColumns={['athlete', 'expiration', 'pole']} />
                 </div>
               </div>
             </div>
@@ -235,7 +242,66 @@ class PoleApp extends React.Component {
             <PoleInfo pole={this.state.activePole} callback={this.poleUpdate.bind(this)} cancelAdd={this.closeInfoModal.bind(this)} />
           )} />
          : null}
+        {this.state.showRentalModal
+          ? <GenericModal title='Rental Information' onClose={this.closeRentalModal.bind(this)} childComponent={
+            <RentalInfo rentalData={this.state.activeRental} rental={this.state.activeRental} pole={this.getById(this.state.poles, this.state.activeRental.poleId)} athlete={this.getById(this.state.athletes, this.state.activeRental.athleteId)} />
+          } />
+         : null}
       </section>
+    )
+  }
+}
+
+class RentalInfo extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {}
+  }
+
+  getBoolStr () {
+    let yesNoArr = []
+    yesNoArr.push(this.props.pole.rented ? 'Y' : 'N')
+    yesNoArr.push(this.props.pole.needsTip ? 'Y' : 'N')
+    yesNoArr.push(this.props.pole.damaged ? 'Y' : 'N')
+    yesNoArr.push(this.props.pole.broken ? 'Y' : 'N')
+    yesNoArr.push(this.props.pole.missing ? 'Y' : 'N')
+    return yesNoArr.join(', ')
+  }
+
+  endRental () {
+    if (window.confirm('End Rental?')) {
+      apiHelpers.endRental(this.props.rental.id).then(res => {
+        if (res.data.ok) {
+          window.alert('Rental ended')
+          this.props.onClose()
+        } else {
+          window.alert('An error occurred, please try again')
+        }
+      })
+    }
+  }
+
+  render () {
+    return (
+      <div className='pole-info__container'>
+        <div className='pole-info__element'><span className='red-text'>Brand:</span>{this.props.pole.brand}</div>
+        <div className='pole-info__element'><span className='red-text'>Length:</span>{this.props.pole.feet + '\'' + this.props.pole.inches + '"'}</div>
+        <div className='pole-info__element'><span className='red-text'>Weight:</span>{this.props.pole.weight}</div>
+        <div className='pole-info__element'><span className='red-text'>Location:</span>{this.props.pole.location}</div>
+        <div className='pole-info__element'><span className='red-text'>R, Nt, D, B, M:</span>{this.getBoolStr()}</div>
+        <div className='pole-info__element'><span className='red-text'>Note:</span>{this.props.pole.note}</div>
+        <p />
+        <div className='pole-info__element'><span className='red-text'>Athlete:</span>{this.props.athlete.firstName + ' ' + this.props.athlete.lastName}</div>
+        <div className='pole-info__element'><span className='red-text'>Email:</span>{this.props.athlete.email}</div>
+        <div className='pole-info__element'><span className='red-text'>Rental Expiration:</span>{new Date(this.props.rental.expiration).toLocaleDateString('en-US')}</div>
+
+        <div className='pole-info__edit-btns'>
+          <div className='red-button' onClick={this.endRental.bind(this)}>
+            <span className='button-text'>End</span>
+          </div>
+        </div>
+      </div>
     )
   }
 }
@@ -288,7 +354,6 @@ class PoleInfo extends React.Component {
       let confirmed = window.confirm('Delete this pole?')
       if (confirmed) {
         apiHelpers.deletePole(this.props.pole.id).then(res => {
-          console.log(res)
           if (res.data) {
             this.props.callback(res.data.ok)
           } else {
