@@ -448,6 +448,10 @@ class PoleRentalPurchase extends React.Component {
     if (!this.state.successfulPayment && !this.state.failedPayment) {
       return (
         <div style={{textAlign: 'center'}}>
+          <p>
+            {this.props.period === 'oneTime'
+          ? 'A one-time rental is good for one week. You are expected to return the pole at practice one week from the date the pole is issued'
+          : 'A quarterly rental is good for the duration of the training quarter. You are expected to return the pole at practice before the start of the following quarter'}</p>
           <p><span className='red-text'>{this.state.periodDisplay} rental:</span> ${this.state.price.toFixed(2)}</p>
           <p><span className='red-text'>Online Transaction Fee:</span> ${(this.state.price * 0.03).toFixed(2)}</p>
           <div id='paypal-button-container' />
