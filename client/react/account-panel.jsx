@@ -346,7 +346,7 @@ class PoleRental extends React.Component {
             )}
 
           </form>
-          <div className='red-button' style={{marginTop: '16px', marginBottom: '16px'}} onClick={this.submit.bind(this)}>
+          <div className='red-button' style={{marginTop: '16px', marginBottom: '16px'}} onClick={this.state.athletes.filter(athlete => athlete.currentlyRegistered).length && this.submit.bind(this)}>
             <span className='button-text'>Request Rental</span>
           </div>
         </div>
