@@ -307,52 +307,56 @@ class PoleRental extends React.Component {
 
   render () {
     const openModal = this.state.openModal
-    return (
-      <div className='pole-rental'>
-        <p>
-          To request a pole rental, select from the options below
-        </p>
-        <div style={{textAlign: 'center'}}>
-          <form id='rental-info' className='form-labels-on-top' style={{padding: '8px', boxShadow: 'none'}}>
-            <div className='form-row'>
-              <label>
-                <span className='required'>Select Rental Period</span>
-                <select name='type'>
-                  {
-                    this.state.rentalOptions.map(option => {
-                      return (<option key={option.name} value={option.name}>{option.displayName}: {option.displayPrice}</option>)
-                    })
-                  }
-                </select>
-              </label>
-            </div>
-            { this.state.athletes.length ? (
+    if (this.state.athletes.filter(athlete => athlete.currentlyRegistered).length === 0) {
+      return (<p> There are no actively registered athletes associated with this account </p>)
+    } else {
+      return (
+        <div className='pole-rental'>
+          <p>
+            To request a pole rental, select from the options below
+          </p>
+          <div style={{textAlign: 'center'}}>
+            <form id='rental-info' className='form-labels-on-top' style={{padding: '8px', boxShadow: 'none'}}>
               <div className='form-row'>
                 <label>
-                  <span className='required'>Select Athlete</span>
-                  <select name='athlete'>
+                  <span className='required'>Select Rental Period</span>
+                  <select name='type'>
                     {
-                      this.state.athletes.filter(athlete => athlete.currentlyRegistered).map(athlete => {
-                        return (<option key={athlete.id} value={athlete.id}>{athlete.firstName + ' ' + athlete.lastName}</option>)
+                      this.state.rentalOptions.map(option => {
+                        return (<option key={option.name} value={option.name}>{option.displayName}: {option.displayPrice}</option>)
                       })
                     }
                   </select>
                 </label>
               </div>
-            ) : (
-              <div className='error-container'>
-                <p>{this.state.errorText}</p>
-              </div>
-            )}
+              { this.state.athletes.length ? (
+                <div className='form-row'>
+                  <label>
+                    <span className='required'>Select Athlete</span>
+                    <select name='athlete'>
+                      {
+                        this.state.athletes.filter(athlete => athlete.currentlyRegistered).map(athlete => {
+                          return (<option key={athlete.id} value={athlete.id}>{athlete.firstName + ' ' + athlete.lastName}</option>)
+                        })
+                      }
+                    </select>
+                  </label>
+                </div>
+              ) : (
+                <div className='error-container'>
+                  <p>{this.state.errorText}</p>
+                </div>
+              )}
 
-          </form>
-          <div className='red-button' style={{marginTop: '16px', marginBottom: '16px'}} onClick={this.state.athletes.filter(athlete => athlete.currentlyRegistered).length && this.submit.bind(this)}>
-            <span className='button-text'>Request Rental</span>
+            </form>
+            <div className='red-button' style={{marginTop: '16px', marginBottom: '16px'}} onClick={this.submit.bind(this)}>
+              <span className='button-text'>Request Rental</span>
+            </div>
           </div>
+          {openModal ? (<GenericModal style={{zIndex: 9999}} title={'Request Rental'} onClose={this.closeModal.bind(this)} childComponent={<PoleRentalPurchase period={this.state.period} user={this.props.user} closeFunction={this.closeModal.bind(this)} athlete={this.getSelectedAthlete()} />} />) : ''}
         </div>
-        {openModal ? (<GenericModal style={{zIndex: 9999}} title={'Request Rental'} onClose={this.closeModal.bind(this)} childComponent={<PoleRentalPurchase period={this.state.period} user={this.props.user} closeFunction={this.closeModal.bind(this)} athlete={this.getSelectedAthlete()} />} />) : ''}
-      </div>
-    )
+      )
+    }
   }
 }
 
