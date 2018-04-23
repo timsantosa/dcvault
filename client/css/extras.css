@@ -287,6 +287,7 @@ a {
 
 .fade-bg {
   position: fixed;
+  z-index: 2147483647;
   top: 0;
   left: 0;
   height: 110vh;
@@ -306,7 +307,7 @@ a {
   margin: 10px;
   padding: 0px;
   max-height: 80vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .login-modal .row {
@@ -346,6 +347,65 @@ a {
 
 .login-input {
   width: 80%;
+}
+
+.generic-modal {
+  position: fixed;
+  z-index: 99999;
+  min-width: 300px;
+  width: 30%;
+  background-color: #DDD;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+  margin: 10px;
+  padding: 0px;
+  border-radius: 8px;
+}
+
+.generic-modal__title__container { 
+  position: relative;
+  background-color: #C0282D;
+  margin: 0px;
+  height: 48px;
+  border-radius: 8px 8px 0 0;
+}
+
+.generic-modal__title {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  text-align: center;
+  color: white;
+}
+.generic-modal__title p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.generic-modal__content {
+  padding: 16px;
+}
+
+.generic-modal__content__container {
+  max-height: 70vh;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.generic-modal__close-btn {
+  position: absolute;
+  right: 16px;
+  font-size: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.generic-modal__content__container {
+  width: 100%;
 }
 
 .forgot-button {
@@ -585,10 +645,100 @@ a {
   display: block;
 }
 
+.pole-request__row {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.pole-request__item {
+  display: inline-block;
+}
+ 
+.pole-viewer__container {
+  width: 100%;
+  background-color: white;
+  padding: 16px;
+  border-radius: 5px;
+}
+
+.pole-viewer__container > table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.pole-viewer__container td {
+  text-align: center;
+}
+
+.pole-info__container {
+  text-align: left;
+  padding: 8px 16px;
+}
+
+.flex-around {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.pole-info__element {
+  border-bottom: 1px solid rgba(0, 0, 0, .3);
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.multi-btn-container {
+  display: flex;
+  margin-top: 16px;
+  justify-content: space-around;
+}
+
+.pole-info__edit-btns {
+  display: flex;
+  margin-top: 16px;
+  justify-content: space-around;
+}
+
+#edit-pole-info {
+  text-align: left;
+  padding: 8px 16px;
+}
+
+.pole-info__edit-form {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pole-viewer__pole {
+
+}
+
+.pole-viewer__rented {
+  background-color: rgba(150, 150, 150, .35);
+}
+
+.pole-viewer__missing {
+  background-color: rgba(192, 40, 45, .35);
+}
+
+.pole-viewer__broken {
+  background-color: rgba(192, 40, 45, .35);
+}
+
+.pole-viewer__damaged {
+  background-color: rgba(210, 100, 0, .35);
+}
+
+.pole-viwer__needs-tip {
+
+}
+
 .progress-text p {
   font-size: 12px;
 }
-
 /*FORM STYLING*/
 
 .form-labels-on-top{

@@ -28,6 +28,19 @@ module.exports.decodeUser = (token) => {
   return user
 }
 
+module.exports.getCurrentQuarter = () => {
+  let month = (new Date()).getMonth() + 1
+  if (month === 12 || month === 1 || month === 2) {
+    return 'winter'
+  } else if (month <= 5 && month >= 3) {
+    return 'spring'
+  } else if (month <= 8 && month >= 6) {
+    return 'summer'
+  } else {
+    return 'fall'
+  }
+}
+
 module.exports.sendCode = (code, email) => {
   let link = config.server.domain + '/users/verify?code=' + code
   let mailOptions = {

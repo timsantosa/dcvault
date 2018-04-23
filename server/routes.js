@@ -31,7 +31,6 @@ module.exports = (app, db) => {
       helpers.sendWithReplyTo(name, from, to, subject, text).then(() => {
         res.send({ok: true, message: 'email sent successfully'})
       }, (err) => {
-        console.log(err)
         res.status(500).send({ok: false, message: 'server error'})
       })
     }
@@ -136,8 +135,8 @@ module.exports = (app, db) => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
-          db.tables.Rentals.findAll().then(poles => {
-            res.send({ok: true, message: 'rental list request accepted', poles})
+          db.tables.Rentals.findAll().then(rentals => {
+            res.send({ok: true, message: 'rental list request accepted', rentals})
           })
         }
       })
@@ -145,7 +144,7 @@ module.exports = (app, db) => {
   })
 
   app.post('/rentals/request', (req, res) => {
-    if (!req.body.token || !req.body.athleteId || !req.body.request) {
+    if (!req.body.token || !req.body.athleteId || !req.body.period || !req.body.quarter) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
@@ -154,34 +153,30 @@ module.exports = (app, db) => {
           res.status(400).send({ok: false, message: 'bad user token'})
         } else {
           db.tables.Athletes.find({where: {id: req.body.athleteId}}).then(athlete => {
-            if (!athlete || athlete.userId !== user.id) {
+            if (!athlete || (!user.isAdmin && athlete.userId !== user.id)) {
               res.status(400).send({ok: false, message: 'athlete not found'})
             } else {
-              let request = null
-              try {
-                request = JSON.parse(req.body.request)
-              } catch (e) {}
-              if (!request) {
-                res.status(400).send({ok: false, message: 'bad rental request body'})
-              } else {
-                let expiration = 0
-                if (request.type === 'quarter') {
-                  if (request.quarter === 'winter') {
-                    expiration = new Date(request.year + 1, 2, 1)
-                  } else if (request.quarter === 'spring') {
-                    expiration = new Date(request.year, 5, 1)
-                  } else if (request.quarter === 'summer') {
-                    expiration = new Date(request.year, 8, 1)
-                  } else {
-                    expiration = new Date(request.year, 11, 1)
-                  }
-                } else {
-                  expiration = new Date(Date.now() + 1209600000)
-                }
-                db.tables.Rentals.create({expiration, athleteId: athlete.id}).then(rental => {
-                  res.send({ok: true, message: 'rental request created', rental})
-                })
+              let request = {
+                type: req.body.period,
+                year: (new Date()).getFullYear()
               }
+              let expiration
+              if (request.type === 'quarterly') {
+                if (req.body.quarter === 'winter') {
+                  expiration = new Date(request.year + 1, 2, 1)
+                } else if (req.body.quarter === 'spring') {
+                  expiration = new Date(request.year, 5, 1)
+                } else if (req.body.quarter === 'summer') {
+                  expiration = new Date(request.year, 8, 1)
+                } else {
+                  expiration = new Date(request.year, 11, 1)
+                }
+              } else {
+                expiration = new Date(Date.now() + 1209600000)
+              }
+              db.tables.Rentals.create({expiration, athleteId: athlete.id}).then(rental => {
+                res.send({ok: true, message: 'rental request created', rental})
+              })
             }
           })
         }
@@ -230,16 +225,49 @@ module.exports = (app, db) => {
         } else {
           db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(rental => {
             rental.getPole().then(pole => {
-              if (!rental || !pole) {
+              if (!rental) {
                 res.status(400).send({ok: false, message: 'record not found'})
+              } else if (!pole) {
+                rental.destroy().then(numDestroyed => {
+                  res.send({ok: true, message: 'rental ended', updatedPole: null})
+                })
               } else {
-                rental.update({poleId: null}).then(updatedRental => {
+                rental.destroy().then(numDestroyed => {
                   pole.update({rented: false}).then((updatedPole) => {
-                    res.send({ok: true, message: 'rental ended', updatedRental, updatedPole})
+                    res.send({ok: true, message: 'rental ended', updatedPole})
                   })
                 })
               }
             })
+          })
+        }
+      })
+    }
+  })
+
+  app.post('/rentals/update', (req, res) => {
+    if (!req.body.token || !req.body.updatedRental) {
+      res.status(400).send({ok: false, message: 'bad request'})
+    } else {
+      let tokenDecoded = helpers.decodeUser(req.body.token)
+      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+        let updatedRental = null
+        try {
+          updatedRental = JSON.parse(req.body.updatedRental)
+        } catch (e) {}
+        if (!user || !user.isAdmin) {
+          res.status(300).send({ok: false, message: 'unauthorized'})
+        } else if (!updatedRental) {
+          res.status(400).send({ok: false, message: 'bad rental object'})
+        } else {
+          db.tables.Rentals.find({where: {id: updatedRental.id}}).then(rental => {
+            if (!rental) {
+              res.status(400).send({ok: false, message: 'record not found'})
+            } else {
+              rental.update(updatedRental).then(newRental => {
+                res.send({ok: true, message: 'record updated', newRental})
+              })
+            }
           })
         }
       })
@@ -325,7 +353,6 @@ module.exports = (app, db) => {
       } catch (e) {}
       db.tables.Users.find({where: {email: user.email, password: user.password}}).then((user) => {
         if (!user || !user.isAdmin) {
-          console.log(user)
           res.status(403).send({ok: false, message: 'unauthorized'})
         } else {
           let code = helpers.randString()
@@ -345,7 +372,6 @@ module.exports = (app, db) => {
   })
 
   app.post('/registration/finalize', (req, res) => {
-    // console.log(req.body)
     if (!req.body.purchaseInfo || !req.body.token) {
       res.status(400).send({ok: false, message: 'missing purchase details'})
     } else {
@@ -402,6 +428,44 @@ module.exports = (app, db) => {
         res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
       })
     }
+  })
+
+  app.get('/registration/options', (req, res) => {
+    db.tables.TrainingOptions.find({where: {id: 1}}).then(options => {
+      if (!options) {
+        res.status(400).send({ok: false, message: 'record not found'})
+      } else {
+        res.send({ok: true, message: 'retrieved training options', options})
+      }
+    }).catch(e => {
+      res.status(500).send({ok: false, message: 'an internal error has ocurred'})
+    })
+  })
+
+  app.post('/registration/options', (req, res) => {
+    db.tables.TrainingOptions.find({where: {id: 1}}).then(options => {
+      if (!options) {
+        let options = {
+          fall: false,
+          winter: false,
+          spring: false,
+          summer: true,
+          youthAdult: true,
+          dcv: false,
+          balt: false,
+          prep: false,
+          ncs: false,
+          cua: false,
+          pg: false,
+          pa: false
+        }
+        db.tables.TrainingOptions.create()
+      } else {
+        res.send({ok: true, message: 'retrieved training options', options})
+      }
+    }).catch(e => {
+      res.status(500).send({ok: false, message: 'an internal error has ocurred'})
+    })
   })
 
   // DELETE REQ?
@@ -468,7 +532,6 @@ module.exports = (app, db) => {
       let user = null
       try {
         user = jwt.decode(token, config.auth.secret)
-        // console.log(user);
       } catch (e) {
 
       }
@@ -495,7 +558,6 @@ module.exports = (app, db) => {
       try {
         user = jwt.decode(token, config.auth.secret)
       } catch (e) {
-        console.log(e)
       }
       db.tables.Users.find({where: {email: user.email, password: user.password}}).then((existingUser) => {
         if (!user) {
@@ -569,6 +631,20 @@ module.exports = (app, db) => {
             if (foundUser.isAdmin) {
               db.tables.Purchases.findAll().then((purchases) => {
                 db.tables.Athletes.findAll().then((athletes) => {
+                  let quarter = helpers.getCurrentQuarter()
+                  let year = new Date().getFullYear()
+                  athletes = athletes.map(athlete => {
+                    let currentlyRegistered = false
+                    for (let i = 0; i < purchases.length; i++) {
+                      let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
+                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter === quarter && purchaseYear === year) {
+                        currentlyRegistered = true
+                        break
+                      }
+                    }
+                    athlete.dataValues.currentlyRegistered = currentlyRegistered
+                    return athlete
+                  })
                   db.tables.Invites.findAll().then((invites) => {
                     db.tables.Discounts.findAll().then((discounts) => {
                       let user = {
@@ -585,6 +661,20 @@ module.exports = (app, db) => {
             } else {
               db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchases) => {
                 db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athletes) => {
+                  let quarter = helpers.getCurrentQuarter()
+                  let year = new Date().getFullYear()
+                  athletes = athletes.map(athlete => {
+                    let currentlyRegistered = false
+                    for (let i = 0; i < purchases.length; i++) {
+                      let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
+                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter === quarter && purchaseYear === year) {
+                        currentlyRegistered = true
+                        break
+                      }
+                    }
+                    athlete.dataValues.currentlyRegistered = currentlyRegistered
+                    return athlete
+                  })
                   let user = {
                     id: foundUser.id,
                     email: foundUser.email,
@@ -604,12 +694,35 @@ module.exports = (app, db) => {
       }
     }
   })
+
+  app.post('/users/isadmin', (req, res) => {
+    let token = req.body.token
+    if (!token) {
+      res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}))
+    } else {
+      let user = null
+      try {
+        user = jwt.decode(token, config.auth.secret)
+      } catch (e) {
+      }
+      if (!user) {
+        res.status(403).send(JSON.stringify({ok: false, message: 'invalid user token'}))
+      } else {
+        db.tables.Users.find({where: {id: user.id}}).then(foundUser => {
+          if (foundUser) {
+            res.send({ok: true, isAdmin: user.isAdmin, message: 'user Found'})
+          } else {
+            res.status(403).send({ok: false, message: 'user not found'})
+          }
+        })
+      }
+    }
+  })
   // End Users Section
 
   // Admin Endpoints
 
   app.post('/discounts/delete', (req, res) => {
-    console.log(req.body)
     let token = req.body.token
     let discountId = req.body.discountId
     if (!token) {
@@ -634,7 +747,6 @@ module.exports = (app, db) => {
   })
 
   app.post('/invites/delete', (req, res) => {
-    console.log(req.body)
     let token = req.body.token
     let inviteId = req.body.inviteId
     if (!token) {

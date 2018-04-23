@@ -14,6 +14,21 @@ columns.users = {
   // Address FK
 }
 
+columns.trainingOptions = {
+  fall: Sequelize.BOOLEAN,
+  winter: Sequelize.BOOLEAN,
+  spring: Sequelize.BOOLEAN,
+  summer: Sequelize.BOOLEAN,
+  youthAdult: Sequelize.BOOLEAN,
+  dcv: Sequelize.BOOLEAN,
+  balt: Sequelize.BOOLEAN,
+  prep: Sequelize.BOOLEAN,
+  ncs: Sequelize.BOOLEAN,
+  cua: Sequelize.BOOLEAN,
+  pg: Sequelize.BOOLEAN,
+  pa: Sequelize.BOOLEAN
+}
+
 columns.athletes = {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
@@ -107,6 +122,7 @@ const syncTables = (schema, force) => {
   tables.Discounts = schema.define('discount', columns.discounts)
   tables.Invites = schema.define('invite', columns.invites)
   tables.Addresses = schema.define('address', columns.addresses)
+  tables.TrainingOptions = schema.define('trainingOptions', columns.trainingOptions)
 
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 

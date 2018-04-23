@@ -9,7 +9,8 @@ class SuperTable extends React.Component {
       keys: this.getKeys(this.props.data),
       currentlySorted: '',
       shownColumns: this.getKeys(this.props.data),
-      filter: {key: '', value: ''}
+      filter: {key: '', value: ''},
+      callback: this.props.callback || function () {}
     }
   }
 
@@ -230,12 +231,13 @@ class SuperTable extends React.Component {
                 return (<th onClick={() => { this.sortBy.bind(this)(key) }} key={index} className='superTable-th'> {key} </th>)
               }
             })}
+            {this.props.extraAction ? (<th>{this.props.actionInfo.title}</th>) : null}
           </tr></thead>
           <tbody>
             {this.state.data.map((row, index) => {
               if (this.passesFilter.bind(this)(row)) {
                 return (
-                  <SuperTableRow key={index} info={row} keys={this.state.keys} shownColumns={this.state.shownColumns} />
+                  <SuperTableRow key={index} info={row} keys={this.state.keys} shownColumns={this.state.shownColumns} extraAction={this.props.extraAction} actionInfo={this.props.actionInfo} callback={this.state.callback.bind(this)} />
                 )
               }
             })}
@@ -265,6 +267,8 @@ class SuperTableRow extends React.Component {
             return (<td key={index}> {this.props.info.hasOwnProperty(key) ? this.props.info[key] : '-'} </td>)
           }
         })}
+        {this.props.extraAction ? (<td onClick={() => { this.props.callback(this.props.info) }}><span className={this.props.actionInfo.iconClass} /></td>) : null}
+
       </tr>
     )
   }

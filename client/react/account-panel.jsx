@@ -1,17 +1,7 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+import GenericModal from './generic-modal.jsx'
 const $ = window.$
-
-/*
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>Pole Rental</span>
-              </div>
-              <div className='body-box'>
-                <PoleRental user={user} />
-              </div>
-            </div>
-*/
 
 class AccountPanel extends React.Component {
   constructor (props) {
@@ -169,6 +159,14 @@ class AccountPanel extends React.Component {
                 </ul>
               </div>
             </div>
+            <div className='account-panel-box'>
+              <div className='title-box'>
+                <span className='title'>Pole Rental</span>
+              </div>
+              <div className='body-box'>
+                <PoleRental user={user} />
+              </div>
+            </div>
           </div>
 
           <div className='col-xs-12 col-md-6'>
@@ -218,8 +216,13 @@ class AccountPanel extends React.Component {
                   <p>
                     It appears you are an administrator. To view your Administrator Panel, click below.
                   </p>
-                  <div className='red-button' onClick={() => { window.location.href = '/admin' }}>
-                    <span className='button-text'>Go</span>
+                  <div className='multi-btn-container'>
+                    <div className='red-button' onClick={() => { window.location.href = '/admin' }}>
+                      <span className='button-text'>Admin</span>
+                    </div>
+                    <div className='red-button' onClick={() => { window.location.href = '/poles' }}>
+                      <span className='button-text'>Poles</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -234,47 +237,233 @@ class AccountPanel extends React.Component {
 class PoleRental extends React.Component {
   constructor (props) {
     super(props)
+
+    this.state = {
+      openModal: false,
+      athletes: [],
+      errorText: '',
+      rentalOptions: [
+        {name: 'oneTime', displayName: 'One Time', displayPrice: '$75'},
+        {name: 'quarterly', displayName: 'Quarterly', displayPrice: '$150'}
+      ]
+    }
+
+    this.getAthleteList()
+  }
+
+  getAthleteList () {
+    apiHelpers.getUserData().then(res => {
+      if (res.data.ok) {
+        this.setState({
+          athletes: res.data.athletes.slice()
+        })
+      } else {
+        this.setState({
+          errorText: 'We could not retrieve any athletes for this account. Please refresh and try again. If the issue persists, please contact us'
+        })
+      }
+    })
+  }
+
+  getSelectedAthlete () {
+    let id = parseInt(apiHelpers.parseFormValues($('#rental-info').serializeArray()).athlete)
+    let selected = {}
+    this.state.athletes.forEach(athlete => {
+      if (athlete.id === id) {
+        selected = athlete
+      }
+    })
+    return selected
   }
 
   submit () {
-    let output = {}
-    output.type = $('input[name="type"]:checked').val()
+    let output = apiHelpers.parseFormValues($('#rental-info').serializeArray())
+    // output.type = $('input[name="type"]:checked').val()
+    let selected = false
+    if (output.type === 'quarterly') {
+      this.setState({
+        period: 'quarterly'
+      })
+      selected = true
+    } else if (output.type === 'oneTime') {
+      this.setState({
+        period: 'oneTime'
+      })
+      selected = true
+    }
 
-    console.log('clicked button:', output.type)
+    if (selected) {
+      this.setState({
+        openModal: true
+      })
+    }
+  }
+
+  closeModal () {
+    this.setState({
+      openModal: false
+    })
   }
 
   render () {
+    const openModal = this.state.openModal
     return (
       <div className='pole-rental'>
         <p>
-          To request a pole rental, select one of the options below
+          To request a pole rental, select from the options below
         </p>
         <div style={{textAlign: 'center'}}>
-          <form className='form-labels-on-top' style={{padding: '8px', boxShadow: 'none'}}>
+          <form id='rental-info' className='form-labels-on-top' style={{padding: '8px', boxShadow: 'none'}}>
             <div className='form-row'>
-              <label><span className='required'>Rental Type</span></label>
-              <div className='form-radio-buttons'>
-                <div>
-                  <label>
-                    <input type='radio' name='type' value='quarterly' />
-                    <span>Quarterly</span>
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='type' value='oneTime' />
-                    <span>One-time</span>
-                  </label>
-                </div>
-              </div>
+              <label>
+                <span className='required'>Select Rental Period</span>
+                <select name='type'>
+                  {
+                    this.state.rentalOptions.map(option => {
+                      return (<option key={option.name} value={option.name}>{option.displayName}: {option.displayPrice}</option>)
+                    })
+                  }
+                </select>
+              </label>
             </div>
+            { this.state.athletes.length ? (
+              <div className='form-row'>
+                <label>
+                  <span className='required'>Select Athlete</span>
+                  <select name='athlete'>
+                    {
+                      this.state.athletes.filter(athlete => athlete.currentlyRegistered).map(athlete => {
+                        return (<option key={athlete.id} value={athlete.id}>{athlete.firstName + ' ' + athlete.lastName}</option>)
+                      })
+                    }
+                  </select>
+                </label>
+              </div>
+            ) : (
+              <div className='error-container'>
+                <p>{this.state.errorText}</p>
+              </div>
+            )}
+
           </form>
           <div className='red-button' style={{marginTop: '16px', marginBottom: '16px'}} onClick={this.submit.bind(this)}>
             <span className='button-text'>Request Rental</span>
           </div>
         </div>
+        {openModal ? (<GenericModal style={{zIndex: 9999}} title={'Request Rental'} onClose={this.closeModal.bind(this)} childComponent={<PoleRentalPurchase period={this.state.period} user={this.props.user} closeFunction={this.closeModal.bind(this)} athlete={this.getSelectedAthlete()} />} />) : ''}
       </div>
     )
+  }
+}
+
+class PoleRentalPurchase extends React.Component {
+  constructor (props) {
+    super(props)
+    if (this.props.period === 'quarterly') {
+      this.state = {
+        price: 150.00,
+        periodDisplay: 'Quarterly',
+        successfulPayment: false,
+        failedPayment: false,
+        statusText: ''
+      }
+    } else if (this.props.period === 'oneTime') {
+      this.state = {
+        price: 75.00,
+        periodDisplay: 'One Time',
+        successfulPayment: false,
+        failedPayment: false,
+        statusText: ''
+      }
+    }
+  }
+
+  componentDidMount () {
+    if (!this.state.successfulPayment) {
+      this.renderButton()
+    }
+  }
+
+  continue (data) {
+    apiHelpers.requestPole(this.props.athlete.id, this.props.period).then(res => {
+      if (res.data.ok) {
+        this.setState({
+          successfulPayment: true,
+          statusText: 'Your request has been processed. Please see the head coach at your next training session to check out your Pole'
+        })
+      } else {
+        this.setState({
+          failedPayment: true,
+          statusText: 'Request Failed. Please check your PayPal records to verify the payment, and contact us to resolve the issue'
+        })
+      }
+    })
+  }
+
+  renderButton () {
+    let amount = 1.03 * this.state.price
+
+    var cont = this.continue.bind(this)
+    var paymentDescription = 'Pole rental: ' + this.state.periodDisplay + '; Athlete: ' + this.props.athlete.firstName + ' ' + this.props.athlete.lastName
+
+    paypal.Button.render({ // eslint-disable-line
+      env: window.configVariables.PAYPAL_MODE, // sandbox | production
+      client: {
+        sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
+        production: window.configVariables.PAYPAL_CLIENT_ID
+      },
+      commit: true,
+
+      style: {
+        size: 'responsive',
+        shape: 'rect',
+        color: 'silver',
+        label: 'pay'
+      },
+
+      payment: function (data, actions) {
+        return actions.payment.create({
+          payment: {
+            transactions: [
+              {
+                amount: { total: amount.toFixed(2), currency: 'USD' },
+                note_to_payee: paymentDescription
+              }
+            ]
+          }
+        })
+      },
+
+    // onAuthorize() is called when the buyer approves the payment
+      onAuthorize: function (data, actions) {
+        return actions.payment.execute().then(function () {
+          cont(data)
+        })
+      }
+
+    }, '#paypal-button-container')
+  }
+
+  render () {
+    if (!this.state.successfulPayment && !this.state.failedPayment) {
+      return (
+        <div style={{textAlign: 'center'}}>
+          <p>
+            {this.props.period === 'oneTime'
+          ? 'A one-time rental is good for one week. You are expected to return the pole at practice one week from the date the pole is issued'
+          : 'A quarterly rental is good for the duration of the training quarter. You are expected to return the pole at practice before the start of the following quarter'}</p>
+          <p><span className='red-text'>{this.state.periodDisplay} rental:</span> ${this.state.price.toFixed(2)}</p>
+          <p><span className='red-text'>Online Transaction Fee:</span> ${(this.state.price * 0.03).toFixed(2)}</p>
+          <div id='paypal-button-container' />
+        </div>
+      )
+    } else {
+      return (
+        <div className={this.state.failedPayment ? 'error-container' : 'status-container'}>
+          <p>{this.state.statusText}</p>
+        </div>
+      )
+    }
   }
 }
 

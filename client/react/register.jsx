@@ -2,14 +2,7 @@ import React from 'react'
 import apiHelpers from './api-helpers'
 const $ = window.$
 
-const parseFormValues = (array) => {
-  let retVal = {}
-  for (let i = 0; i < array.length; i++) {
-    retVal[array[i].name] = array[i].value
-  }
-
-  return retVal
-}
+const parseFormValues = apiHelpers.parseFormValues
 
 class Register extends React.Component {
   constructor (props) {

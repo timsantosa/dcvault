@@ -7,6 +7,8 @@ import Training from './training.jsx'
 import Register from './register.jsx'
 import AdminPanel from './admin-panel.jsx'
 import ContactModal from './contact-modal.jsx'
+import GenericModal from './generic-modal.jsx'
+import PoleApp from './pole-app.jsx'
 
 let currentPage = window.location.pathname
 let hashString = window.location.hash
@@ -63,6 +65,8 @@ if (currentPage.indexOf('account') !== -1) {
   render(<Register />, document.getElementById('registration-page'))
 } else if (currentPage.indexOf('admin') !== -1) {
   render(<AdminPanel />, document.getElementById('admin-panel'))
+} else if (currentPage.indexOf('poles') !== -1) {
+  render(<PoleApp />, document.getElementById('pole-panel'))
 } else {
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))
