@@ -297,6 +297,24 @@ class RentalInfo extends React.Component {
     })
   }
 
+  removePole () {
+    let updatedRental = JSON.parse(JSON.stringify(this.props.rental))
+    updatedRental.poleId = null
+    let updatedPole = JSON.parse(JSON.stringify(this.props.pole))
+    updatedPole.rented = false
+    let p1 = apiHelpers.updateRental(updatedRental)
+    let p2 = apiHelpers.updatePole(updatedPole)
+    Promise.all([p1, p2]).then(responses => {
+      if (responses[1].data.ok && responses[0].data.ok) {
+        window.alert('Rental updated')
+        this.props.onClose()
+        this.props.populateData()
+      } else {
+        window.alert('An error occurred, please try again')
+      }
+    })
+  }
+
   assignPole (pole) {
     let updatedPole = JSON.parse(JSON.stringify(this.props.pole))
     updatedPole.rented = false
@@ -343,11 +361,16 @@ class RentalInfo extends React.Component {
         <div className='pole-info__element'><span className='red-text'>Rental Expiration:</span>{new Date(this.props.rental.expiration).toLocaleDateString('en-US')}</div>
 
         <div className='pole-info__edit-btns'>
-          <div className='red-button' onClick={this.endRental.bind(this)}>
-            <span className='button-text'>End</span>
-          </div>
           <div className='red-button' onClick={this.showSelectionModal.bind(this)}>
             <span className='button-text'>Swap</span>
+          </div>
+          <div className='red-button' onClick={this.removePole.bind(this)}>
+            <span className='button-text'>Remove</span>
+          </div>
+        </div>
+        <div className='pole-info__edit-btns'>
+          <div className='red-button' onClick={this.endRental.bind(this)}>
+            <span className='button-text'>End</span>
           </div>
         </div>
         {this.state.showSelectionModal
