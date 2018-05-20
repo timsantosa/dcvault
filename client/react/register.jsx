@@ -323,6 +323,30 @@ class SelectPackage extends React.Component {
     }
   }
 
+  /*
+                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Winter</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Fall</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Spring</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
+                  </label>
+                </div>
+  */
+
   render () {
     let errorContainer
     if (!(this.state.errorText.length === 0)) {
@@ -434,27 +458,6 @@ class SelectPackage extends React.Component {
                     <input type='radio' name='quarter' value='summer(y/a-2)' checked={this.state.checkedSession === 'summer(y/a-2)'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer (Y/A-2)</span>
                     <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (2pm-3:30pm), Jul 15 - Aug 12</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Winter</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Fall</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Spring</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
                   </label>
                 </div>
               </div>
@@ -941,7 +944,7 @@ class Payment extends React.Component {
       lateFee = 25
     } else if (quarter === 'spring' && month === 3) {
       lateFee = 25
-    } else if (quarter === 'summer' && month === 6) {
+    } else if ((quarter.indexOf('summer') !== -1 && quarter !== 'summer(2)') && month === 6) {
       lateFee = 25
     } else if (quarter === 'fall' && month === 9) {
       lateFee = 25

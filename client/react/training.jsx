@@ -91,6 +91,9 @@ class Training extends React.Component {
     return (
       <div id='training-container' className='container'>
         <p className='section-header'>Training <span className='red-text'>Options</span></p>
+        <div className='red-button' onClick={() => { window.location.href = '/register' }} style={{marginBottom: '30px'}}>
+          <span className='button-text'>Sign Up</span>
+        </div>
         <div className='row' style={{width: '100%', margin: '0'}}>
           {
             this.state.trainingCards.map((card, index) => {
@@ -99,9 +102,6 @@ class Training extends React.Component {
               )
             })
           }
-        </div>
-        <div className='red-button' onClick={() => { window.location.href = '/register' }} style={{marginTop: '30px'}}>
-          <span className='button-text'>Sign Up</span>
         </div>
         <div className='center-content' style={{marginTop: '15px'}}>
           <p className='info-text' style={{textAlign: 'center'}}>To apply for a discount code or training group invitation, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a></p>
