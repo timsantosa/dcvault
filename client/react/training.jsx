@@ -67,6 +67,7 @@ class Training extends React.Component {
         },
         {
           title: 'Private Lessons',
+          price: '$175',
           priceModifier: 'BY REQUEST',
           description: '1 hour in duration, offered for all skill levels. Private lessons are limited in availability. Please contact us for scheduling.'
         },
