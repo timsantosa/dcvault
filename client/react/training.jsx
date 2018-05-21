@@ -22,7 +22,7 @@ class Training extends React.Component {
           ages: 'All Ages',
           price: '$500',
           priceModifier: 'PER QTR',
-          location: 'DCV, PREP, BALT, PA',
+          location: 'DCV, BALT',
           duration: '3-month course',
           dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
           description: 'Beginner, Level I athletes focus on developing primary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary phase drills and vaulting.'
@@ -32,7 +32,7 @@ class Training extends React.Component {
           ages: 'All Ages',
           price: '$500',
           priceModifier: 'PER QTR',
-          location: 'DCV, PREP, BALT, PA',
+          location: 'DCV, BALT',
           duration: '3-month course',
           dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
           description: 'Intermediate, Level II athletes focus on mastering primary phases of the vault and basic introduction of secondary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary and secondary phase drills, vaulting and introductory speed and strength conditioning.'
@@ -40,7 +40,7 @@ class Training extends React.Component {
         {
           title: 'Emerging Elite',
           priceModifier: 'INVITE ONLY',
-          location: 'DCV, CUA',
+          location: 'DCV',
           duration: '6-month course',
           dates: 'Fall and Winter',
           description: 'Emerging Elite, Level III athletes focus on mastering secondary phases of the vault. Class is held on weekends and at multiple times during the week. Athletes participate in a 6-month comprehensive training program designed to produce maximum level of performance during the competitive season. Classes include static and dynamic stretching, biomechanically focused warm-up, secondary phase drills, vaulting and extensive speed and strength conditioning.'
@@ -48,7 +48,7 @@ class Training extends React.Component {
         {
           title: 'Elite',
           priceModifier: 'INVITE ONLY',
-          location: 'DCV, CUA',
+          location: 'DCV',
           duration: '9-month course',
           dates: 'Fall, Winter, and Spring',
           description: 'Elite, Level IV athletes focus on high level refinement of secondary phases of the vault, as well as mastering tertiary phases of the vault. Athletes participate in a 9-month comprehensive training program designed to produce two seasonal peaks in performance (indoor and outdoor championships)and to transition athletes to professional level training.'
@@ -56,7 +56,7 @@ class Training extends React.Component {
         {
           title: 'Professional',
           priceModifier: 'INVITE ONLY',
-          location: 'DCV, NCS, PG',
+          location: 'DCV',
           duration: 'Year-round program',
           description: 'Professional, Level V athletes work in private session on a personalized, comprehensive, year-round training program. Technical focus is on mastering tertiary phases of the vault, with strong emphasis placed on high level refinement of energy transitions. Speed and strength development is customized for the individual athlete to produce peak performance during championship competitions. It incorporates recovery phases and non-traditional range of motion and biomechanical movements for stabilization, technical consistency and injury prevention.'
         },
