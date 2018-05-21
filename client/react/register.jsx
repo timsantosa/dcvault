@@ -463,19 +463,25 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row'>
+            <div className='form-row' styie={{display: this.state.checkedSession !== null ? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
-                <div>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='facility' value='dcv' disabled={!this.state.availableFacilities.dcv} />
                     <span>Washington, DC (DCV)</span>
                   </label>
                 </div>
-                <div>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='facility' value='prep' disabled={!this.state.availableFacilities.prep} />
                     <span>North Bethesda, MD (PREP)</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedSession === 'summer(0)' && (this.state.checkedGroup === 'beginner' || this.state.checkedGroup === 'intermediate') ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='facility' value='balt' disabled={!this.state.availableFacilities.prep} />
+                    <span>Baltimore (BALT)</span>
                   </label>
                 </div>
               </div>
@@ -930,7 +936,7 @@ class Payment extends React.Component {
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'beginner' || group === 'intermediate') {
-      price = 495
+      price = 500
     } else {
       price = 550
     }

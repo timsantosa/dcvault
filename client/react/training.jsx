@@ -20,7 +20,7 @@ class Training extends React.Component {
         {
           title: 'Beginner',
           ages: 'All Ages',
-          price: '$550',
+          price: '$500',
           priceModifier: 'PER QTR',
           location: 'DCV, PREP, BALT, PA',
           duration: '3-month course',
@@ -30,7 +30,7 @@ class Training extends React.Component {
         {
           title: 'Intermediate',
           ages: 'All Ages',
-          price: '$550',
+          price: '$500',
           priceModifier: 'PER QTR',
           location: 'DCV, PREP, BALT, PA',
           duration: '3-month course',
