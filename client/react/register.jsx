@@ -422,7 +422,7 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedGroup !== null ? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedGroup ? 'block' : 'none'}}>
               <label><span className='required'>Training Session</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
@@ -463,7 +463,7 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' styie={{display: this.state.checkedSession !== null ? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
