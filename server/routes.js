@@ -459,7 +459,7 @@ module.exports = (app, db) => {
           pg: false,
           pa: false
         }
-        db.tables.TrainingOptions.create()
+        db.tables.TrainingOptions.create(options)
       } else {
         res.send({ok: true, message: 'retrieved training options', options})
       }
@@ -637,7 +637,7 @@ module.exports = (app, db) => {
                     let currentlyRegistered = false
                     for (let i = 0; i < purchases.length; i++) {
                       let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
-                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter === quarter && purchaseYear === year) {
+                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1 && purchaseYear === year) {
                         currentlyRegistered = true
                         break
                       }
@@ -667,7 +667,7 @@ module.exports = (app, db) => {
                     let currentlyRegistered = false
                     for (let i = 0; i < purchases.length; i++) {
                       let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
-                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter === quarter && purchaseYear === year) {
+                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1 && purchaseYear === year) {
                         currentlyRegistered = true
                         break
                       }

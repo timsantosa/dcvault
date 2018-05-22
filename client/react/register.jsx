@@ -149,7 +149,8 @@ class SelectPackage extends React.Component {
       errorText: '',
       showYouthAdult: true,
       youthAdult: false,
-      checkedGroup: '',
+      checkedGroup: null,
+      checkedSession: null,
       showInvite: false,
       showEmergingElite: false,
       showElite: false,
@@ -190,6 +191,7 @@ class SelectPackage extends React.Component {
         errorText: 'Please fill in all required fields'
       })
     } else {
+      console.log(output)
       this.props.advance('selectPackage', output)
     }
   }
@@ -232,8 +234,10 @@ class SelectPackage extends React.Component {
 
   adjustOptions () {
     let group = $('input[name="group"]:checked').val()
+    let quarter = $('input[name="quarter"]:checked').val()
     this.setState({
-      checkedGroup: group
+      checkedGroup: group,
+      checkedSession: quarter
     })
 
     if (group === 'youth-adult') {
@@ -319,32 +323,29 @@ class SelectPackage extends React.Component {
     }
   }
 
-/*
-                { () => {
-                  console.log('checking', this.state.showYouthAdult)
-                  if (context.state.showYouthAdult) {
-                    return (<div>
-                      <label>
-                        <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
-                        <span>Youth/Adult</span>
-                      </label>
-                    </div>)
-                  }
-                }}
-
-                <div>
+  /*
+                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='facility' value='balt' disabled={!this.state.availableFacilities.balt} />
-                    <span>Baltimore, MD (BALT)</span>
+                    <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Winter</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
                   </label>
                 </div>
-                <div>
+                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='facility' value='pa' disabled={!this.state.availableFacilities.pa} />
-                    <span>Mercersburg, PA (PA)</span>
+                    <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Fall</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
                   </label>
                 </div>
-*/
+                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Spring</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
+                  </label>
+                </div>
+  */
 
   render () {
     let errorContainer
@@ -355,46 +356,20 @@ class SelectPackage extends React.Component {
         </div>
       </div>
     }
-
-    let context = this
-    let youthAdultOption
-    if (this.state.showYouthAdult) {
-      youthAdultOption = (<div>
-        <label>
-          <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
-          <span>Youth/Adult</span>
-        </label>
-      </div>)
-    }
     return (
 
       <div className='row'>
         <div className='col-xs-12' style={{textAlign: 'center'}}>
           <form id='select-package' className='form-labels-on-top'>
-
-            <div className='form-title-row'>
-              <h1>Select Training Package</h1>
-            </div>
-            <div className='form-row'>
-              <label><span className='required'>Quarter</span></label>
-              <div className='form-radio-buttons'>
-                { this.state.quarters.map((quarter, index) => {
-                  return (
-                    <div key={index}>
-                      <label>
-                        <input type='radio' name='quarter' value={quarter.value} disabled={context.state.activeQuarter !== quarter.value} />
-                        <span>{quarter.name}</span>
-                      </label>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
             <div className='form-row'>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                {youthAdultOption}
+                <div>
+                  <label>
+                    <input type='radio' name='group' value='youth-adult' checked={this.state.checkedGroup === 'youth-adult'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Youth/Adult</span>
+                  </label>
+                </div>
                 <div>
                   <label>
                     <input type='radio' name='group' value='beginner' checked={this.state.checkedGroup === 'beginner'} onChange={this.adjustOptions.bind(this)} />
@@ -407,6 +382,7 @@ class SelectPackage extends React.Component {
                     <span>Intermediate (Level II)</span>
                   </label>
                 </div>
+
                 <div style={{display: this.state.showEmergingElite ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='group' value='emerging-elite' checked={this.state.checkedGroup === 'emerging-elite'} onChange={this.adjustOptions.bind(this)} />
@@ -426,42 +402,90 @@ class SelectPackage extends React.Component {
                   </label>
                 </div>
               </div>
+              <div>
+                <a style={{color: '#C0282D'}} onClick={this.toggleInvite.bind(this)}> Elite Training Invite Code </a>
+                <div className='form-row' style={{display: this.state.showInvite ? 'block' : 'none'}}>
+                  <div className='row'>
+                    <div className='col-xs-8'>
+                      <label>
+                        <span>Invite Code</span>
+                        <input ref='inviteBox' type='text' name='invite' style={{width: '100%'}} />
+                      </label>
+                    </div>
+                    <div className='col-xs-4'>
+                      <button type='button' onClick={this.applyInvite.bind(this)}>Apply</button>
+                    </div>
+                  </div>
+                </div>
+
+                {errorContainer}
+              </div>
             </div>
 
-            <div className='form-row'>
+            <div className='form-row' style={{display: this.state.checkedGroup ? 'block' : 'none'}}>
+              <label><span className='required'>Training Session</span></label>
+              <div className='form-radio-buttons'>
+                <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='summer(0)' checked={this.state.checkedSession === 'summer(0)'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Summer (0)</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (12pm-2:30pm), Jun 10 - Aug 12</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedGroup === 'beginner' || this.state.checkedGroup === 'intermediate' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='summer(1)' checked={this.state.checkedSession === 'summer(1)'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Summer (1)</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (12pm-2:30pm) + Tuesdays (6:30pm-8pm), Jun 10 - Jul 12</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedGroup === 'beginner' || this.state.checkedGroup === 'intermediate' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='summer(2)' checked={this.state.checkedSession === 'summer(2)'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Summer (2)</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (12pm-2:30pm) + Tuesdays (6:30pm-8pm), Jul 15 - Aug 14</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedGroup === 'youth-adult' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='summer(y/a-1)' checked={this.state.checkedSession === 'summer(y/a-1)'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Summer (Y/A-1)</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (2pm-3:30pm), Jun 10 - Jul 8</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedGroup === 'youth-adult' ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='summer(y/a-2)' checked={this.state.checkedSession === 'summer(y/a-2)'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Summer (Y/A-2)</span>
+                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (2pm-3:30pm), Jul 15 - Aug 12</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
-                <div>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='facility' value='dcv' disabled={!this.state.availableFacilities.dcv} />
                     <span>Washington, DC (DCV)</span>
                   </label>
                 </div>
-                <div>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='facility' value='prep' disabled={!this.state.availableFacilities.prep} />
                     <span>North Bethesda, MD (PREP)</span>
                   </label>
                 </div>
-              </div>
-            </div>
-
-            <a style={{color: '#C0282D'}} onClick={this.toggleInvite.bind(this)}> Have an Invite Code? </a>
-            <div className='form-row' style={{display: this.state.showInvite ? 'block' : 'none'}}>
-              <div className='row'>
-                <div className='col-xs-8'>
+                <div style={{display: this.state.checkedSession === 'summer(0)' && (this.state.checkedGroup === 'beginner' || this.state.checkedGroup === 'intermediate') ? 'block' : 'none'}}>
                   <label>
-                    <span>Invite Code</span>
-                    <input ref='inviteBox' type='text' name='invite' style={{width: '100%'}} />
+                    <input type='radio' name='facility' value='balt' disabled={!this.state.availableFacilities.prep} />
+                    <span>Baltimore (BALT)</span>
                   </label>
                 </div>
-                <div className='col-xs-4'>
-                  <button type='button' onClick={this.applyInvite.bind(this)}>Apply</button>
-                </div>
               </div>
             </div>
-
-            {errorContainer}
 
             <div className='form-row'>
               <button type='button' onClick={this.continue.bind(this)}>Continue</button>
@@ -911,6 +935,8 @@ class Payment extends React.Component {
       price = 175
     } else if (group === 'elite' || group === 'professional') {
       price = 0
+    } else if (group === 'beginner' || group === 'intermediate') {
+      price = 500
     } else {
       price = 550
     }
@@ -924,7 +950,7 @@ class Payment extends React.Component {
       lateFee = 25
     } else if (quarter === 'spring' && month === 3) {
       lateFee = 25
-    } else if (quarter === 'summer' && month === 6) {
+    } else if ((quarter.indexOf('summer') !== -1 && quarter !== 'summer(2)') && month === 6) {
       lateFee = 25
     } else if (quarter === 'fall' && month === 9) {
       lateFee = 25
