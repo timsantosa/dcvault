@@ -61,8 +61,12 @@ socialButton.onclick = () => {
 if (currentPage.indexOf('account') !== -1) {
   render(<AccountPanel />, document.getElementById('account-panel'))
 } else if (currentPage.indexOf('register') !== -1) {
-  render(<Login />, document.getElementById('login'))
-  render(<Register />, document.getElementById('registration-page'))
+  if (currentPage.indexOf('info') !== -1) {
+    // Something something
+  } else {
+    render(<Login />, document.getElementById('login'))
+    render(<Register />, document.getElementById('registration-page'))
+  }
 } else if (currentPage.indexOf('admin') !== -1) {
   render(<AdminPanel />, document.getElementById('admin-panel'))
 } else if (currentPage.indexOf('poles') !== -1) {

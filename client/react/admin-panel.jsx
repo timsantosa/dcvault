@@ -83,7 +83,7 @@ class AdminPanel extends React.Component {
     let currentYear = (new Date()).getFullYear()
     return arr.filter(record => {
       let recordYear = new Date(record.createdAt).getFullYear()
-      return (recordYear === currentYear && record.quarter === quarter)
+      return (recordYear === currentYear && record.quarter.indexOf(quarter) !== -1)
     })
   }
 

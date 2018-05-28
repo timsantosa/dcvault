@@ -13,9 +13,8 @@ class Training extends React.Component {
           price: '$175',
           priceModifier: 'PER COURSE',
           location: 'DCV',
-          duration: '4-week course',
           dates: 'Spring, Summer, and Fall',
-          description: 'A 4 week program specifically designed for youth or adult athletes is offered at our DC Vault site in Spring, Summer and Fall. Classes cover Primary Phases of the vault and are suitable for beginner through intermediate youth, or beginner to advanced adults. Class is held on weekdays or weekends depending on the training program. Check our schedule for upcoming courses.'
+          description: 'A program specifically designed for youth or adult athletes is offered at our DC Vault site in Spring, Summer and Fall. Classes cover Primary Phases of the vault and are suitable for beginner through intermediate youth, or beginner to advanced adults. Class is held on weekdays or weekends depending on the training program. Check our schedule for upcoming courses.'
         },
         {
           title: 'Beginner',
@@ -91,7 +90,7 @@ class Training extends React.Component {
     return (
       <div id='training-container' className='container'>
         <p className='section-header'>Training <span className='red-text'>Options</span></p>
-        <div className='red-button' onClick={() => { window.location.href = '/register' }} style={{marginBottom: '30px'}}>
+        <div className='red-button' onClick={() => { window.location.href = '/register/info' }} style={{marginBottom: '30px'}}>
           <span className='button-text'>Sign Up</span>
         </div>
         <div className='row' style={{width: '100%', margin: '0'}}>
