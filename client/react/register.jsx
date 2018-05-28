@@ -328,21 +328,18 @@ class SelectPackage extends React.Component {
                   <label>
                     <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
                     <span>Winter</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
                   </label>
                 </div>
                 <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fall</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
                   </label>
                 </div>
                 <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
                     <span>Spring</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>To Be Determined</span>
                   </label>
                 </div>
   */

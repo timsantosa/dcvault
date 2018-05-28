@@ -90,7 +90,7 @@ class Training extends React.Component {
     return (
       <div id='training-container' className='container'>
         <p className='section-header'>Training <span className='red-text'>Options</span></p>
-        <div className='red-button' onClick={() => { window.location.href = '/register' }} style={{marginBottom: '30px'}}>
+        <div className='red-button' onClick={() => { window.location.href = '/register/info' }} style={{marginBottom: '30px'}}>
           <span className='button-text'>Sign Up</span>
         </div>
         <div className='row' style={{width: '100%', margin: '0'}}>
