@@ -428,36 +428,31 @@ class SelectPackage extends React.Component {
                 <div style={{display: this.state.checkedGroup !== 'youth-adult' ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer(0)' checked={this.state.checkedSession === 'summer(0)'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Summer (0)</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (12pm-2:30pm), Jun 10 - Aug 12</span>
+                    <span>Summer</span>
                   </label>
                 </div>
                 <div style={{display: this.state.checkedGroup === 'beginner' || this.state.checkedGroup === 'intermediate' ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer(1)' checked={this.state.checkedSession === 'summer(1)'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer (1)</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (12pm-2:30pm) + Tuesdays (6:30pm-8pm), Jun 10 - Jul 12</span>
                   </label>
                 </div>
                 <div style={{display: this.state.checkedGroup === 'beginner' || this.state.checkedGroup === 'intermediate' ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer(2)' checked={this.state.checkedSession === 'summer(2)'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer (2)</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (12pm-2:30pm) + Tuesdays (6:30pm-8pm), Jul 15 - Aug 14</span>
                   </label>
                 </div>
                 <div style={{display: this.state.checkedGroup === 'youth-adult' ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer(y/a-1)' checked={this.state.checkedSession === 'summer(y/a-1)'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer (Y/A-1)</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (2pm-3:30pm), Jun 10 - Jul 8</span>
                   </label>
                 </div>
                 <div style={{display: this.state.checkedGroup === 'youth-adult' ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer(y/a-2)' checked={this.state.checkedSession === 'summer(y/a-2)'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer (Y/A-2)</span>
-                    <span style={{display: 'block', fontStyle: 'italic', fontSize: '12px'}}>Sundays (2pm-3:30pm), Jul 15 - Aug 12</span>
                   </label>
                 </div>
               </div>
