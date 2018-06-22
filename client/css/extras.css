@@ -559,6 +559,36 @@ a {
   width: 100vw;
 }
 
+#events-header {
+  margin: 0px;
+  padding: 0;
+}
+
+.page-header {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  min-height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.page-header-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 45px;
+  white-space: nowrap;
+  font-family: Raleway;
+  font-weight: 700;
+  color: white;
+  text-shadow: 5px 5px rgba(0, 0, 0, .45);
+}
+
 #my-account {
   min-height: 90vh;
   background-color: #ddd;
@@ -756,6 +786,41 @@ a {
 .progress-text p {
   font-size: 12px;
 }
+
+.event-intro {
+  border: 1px solid rgba(150, 150, 150, .35);
+  border-radius: 0 16px;
+  margin: 16px 0;
+  padding: 8px 24px;
+}
+
+.event-intro:hover {
+  border: 1px solid #434343;
+}
+
+.event-intro .event-header {
+  display: block;
+  padding-bottom: 16px;
+}
+
+.event-intro .event-title {
+  font-size: 125%;
+  float: left;
+  text-decoration: underline;
+}
+
+.event-intro .event-date {
+  font-style: italic;
+  float: right;
+  color: #C0282D;
+}
+
+.event-intro .event-info {
+  font-size: 100%;
+  text-align: justify;
+  margin: 0 24px;
+}
+
 /*FORM STYLING*/
 
 .form-labels-on-top{

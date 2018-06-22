@@ -62,7 +62,7 @@ if (currentPage.indexOf('account') !== -1) {
   render(<AccountPanel />, document.getElementById('account-panel'))
 } else if (currentPage.indexOf('register') !== -1) {
   if (currentPage.indexOf('info') !== -1) {
-    // Something something
+    render(<Login />, document.getElementById('login'))
   } else {
     render(<Login />, document.getElementById('login'))
     render(<Register />, document.getElementById('registration-page'))
@@ -71,6 +71,8 @@ if (currentPage.indexOf('account') !== -1) {
   render(<AdminPanel />, document.getElementById('admin-panel'))
 } else if (currentPage.indexOf('poles') !== -1) {
   render(<PoleApp />, document.getElementById('pole-panel'))
+} else if (currentPage.indexOf('events') !== -1) {
+  render(<Login />, document.getElementById('login'))
 } else {
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))
