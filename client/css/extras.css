@@ -789,36 +789,93 @@ a {
 
 .event-intro {
   border: 1px solid rgba(150, 150, 150, .35);
-  border-radius: 0 16px;
-  margin: 16px 0;
-  padding: 8px 24px;
+  background-color: rgba(0, 0, 0, .10);
+  text-align: left;
+  margin: 8px 0;
+  padding: 16px;
+  position: relative;
 }
 
 .event-intro:hover {
-  border: 1px solid #434343;
-}
-
-.event-intro .event-header {
-  display: block;
-  padding-bottom: 16px;
+  background-color: rgba(0, 0, 0, .20);
 }
 
 .event-intro .event-title {
-  font-size: 125%;
-  float: left;
-  text-decoration: underline;
+  font-size: 20px;
+  text-transform: uppercase;
 }
 
-.event-intro .event-date {
+.event-intro .event-description {
+  opacity: .75;
   font-style: italic;
-  float: right;
-  color: #C0282D;
+  font-size: 12px;
 }
 
-.event-intro .event-info {
-  font-size: 100%;
-  text-align: justify;
-  margin: 0 24px;
+.event-intro .event-info{
+  opacity: .75;
+  font-size: 16px;
+}
+
+.event-block-title {
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin: 0;
+}
+
+.event-expand-btn {
+  width: 100%;
+  text-align: center;
+}
+
+.event-expand-btn > span {
+  margin-top: 0;
+  font-size: 32px;
+  color: rgba(0, 0, 0, .25);
+}
+
+.event-expand-btn:hover > span {
+  color: rgba(0, 0, 0, .5);
+}
+
+.event-block-full {
+  border: 1px solid rgba(0, 0, 0, .1);
+  margin-bottom: 16px;
+}
+
+.event-block-details-header {
+  font-size: 14px;
+  font-style: italic;
+}
+
+.event-block {
+  margin-bottom: 0;
+}
+
+.event-block-details {
+  font-size: 12px;
+  font-weight: lighter;
+}
+
+.event-block-info {
+  font-size: 16px;
+  font-style: italic;
+  font-weight: bold;
+  margin: o;
+}
+
+.event-block-location {
+  float: right;
+}
+
+
+.event-intro .event-arrow {
+  color: rgba(0, 0, 0, .25);
+  font-size: 48px;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /*FORM STYLING*/

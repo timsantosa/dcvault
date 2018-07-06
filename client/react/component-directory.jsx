@@ -9,6 +9,7 @@ import AdminPanel from './admin-panel.jsx'
 import ContactModal from './contact-modal.jsx'
 import GenericModal from './generic-modal.jsx'
 import PoleApp from './pole-app.jsx'
+import Events from './events.jsx'
 
 let currentPage = window.location.pathname
 let hashString = window.location.hash
@@ -73,6 +74,7 @@ if (currentPage.indexOf('account') !== -1) {
   render(<PoleApp />, document.getElementById('pole-panel'))
 } else if (currentPage.indexOf('events') !== -1) {
   render(<Login />, document.getElementById('login'))
+  render(<Events />, document.getElementById('events-container'))
 } else {
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))
