@@ -138,6 +138,7 @@ class Events extends React.Component {
                 <div onClick={() => { this.expandDiv(idx) }} className='event-expand-btn' style={{display: div.full ? 'block' : 'none'}}>
                   {button}
                 </div>
+                <span className='horizontalDivider' style={{opacity: '.1'}} />
               </div>
             )
           })

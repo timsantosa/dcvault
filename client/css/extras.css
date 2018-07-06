@@ -820,12 +820,12 @@ a {
   font-size: 24px;
   text-transform: uppercase;
   font-weight: bold;
-  margin: 0;
 }
 
 .event-expand-btn {
   width: 100%;
   text-align: center;
+  /*background: linear-gradient(to right, white, white, rgba(0, 0, 0, .1), white, white)*/
 }
 
 .event-expand-btn > span {
@@ -839,7 +839,7 @@ a {
 }
 
 .event-block-full {
-  border: 1px solid rgba(0, 0, 0, .1);
+  /*border: 1px solid rgba(0, 0, 0, .1);*/
   margin-bottom: 16px;
 }
 
@@ -849,7 +849,6 @@ a {
 }
 
 .event-block {
-  margin-bottom: 0;
 }
 
 .event-block-details {
@@ -861,7 +860,6 @@ a {
   font-size: 16px;
   font-style: italic;
   font-weight: bold;
-  margin: o;
 }
 
 .event-block-location {
