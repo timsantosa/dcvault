@@ -103,6 +103,7 @@ class Events extends React.Component {
           <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
             <li>Youth 6-14 / Adult 21 and up</li>
+            <li>Clinic runs from 5:30pm to 7:00pm</li>
             <li><span className='red-text'>Limited Space</span> - Register ahead to guarantee a slot</li>
             <li>Advance Registration Closes: July 10th</li>
             <li>Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to register</li>
@@ -116,7 +117,8 @@ class Events extends React.Component {
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
           <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
-            <li>Open to competitors of all ages</li>
+            <li>Open to participants of all ages</li>
+            <li>Clinic runs from 10:30am to 12:30pm</li>
             <li><span className='red-text'>Limited Space</span> - Register ahead to guarantee a slot</li>
             <li>Advance Registration Closes: July 8th</li>
             <li>Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to register</li>
