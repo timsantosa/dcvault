@@ -559,6 +559,36 @@ a {
   width: 100vw;
 }
 
+#events-header {
+  margin: 0px;
+  padding: 0;
+}
+
+.page-header {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 50vh;
+  min-height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.page-header-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 45px;
+  white-space: nowrap;
+  font-family: Raleway;
+  font-weight: 700;
+  color: white;
+  text-shadow: 5px 5px rgba(0, 0, 0, .45);
+}
+
 #my-account {
   min-height: 90vh;
   background-color: #ddd;
@@ -756,6 +786,96 @@ a {
 .progress-text p {
   font-size: 12px;
 }
+
+.event-intro {
+  border: 1px solid rgba(150, 150, 150, .35);
+  background-color: rgba(0, 0, 0, .10);
+  text-align: left;
+  margin: 8px 0;
+  padding: 16px;
+  position: relative;
+}
+
+.event-intro:hover {
+  background-color: rgba(0, 0, 0, .20);
+}
+
+.event-intro .event-title {
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+.event-intro .event-description {
+  opacity: .75;
+  font-style: italic;
+  font-size: 12px;
+}
+
+.event-intro .event-info{
+  opacity: .75;
+  font-size: 16px;
+}
+
+.event-block-title {
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.event-expand-btn {
+  width: 100%;
+  text-align: center;
+  /*background: linear-gradient(to right, white, white, rgba(0, 0, 0, .1), white, white)*/
+}
+
+.event-expand-btn > span {
+  margin-top: 0;
+  font-size: 32px;
+  color: rgba(0, 0, 0, .25);
+}
+
+.event-expand-btn:hover > span {
+  color: rgba(0, 0, 0, .5);
+}
+
+.event-block-full {
+  /*border: 1px solid rgba(0, 0, 0, .1);*/
+  margin-bottom: 16px;
+}
+
+.event-block-details-header {
+  font-size: 14px;
+  font-style: italic;
+}
+
+.event-block {
+}
+
+.event-block-details {
+  font-size: 12px;
+  font-weight: lighter;
+}
+
+.event-block-info {
+  font-size: 16px;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.event-block-location {
+  float: right;
+}
+
+
+.event-intro .event-arrow {
+  color: rgba(0, 0, 0, .25);
+  font-size: 48px;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 /*FORM STYLING*/
 
 .form-labels-on-top{
