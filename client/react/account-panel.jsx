@@ -502,7 +502,7 @@ class Purchases extends React.Component {
                       {purchase.quarter.toUpperCase()}
                     </td>
                     <td>
-                      {purchase.group === 'youth-adult' ? ('YOUTH OR ADULT') : purchase.group.toUpperCase()}
+                      {purchase.group === 'beginner-intermediate' ? ('BEGINNER/INTERMEDATE') : purchase.group.toUpperCase()}
                     </td>
                     <td>
                       {purchase.facility.toUpperCase()}
