@@ -243,7 +243,7 @@ class PoleRental extends React.Component {
       athletes: [],
       errorText: '',
       rentalOptions: [
-        {name: 'oneTime', displayName: 'One Time', displayPrice: '$75'},
+        {name: 'oneTime', displayName: 'One Week', displayPrice: '$75'},
         {name: 'quarterly', displayName: 'Quarterly', displayPrice: '$150'}
       ]
     }
