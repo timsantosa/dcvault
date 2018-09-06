@@ -374,7 +374,7 @@ class PoleRentalPurchase extends React.Component {
     } else if (this.props.period === 'oneTime') {
       this.state = {
         price: 75.00,
-        periodDisplay: 'One Time',
+        periodDisplay: 'One Week',
         successfulPayment: false,
         failedPayment: false,
         statusText: ''
