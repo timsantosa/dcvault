@@ -24,9 +24,9 @@ class Events extends React.Component {
   }
 
   render () {
-    let contentDivs = [
+    let contentDivs = {past: [
       {
-        partial: (<div className='event-block'>
+        partial: (<div className='event-block' id='08JUL2018'>
           <p className='event-block-title'>DC VAULT 10-YEAR ANNIVERSARY ​& TRAINING CENTER LAUNCH EVENT!​</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
@@ -96,7 +96,7 @@ class Events extends React.Component {
         </div>)
       },
       {
-        partial: (<div className='event-block'>
+        partial: (<div className='event-block' id='12JUL2018'>
           <p className='event-block-title'>Free Beginners Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Thursday, Jul 12</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
@@ -111,7 +111,7 @@ class Events extends React.Component {
         </div>)
       },
       {
-        partial: (<div className='event-block'>
+        partial: (<div className='event-block' id='14JUL2018'>
           <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Saturday, Jul 14</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
@@ -125,12 +125,67 @@ class Events extends React.Component {
           </ul>
         </div>)
       }
-    ]
+    ],
+      upcoming: []
+    }
 
     return (
       <div className='event-description'>
+        {contentDivs.upcoming.length ? (
+          <div>
+            <div className='row'>
+              <div className='col-xs-12'>
+                <p className='subsection-header'>Upcoming Events</p>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-xs-12'>
+                <span className='horizontalDivider' style={{opacity: '.1'}} />
+              </div>
+            </div>
+            {contentDivs.upcoming.map((div, idx) => {
+              let content = this.state.expandedDiv === idx ? div.full : div.partial
+              let button = this.state.expandedDiv === idx ? (<span className='glyphicon glyphicon-menu-up' />) : (<span className='glyphicon glyphicon-menu-down' />)
+
+              return (
+                <div className='container event-block-full' key={idx}>
+                  {content}
+                  <div onClick={() => { this.expandDiv(idx) }} className='event-expand-btn' style={{display: div.full ? 'block' : 'none'}}>
+                    {button}
+                  </div>
+                  <span className='horizontalDivider' style={{opacity: '.1'}} />
+                </div>
+              )
+            })
+          }
+          </div>) : (
+            <div>
+              <div className='row'>
+                <div className='col-xs-12'>
+                  <p className='subsection-header'>Check back soon for information on Upcoming Events!</p>
+                </div>
+              </div>
+              <div className='row'>
+                <div className='col-xs-12'>
+                  <span className='horizontalDivider' style={{opacity: '.1'}} />
+                </div>
+              </div>
+              <div style={{margin: '64px'}} />
+            </div>
+          )}
+        <div className='row'>
+          <div className='col-xs-12'>
+            <p className='subsection-header'>Past Events</p>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-xs-12'>
+            <span className='horizontalDivider' style={{opacity: '.1'}} />
+          </div>
+        </div>
+
         {
-          contentDivs.map((div, idx) => {
+          contentDivs.past.reverse().map((div, idx) => {
             let content = this.state.expandedDiv === idx ? div.full : div.partial
             let button = this.state.expandedDiv === idx ? (<span className='glyphicon glyphicon-menu-up' />) : (<span className='glyphicon glyphicon-menu-down' />)
 
