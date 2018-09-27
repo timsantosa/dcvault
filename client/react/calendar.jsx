@@ -26,7 +26,7 @@ class Calendar extends React.Component {
         editable: true,
         eventLimit: true, // allow "more" link when too many events
         themeSystem: 'bootstrap3',
-        googleCalendarApiKey: window.configVariables.GOOGLE_CALENDAR_API_KEY,
+        googleCalendarApiKey: window.configVariables.GOOGLE_MAPS_API_KEY,
         events: {
           googleCalendarId: 'dcvaultt@gmail.com'
         }
