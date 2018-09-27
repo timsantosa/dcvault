@@ -19,8 +19,9 @@ class Calendar extends React.Component {
         header: {
           left: 'prev,next today',
           center: 'title',
-          right: 'month,agendaWeek,agendaDay,listWeek'
+          right: 'month,agendaDay,listWeek'
         },
+        defaultView: 'listWeek',
         height: 850,
         navLinks: true, // can click day/week names to navigate views
         editable: true,
