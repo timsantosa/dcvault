@@ -1001,6 +1001,6 @@ a {
   border-color: #C0282D;
 }
 
-#full-calendar .alert-info {
+.fc-today {
   background-color: rgba(0, 0, 0, .05);
 }
