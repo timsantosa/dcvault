@@ -19,7 +19,7 @@ class Calendar extends React.Component {
         header: {
           left: 'prev,next today',
           center: 'title',
-          right: 'month,agendaDay,listWeek'
+          right: 'month,listWeek'
         },
         defaultView: 'listWeek',
         height: 850,
