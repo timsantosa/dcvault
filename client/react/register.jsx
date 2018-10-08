@@ -400,7 +400,7 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedGroup ? 'block' : 'none'}}>
               <label><span className='required'>Training Session</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer</span>
@@ -412,7 +412,7 @@ class SelectPackage extends React.Component {
                     <span>Fall</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
                     <span>Winter</span>
