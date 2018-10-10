@@ -240,13 +240,22 @@ class SelectPackage extends React.Component {
       checkedSession: quarter
     })
 
-    if (quarter === 'winter') {
+    if (quarter === 'winter' && group === 'beginner-intermediate') {
       this.setState({
         availableFacilities: {
           dcv: false,
           balt: true,
           pa: false,
           prep: true
+        }
+      })
+    } else if (quarter === 'winter') {
+      this.setState({
+        availableFacilities: {
+          dcv: true,
+          balt: false,
+          pa: false,
+          prep: false
         }
       })
     } else {
@@ -337,16 +346,47 @@ class SelectPackage extends React.Component {
       <div className='row'>
         <div className='col-xs-12' style={{textAlign: 'center'}}>
           <form id='select-package' className='form-labels-on-top'>
+
             <div className='form-row'>
+              <label><span className='required'>Training Session</span></label>
+              <div className='form-radio-buttons'>
+                <div style={{display: 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Summer</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Fall</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Winter</span>
+                  </label>
+                </div>
+                <div style={{display: 'none'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Spring</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
                 <div>
-                  <label>
+                  <label style={{display: this.state.checkedSession === 'fall' ? 'block' : 'none'}} >
                     <input type='radio' name='group' value='youth' checked={this.state.checkedGroup === 'youth'} onChange={this.adjustOptions.bind(this)} />
                     <span>Youth</span>
                   </label>
                 </div>
-                <div>
+                <div style={{display: this.state.checkedSession === 'fall' ? 'block' : 'none'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
                     <span>Adult</span>
@@ -398,36 +438,6 @@ class SelectPackage extends React.Component {
             </div>
 
             <div className='form-row' style={{display: this.state.checkedGroup ? 'block' : 'none'}}>
-              <label><span className='required'>Training Session</span></label>
-              <div className='form-radio-buttons'>
-                <div style={{display: 'none'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Summer</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Fall</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Winter</span>
-                  </label>
-                </div>
-                <div style={{display: 'none'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Spring</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display: this.state.availableFacilities.dcv ? 'block' : 'none'}}>
