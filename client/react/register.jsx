@@ -395,7 +395,7 @@ class SelectPackage extends React.Component {
                 <div>
                   <label>
                     <input type='radio' name='group' value='beginner-intermediate' checked={this.state.checkedGroup === 'beginner-intermediate'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Beginner (Level I) or Intermediate (Level II)</span>
+                    <span>All Ages Beginner/Intermediate</span>
                   </label>
                 </div>
                 <div style={{display: this.state.showEmergingElite ? 'block' : 'none'}}>
