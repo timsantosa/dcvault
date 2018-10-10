@@ -876,6 +876,11 @@ a {
   transform: translateY(-50%);
 }
 
+#full-calendar {
+  max-width: 900px;
+  margin: 40px auto;
+}
+
 /*FORM STYLING*/
 
 .form-labels-on-top{
@@ -985,4 +990,17 @@ a {
     }
 
 }
-/*END FORM STYLING
+/*END FORM STYLING*/
+
+.fc-center h2 {
+  font-size: 24px;
+}
+
+.fc-event, .fc-event-dot {
+  background-color: #C0282D;
+  border-color: #C0282D;
+}
+
+.fc-today {
+  background-color: rgba(0, 0, 0, .05);
+}

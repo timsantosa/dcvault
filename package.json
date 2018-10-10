@@ -8,7 +8,6 @@
     "url": "git://github.com/admoores/dcvault.git"
   },
   "scripts": {
-    "test": "mocha -R spec test/*.js",
     "build": "./node_modules/.bin/webpack -d",
     "watch": "./node_modules/.bin/webpack -d --watch",
     "prod": "./node_modules/.bin/webpack -p",
@@ -27,8 +26,10 @@
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
+    "fullcalendar": "^3.9.0",
     "history": "^4.7.2",
     "jwt-simple": "^0.5.1",
+    "moment": "^2.22.2",
     "morgan": "^1.9.0",
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.4",
@@ -45,7 +46,6 @@
   "devDependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
     "chai": "^4.1.2",
-    "mocha": "^3.5.3",
     "supertest": "^3.0.0"
   }
 }
