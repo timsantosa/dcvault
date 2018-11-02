@@ -433,7 +433,6 @@ class SelectPackage extends React.Component {
                   </div>
                 </div>
 
-                {errorContainer}
               </div>
             </div>
 
@@ -464,6 +463,7 @@ class SelectPackage extends React.Component {
             <div className='form-row'>
               <button type='button' onClick={this.continue.bind(this)}>Continue</button>
             </div>
+            {errorContainer}
 
           </form>
         </div>
