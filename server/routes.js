@@ -31,7 +31,7 @@ module.exports = (app, db) => {
       helpers.sendWithReplyTo(name, from, to, subject, text).then(() => {
         res.send({ok: true, message: 'email sent successfully'})
       }, (err) => {
-        res.status(500).send({ok: false, message: 'server error'})
+        res.status(500).send({ok: false, message: 'server error', err})
       })
     }
   })
