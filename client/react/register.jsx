@@ -240,7 +240,7 @@ class SelectPackage extends React.Component {
       checkedSession: quarter
     })
 
-    if (quarter === 'winter' && group === 'beginner-intermediate') {
+    if (quarter === 'winter' && (group === 'beginner-intermediate' || group === 'youth' || group === 'adult')) {
       this.setState({
         availableFacilities: {
           dcv: false,
@@ -380,13 +380,13 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                <div>
-                  <label style={{display: this.state.checkedSession === 'fall' ? 'block' : 'none'}} >
+                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}}>
+                  <label>
                     <input type='radio' name='group' value='youth' checked={this.state.checkedGroup === 'youth'} onChange={this.adjustOptions.bind(this)} />
                     <span>Youth</span>
                   </label>
                 </div>
-                <div style={{display: this.state.checkedSession === 'fall' ? 'block' : 'none'}} >
+                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
                     <span>Adult</span>
@@ -906,7 +906,7 @@ class Payment extends React.Component {
     let price
     let group = this.props.data.selectPackage.group
     if (group === 'youth' || group === 'adult') {
-      price = 175
+      price = 225
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'beginner' || group === 'intermediate' || group === 'beginner-intermediate') {

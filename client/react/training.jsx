@@ -14,7 +14,7 @@ class Training extends React.Component {
           priceModifier: 'PER COURSE',
           location: 'DCV',
           dates: 'Spring, Summer, and Fall',
-          description: 'A program specifically designed for youth or adult athletes is offered at our DC Vault site. Classes cover Primary Phases of the vault and are suitable for beginner through intermediate youth, or beginner to advanced adults. Class is held on weekdays or weekends depending on the training program. Check our schedule for upcoming courses.'
+          description: 'We offer a program specifically designed for youth or adult athletes. Classes cover Primary Phases of the vault and are suitable for beginner through intermediate youth, or beginner to advanced adults. Class is held on weekdays or weekends depending on the training program. Check our schedule for upcoming courses.'
         },
         {
           title: 'Beginner',
