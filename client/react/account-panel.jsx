@@ -244,7 +244,7 @@ class PoleRental extends React.Component {
       errorText: '',
       rentalOptions: [
         {name: 'oneTime', displayName: 'One Week', displayPrice: '$75'},
-        {name: 'quarterly', displayName: 'Quarterly', displayPrice: '$150'}
+        {name: 'quarterly', displayName: 'Quarterly', displayPrice: '$175'}
       ]
     }
 
@@ -365,7 +365,7 @@ class PoleRentalPurchase extends React.Component {
     super(props)
     if (this.props.period === 'quarterly') {
       this.state = {
-        price: 150.00,
+        price: 175.00,
         periodDisplay: 'Quarterly',
         successfulPayment: false,
         failedPayment: false,

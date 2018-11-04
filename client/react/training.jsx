@@ -72,7 +72,7 @@ class Training extends React.Component {
         },
         {
           title: 'Pole Rental',
-          price: '$150',
+          price: '$175',
           priceModifier: 'PER QTR',
           description: 'Note - Poles are provided FREE OF CHARGE for use during DC Vault classes.</br>As a typical athlete will progress through 3-6 poles during a season, the cost of purchasing poles (ranging from $300-$800 each) can add up quickly. Our pole rental program allows athletes to check out one pole at a time for non-club related activities, such as high school practice or competition.'
         }
