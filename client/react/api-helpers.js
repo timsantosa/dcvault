@@ -29,6 +29,37 @@ apiHelpers.getCurrentQuarter = () => {
   }
 }
 
+apiHelpers.getCurrentFullQuarter = () => {
+  let month = new Date().getMonth() + 1
+  let year = new Date().getFullYear()
+  let quarter = apiHelpers.getCurrentQuarter()
+
+  if ((month === 1 || month === 2) && quarter.indexOf('winter') !== -1) {
+    year--
+  }
+
+  return {
+    year: year,
+    quarter: quarter }
+}
+
+apiHelpers.getNextFullQuarter = () => {
+  let current = apiHelpers.getCurrentFullQuarter()
+  let retVal = {year: current.year}
+  if (current.quarter === 'winter') {
+    retVal.quarter = 'spring'
+    retVal.year = current.year + 1
+  } else if (current.quarter === 'spring') {
+    retVal.quarter = 'summer'
+  } else if (current.quarter === 'summer') {
+    retVal.quarter = 'fall'
+  } else {
+    retVal.quarter = 'winter'
+  }
+
+  return retVal
+}
+
 apiHelpers.isAdmin = () => {
   let token = getToken()
   return axios.post('/users/isadmin', {token})

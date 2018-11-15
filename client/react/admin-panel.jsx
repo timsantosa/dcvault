@@ -87,6 +87,20 @@ class AdminPanel extends React.Component {
     })
   }
 
+  getFullQuarter (row) {
+    let rowMonth = new Date(row.createdAt).getMonth() + 1
+    let rowYear = new Date(row.createdAt).getFullYear()
+
+    if ((rowMonth === 1 || rowMonth === 2) && row.quarter.indexOf('winter') !== -1) {
+      rowYear--
+    }
+
+    return {
+      year: rowYear,
+      quarter: row.quarter
+    }
+  }
+
   combineData (athletes, purchases) {
     let returnArr = []
     for (let i = 0; i < purchases.length; i++) {
@@ -139,11 +153,21 @@ class AdminPanel extends React.Component {
     }
   }
 
-  toggleOldRecords () {
-    let checked = $('#showOld').is(':checked')
-    if (checked) {
+  updateDisplayRecords () {
+    let allChecked = $('#showAll').is(':checked')
+    let upcomingChecked = $('#showUpcoming').is(':checked')
+    if (allChecked) {
       this.setState({
         displayData: this.state.fullData
+      })
+    } else if (upcomingChecked) {
+      let upcoming = this.state.fullData.filter(record => {
+        let rowQuarterFull = this.getFullQuarter(record)
+        let nextQuarterFull = apiHelpers.getNextFullQuarter()
+        return (rowQuarterFull.quarter.indexOf(nextQuarterFull.quarter) !== -1 && nextQuarterFull.year === rowQuarterFull.year)
+      })
+      this.setState({
+        displayData: this.state.filteredData.concat(upcoming)
       })
     } else {
       this.setState({
@@ -153,6 +177,8 @@ class AdminPanel extends React.Component {
   }
 
   render () {
+    let showAllRecords = $('#showAll').is(':checked')
+
     return (
       <section id='my-account'>
 
@@ -165,7 +191,8 @@ class AdminPanel extends React.Component {
                 <span className='title'>Registered Athletes</span>
               </div>
               <div className='body-box'>
-                <input id='showOld' type='checkbox' onChange={this.toggleOldRecords.bind(this)} /> Show Old Records
+                <p><input id='showUpcoming' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} /> Show Upcoming Quarter</p>
+                <p><input id='showAll' type='checkbox' onChange={this.updateDisplayRecords.bind(this)} /> Show All Records</p>
                 <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'quarter', 'emergencyContactMDN']} />
               </div>
             </div>
