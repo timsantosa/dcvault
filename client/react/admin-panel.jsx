@@ -79,11 +79,10 @@ class AdminPanel extends React.Component {
   }
 
   filterByCurrentQuarter (arr) {
-    let quarter = apiHelpers.getCurrentQuarter()
-    let currentYear = (new Date()).getFullYear()
+    let currentFullQuarter = apiHelpers.getCurrentFullQuarter()
     return arr.filter(record => {
-      let recordYear = new Date(record.createdAt).getFullYear()
-      return (recordYear === currentYear && record.quarter.indexOf(quarter) !== -1)
+      let recordQuarter = this.getFullQuarter(record)
+      return (recordQuarter.quarter.indexOf(currentFullQuarter.quarter) !== -1 && recordQuarter.year === currentFullQuarter.year)
     })
   }
 
@@ -153,25 +152,40 @@ class AdminPanel extends React.Component {
     }
   }
 
+  filterByUpcoming (arr) {
+    return arr.filter(record => {
+      let rowQuarterFull = this.getFullQuarter(record)
+      let nextQuarterFull = apiHelpers.getNextFullQuarter()
+      return (rowQuarterFull.quarter.indexOf(nextQuarterFull.quarter) !== -1 && nextQuarterFull.year === rowQuarterFull.year)
+    })
+  }
+
   updateDisplayRecords () {
     let allChecked = $('#showAll').is(':checked')
     let upcomingChecked = $('#showUpcoming').is(':checked')
+    let currentChecked = $('#showCurrent').is(':checked')
+
     if (allChecked) {
       this.setState({
         displayData: this.state.fullData
       })
-    } else if (upcomingChecked) {
-      let upcoming = this.state.fullData.filter(record => {
-        let rowQuarterFull = this.getFullQuarter(record)
-        let nextQuarterFull = apiHelpers.getNextFullQuarter()
-        return (rowQuarterFull.quarter.indexOf(nextQuarterFull.quarter) !== -1 && nextQuarterFull.year === rowQuarterFull.year)
-      })
+    } else if (upcomingChecked && currentChecked) {
+      let upcoming = this.filterByUpcoming(this.state.fullData || [])
       this.setState({
         displayData: this.state.filteredData.concat(upcoming)
       })
-    } else {
+    } else if (upcomingChecked) {
+      let upcoming = this.filterByUpcoming(this.state.fullData || [])
+      this.setState({
+        displayData: upcoming
+      })
+    } else if (currentChecked) {
       this.setState({
         displayData: this.state.filteredData
+      })
+    } else {
+      this.setState({
+        displayData: []
       })
     }
   }
@@ -191,8 +205,9 @@ class AdminPanel extends React.Component {
                 <span className='title'>Registered Athletes</span>
               </div>
               <div className='body-box'>
-                <p><input id='showUpcoming' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} /> Show Upcoming Quarter</p>
-                <p><input id='showAll' type='checkbox' onChange={this.updateDisplayRecords.bind(this)} /> Show All Records</p>
+                <span style={{textDecoration: showAllRecords ? 'line-through' : '', display: 'block'}}><input id='showCurrent' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} defaultChecked /> Show Current Quarter</span>
+                <span style={{textDecoration: showAllRecords ? 'line-through' : '', display: 'block'}}><input id='showUpcoming' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} /> Show Upcoming Quarter</span>
+                <span style={{display: 'block'}}><input id='showAll' type='checkbox' onChange={this.updateDisplayRecords.bind(this)} /> Show All Records</span>
                 <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'quarter', 'emergencyContactMDN']} />
               </div>
             </div>
