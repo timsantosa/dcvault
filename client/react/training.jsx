@@ -12,7 +12,7 @@ class Training extends React.Component {
           ages: 'Youth: 13 and under, Adult: 21+',
           price: '$225',
           priceModifier: 'PER COURSE',
-          location: 'DCV',
+          location: 'DCV, BALT',
           dates: 'Spring, Summer, and Fall',
           description: 'We offer a program specifically designed for youth or adult athletes. Classes cover Primary Phases of the vault and are suitable for beginner through intermediate youth, or beginner to advanced adults. Class is held on weekdays or weekends depending on the training program. Check our schedule for upcoming courses.'
         },
