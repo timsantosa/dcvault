@@ -177,7 +177,6 @@ class PoleApp extends React.Component {
       }
     }
   }
-
   getRentalData () {
     return this.state.rentals.filter(rental => rental.poleId !== null).map(rental => {
       return {
@@ -364,13 +363,13 @@ class RentalInfo extends React.Component {
           <div className='red-button' onClick={this.showSelectionModal.bind(this)}>
             <span className='button-text'>Swap</span>
           </div>
-          <div className='red-button' onClick={this.removePole.bind(this)}>
-            <span className='button-text'>Remove</span>
+          <div className='red-button' onClick={this.endRental.bind(this)}>
+            <span className='button-text'>End</span>
           </div>
         </div>
         <div className='pole-info__edit-btns'>
-          <div className='red-button' onClick={this.endRental.bind(this)}>
-            <span className='button-text'>End</span>
+          <div className='red-button' style={{width: '60%'}} onClick={this.removePole.bind(this)}>
+            <span className='button-text'>Remove Pole</span>
           </div>
         </div>
         {this.state.showSelectionModal
