@@ -238,6 +238,10 @@ class PoleRental extends React.Component {
   constructor (props) {
     super(props)
 
+    window.testFunc = () => {
+      console.log(this.getSelectedInfo())
+    }
+
     this.state = {
       openModal: false,
       athletes: [],
@@ -245,6 +249,12 @@ class PoleRental extends React.Component {
       rentalOptions: [
         {name: 'oneTime', displayName: 'One Week', displayPrice: '$75'},
         {name: 'quarterly', displayName: 'Quarterly', displayPrice: '$175'}
+      ],
+      quarters: [
+        {name: 'winter', displayName: 'Winter'},
+        {name: 'summer', displayName: 'Summer'},
+        {name: 'fall', displayName: 'Fall'},
+        {name: 'spring', displayName: 'Spring'}
       ]
     }
 
@@ -276,13 +286,32 @@ class PoleRental extends React.Component {
     return selected
   }
 
+  getSelectedInfo () {
+    return apiHelpers.parseFormValues($('#rental-info').serializeArray())
+  }
+
+  updateState () {
+    let output = this.getSelectedInfo()
+    if (output.type === 'quarterly') {
+      this.setState({
+        period: 'quarterly',
+        quarter: output.quarter
+      })
+    } else if (output.type === 'oneTime') {
+      this.setState({
+        period: 'oneTime'
+      })
+    }
+  }
+
   submit () {
-    let output = apiHelpers.parseFormValues($('#rental-info').serializeArray())
+    let output = this.getSelectedInfo()
     // output.type = $('input[name="type"]:checked').val()
     let selected = false
     if (output.type === 'quarterly') {
       this.setState({
-        period: 'quarterly'
+        period: 'quarterly',
+        quarter: output.quarter
       })
       selected = true
     } else if (output.type === 'oneTime') {
@@ -316,7 +345,7 @@ class PoleRental extends React.Component {
             To request a pole rental, select from the options below
           </p>
           <div style={{textAlign: 'center'}}>
-            <form id='rental-info' className='form-labels-on-top' style={{padding: '8px', boxShadow: 'none'}}>
+            <form id='rental-info' className='form-labels-on-top' style={{padding: '8px', boxShadow: 'none'}} onChange={this.updateState.bind(this)}>
               <div className='form-row'>
                 <label>
                   <span className='required'>Select Rental Period</span>
@@ -324,6 +353,18 @@ class PoleRental extends React.Component {
                     {
                       this.state.rentalOptions.map(option => {
                         return (<option key={option.name} value={option.name}>{option.displayName}: {option.displayPrice}</option>)
+                      })
+                    }
+                  </select>
+                </label>
+              </div>
+              <div className='form-row' style={{display: this.state.period === 'quarterly' ? 'block' : 'none'}}>
+                <label>
+                  <span className='required'>Select Quarter</span>
+                  <select name='quarter' defaultValue={apiHelpers.getCurrentQuarter()}>
+                    {
+                      this.state.quarters.map(option => {
+                        return (<option key={option.name} value={option.name}>{option.displayName}</option>)
                       })
                     }
                   </select>
@@ -353,7 +394,7 @@ class PoleRental extends React.Component {
               <span className='button-text'>Request Rental</span>
             </div>
           </div>
-          {openModal ? (<GenericModal style={{zIndex: 9999}} title={'Request Rental'} onClose={this.closeModal.bind(this)} childComponent={<PoleRentalPurchase period={this.state.period} user={this.props.user} closeFunction={this.closeModal.bind(this)} athlete={this.getSelectedAthlete()} />} />) : ''}
+          {openModal ? (<GenericModal style={{zIndex: 9999}} title={'Request Rental'} onClose={this.closeModal.bind(this)} childComponent={<PoleRentalPurchase period={this.state.period} user={this.props.user} quarter={this.state.quarter} closeFunction={this.closeModal.bind(this)} athlete={this.getSelectedAthlete()} />} />) : ''}
         </div>
       )
     }
@@ -389,7 +430,7 @@ class PoleRentalPurchase extends React.Component {
   }
 
   continue (data) {
-    apiHelpers.requestPole(this.props.athlete.id, this.props.period).then(res => {
+    apiHelpers.requestPole(this.props.athlete.id, this.props.period, this.props.quarter).then(res => {
       if (res.data.ok) {
         this.setState({
           successfulPayment: true,

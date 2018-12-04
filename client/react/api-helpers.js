@@ -286,9 +286,9 @@ apiHelpers.contactForm = (name, from, to, subject, text) => {
   })
 }
 
-apiHelpers.requestPole = (athleteId, period) => {
+apiHelpers.requestPole = (athleteId, period, quarter) => {
   let token = getToken()
-  return axios.post('/rentals/request', {token, athleteId, period, quarter: apiHelpers.getCurrentQuarter()})
+  return axios.post('/rentals/request', {token, athleteId, period, quarter})
   .then((response) => {
     return response
   })

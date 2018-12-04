@@ -163,13 +163,16 @@ module.exports = (app, db) => {
               let expiration
               if (request.type === 'quarterly') {
                 if (req.body.quarter === 'winter') {
-                  expiration = new Date(request.year + 1, 2, 1)
+                  expiration = new Date(request.year, 2, 1)
                 } else if (req.body.quarter === 'spring') {
                   expiration = new Date(request.year, 5, 1)
                 } else if (req.body.quarter === 'summer') {
                   expiration = new Date(request.year, 8, 1)
                 } else {
                   expiration = new Date(request.year, 11, 1)
+                }
+                if (expiration < Date.now()) {
+                  expiration = expiration.setFullYear(request.year + 1)
                 }
               } else {
                 expiration = new Date(Date.now() + 1209600000)
