@@ -24,11 +24,12 @@ class Events extends React.Component {
   }
 
   render () {
-    let contentDivs = {past: [
+    let contents = [
       {
+        date: new Date('08JUL2018'),
         partial: (<div className='event-block' id='08JUL2018'>
           <p className='event-block-title'>DC VAULT 10-YEAR ANNIVERSARY ​& TRAINING CENTER LAUNCH EVENT!​</p>
-          <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8</span>
+          <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8 2018</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
           <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
@@ -40,7 +41,7 @@ class Events extends React.Component {
         </div>),
         full: (<div className='event-block'>
           <p className='event-block-title'>DC VAULT 10-YEAR ANNIVERSARY ​& TRAINING CENTER LAUNCH EVENT!​</p>
-          <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8</span>
+          <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8 2018</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
           <span className='event-block-details-header'>Events</span>
           <ul className='event-block-details'>
@@ -96,9 +97,10 @@ class Events extends React.Component {
         </div>)
       },
       {
+        date: new Date('12JUL2018'),
         partial: (<div className='event-block' id='12JUL2018'>
           <p className='event-block-title'>Free Beginners Pole Vault Clinic</p>
-          <p className='event-block-info'><span className='event-block-date'>Thursday, Jul 12</span>
+          <p className='event-block-info'><span className='event-block-date'>Thursday, Jul 12 2018</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
           <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
@@ -111,9 +113,10 @@ class Events extends React.Component {
         </div>)
       },
       {
+        date: new Date('14JUL2018'),
         partial: (<div className='event-block' id='14JUL2018'>
           <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
-          <p className='event-block-info'><span className='event-block-date'>Saturday, Jul 14</span>
+          <p className='event-block-info'><span className='event-block-date'>Saturday, Jul 14 2018</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
           <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
@@ -124,10 +127,42 @@ class Events extends React.Component {
             <li>Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to register</li>
           </ul>
         </div>)
+      },
+      {
+        date: new Date('03MAR2019'),
+        partial: (<div className='event-block' id='03MAR2019'>
+          <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
+          <p className='event-block-info'><span className='event-block-date'>Sunday, Mar 3 2019</span>
+            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+          <span className='event-block-details-header'>Details</span>
+          <ul className='event-block-details'>
+            <li>Open to participants of all ages</li>
+            <li>Clinic runs from 10:30am to 12:30pm</li>
+            <li><span className='red-text'>Limited Space</span> - Register ahead to guarantee a slot</li>
+            <li>Advance Registration Closes: Feb 25th, 2019</li>
+            <li>Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to register</li>
+          </ul>
+        </div>)
       }
-    ],
-      upcoming: []
-    }
+    ]
+
+    let contentDivs = {past: [], upcoming: []}
+
+    contents.forEach(item => {
+      if (item.date < new Date()) {
+        contentDivs.past.push(item)
+      } else {
+        contentDivs.upcoming.push(item)
+      }
+    })
+
+    contentDivs.upcoming = contentDivs.upcoming.sort((a, b) => {
+      return b.date - a.date
+    })
+
+    contentDivs.past = contentDivs.past.sort((a, b) => {
+      return a.date - b.date
+    })
 
     return (
       <div className='event-description'>
@@ -175,7 +210,7 @@ class Events extends React.Component {
           )}
         <div className='row'>
           <div className='col-xs-12'>
-            <p className='subsection-header'>Past Events</p>
+            <p className='subsection-header' style={{marginTop: '10%'}}>Past Events</p>
           </div>
         </div>
         <div className='row'>
