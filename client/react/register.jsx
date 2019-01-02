@@ -910,9 +910,9 @@ class Payment extends React.Component {
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'beginner' || group === 'intermediate' || group === 'beginner-intermediate') {
-      price = 500
+      price = 450
     } else {
-      price = 550
+      price = 450
     }
 
     let quarter = this.props.data.selectPackage.quarter
