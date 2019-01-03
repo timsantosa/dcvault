@@ -134,8 +134,8 @@ class Events extends React.Component {
           <ul className='event-block-details'>
             <li>Open to participants of all ages</li>
             <li>Clinic runs from 10:30am to 12:30pm</li>
-            <li><span className='red-text'>Limited Space</span> - Register ahead to guarantee a slot</li>
-            <li>Advance Registration Closes: Feb 25th, 2019</li>
+            <li><span className='red-text'>Limited Space</span> - Register early to guarantee a slot</li>
+            <li>Registration Closes: Feb 25th, 2019</li>
             <li>Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to register</li>
           </ul>
         </div>)
