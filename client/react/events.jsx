@@ -31,7 +31,6 @@ class Events extends React.Component {
           <p className='event-block-title'>DC VAULT 10-YEAR ANNIVERSARY ​& TRAINING CENTER LAUNCH EVENT!​</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8 2018</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
-          <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
             <li>Elite Competition: Featuring 2015 World Champion - SHAWN BARBER!</li>
             <li>Open Competition: All Ages - Free Entry!</li>
@@ -102,7 +101,6 @@ class Events extends React.Component {
           <p className='event-block-title'>Free Beginners Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Thursday, Jul 12 2018</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
-          <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
             <li>Youth 6-14 / Adult 21 and up</li>
             <li>Clinic runs from 5:30pm to 7:00pm</li>
@@ -118,7 +116,6 @@ class Events extends React.Component {
           <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Saturday, Jul 14 2018</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
-          <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
             <li>Open to participants of all ages</li>
             <li>Clinic runs from 10:30am to 12:30pm</li>
@@ -134,7 +131,6 @@ class Events extends React.Component {
           <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Mar 3 2019</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
-          <span className='event-block-details-header'>Details</span>
           <ul className='event-block-details'>
             <li>Open to participants of all ages</li>
             <li>Clinic runs from 10:30am to 12:30pm</li>
