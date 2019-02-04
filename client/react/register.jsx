@@ -249,7 +249,7 @@ class SelectPackage extends React.Component {
           prep: true
         }
       })
-    } else if (quarter === 'winter') {
+    } else if (quarter === 'spring' && (group === 'elite' || group === 'emerging-elite' || group === 'professional')) {
       this.setState({
         availableFacilities: {
           dcv: true,
@@ -356,7 +356,7 @@ class SelectPackage extends React.Component {
                     <span>Summer</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fall</span>
@@ -368,7 +368,7 @@ class SelectPackage extends React.Component {
                     <span>Winter</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
                     <span>Spring</span>
@@ -380,13 +380,13 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}}>
+                <div style={{display: (this.state.checkedSession === 'spring' || this.state.checkedSession === 'winter') ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='group' value='youth' checked={this.state.checkedGroup === 'youth'} onChange={this.adjustOptions.bind(this)} />
                     <span>Youth</span>
                   </label>
                 </div>
-                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}} >
+                <div style={{display: (this.state.checkedSession === 'spring' || this.state.checkedSession === 'winter') ? 'block' : 'none'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
                     <span>Adult</span>
