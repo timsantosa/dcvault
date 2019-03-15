@@ -141,6 +141,19 @@ class Events extends React.Component {
         </div>)
       },
         {
+            date: new Date('5MAY2019'),
+            partial: (<div className='event-block' id='5MAY2019'>
+                <p className='event-block-title'>Capitol Hill Pole Vault Clinic - Free!</p>
+                <p className='event-block-info'><span className='event-block-date'>Sunday, May 5 2019</span>
+                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                <ul className='event-block-details'>
+                    <li>Clinic starts at 12:30pm</li>
+                    <li>Capitol Hill Residents Only!</li>
+                    <li>Details and Registration info coming soon.</li>
+                </ul>
+            </div>)
+        },
+        {
             date: new Date('17APR2019'),
             partial: (<div className='event-block' id='17APR2019'>
                 <p className='event-block-title'>DC Fray Adult Pole Vault Class</p>
@@ -156,20 +169,8 @@ class Events extends React.Component {
                     <li>Adults Can register to participate in this special event at <a href="https://dcfray.com/events/pole-vaulting-3/">here</a></li>
                 </ul>
             </div>)
-        },
-        {
-            date: new Date('5MAY2019'),
-            partial: (<div className='event-block' id='5MAY2019'>
-                <p className='event-block-title'>Capitol Hill Pole Vault Clinic - Free!</p>
-                <p className='event-block-info'><span className='event-block-date'>Sunday, May 5 2019</span>
-                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
-                <ul className='event-block-details'>
-                    <li>Clinic starts at 12:30pm</li>
-                    <li>Capitol Hill Residents Only!</li>
-                    <li>Details and Registration info coming soon.</li>
-                </ul>
-            </div>)
         }
+
 
     ]
 
