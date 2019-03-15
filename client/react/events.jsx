@@ -185,7 +185,7 @@ class Events extends React.Component {
     })
 
     contentDivs.upcoming = contentDivs.upcoming.sort((a, b) => {
-      return b.date - a.date
+      return a.date - b.date
     })
 
     contentDivs.past = contentDivs.past.sort((a, b) => {
