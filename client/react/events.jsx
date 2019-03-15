@@ -148,10 +148,10 @@ class Events extends React.Component {
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
                     <li>DC Fray and DC Vault team up to host the Fray Life Adult Pole Vault Class!</li>
+                    <li>Class runs from 6:30pm-8:00pm</li>
                     <li>NO EXPERIENCE NECESSARY!</li>
                     <li>Participants should bring water and comfortable sports clothing appropriate for the weather</li>
                     <li>Adult 21 and up</li>
-                    <li>Class runs from 6:30pm-8:00pm</li>
                     <li><span className='red-text'>Limited Space</span> - Register early to guarantee a slot</li>
                     <li>Adults Can register to participate in this special event at <a href="https://dcfray.com/events/pole-vaulting-3/">here</a></li>
                 </ul>
