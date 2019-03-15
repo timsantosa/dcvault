@@ -139,7 +139,25 @@ class Events extends React.Component {
             <li>Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to register</li>
           </ul>
         </div>)
-      }
+      },
+        {
+            date: new Date('17APR2019'),
+            partial: (<div className='event-block' id='17APR2019'>
+                <p className='event-block-title'>DC Fray Adult Pole Vault Class</p>
+                <p className='event-block-info'><span className='event-block-date'>Wednesday, Apr 17 2019</span>
+                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                <ul className='event-block-details'>
+                    <li>DC Fray and DC Vault team up to host the Fray Life Adult Pole Vault Class!</li>
+                    <li>NO EXPERIENCE NECESSARY!</li>
+                    <li>Participants should bring water and comfortable sports clothing appropriate for the weather</li>
+                    <li>Adult 21 and up</li>
+                    <li>Class runs from 6:30pm-8:00pm</li>
+                    <li><span className='red-text'>Limited Space</span> - Register early to guarantee a slot</li>
+                    <li>Adults Can register to participate in this special event at <a href="https://dcfray.com/events/pole-vaulting-3/">here</a></li>
+                </ul>
+            </div>)
+        }
+
     ]
 
     let contentDivs = {past: [], upcoming: []}
