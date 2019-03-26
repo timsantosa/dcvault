@@ -147,10 +147,10 @@ class Events extends React.Component {
                 <p className='event-block-info'><span className='event-block-date'>Sunday, May 5 2019</span>
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
-                    <li>Open to Capitol Hill Residents! (1st street to RFK stadium + H street NE to L street SE)</li>
+                    <li>Open to <span className = 'red-text'>Capitol Hill</span> Residents! (1st street to RFK stadium + H street NE to L street SE)</li>
                     <li>Experience: No experience necessary</li>
                     <li>Ages: Youth through Adult groups, ages 6 and up</li>
-                    <li>Time: 12:30pm-2:30pm (arrive by 12:20pm)</li>
+                    <li>Time: <span className = 'red-text'>12:30pm-2:30pm</span> (arrive by 12:20pm)</li>
                     <li>Bring: Water, sunblock and comfortable sports clothing</li>
                     <li>Food: Free BBQ Hot Dogs for participants at end of clinic! </li>
                     <li>Dogs: Family dogs welcome! Bring a leash and water for your critter please. </li>
@@ -158,7 +158,7 @@ class Events extends React.Component {
                     <li>Facility: DC Vault Pole Vault Training Facility</li>
                     <li>Address: 2200 East Capitol street NE Washington DC</li>
                     <li>Parking: Available in Lot #3 </li>
-                    <li>Registration: Email events@dcvault.org to register. Limited Space - Register early to guarantee a slot! </li>
+                    <li>Registration: Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to register. <span className = 'red-text'>Limited Space</span> - Register early to guarantee a slot! </li>
                 </ul>
             </div>)
         },
