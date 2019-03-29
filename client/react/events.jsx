@@ -186,27 +186,60 @@ class Events extends React.Component {
                 <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
-                    <li><span className='red-text'>TIME:</span> 10am-12pm</li>
+                    <li>Time: <span className='red-text'>10am-12pm</span></li>
 
-                    <li><span className='red-text'>DETAILS:</span> Free Beginner/Intermediate Pole Vault Clinic - Open to all Virginia State High School athletes!</li>
+                    <li>Details: Free Beginner/Intermediate Pole Vault Clinic - Open to all <span className='red-text'>Virginia State High School athletes!</span></li>
                     <ul>
                       <li>Athletes will receive instruction for DC Vault coaching staff.</li>
                       <li>Beginners will be moved through the fundamentals of executing primary phases of the vault.</li>
                       <li>Intermediate athletes will work on improving their primary and secondary phases of the vault depending on individual technical needs.</li>
                     </ul>
-                    <li><span className='red-text'>WAIVERS:</span> All participants must sign waivers in advance.</li>
+                    <li>Waivers: All participants must sign waivers in advance.</li>
                     <ul>
                       <li>Minors must have a parent or guardian sign their waivers.</li>
                       <li>Waivers will be sent during registration and must be presented at the clinic.</li>
                     </ul>
 
-                    <li><span className='red-text'>SPIKES:</span> Intermediate athletes may use 1/8" pyramid spikes ONLY! Standard 1/4" spikes will NOT be permitted on the runways - No Exceptions!</li>
+                    <li>Spikes: Intermediate athletes may use 1/8" pyramid spikes ONLY! Standard 1/4" spikes will NOT be permitted on the runways - No Exceptions!</li>
 
-                    <li><span className='red-text'>BRING:</span> Comfortable athletic clothing and running shoes.</li>
+                    <li>Bring: Comfortable athletic clothing and running shoes.</li>
 
-                    <li><span className='red-text'>PARKING:</span> Available in Lot #3</li>
+                    <li>Parking:Available in <span className='red-text'>Lot #3</span></li>
 
-                    <li><span className='red-text'>REGISTRATION/DEADLINE:</span> Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> no later than April 25th!</li>
+                    <li>Registration/Deadline: Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> no later than <span className='red-text'>April 25th!</span></li>
+                </ul>
+            </div>)
+        },
+        {
+            date: new Date('28APR2019'),
+            partial: (<div className='event-block' id='28APR20192'>
+                <p className='event-block-title'>Open Vault Day - Free!</p>
+                <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
+                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                <ul className='event-block-details'>
+                    <li>Time: <span className='red-text'>2pm-1:30pm</span></li>
+
+                    <li>Coaches bring your vaulters and use all the equipment that the Pole Vault Training Center has to offer in order to fine tune your athletes for their upcoming Championship meets!</li>
+                    <ul>
+                        <li>Open to all experienced high school pole vaulters.</li>
+                        <li>Athletes MUST be accompanied by their high school or club coach.</li>
+                    </ul>
+                    <li>Waivers: All participants must sign waivers in advance.</li>
+                    <ul>
+                        <li>Minors must have a parent or guardian sign their waivers.</li>
+                        <li>Waivers will be sent during registration and must be presented at the clinic.</li>
+                    </ul>
+
+                    <li>Spikes: Intermediate athletes may use 1/8" pyramid spikes ONLY! Standard 1/4" spikes will NOT be permitted on the runways - No Exceptions!</li>
+
+                    <li>SAFETY: Please Note - Athletes who are unable to safely execute a vault or who demonstrate unsafe actions will not be allowed to continue utilizing the facility.</li>
+                    <ul>
+                      <li>This opportunity is meant for experienced athletes who are preparing for their end of season championship meets. </li>
+                      <li>Coaches, please do not bring beginners who lack the necessary skills to safely execute primary phases of the vault.</li>
+                    </ul>
+                    <li>Parking:Available in <span className='red-text'>Lot #3</span></li>
+
+                    <li>Registration/Deadline: Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to guarantee a slot to participate. Coaches - each of your athletes will need to register individually not later than <span className='red-text'>April 25th!</span> </li>
                 </ul>
             </div>)
         }
