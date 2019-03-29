@@ -189,13 +189,16 @@ class Events extends React.Component {
                     <li><span className='red-text'>TIME:</span> 10am-12pm</li>
 
                     <li><span className='red-text'>DETAILS:</span> Free Beginner/Intermediate Pole Vault Clinic - Open to all Virginia State High School athletes!</li>
-                    <li>Athletes will receive instruction for DC Vault coaching staff.</li>
-                    <li>Beginners will be moved through the fundamentals of executing primary phases of the vault.</li>
-                    <li>Intermediate athletes will work on improving their primary and secondary phases of the vault depending on individual technical needs.</li>
-
+                    <ul>
+                      <li>Athletes will receive instruction for DC Vault coaching staff.</li>
+                      <li>Beginners will be moved through the fundamentals of executing primary phases of the vault.</li>
+                      <li>Intermediate athletes will work on improving their primary and secondary phases of the vault depending on individual technical needs.</li>
+                    </ul>
                     <li><span className='red-text'>WAIVERS:</span> All participants must sign waivers in advance.</li>
-                    <li>Minors must have a parent or guardian sign their waivers.</li>
-                    <li>Waivers will be sent during registration and must be presented at the clinic.</li>
+                    <ul>
+                      <li>Minors must have a parent or guardian sign their waivers.</li>
+                      <li>Waivers will be sent during registration and must be presented at the clinic.</li>
+                    </ul>
 
                     <li><span className='red-text'>SPIKES:</span> Intermediate athletes may use 1/8" pyramid spikes ONLY! Standard 1/4" spikes will NOT be permitted on the runways - No Exceptions!</li>
 
