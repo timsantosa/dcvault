@@ -217,7 +217,7 @@ class Events extends React.Component {
                 <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
-                    <li>Time: <span className='red-text'>2pm-1:30pm</span></li>
+                    <li>Time: <span className='red-text'>12pm-1:30pm</span></li>
 
                     <li>Coaches bring your vaulters and use all the equipment that the Pole Vault Training Center has to offer in order to fine tune your athletes for their upcoming Championship meets!</li>
                     <ul>
