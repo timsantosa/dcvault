@@ -178,6 +178,34 @@ class Events extends React.Component {
                     <li>Adults Can register to participate in this special event at <a href="https://dcfray.com/events/pole-vaulting-3/">here</a></li>
                 </ul>
             </div>)
+        },
+        {
+            date: new Date('28APR2019'),
+            partial: (<div className='event-block' id='28APR2019'>
+                <p className='event-block-title'>VA Highschool Clinic - Free!</p>
+                <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
+                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                <ul className='event-block-details'>
+                    <li><span className='red-text'>TIME:</span> 10am-12pm</li>
+
+                    <li><span className='red-text'>DETAILS:</span> Free Beginner/Intermediate Pole Vault Clinic - Open to all Virginia State High School athletes!</li>
+                    <li>Athletes will receive instruction for DC Vault coaching staff.</li>
+                    <li>Beginners will be moved through the fundamentals of executing primary phases of the vault.</li>
+                    <li>Intermediate athletes will work on improving their primary and secondary phases of the vault depending on individual technical needs.</li>
+
+                    <li><span className='red-text'>WAIVERS:</span> All participants must sign waivers in advance.</li>
+                    <li>Minors must have a parent or guardian sign their waivers.</li>
+                    <li>Waivers will be sent during registration and must be presented at the clinic.</li>
+
+                    <li><span className='red-text'>SPIKES:</span> Intermediate athletes may use 1/8" pyramid spikes ONLY! Standard 1/4" spikes will NOT be permitted on the runways - No Exceptions!</li>
+
+                    <li><span className='red-text'>BRING:</span> Comfortable athletic clothing and running shoes.</li>
+
+                    <li><span className='red-text'>PARKING:</span> Available in Lot #3</li>
+
+                    <li><span className='red-text'>REGISTRATION/DEADLINE:</span> Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> no later than April 25th!</li>
+                </ul>
+            </div>)
         }
 
 
