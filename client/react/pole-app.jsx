@@ -652,7 +652,7 @@ class PoleViewer extends React.Component {
               {this.props.hasAction ? (<th>More</th>) : null}
             </tr>
           </thead>
-          <tbody>
+          <tbody onLoad={() => { this.sortBy('length')}}>
             {this.state.poles.map(pole => {
               return (
                 <tr key={pole.id} className={this.getRowClass(pole)}>
