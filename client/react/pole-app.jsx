@@ -666,6 +666,7 @@ class PoleViewer extends React.Component {
             })}
           </tbody>
         </table>
+          {this.sortBy('length')}
       </div>
     )
   }
