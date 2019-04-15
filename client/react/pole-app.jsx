@@ -593,6 +593,10 @@ class PoleViewer extends React.Component {
     })
   }
 
+  componentWillMount(){
+    this.sortBy('length')
+  }
+
   sortBy (sortBy) {
     let reverse = this.state.reverse
     if (this.state.sortBy === sortBy) {
@@ -652,7 +656,7 @@ class PoleViewer extends React.Component {
               {this.props.hasAction ? (<th>More</th>) : null}
             </tr>
           </thead>
-          <tbody onLoad={() => { this.sortBy('length')}}>
+          <tbody>
             {this.state.poles.map(pole => {
               return (
                 <tr key={pole.id} className={this.getRowClass(pole)}>
