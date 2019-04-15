@@ -610,9 +610,9 @@ class PoleViewer extends React.Component {
         aVal = a.feet + (a.inches / 12)
         bVal = b.feet + (b.inches / 12)
       }
-      if (aVal < bVal) {
+      if (aVal > bVal) {
         return reverseVal * -1
-      } else if (aVal > bVal) {
+      } else if (aVal < bVal) {
         return reverseVal * 1
       } else {
         return 0
