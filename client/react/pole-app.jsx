@@ -579,7 +579,7 @@ class PoleViewer extends React.Component {
     super(props)
 
     this.state = {
-      sortBy: '',
+      sortBy: 'length',
       reverse: false,
       poles: this.props.poles
     }
@@ -587,15 +587,12 @@ class PoleViewer extends React.Component {
 
   componentWillReceiveProps (newProps) {
     this.setState({
-      sortBy: '',
+      sortBy: 'length',
       reverse: false,
       poles: newProps.poles
     })
   }
 
-  componentWillMount(){
-    this.sortBy('length')
-  }
 
   sortBy (sortBy) {
     let reverse = this.state.reverse
