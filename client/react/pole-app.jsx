@@ -648,7 +648,7 @@ class PoleViewer extends React.Component {
           <thead>
             <tr>
               <th onClick={() => { this.sortBy('brand') }}>Brand</th>
-              <th onClick={() => { this.sortBy('length') }}>Length &#9660</th>
+              <th onClick={() => { this.sortBy('length') }}>Length</th>
               <th onClick={() => { this.sortBy('weight') }}>Weight</th>
               {this.props.hasAction ? (<th>More</th>) : null}
             </tr>
