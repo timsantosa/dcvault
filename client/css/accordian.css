@@ -281,6 +281,16 @@
     }
 }
 
+/*
+Mobile for the content description
+ */
+@media (min-width: 320px) and (max-width: 480px) {
+    .accordian-sector-content{
+        padding: 0px 0;
+    }
+
+}
+
 /*Placement & size of the content box*/
 .accordian-sector-content.is-expanded {
     opacity: 1;
@@ -401,6 +411,18 @@
     }
 }
 
+/*
+Mobile for the inner_info description
+ */
+@media (min-width: 320px) and (max-width: 480px) {
+    .accordian-sector-content_desc-inner_info {
+        font-size:14px;
+        line-height: 1.2;
+        margin-bottom:5px;
+    }
+
+}
+
 .accordian-sector-content_desc-inner_details {
     font-size: 14px;
     max-height: 120px;
@@ -420,7 +442,7 @@
 .my-inner_details {
     font-family: Lato;
     font-size: 14px;
-    max-height: 220px; /* Changes the size of the text box description*/
+    max-height: 210px; /* Changes the size of the text box description*/
     line-height: 1.55;
     margin-bottom: .80rem;
     overflow-y: scroll;
@@ -439,6 +461,16 @@
         height: auto;
         margin-right: auto
     }
+}
+
+/*
+Mobile for the text box description
+ */
+@media (min-width: 320px) and (max-width: 480px) {
+    .my-inner_details {
+        max-height:100px;
+    }
+
 }
 
 .accordian-sector-content_desc-inner_link {
