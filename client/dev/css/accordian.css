@@ -127,7 +127,14 @@
 
 .accordian-sector:hover .accordian-sector-underlay, .accordian-sector:focus .accordian-sector-underlay,
 .accordian-sector:active .accordian-sector-underlay {
-    opacity: 0
+    opacity: 1
+}
+
+@media(min-width:768px) {
+    .accordian-sector:hover .accordian-sector-underlay, .accordian-sector:focus .accordian-sector-underlay,
+    .accordian-sector:active .accordian-sector-underlay {
+        opacity: 0
+    }
 }
 
 .accordian-sector:hover .accordian-sector-expand, .accordian-sector:focus .accordian-sector-expand,
@@ -142,7 +149,14 @@
 
 .accordian-sector a:hover ~ .accordian-sector-underlay, .accordian-sector a:focus ~ .accordian-sector-underlay,
 .accordian-sector a:active ~ .accordian-sector-underlay {
-    opacity: 0
+    opacity: 1
+}
+
+@media(min-width:768px) {
+    .accordian-sector a:hover ~ .accordian-sector-underlay, .accordian-sector a:focus ~ .accordian-sector-underlay,
+    .accordian-sector a:active ~ .accordian-sector-underlay {
+        opacity: 0
+    }
 }
 
 .accordian-sector a:hover .accordian-sector-expand, .accordian-sector a:focus .accordian-sector-expand,
@@ -508,6 +522,7 @@
 
 @media(min-width:768px) {
     .accordian-sector-underlay{
+        background-color: BLACK !important;
         opacity: .5;
     }
 
@@ -523,34 +538,6 @@
     opacity: 0
 }
 
-.accordian-sector-underlay2 {
-    background-color: #aaa;
-    bottom: 0;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    opacity: 1;
-    transition: all .15s ease-out;
-    z-index: 3
-}
-
-@media(min-width:768px) {
-    .accordian-sector-underlay2{
-        opacity: .5;
-    }
-
-}
-
-.accordian-sector-underlay2.is-visible {
-    display: block;
-    opacity: 1
-}
-
-.accordian-sector-underlay2.is-invisible {
-    display: none;
-    opacity: 0
-}
 
 .accordian-sector hr {
     background: #a9a9a9;
