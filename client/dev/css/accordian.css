@@ -127,12 +127,23 @@
 
 .accordian-sector:hover .accordian-sector-underlay, .accordian-sector:focus .accordian-sector-underlay,
 .accordian-sector:active .accordian-sector-underlay {
-    opacity: 1
+    opacity: 1;
+
+    -webkit-animation: fadeout 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeout 1s; /* Firefox < 16 */
+    -ms-animation: fadeout 1s; /* Internet Explorer */
+    -o-animation: fadeout 1s; /* Opera < 12.1 */
+    animation: fadeout 1s;
 }
 
 @media(min-width:768px) {
     .accordian-sector:hover .accordian-sector-underlay, .accordian-sector:focus .accordian-sector-underlay,
     .accordian-sector:active .accordian-sector-underlay {
+        -webkit-animation: fadeout 0s; /* Safari, Chrome and Opera > 12.1 */
+        -moz-animation: fadeout 0s; /* Firefox < 16 */
+        -ms-animation: fadeout 0s; /* Internet Explorer */
+        -o-animation: fadeout 0s; /* Opera < 12.1 */
+        animation: fadeout 0s;
         opacity: 0
     }
 }
@@ -149,12 +160,22 @@
 
 .accordian-sector a:hover ~ .accordian-sector-underlay, .accordian-sector a:focus ~ .accordian-sector-underlay,
 .accordian-sector a:active ~ .accordian-sector-underlay {
+    -webkit-animation: fadeout 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeout 1s; /* Firefox < 16 */
+    -ms-animation: fadeout 1s; /* Internet Explorer */
+    -o-animation: fadeout 1s; /* Opera < 12.1 */
+    animation: fadeout 1s;
     opacity: 1
 }
 
 @media(min-width:768px) {
     .accordian-sector a:hover ~ .accordian-sector-underlay, .accordian-sector a:focus ~ .accordian-sector-underlay,
     .accordian-sector a:active ~ .accordian-sector-underlay {
+        -webkit-animation: fadeout 0s; /* Safari, Chrome and Opera > 12.1 */
+        -moz-animation: fadeout 0s; /* Firefox < 16 */
+        -ms-animation: fadeout 0s; /* Internet Explorer */
+        -o-animation: fadeout 0s; /* Opera < 12.1 */
+        animation: fadeout 0s;
         opacity: 0
     }
 }
@@ -518,6 +539,7 @@
     opacity: 1;
     transition: all .15s ease-out;
     z-index: 3
+
 }
 
 @media(min-width:768px) {
@@ -536,6 +558,35 @@
 .accordian-sector-underlay.is-invisible {
     display: none;
     opacity: 0
+}
+
+@keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
 }
 
 
