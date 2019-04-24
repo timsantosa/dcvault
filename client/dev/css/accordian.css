@@ -113,6 +113,8 @@
     position: relative
 }
 
+
+
 .accordian-sector:hover, .accordian-sector:focus, .accordian-sector:active {
     cursor: pointer
 
@@ -259,7 +261,7 @@
     height: 100%;
     left: 50%;
     opacity: 0;
-    padding: 20px 0;
+    padding: 0px 0;
     position: absolute;
     top: 45%;
     transform: translate(-50%, -50%);
@@ -281,11 +283,12 @@
     }
 }
 
+
+
 /*Placement & size of the content box*/
 .accordian-sector-content.is-expanded {
     opacity: 1;
     top: 50%;
-    height: 70%;
 }
 
 .accordian-sector-content_image {
@@ -307,6 +310,7 @@
 
 @media(min-width:800px) and (max-width:840px) {
     .accordian-sector-content_image {
+        display: none;
         width: 30%
     }
 }
@@ -388,9 +392,9 @@
 }
 
 .accordian-sector-content_desc-inner_info {
-    font-size: 20px;
+    font-size: 14px;
     line-height: 1.2;
-    margin-bottom: 10px
+    margin-bottom: 5px
 }
 
 @media(min-width:768px) {
@@ -400,6 +404,7 @@
         margin: 10px 0
     }
 }
+
 
 .accordian-sector-content_desc-inner_details {
     font-size: 14px;
@@ -420,7 +425,7 @@
 .my-inner_details {
     font-family: Lato;
     font-size: 14px;
-    max-height: 220px; /* Changes the size of the text box description*/
+    max-height: 100px; /* Changes the size of the text box description*/
     line-height: 1.55;
     margin-bottom: .80rem;
     overflow-y: scroll;
@@ -436,10 +441,12 @@
 @media(min-width:768px) {
     .my-inner_details {
         font-size: 14px;
+        max-height:210px;  /* Changes the size of the text box description*/
         height: auto;
         margin-right: auto
     }
 }
+
 
 .accordian-sector-content_desc-inner_link {
     color: #49b0f2;
@@ -488,15 +495,22 @@
 }
 
 .accordian-sector-underlay {
-    background-color: #111;
+    background-color: #434343;
     bottom: 0;
     left: 0;
     position: absolute;
     right: 0;
     top: 0;
-    opacity: .5;
+    opacity: 1;
     transition: all .15s ease-out;
     z-index: 3
+}
+
+@media(min-width:768px) {
+    .accordian-sector-underlay{
+        opacity: .5;
+    }
+
 }
 
 .accordian-sector-underlay.is-visible {
@@ -505,6 +519,35 @@
 }
 
 .accordian-sector-underlay.is-invisible {
+    display: none;
+    opacity: 0
+}
+
+.accordian-sector-underlay2 {
+    background-color: #aaa;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 1;
+    transition: all .15s ease-out;
+    z-index: 3
+}
+
+@media(min-width:768px) {
+    .accordian-sector-underlay2{
+        opacity: .5;
+    }
+
+}
+
+.accordian-sector-underlay2.is-visible {
+    display: block;
+    opacity: 1
+}
+
+.accordian-sector-underlay2.is-invisible {
     display: none;
     opacity: 0
 }
@@ -543,6 +586,7 @@
         width: 50px
     }
 }
+
 
 .accordian-sector-expand:before {
     color: #323232;
