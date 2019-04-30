@@ -257,13 +257,13 @@ class Events extends React.Component {
       }
     })
 
-    contentDivs.upcoming = contentDivs.upcoming.sort((a, b) => {
+    contentDivs.upcoming = contentDivs.upcoming.sort((a, b) =>
       return b.date - a.date
-    })
+    );
 
-    contentDivs.past = contentDivs.past.sort((a, b) => {
+    contentDivs.past = contentDivs.past.sort((a, b) =>
       return a.date - b.date
-    })
+    );
 
     return (
       <div className='event-description'>
