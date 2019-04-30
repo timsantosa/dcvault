@@ -264,6 +264,8 @@ class Events extends React.Component {
     contentDivs.past = contentDivs.past.sort((a, b) =>
        a.date - b.date
     );
+    console.log('past' + contentDivs.past);
+    console.log('upcoming' + contentDivs.upcoming);
 
     return (
       <div className='event-description'>
