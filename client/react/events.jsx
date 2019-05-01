@@ -266,7 +266,7 @@ class Events extends React.Component {
        a.date - b.date
     );
     console.log('past' + contentDivs.past);
-    console.log('upcoming' + contentDivs.upcoming);
+    console.log('upcoming' + contentDivs.upcoming[1]);
     console.log(t1);
 
     return (
