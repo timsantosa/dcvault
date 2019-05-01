@@ -7,7 +7,13 @@ class Training extends React.Component {
 
     this.state = {
       trainingCards: [
+          {
+              title: 'Discounts',
+              priceModifier: 'BY REQUEST',
+              description: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as...</br>10% - College Student (full time)</br>10% - Active Duty and Retired Military</br>25% - DC Residents</br>25% - DCPS Students</br>25% - Family Discount (2 or more)</br>Does not apply to equipment rental, special training sessions, or events. Discounts cannot be combined.</br>Please contact us (dcvault@dcvault.org) to apply for a discount code.'
+          },
         {
+
           title: 'Youth/Adult',
           ages: 'Youth: 13 and under, Adult: 21+',
           price: '$225',
@@ -17,24 +23,14 @@ class Training extends React.Component {
           description: 'We offer a program specifically designed for youth or adult athletes. Classes cover Primary Phases of the vault and are suitable for beginner through intermediate youth, or beginner to advanced adults. Class is held on weekdays or weekends depending on the training program. Check our schedule for upcoming courses.'
         },
         {
-          title: 'Beginner',
+          title: 'Beginner/Intermediate',
           ages: 'All Ages',
           price: '$450',
           priceModifier: 'PER QTR',
           location: 'DCV, BALT',
           duration: '3-month course',
           dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
-          description: 'Beginner, Level I athletes focus on developing primary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary phase drills and vaulting.'
-        },
-        {
-          title: 'Intermediate',
-          ages: 'All Ages',
-          price: '$450',
-          priceModifier: 'PER QTR',
-          location: 'DCV, BALT',
-          duration: '3-month course',
-          dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
-          description: 'Intermediate, Level II athletes focus on mastering primary phases of the vault and basic introduction of secondary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary and secondary phase drills, vaulting and introductory speed and strength conditioning.'
+          description: 'Beginner/Level-1 athletes focus on development of primary phases of the vault, whereas Intermediate/Level II athletes focus on mastering primary phases and introduction to secondary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary and secondary phase drills, vaulting and introductory speed and strength conditioning. Bonus Sessions are often added to the mid-week training schedule and are optional for those athletes who would like to get in more practice.'
         },
         {
           title: 'Emerging Elite',
@@ -59,11 +55,12 @@ class Training extends React.Component {
           duration: 'Year-round program',
           description: 'Professional, Level V athletes work in private session on a personalized, comprehensive, year-round training program. Technical focus is on mastering tertiary phases of the vault, with strong emphasis placed on high level refinement of energy transitions. Speed and strength development is customized for the individual athlete to produce peak performance during championship competitions. It incorporates recovery phases and non-traditional range of motion and biomechanical movements for stabilization, technical consistency and injury prevention.'
         },
-        {
-          title: 'Discounts',
-          priceModifier: 'BY REQUEST',
-          description: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as...</br>10% - DC Residents</br>20% - Active Duty and Retired Military</br>10% - Full Time College Student</br>25% - DCPS Students</br>25% - Family Discount</br>Does not apply to equipment rental, special training sessions, or events. Discounts cannot be combined.</br>Please contact us (dcvault@dcvault.org) to apply for a discount code.'
-        },
+          {
+              title: 'Trial Session',
+              price: '$50',
+              priceModifier: 'BY REQUEST',
+              description: 'Want to give DC Vault a try before signing up for a full program? Take a one-time trial session during a regularly scheduled practice. If you decide you want to sign up for training afterwards, the fee will be applied towards the program that you register for! '
+          },
         {
           title: 'Private Lessons',
           price: '$175',
