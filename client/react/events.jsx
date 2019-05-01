@@ -248,9 +248,10 @@ class Events extends React.Component {
     ]
 
     let contentDivs = {past: [], upcoming: []}
+    let t1 = new Date();
 
     contents.forEach(item => {
-      if (item.date < new Date()) {
+      if (item.date < t1) {
         contentDivs.past.push(item)
       } else {
         contentDivs.upcoming.push(item)
@@ -266,6 +267,7 @@ class Events extends React.Component {
     );
     console.log('past' + contentDivs.past);
     console.log('upcoming' + contentDivs.upcoming);
+    console.log(t1);
 
     return (
       <div className='event-description'>
