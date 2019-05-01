@@ -26,7 +26,7 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
-        date: new Date('08JUL2018'),
+        date: new Date('June 8, 2018'),
         partial: (<div className='event-block' id='08JUL2018'>
           <p className='event-block-title'>DC VAULT 10-YEAR ANNIVERSARY ​& TRAINING CENTER LAUNCH EVENT!​</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8 2018</span>
@@ -96,7 +96,7 @@ class Events extends React.Component {
         </div>)
       },
       {
-        date: new Date('12JUL2018'),
+        date: new Date('July 12, 2018'),
         partial: (<div className='event-block' id='12JUL2018'>
           <p className='event-block-title'>Free Beginners Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Thursday, Jul 12 2018</span>
@@ -111,7 +111,7 @@ class Events extends React.Component {
         </div>)
       },
       {
-        date: new Date('14JUL2018'),
+        date: new Date('July 14, 2018'),
         partial: (<div className='event-block' id='14JUL2018'>
           <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Saturday, Jul 14 2018</span>
@@ -126,7 +126,7 @@ class Events extends React.Component {
         </div>)
       },
       {
-        date: new Date('10MAR2019'),
+        date: new Date('March 10, 2019'),
         partial: (<div className='event-block' id='10MAR2019'>
           <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Mar 10 2019</span>
@@ -141,7 +141,7 @@ class Events extends React.Component {
         </div>)
       },
         {
-            date: new Date('5MAY2019'),
+            date: new Date('May 5, 2019'),
             partial: (<div className='event-block' id='5MAY2019'>
                 <p className='event-block-title'>Capitol Hill Pole Vault Clinic - Free!</p>
                 <p className='event-block-info'><span className='event-block-date'>Sunday, May 5 2019</span>
@@ -163,7 +163,7 @@ class Events extends React.Component {
             </div>)
         },
         {
-            date: new Date('17APR2019'),
+            date: new Date('April 17, 2019'),
             partial: (<div className='event-block' id='17APR2019'>
                 <p className='event-block-title'>DC Fray Adult Pole Vault Class</p>
                 <p className='event-block-info'><span className='event-block-date'>Wednesday, Apr 17 2019</span>
@@ -180,7 +180,7 @@ class Events extends React.Component {
             </div>)
         },
         {
-            date: new Date('28APR2019'),
+            date: new Date('April 28, 2019'),
             partial: (<div className='event-block' id='28APR2019'>
                 <p className='event-block-title'>VA Highschool Clinic - Free!</p>
                 <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
@@ -211,7 +211,7 @@ class Events extends React.Component {
             </div>)
         },
         {
-            date: new Date('28APR2019'),
+            date: new Date('April 28, 2019'),
             partial: (<div className='event-block' id='28APR20192'>
                 <p className='event-block-title'>Open Vault Day - Free!</p>
                 <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
@@ -248,8 +248,7 @@ class Events extends React.Component {
     ]
 
     let contentDivs = {past: [], upcoming: []}
-    let t1 = new Date();
-    let t2 = new Date("June 8, 2018");
+    let t1 = new Date(); /* Todays date */
 
     contents.forEach(item => {
       if (item.date < t1) {
@@ -266,10 +265,9 @@ class Events extends React.Component {
     contentDivs.past = contentDivs.past.sort((a, b) =>
        a.date - b.date
     );
+    /* Debugging log to make sure that the objects get placed in the correct array*/
     console.log('past' + contentDivs.past);
     console.log('upcoming' + contentDivs.upcoming);
-    console.log(t1);
-    console.log('08Jul2018: ' + t2);
 
 
     return (
