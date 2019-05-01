@@ -249,7 +249,7 @@ class Events extends React.Component {
 
     let contentDivs = {past: [], upcoming: []}
     let t1 = new Date();
-    let t2 = new Date('08JUL2018');
+    let t2 = new Date("June 8, 2018");
 
     contents.forEach(item => {
       if (item.date < t1) {
