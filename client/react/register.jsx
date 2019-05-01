@@ -921,7 +921,7 @@ class Payment extends React.Component {
     } else if (group === 'beginner' || group === 'intermediate' || group === 'beginner-intermediate') {
       price = 450
     } else {
-      price = 450
+      price = 600
     }
 
     let quarter = this.props.data.selectPackage.quarter
