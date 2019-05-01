@@ -349,6 +349,7 @@ class SelectPackage extends React.Component {
     To manually change what quarters are available to sign up for change the <div style = {{display: 'x'}}>
     line to either block or none. block will show the option as available and none will hide it
      */
+
       <div className='row'>
         <div className='col-xs-12' style={{textAlign: 'center'}}>
           <form id='select-package' className='form-labels-on-top'>
@@ -386,9 +387,6 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                /*
-                Change the this.state.checkedSession to the appropriate quarter for the youth and adult options
-                 */
                 <div style={{display: (this.state.checkedSession === 'summer') ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='group' value='youth' checked={this.state.checkedGroup === 'youth'} onChange={this.adjustOptions.bind(this)} />
