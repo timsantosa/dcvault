@@ -245,7 +245,21 @@ class Events extends React.Component {
                     <li>Registration/Deadline: Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to guarantee a slot to participate. Coaches - each of your athletes will need to register individually not later than <span className='red-text'>April 25th!</span> </li>
                 </ul>
             </div>)
+        },
+        {
+            date: new Date('July 4, 2019'),
+            partial: (<div className='event-block' id='4JUL2019'>
+                <p className='event-block-title'>Independence Day - Pole Vault Championships</p>
+                <p className='event-block-info'><span className='event-block-date'>Thursday, July 4th 2019</span>
+                    <span className='event-block-location'>Washington DC</span></p>
+                <ul className='event-block-details'>
+                    <li>Join us for a day of Pole Vaulting and Fireworks!</li>
+                    <li>Event and registration info coming this weekend. </li>
+
+                </ul>
+            </div>)
         }
+
 
 
     ]
