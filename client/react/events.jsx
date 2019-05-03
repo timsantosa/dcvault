@@ -251,7 +251,7 @@ class Events extends React.Component {
             partial: (<div className='event-block' id='4JUL2019'>
                 <p className='event-block-title'>Independence Day - Pole Vault Championships</p>
                 <p className='event-block-info'><span className='event-block-date'>Thursday, July 4th 2019</span>
-                    <span className='event-block-location'>Washington DC</span></p>
+                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
                     <li>Join us for a day of Pole Vaulting and Fireworks!</li>
                     <li>Event and registration info coming this weekend. </li>
