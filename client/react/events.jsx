@@ -23,6 +23,9 @@ class Events extends React.Component {
     }
   }
 
+  /*
+  Note: When adding events please
+   */
   render () {
     let contents = [
       {
