@@ -260,7 +260,7 @@ class Events extends React.Component {
                 </ul>
                 <span className='event-block-details-header'>Expand For Full Info Below</span>
             </div>),
-            full: (<li className='event-block'>
+            full: (<div className='event-block'>
                 <p className='event-block-title'>Independence Day - Pole Vault Championships</p>
                 <p className='event-block-info'><span className='event-block-date'>Thursday, July 4th 2019</span>
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
