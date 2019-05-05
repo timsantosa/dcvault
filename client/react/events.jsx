@@ -256,7 +256,6 @@ class Events extends React.Component {
                 <ul className='event-block-details'>
                     <li>Registration closes June 27th (no late entries)</li>
                     <li>Registration Fee - $35</li>
-                    <!--<li>Registration and Event Information at <a href="https://dcvault.com/events">DCVault.com/events</a></li>-->
                     <li>Online Registration information coming soon.</li>
                 </ul>
                 <span className='event-block-details-header'>Expand For Full Info Below</span>
