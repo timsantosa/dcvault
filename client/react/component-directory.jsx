@@ -73,8 +73,8 @@ if (currentPage.indexOf('account') !== -1) {
 } else if (currentPage.indexOf('poles') !== -1) {
   render(<PoleApp />, document.getElementById('pole-panel'))
 } else if (currentPage.indexOf('events') !== -1) {
-  render(<Login />, document.getElementById('login'))
-  render(<Events />, document.getElementById('events-container'))
+    render(<Login />, document.getElementById('login'))
+    render(<Events />, document.getElementById('events-container'))
 } else {
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))

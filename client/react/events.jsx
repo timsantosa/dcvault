@@ -248,15 +248,242 @@ class Events extends React.Component {
         },
         {
             date: new Date('July 4, 2019'),
-            partial: (<div className='event-block' id='4JUL2019'>
+            partial: (<div className='event-block' id='04JUL2019'>
                 <p className='event-block-title'>Independence Day - Pole Vault Championships</p>
                 <p className='event-block-info'><span className='event-block-date'>Thursday, July 4th 2019</span>
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
-                    <li>Join us for a day of Pole Vaulting and Fireworks!</li>
-                    <li>Event and registration info coming this weekend. </li>
+                    <li>Registration closes June 27th (no late entries)</li>
+                    <li>Registration Fee - $35</li>
+                    <!--<li>Registration and Event Information at <a href="https://dcvault.com/events">DCVault.com/events</a></li>-->
+                    <li>Online Registration information coming soon.</li>
+                </ul>
+                <span className='event-block-details-header'>Expand For Full Info Below</span>
+            </div>),
+            full: (<li className='event-block'>
+                <p className='event-block-title'>Independence Day - Pole Vault Championships</p>
+                <p className='event-block-info'><span className='event-block-date'>Thursday, July 4th 2019</span>
+                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                <span className='event-block-details-header'>Registration</span>
+                <ul className='event-block-details'>
+                    <li>Registration closes June 27th (no late entries)</li>
+                    <li>Registration Fee - $35</li>
+                    <!--<li>Registration and Event Information at <a href="https://dcvault.com/events">DCVault.com/events</a></li>-->
+                    <li>Online Registration information coming soon.</li>
+                </ul>
+                <span className='event-block-details-header'>Team Competition</span>
+                <ul className='event-block-details'>
+                    <li>Teams must enter 5 or more athletes to be scored (honor system – please, no ringers)</li>
+                    <li>Teams will be scored against one another for 1st, 2nd 3rd place awards.</li>
+                    <li>Unattached athletes or those participating on a team with fewer than 5 members will not be scored but will rank in individual flight placing.</li>
+                </ul>
+                <span className='event-block-details-header'>Team Awards</span>
+                <ul className='event-block-details'>
+                    <li><span className = 'red-text'>1st</span> place:  2 UCS Spirit Poles <span className = 'red-text'>+</span> 2 UCS Spirit Crossbars <span className = 'red-text'>+</span> 1 UCS Spirit Pole Bag</li>
+                    <li><span className = 'red-text'>2nd</span> place:  1 UCS Spirit Pole <span className = 'red-text'>+</span> 1 UCS Spirit Crossbar <span className = 'red-text'>+</span> 1 UCS Spirit Pole Bag</li>
+                    <li><span className = 'red-text'>3rd</span> place:  1 UCS Spirit Pole Bag</li>
 
                 </ul>
+                <span className='event-block-details-header'>Individual Awards</span>
+                <ul className='event-block-details'>
+                    <li>T.B.A.</li>
+                </ul>
+                <span className='event-block-details-header'>Venue</span>
+                <ul className='event-block-details'>
+                    <li>This event will be hosted at the DC Vault Pole Vault Center, located on East Capitol street - straight down the road from the US Capitol dome and the National Fireworks Celebration!</li>
+                    <li>This ‘dog friendly’ facility features 3 Mondo Runways, 3 UCS Pits (1700, 1900, 2100), a complete series of UCS Spirit Vaulting Poles, a variety of training implements and of course... a BBQ Grill! As a bonus, participants have immediate access to the RFK Skate Park for those who want to bring their boards.</li>
+                    <li>Location:</li>
+                    <ul>
+                        <li>2200 East Capitol street NE Washington DC 20002</li>
+                        <li>Parking: Lot #3</li>
+                        <li>Metro: Stadium/Armory metro station (Blue, Orange, and Silver lines)</li>
+                    </ul>
+                </ul>
+                <span className='event-block-details-header'>National Fireworks</span>
+                <ul className='event-block-details'>
+                    <li>The National Fireworks Celebration in Washington DC is one of the most spectacular events to witness in the USA. Few things compare to viewing the fireworks above the US Capitol, Washington Monument, Lincoln Memorial, etc.</li>
+                    <li>Fireworks begin at 9:09pm sharp.</li>
+                    <ul>
+                        <li>Competition is scheduled to wrap up at 7:30pm, leaving plenty of time to make it to the celebration.</li>
+                    </ul>
+                    <li>Directions from DC Vault - by foot:</li>
+                    <ul>
+                        <li>Leave your car at DC Vault and walk straight down East Capitol street through historic Capitol Hill neighborhood, towards the US Capitol dome. Walk left or right around the Capitol to the National Mall side of the grounds.</li>
+                        <li>Access Points to the National Mall are located at Pennsylvania avenue and 3rd street NW or Constitution avenue and 3rd street SW. For additional access points and information, see <a href ="https://home.nps.gov/subjects/nationalmall4th">home.nps.gov/subjects/nationalmall4th</a></li>
+                    </ul>
+                    <li>Directions from DC Vault - by metro: </li>
+                    <ul>
+                        <li>Leave your car at DC Vault and walk right across the street from the DC Vault Facility to the Stadium/Armory metro station. Take the quick 12-minute ride directly to the Smithsonian metro stop by the Washington Monument.</li>
+                        <li>On your return trip, consider using the L'Enfant or Federal Center SW metro stations to avoid the overcrowding that will occur at Smithsonian metro station.</li>
+                    </ul>
+                    <li>Complete information can be found at the National Parks Service Website: </li>
+                    <ul>
+                        <li><a href ="https://home.nps.gov/subjects/nationalmall4th">home.nps.gov/subjects/nationalmall4th</a></li>
+                    </ul>
+                </ul>
+                <span className='event-block-details-header'>Event Schedule</span>
+                <ul className = 'event-block-details'>
+                    <li>Wednesday - July 3rd</li>
+                    <ul>
+                        <li>6:00 - 7:30 pm - Pole Dropoff and open runway practice</li>
+                    </ul>
+                    <li>Thursday - July 4th (subject to change - final schedule and flight list will be posted July 1)</li>
+                    <ul>
+                        <li>10:30-11:30pm - Flights 1&2 check-in + warmups (10:30-10:45am - pole pickup & drop-off)</li>
+                        <li>11:30-1:30pm - Flights 1&2 competition</li>
+                        <li>1:30-2:30pm - Flights 3&4 check-in + warmups (1:30-1:45am - pole pickup & drop-off)</li>
+                        <li>2:30-4:30pm - Flights 3&4 competition</li>
+                        <li>4:30-5:30pm - Elite check-in + warmups + BBQ time...free hotdogs while they last! (4:30-4:45pm - pole pickup & drop-off)</li>
+                        <li>5:30-7:30pm - Elite competition</li>
+                        <li>7:30-7:45pm - Pole Dropoff</li>
+                        <li>9:09pm - National Fireworks!</li>
+                        <li>11:00pm - Pole Pickup</li>
+                    </ul>
+                    <li>Friday - July 5th</li>
+                    <ul>
+                        <li>2:00pm-2:30pm - Pole Pickup</li>
+                    </ul>
+                    <li>Saturday - July 6th </li>
+                    <ul>
+                        <li>2:00pm-2:30pm - Pole Pickup</li>
+                    </ul>
+                    <li>Sunday - July 7th</li>
+                    <ul>
+                        <li>10:30am-12:30pm - Pole Pickup</li>
+                    </ul>
+                </ul>
+
+                <span className='event-block-details-header'>Pole Pickup and Dropoff</span>
+                <ul className = 'event-block-details'>
+                    <li>Poles and pole bags can be dropped off Wednesday evening for those arriving ahead of time. As per the event schedule, pole pickup times will be available over the course of the entire weekend for those staying in DC to enjoy the capitol.</li>
+                    <li>Poles or Pole Bags must be Tagged with complete name and contact info (we will NOT have tags for you). The name on the poles must match a photo ID to be reclaimed.</li>
+                    <li>Poles will be secured in a locked storage conex but are not guaranteed against theft, lost poles, damage, etc. This is a convenience - If these conditions are not acceptable, secure your poles elsewhere.</li>
+                </ul>
+
+                <span className='event-block-details-header'>Scoring System</span>
+                <ul className = 'event-block-details'>
+                    <li>Athletes compete in performance-based flights however, athletes are scored based on age divisions.</li>
+                    <li>Age divisions are broken into 5-year increments beginning with ages 5-9.</li>
+                    <li>Points are awarded for 1st through 5th place in each age division as follows.</li>
+                    <ul>
+                        <li>1st = 10</li>
+                        <li>2nd = 8</li>
+                        <li>3rd = 6</li>
+                        <li>4th = 4</li>
+                        <li>5th = 2</li>
+                    </ul>
+                    <li>Unattached athletes may bump a team athlete out of a place, lowering the team score. If an unattached athlete takes 1st in their age division and a team athlete takes 2nd, the team is awarded 8 points for 2nd place.</li>
+                    <li>No Jump-Offs!</li>
+                    <ul>
+                        <li>In the event of a tie, one of several fitness challenges will be proposed by the official who will set the rules (number of muscle ups, 20m sprint or number of Bubkas for example). If clubs cannot agree upon which fitness challenge, a coin will be flipped and called by the official.</li>
+                        <li>Teams may choose any member who cleared a bar in the competition to represent the team for the challenge (show us what you've got!).</li>
+                    </ul>
+                </ul>
+                <span className='event-block-details-header'>Spikes!!! - Spikes!!! - Spikes!!!</span>
+                <ul className = 'event-block-details'>
+                    <li>Please Note: Only 1/8" spikes are allowed at this facility! These are smaller than the standard 1/4" spikes allowed at most meets! Order and install your 1/8" Spikes ahead of time so you don't run into an issue at the event! A limited number of 1/8" spikes will be available for cash purchase at the event - bring your own spike wrench!</li>
+                </ul>
+                <span className='event-block-details-header'>Pole Rentals</span>
+                <ul className = 'event-block-details'>
+                    <li>Poles will be available for rent for $25 (cash only - exact change)</li>
+                    <li>Your ID will be held in exchange for the pole</li>
+                    <li>Note - you may be sharing your pole with another vaulter</li>
+                    <li>If you break our pole, you will be required to pay the list price of the pole. Current prices can be found at UCSSpirit.com</li>
+                    <ul>
+                        <li>Available Poles:</li>
+                        <ul>
+                            <li>8'0"	40	ALTIUS (KIDS)</li>
+                            <li>8'0"	50	ALTIUS (KIDS)</li>
+                            <li>8'0"	60	ALTIUS (KIDS)</li>
+                            <li>9'0"	60	ALTIUS (KIDS)</li>
+                            <li>9'0"	70	ALTIUS (KIDS)</li>
+                            <li>10'0"	70	ALTIUS (KIDS)</li>
+                            <li>10'0"	80	ALTIUS (KIDS)</li>
+                            <li>10'0"	90	ALTIUS (KIDS)</li>
+                            <li>10'8"	90	UCS</li>
+                            <li>10'8"	100	UCS</li>
+                            <li>10'8"	110	UCS</li>
+                            <li>10'8"	120	UCS</li>
+                            <li>11'6"	120	UCS</li>
+                            <li>11'6"	130	UCS</li>
+                            <li>12'0"	120	UCS</li>
+                            <li>12'0"	120	UCS</li>
+                            <li>12'0"	130	UCS</li>
+                            <li>12'0"	140	UCS</li>
+                            <li>12'0"	150	UCS</li>
+                            <li>13'0"	125	UCS</li>
+                            <li>13'0"	125	UCS</li>
+                            <li>13'0"	130	UCS</li>
+                            <li>13'0"	130	UCS</li>
+                            <li>13'0"	135	UCS</li>
+                            <li>13'0"	140	UCS</li>
+                            <li>13'0"	145	UCS</li>
+                            <li>13'0"	150	UCS</li>
+                            <li>13'0"	150	UCS</li>
+                            <li>13'0"	155	UCS</li>
+                            <li>13'0"	155	UCS</li>
+                            <li>13'0"	160	UCS</li>
+                            <li>13'0"	165	UCS</li>
+                            <li>13'0"	165	UCS</li>
+                            <li>13'0"	170	UCS</li>
+                            <li>13'0"	175	UCS</li>
+                            <li>13'0"	180	UCS</li>
+                            <li>13'7"	140	UCS</li>
+                            <li>13'7"	155	UCS</li>
+                            <li>13'7"	160	UCS</li>
+                            <li>13'7"	165	UCS</li>
+                            <li>13'7"	180	UCS</li>
+                            <li>14'0"	140	UCS</li>
+                            <li>14'0"	140	UCS</li>
+                            <li>14'0"	140	UCS</li>
+                            <li>14'0"	145	UCS</li>
+                            <li>14'0"	145	UCS</li>
+                            <li>14'0"	150	UCS</li>
+                            <li>14'0"	150	UCS</li>
+                            <li>14'0"	155	UCS</li>
+                            <li>14'0"	160	UCS</li>
+                            <li>14'0"	160	UCS</li>
+                            <li>14'0"	160	UCS</li>
+                            <li>14'0"	165	UCS</li>
+                            <li>14'0"	170	UCS</li>
+                            <li>14'0"	175	UCS</li>
+                            <li>14'0"	180	UCS</li>
+                            <li>14'7"	160	UCS</li>
+                            <li>14'7"	165	UCS</li>
+                            <li>14'7"	170	UCS</li>
+                            <li>14'7"	175	UCS</li>
+                            <li>14'7"	180	UCS</li>
+                            <li>15'0"	150	UCS</li>
+                            <li>15'0"	155	UCS</li>
+                            <li>15'0"	165	UCS</li>
+                            <li>15'0"	175	UCS</li>
+                            <li>15'0"	180	UCS</li>
+                            <li>15'0"	180	UCS</li>
+                            <li>15'0"	185	UCS</li>
+                            <li>15'0"	190	UCS</li>
+                            <li>15'0"	205	UCS</li>
+                            <li>15'7"	170	UCS</li>
+                            <li>15'7"	180	UCS</li>
+                            <li>15'7"	190	UCS</li>
+                            <li>15'7"	205	UCS</li>
+                            <li>16'0"	185	UCS</li>
+                            <li>16'0"	185	UCS</li>
+                            <li>16'0"	190	UCS</li>
+                            <li>16'0"	195	UCS</li>
+                            <li>16'0"	200	UCS</li>
+                            <li>16'0"	205	UCS</li>
+                            <li>16'5"	185	UCS</li>
+                            <li>16'5"	190	UCS</li>
+                            <li>16'5"	195	UCS</li>
+                            <li>16'5"	200	UCS</li>
+                            <li>16'5"	205	UCS</li>
+                            <li>17'0"	200	UCS</li>
+                            <li>17'0"	205	UCS</li>
+                        </ul>
+                    </ul>
+                </ul>
+
             </div>)
         }
 
