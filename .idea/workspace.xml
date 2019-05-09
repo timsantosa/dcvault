@@ -3,18 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/client/compete/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/files/DC Vault Waiver - Competition.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/img/forms/adult-comp-1.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/img/forms/adult-comp-2.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/img/forms/adult-comp-3.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/img/forms/youth-comp-1.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/img/forms/youth-comp-2.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/img/forms/youth-comp-3.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/react/competition.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/react/component-directory.jsx" afterPath="$PROJECT_DIR$/client/react/component-directory.jsx" />
-      <change beforePath="$PROJECT_DIR$/server/lib/helpers.js" afterPath="$PROJECT_DIR$/server/lib/helpers.js" />
-      <change beforePath="$PROJECT_DIR$/server/routes.js" afterPath="$PROJECT_DIR$/server/routes.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -288,12 +276,12 @@
       <workItem from="1556904372581" duration="99000" />
       <workItem from="1556904553325" duration="11932000" />
       <workItem from="1557420109914" duration="3000" />
-      <workItem from="1557420219498" duration="98000" />
+      <workItem from="1557420219498" duration="256000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39470000" />
+    <option name="totallyTimeSpent" value="39628000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="816" extended-state="0" />
