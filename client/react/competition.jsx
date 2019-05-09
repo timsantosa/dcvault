@@ -22,6 +22,7 @@ class Competition extends React.Component {
         let newPageNum = this.state.pageNum + 1
         updatedData[page] = info
         this.setState({
+            currentPage: (<AthleteInfo advance={this.advance.bind(this)} />),
             pageNum: newPageNum,
             data: updatedData
         })
@@ -752,10 +753,7 @@ class ProgressBar extends React.Component {
                         <div style={this.props.pageNum === 4 ? onStyle : offStyle} />
                         <p>Payment</p>
                     </div>
-                    <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-                        <div style={this.props.pageNum === 5 ? onStyle : offStyle} />
-                        <p>Done!</p>
-                    </div>
+
                 </div>
             </div>
         )
