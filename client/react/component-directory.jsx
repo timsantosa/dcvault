@@ -10,7 +10,6 @@ import ContactModal from './contact-modal.jsx'
 import GenericModal from './generic-modal.jsx'
 import PoleApp from './pole-app.jsx'
 import Events from './events.jsx'
-import Competition from './competition.jsx'
 
 let currentPage = window.location.pathname
 let hashString = window.location.hash
@@ -76,7 +75,6 @@ if (currentPage.indexOf('account') !== -1) {
 } else if (currentPage.indexOf('events') !== -1) {
     render(<Login />, document.getElementById('login'))
     render(<Events />, document.getElementById('events-container'))
-    render(<Competition />, document.getElementById('competition-page'))
 } else {
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))
