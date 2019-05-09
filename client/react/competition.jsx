@@ -22,7 +22,6 @@ class Competition extends React.Component {
         let newPageNum = this.state.pageNum + 1
         updatedData[page] = info
         this.setState({
-            currentPage: (<AthleteInfo advance={this.advance.bind(this)} />),
             pageNum: newPageNum,
             data: updatedData
         })
@@ -60,6 +59,7 @@ class Competition extends React.Component {
         // }
 
         this.setState({
+            currentPage: (<AthleteInfo advance={this.advance.bind(this)} />),
             registrationOpen: true
         })
     }
