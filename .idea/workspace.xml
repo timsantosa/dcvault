@@ -1,216 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/client/dev/account/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/admin/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/css/accordian.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/css/extras.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/css/fullcalendar.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/css/new-age.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/css/new-age.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/events/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/files/parking-pass.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/files/quarterly-conditioning.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/files/release-form.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/forms/release-form-dcv.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/forms/release-form-gtown.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/Front-Jump.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/chris4.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/chris5.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/eddie3.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/gwen1.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/lauren2.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/steph.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/steph2.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/tim2.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/frontpage/tim3.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/headers/events.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/headers/npva.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/icons/facebook-grey-icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/icons/instagram-grey-icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/icons/twitter-grey-icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/logos/cropped-logo_square-180x180.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/logos/cropped-logo_square-192x192.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/logos/cropped-logo_square-270x270.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/logos/cropped-logo_square-32x32.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/logos/logo-footer.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/logos/logo_square-150x150.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/logos/logo_square-300x249.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/img/logos/logo_square-768x637.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/js/facilities.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/js/map-style.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/js/new-age.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/js/player.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/less/mixins.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/less/new-age.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/less/variables.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/css/bootstrap.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/css/bootstrap.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/fonts/glyphicons-halflings-regular.eot" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/fonts/glyphicons-halflings-regular.svg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/fonts/glyphicons-halflings-regular.ttf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/fonts/glyphicons-halflings-regular.woff" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/fonts/glyphicons-halflings-regular.woff2" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/js/bootstrap.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/bootstrap/js/bootstrap.min.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/edition/gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/edition/rose.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/sport/black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/sport/blue.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/sport/green.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/sport/red.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/sport/white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/watch/metal.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/apple_watch/watch/steel.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/device-mockups.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/device-mockups.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/device-mockups2.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/device-mockups2.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s3/s3_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s3/s3_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s3/s3_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s3/s3_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s5/galaxy_s5_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s5/galaxy_s5_land_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s5/galaxy_s5_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s5/galaxy_s5_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s5/galaxy_s5_port_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_s5/galaxy_s5_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_tab4/galaxy_tab4_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_tab4/galaxy_tab4_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_tab4_small/galaxy_tab4_black_small.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/galaxy_tab4_small/galaxy_tab4_white_small.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/imac/imac.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad/ipad_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad/ipad_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad/ipad_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad/ipad_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air/ipad_air_gray_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air/ipad_air_gray_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air/ipad_air_silver_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air/ipad_air_silver_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air_2/ipad_air_2_gold_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air_2/ipad_air_2_gold_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air_2/ipad_air_2_gray_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air_2/ipad_air_2_gray_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air_2/ipad_air_2_silver_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_air_2/ipad_air_2_silver_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_pro/ipad_pro_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_pro/ipad_pro_land_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_pro/ipad_pro_land_silver.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_pro/ipad_pro_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_pro/ipad_pro_port_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/ipad_pro/ipad_pro_port_silver.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone5/iphone5_land.psd" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone5/iphone5_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone5/iphone5_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone5/iphone5_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone5/iphone5_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6/iphone_6_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6/iphone_6_land_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6/iphone_6_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6/iphone_6_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6/iphone_6_port_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6/iphone_6_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6_plus/iphone_6_plus_black_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6_plus/iphone_6_plus_black_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6_plus/iphone_6_plus_gold_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6_plus/iphone_6_plus_gold_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6_plus/iphone_6_plus_white_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_6_plus/iphone_6_plus_white_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_se/iphone_se_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_se/iphone_se_land_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_se/iphone_se_land_rose.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_se/iphone_se_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_se/iphone_se_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_se/iphone_se_port_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_se/iphone_se_port_rose.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/iphone_se/iphone_se_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/lumia920/lumia920_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/lumia920/lumia920_land.psd" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/lumia920/lumia920_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/lumia_930/lumia_930_dark_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/lumia_930/lumia_930_dark_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/lumia_930/lumia_930_light_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/lumia_930/lumia_930_light_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/macbook/macbook.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/macbook_2015/gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/macbook_2015/grey.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/macbook_2015/silver.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/nexus7/nexus7_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/nexus7/nexus7_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/nexus_6/nexus_6_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/nexus_6/nexus_6_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/samsung_tv/samsung_tv.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/device-mockups/surface/surface.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/css/font-awesome.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/css/font-awesome.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/fonts/FontAwesome.otf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/fonts/fontawesome-webfont.eot" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/fonts/fontawesome-webfont.svg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/fonts/fontawesome-webfont.ttf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/fonts/fontawesome-webfont.woff" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/fonts/fontawesome-webfont.woff2" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/animated.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/bordered-pulled.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/core.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/fixed-width.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/font-awesome.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/icons.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/larger.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/list.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/mixins.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/path.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/rotated-flipped.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/screen-reader.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/stacked.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/less/variables.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_animated.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_bordered-pulled.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_core.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_fixed-width.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_icons.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_larger.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_list.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_mixins.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_path.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_rotated-flipped.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_screen-reader.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_stacked.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/_variables.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/font-awesome/scss/font-awesome.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/jquery/jquery.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/jquery/jquery.min.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/simple-line-icons/css/simple-line-icons.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/simple-line-icons/fonts/Simple-Line-Icons.eot" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/simple-line-icons/fonts/Simple-Line-Icons.svg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/simple-line-icons/fonts/Simple-Line-Icons.ttf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/simple-line-icons/fonts/Simple-Line-Icons.woff" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/simple-line-icons/fonts/Simple-Line-Icons.woff2" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/simple-line-icons/less/simple-line-icons.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/lib/simple-line-icons/scss/simple-line-icons.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/npva/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/poles/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/account-panel.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/admin-panel.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/api-helpers.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/calendar.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/component-directory.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/contact-modal.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/events.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/generic-modal.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/login.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/pole-app.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/register.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/super-table.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/react/training.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/register/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/register/info/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/scripts/components.min.b80f4be87ba254d4142471b805ea149b.js" afterPath="" />
-    </list>
+    <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -226,14 +17,14 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2970">
+            <state relative-caret-position="0">
               <caret line="198" column="24" lean-forward="false" selection-start-line="198" selection-start-column="24" selection-end-line="198" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="component-directory.jsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="component-directory.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/component-directory.jsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="795">
@@ -246,8 +37,8 @@
       <file leaf-file-name="api-helpers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/api-helpers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="240" column="4" lean-forward="false" selection-start-line="240" selection-start-column="4" selection-end-line="240" selection-end-column="4" />
+            <state relative-caret-position="95">
+              <caret line="144" column="25" lean-forward="false" selection-start-line="144" selection-start-column="25" selection-end-line="144" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -263,11 +54,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="routes.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8145">
-              <caret line="543" column="16" lean-forward="false" selection-start-line="543" selection-start-column="16" selection-end-line="543" selection-end-column="16" />
+            <state relative-caret-position="-640">
+              <caret line="40" column="15" lean-forward="true" selection-start-line="40" selection-start-column="15" selection-end-line="40" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -362,7 +153,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="203" />
+    <option name="x" value="202" />
+    <option name="y" value="86" />
     <option name="width" value="1440" />
     <option name="height" value="816" />
   </component>
@@ -394,36 +186,6 @@
               <item name="dcvault" type="462c0819:PsiDirectoryNode" />
               <item name="client" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="dcvault" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dcvault" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="react" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dcvault" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dcvault" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="register" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dcvault" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dcvault" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="register" type="462c0819:PsiDirectoryNode" />
-              <item name="info" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dcvault" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dcvault" type="462c0819:PsiDirectoryNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dcvault" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dcvault" type="462c0819:PsiDirectoryNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -436,6 +198,11 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client/dev" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -485,15 +252,15 @@
       <workItem from="1557420109914" duration="3000" />
       <workItem from="1557420219498" duration="256000" />
       <workItem from="1557420805030" duration="4000" />
-      <workItem from="1557422140954" duration="1379000" />
+      <workItem from="1557422140954" duration="1723000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41011000" />
+    <option name="totallyTimeSpent" value="41355000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="203" width="1440" height="816" extended-state="0" />
+    <frame x="202" y="86" width="1440" height="816" extended-state="0" />
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17847222" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -526,20 +293,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/client/react/pole-app.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8745">
-          <caret line="583" column="21" lean-forward="true" selection-start-line="583" selection-start-column="21" selection-end-line="583" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/events/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1170">
-          <caret line="78" column="36" lean-forward="true" selection-start-line="78" selection-start-column="36" selection-end-line="78" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1170">
@@ -662,14 +415,6 @@
     <entry file="file://$PROJECT_DIR$/client/img/forms/release-form-gtown.png">
       <provider selected="true" editor-type-id="images">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/js/player.js">
@@ -833,7 +578,7 @@
     <entry file="file://$PROJECT_DIR$/client/compete/index.html" />
     <entry file="file://$PROJECT_DIR$/client/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2970">
+        <state relative-caret-position="0">
           <caret line="198" column="24" lean-forward="false" selection-start-line="198" selection-start-column="24" selection-end-line="198" selection-end-column="24" />
           <folding />
         </state>
@@ -855,18 +600,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/routes.js">
+    <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8145">
-          <caret line="543" column="16" lean-forward="false" selection-start-line="543" selection-start-column="16" selection-end-line="543" selection-end-column="16" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/api-helpers.js">
+    <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="240" column="4" lean-forward="false" selection-start-line="240" selection-start-column="4" selection-end-line="240" selection-end-column="4" />
+        <state relative-caret-position="-192">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -875,6 +628,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="795">
           <caret line="64" column="43" lean-forward="false" selection-start-line="64" selection-start-column="43" selection-end-line="64" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/react/api-helpers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="144" column="25" lean-forward="false" selection-start-line="144" selection-start-column="25" selection-end-line="144" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-640">
+          <caret line="40" column="15" lean-forward="true" selection-start-line="40" selection-start-column="15" selection-end-line="40" selection-end-column="15" />
           <folding />
         </state>
       </provider>
