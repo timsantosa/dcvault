@@ -1,226 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/client/dev/README.md" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/account/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/admin/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/css/accordian.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/css/extras.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/css/fullcalendar.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/css/new-age.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/css/new-age.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/events/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/files/parking-pass.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/files/quarterly-conditioning.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/files/release-form.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/forms/release-form-dcv.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/forms/release-form-gtown.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/Front-Jump.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/chris4.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/chris5.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/eddie3.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/gwen1.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/lauren2.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/steph.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/steph2.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/tim2.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/frontpage/tim3.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/headers/events.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/headers/npva.jpg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/icons/facebook-grey-icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/icons/instagram-grey-icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/icons/twitter-grey-icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/logos/cropped-logo_square-180x180.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/logos/cropped-logo_square-192x192.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/logos/cropped-logo_square-270x270.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/logos/cropped-logo_square-32x32.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/logos/logo-footer.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/logos/logo_square-150x150.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/logos/logo_square-300x249.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/img/logos/logo_square-768x637.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/js/facilities.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/js/map-style.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/js/new-age.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/js/player.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/less/mixins.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/less/new-age.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/less/variables.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/css/bootstrap.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/css/bootstrap.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/fonts/glyphicons-halflings-regular.eot" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/fonts/glyphicons-halflings-regular.svg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/fonts/glyphicons-halflings-regular.ttf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/fonts/glyphicons-halflings-regular.woff" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/fonts/glyphicons-halflings-regular.woff2" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/js/bootstrap.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/bootstrap/js/bootstrap.min.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/edition/gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/edition/rose.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/sport/black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/sport/blue.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/sport/green.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/sport/red.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/sport/white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/watch/metal.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/apple_watch/watch/steel.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/device-mockups.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/device-mockups.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/device-mockups2.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/device-mockups2.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s3/s3_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s3/s3_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s3/s3_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s3/s3_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s5/galaxy_s5_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s5/galaxy_s5_land_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s5/galaxy_s5_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s5/galaxy_s5_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s5/galaxy_s5_port_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_s5/galaxy_s5_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_tab4/galaxy_tab4_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_tab4/galaxy_tab4_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_tab4_small/galaxy_tab4_black_small.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/galaxy_tab4_small/galaxy_tab4_white_small.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/imac/imac.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad/ipad_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad/ipad_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad/ipad_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad/ipad_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air/ipad_air_gray_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air/ipad_air_gray_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air/ipad_air_silver_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air/ipad_air_silver_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air_2/ipad_air_2_gold_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air_2/ipad_air_2_gold_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air_2/ipad_air_2_gray_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air_2/ipad_air_2_gray_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air_2/ipad_air_2_silver_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_air_2/ipad_air_2_silver_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_pro/ipad_pro_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_pro/ipad_pro_land_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_pro/ipad_pro_land_silver.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_pro/ipad_pro_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_pro/ipad_pro_port_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/ipad_pro/ipad_pro_port_silver.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone5/iphone5_land.psd" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone5/iphone5_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone5/iphone5_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone5/iphone5_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone5/iphone5_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6/iphone_6_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6/iphone_6_land_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6/iphone_6_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6/iphone_6_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6/iphone_6_port_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6/iphone_6_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6_plus/iphone_6_plus_black_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6_plus/iphone_6_plus_black_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6_plus/iphone_6_plus_gold_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6_plus/iphone_6_plus_gold_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6_plus/iphone_6_plus_white_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_6_plus/iphone_6_plus_white_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_se/iphone_se_land_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_se/iphone_se_land_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_se/iphone_se_land_rose.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_se/iphone_se_land_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_se/iphone_se_port_black.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_se/iphone_se_port_gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_se/iphone_se_port_rose.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/iphone_se/iphone_se_port_white.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/lumia920/lumia920_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/lumia920/lumia920_land.psd" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/lumia920/lumia920_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/lumia_930/lumia_930_dark_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/lumia_930/lumia_930_dark_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/lumia_930/lumia_930_light_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/lumia_930/lumia_930_light_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/macbook/macbook.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/macbook_2015/gold.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/macbook_2015/grey.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/macbook_2015/silver.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/nexus7/nexus7_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/nexus7/nexus7_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/nexus_6/nexus_6_land.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/nexus_6/nexus_6_port.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/samsung_tv/samsung_tv.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/device-mockups/surface/surface.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/css/font-awesome.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/css/font-awesome.min.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/fonts/FontAwesome.otf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/fonts/fontawesome-webfont.eot" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/fonts/fontawesome-webfont.svg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/fonts/fontawesome-webfont.ttf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/fonts/fontawesome-webfont.woff" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/fonts/fontawesome-webfont.woff2" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/animated.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/bordered-pulled.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/core.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/fixed-width.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/font-awesome.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/icons.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/larger.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/list.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/mixins.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/path.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/rotated-flipped.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/screen-reader.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/stacked.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/less/variables.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_animated.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_bordered-pulled.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_core.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_fixed-width.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_icons.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_larger.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_list.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_mixins.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_path.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_rotated-flipped.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_screen-reader.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_stacked.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/_variables.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/font-awesome/scss/font-awesome.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/jquery/jquery.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/jquery/jquery.min.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/simple-line-icons/css/simple-line-icons.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/simple-line-icons/fonts/Simple-Line-Icons.eot" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/simple-line-icons/fonts/Simple-Line-Icons.svg" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/simple-line-icons/fonts/Simple-Line-Icons.ttf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/simple-line-icons/fonts/Simple-Line-Icons.woff" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/simple-line-icons/fonts/Simple-Line-Icons.woff2" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/simple-line-icons/less/simple-line-icons.less" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/lib/simple-line-icons/scss/simple-line-icons.scss" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/npva/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/poles/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/account-panel.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/admin-panel.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/api-helpers.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/calendar.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/component-directory.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/contact-modal.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/events.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/generic-modal.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/login.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/pole-app.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/register.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/super-table.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/react/training.jsx" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/register/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/register/info/index.html" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/client/scripts/components.min.b80f4be87ba254d4142471b805ea149b.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/package-lock.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/package.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/server/app.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/server/db/db.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/server/db/seed.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/server/files/parking-pass.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/server/files/quarterly-conditioning.pdf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/server/lib/helpers.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/server/routes.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/client/dev/webpack.config.js" afterPath="" />
-    </list>
+    <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -236,7 +17,7 @@
       <file leaf-file-name="component-directory.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/component-directory.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="795">
+            <state relative-caret-position="213">
               <caret line="64" column="43" lean-forward="false" selection-start-line="64" selection-start-column="43" selection-end-line="64" selection-end-column="43" />
               <folding />
             </state>
@@ -461,12 +242,12 @@
       <workItem from="1557420109914" duration="3000" />
       <workItem from="1557420219498" duration="256000" />
       <workItem from="1557420805030" duration="4000" />
-      <workItem from="1557422140954" duration="1937000" />
+      <workItem from="1557422140954" duration="2041000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41569000" />
+    <option name="totallyTimeSpent" value="41673000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="202" y="86" width="1440" height="816" extended-state="0" />
@@ -853,7 +634,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/component-directory.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
+        <state relative-caret-position="213">
           <caret line="64" column="43" lean-forward="false" selection-start-line="64" selection-start-column="43" selection-end-line="64" selection-end-column="43" />
           <folding />
         </state>
