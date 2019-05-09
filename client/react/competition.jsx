@@ -572,7 +572,6 @@ class Payment extends React.Component {
 
     calculatePrice () {
         let price = this.state.price * 1.03
-        price = parseFloat(price) < 10 ? 10 : price
         this.renderButton(price)
     }
 
@@ -645,7 +644,6 @@ class Payment extends React.Component {
         }
 
         let currentPrice = (this.state.price)
-        currentPrice = currentPrice < 10 ? (10).toFixed(2) : currentPrice.toFixed(2)
         let currentProcessingFee = ((this.state.price) * 0.03).toFixed(2)
 
         return (
@@ -663,6 +661,7 @@ class Payment extends React.Component {
                                     <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                                 </div>
                             </div>
+                            {errorContainer}
                         </div>
 
 
@@ -739,19 +738,19 @@ class ProgressBar extends React.Component {
                 <div className='row'>
                     <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
                         <div style={this.props.pageNum === 1 ? onStyle : offStyle} />
-                        <p>Packages</p>
-                    </div>
-                    <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-                        <div style={this.props.pageNum === 2 ? onStyle : offStyle} />
                         <p>Athlete</p>
                     </div>
                     <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-                        <div style={this.props.pageNum === 3 ? onStyle : offStyle} />
+                        <div style={this.props.pageNum === 2 ? onStyle : offStyle} />
                         <p>Agreement</p>
                     </div>
                     <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-                        <div style={this.props.pageNum === 4 ? onStyle : offStyle} />
+                        <div style={this.props.pageNum === 3 ? onStyle : offStyle} />
                         <p>Payment</p>
+                    </div>
+                    <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
+                        <div style={this.props.pageNum === 4 ? onStyle : offStyle} />
+                        <p>Done!</p>
                     </div>
 
                 </div>
