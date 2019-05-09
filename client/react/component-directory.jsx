@@ -76,7 +76,6 @@ if (currentPage.indexOf('account') !== -1) {
 } else if (currentPage.indexOf('events') !== -1) {
     render(<Login />, document.getElementById('login'))
     render(<Events />, document.getElementById('events-container'))
-    render(<Competition />, document.getElementById('competition-page'))
 } else if(currentPage.indexOf('compete') !== -1){
   if(currentPage.indexOf('info') !== -1){
     render(<Login />, document.getElementById('login'))
