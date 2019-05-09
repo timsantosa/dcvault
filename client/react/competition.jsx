@@ -19,7 +19,7 @@ class Competition extends React.Component {
 
     advance (page, info) {
         let updatedData = this.state.data
-        let newPageNum = this.state.pageNum + 2
+        let newPageNum = this.state.pageNum + 1
         updatedData[page] = info
         this.setState({
             pageNum: newPageNum,
@@ -28,17 +28,13 @@ class Competition extends React.Component {
 
         if (newPageNum === 2) {
             this.setState({
-                currentPage: (<AthleteInfo advance={this.advance.bind(this)} />)
+                currentPage: (<Agreement advance={this.advance.bind(this)} />)
             })
         } else if (newPageNum === 3) {
             this.setState({
-                currentPage: (<Agreement advance={this.advance.bind(this)} />)
-            })
-        } else if (newPageNum === 4) {
-            this.setState({
                 currentPage: (<Payment advance={this.advance.bind(this)} data={this.state.data} />)
             })
-        } else if (newPageNum === 5) {
+        } else if (newPageNum === 4) {
             this.setState({
                 currentPage: (<Confirmation advance={this.advance.bind(this)} data={this.state.data} />)
             })
