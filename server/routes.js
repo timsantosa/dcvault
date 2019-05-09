@@ -447,7 +447,6 @@ module.exports = (app, db) => {
                     emergencyContactName: athlete['emergency-contact'],
                     emergencyContactRelation: athlete['emergency-relation'],
                     emergencyContactMDN: athlete['emergency-phone'],
-                    school: athlete.school,
                     state: athlete.state,
                     usatf: athlete.usatf,
                     gender: athlete.gender,
