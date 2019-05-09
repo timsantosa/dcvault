@@ -461,7 +461,7 @@ module.exports = (app, db) => {
                 } else {
                     return foundAthlete.update(athleteData)
                 }
-            }).then((newAthlete) => {
+            }).then(() => {
                 let purchaseInfo = req.body.purchaseInfo
                 db.tables.EventPurchases.create({
                     waiverSignatory: purchaseInfo.agreement.name,

@@ -45,6 +45,22 @@ columns.athletes = {
   // User FK
 }
 
+columns.eventAthletes = {
+    firstName: Sequelize.STRING,
+    lastName: Sequelize.STRING,
+    email: {type: Sequelize.STRING, unique: false},
+    dob: Sequelize.STRING,
+    pr: Sequelize.FLOAT,
+    team: Sequelize.STRING,
+    usatf: Sequelize.STRING,
+    emergencyContactName: Sequelize.STRING,
+    emergencyContactMDN: Sequelize.STRING,
+    emergencyContactRelation: Sequelize.STRING,
+    gender: Sequelize.STRING,
+    state: Sequelize.STRING,
+    accomplishments: Sequelize.TEXT
+}
+
 columns.poles = {
   brand: Sequelize.STRING,
   feet: Sequelize.INTEGER,
@@ -79,6 +95,15 @@ columns.purchases = {
   waiverDate: Sequelize.STRING,
   paymentId: Sequelize.STRING,
   payerId: Sequelize.STRING
+}
+
+columns.eventPurchases = {
+    waiverSignatory: Sequelize.STRING,
+    waiverDate: Sequelize.STRING,
+    paymentId: Sequelize.STRING,
+    payerId: Sequelize.STRING,
+    athlete: Sequelize.STRING
+
 }
 
 columns.sites = {
@@ -123,6 +148,8 @@ const syncTables = (schema, force) => {
   tables.Invites = schema.define('invite', columns.invites)
   tables.Addresses = schema.define('address', columns.addresses)
   tables.TrainingOptions = schema.define('trainingOptions', columns.trainingOptions)
+  tables.EventAthletes = schema.define('eventAthletes', columns.eventAthletes)
+  tables.EventPurchases = schema.define('eventPurchases', columns.eventPurchases)
 
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
