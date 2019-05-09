@@ -147,7 +147,7 @@ class AthleteInfo extends React.Component {
         let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'accomplishments']
         let complete = true
 
-        let output = parseFormValues($('#athlete-info').serializeArray())
+        let output = parseFormValues($('#event-athlete-info').serializeArray())
 
 
         if (output.email.length !== 0 && !apiHelpers.validateEmail(output.email)) {
@@ -245,7 +245,7 @@ class AthleteInfo extends React.Component {
         return (
             <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
-                    <form id='athlete-info' className='form-labels-on-top'>
+                    <form id='event-athlete-info' className='form-labels-on-top'>
 
                         <div className='form-title-row'>
                             <h1>Athlete Information</h1>
@@ -565,7 +565,7 @@ class Payment extends React.Component {
 
     componentDidMount () {
         this.calculatePrice()
-        $('#payment').submit((e) => {
+        $('#event-payment').submit((e) => {
             e.preventDefault()
         })
     }
@@ -649,7 +649,7 @@ class Payment extends React.Component {
         return (
             <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
-                    <form id='payment' className='form-labels-on-top'>
+                    <form id='event-payment' className='form-labels-on-top'>
                         <div className='form-title-row'>
                             <h1>Finalize Payment</h1>
                         </div>

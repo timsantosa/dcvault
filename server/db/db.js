@@ -50,7 +50,7 @@ columns.eventAthletes = {
     lastName: Sequelize.STRING,
     email: {type: Sequelize.STRING, unique: false},
     dob: Sequelize.STRING,
-    pr: Sequelize.DOUBLE,
+    pr: Sequelize.FLOAT,
     team: Sequelize.STRING,
     usatf: Sequelize.STRING,
     emergencyContactName: Sequelize.STRING,
