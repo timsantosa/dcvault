@@ -622,7 +622,7 @@ class Payment extends React.Component {
     continue (data) {
         this.props.advance('payment', {
             paymentId: data.paymentID,
-            payerId: data.payerID,
+            payerId: data.payerID
         })
     }
 

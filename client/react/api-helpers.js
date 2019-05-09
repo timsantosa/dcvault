@@ -196,7 +196,7 @@ apiHelpers.finalizePayment = (purchaseInfo) => {
 
 apiHelpers.finalizeEventPayment = (purchaseInfo) => {
   let token = getToken()
-    return aios.post('/event/finalize', {purchaseInfo: purchaseInfo, token: token})
+    return axios.post('/event/finalize', {purchaseInfo: purchaseInfo, token: token})
         .then((response) => {
           return response
         }).catch((error) => {
