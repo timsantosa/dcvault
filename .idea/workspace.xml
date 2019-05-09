@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/server/routes.js" afterPath="$PROJECT_DIR$/server/routes.js" />
+      <change beforePath="$PROJECT_DIR$/server/db/db.js" afterPath="$PROJECT_DIR$/server/db/db.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -22,8 +22,8 @@
             <file leaf-file-name="register.jsx" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="285">
-                    <caret line="984" column="41" lean-forward="true" selection-start-line="984" selection-start-column="41" selection-end-line="984" selection-end-column="41" />
+                  <state relative-caret-position="645">
+                    <caret line="1008" column="35" lean-forward="true" selection-start-line="1008" selection-start-column="35" selection-end-line="1008" selection-end-column="35" />
                     <folding />
                   </state>
                 </provider>
@@ -82,21 +82,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="routes.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
+            <state relative-caret-position="81">
               <caret line="447" column="43" lean-forward="true" selection-start-line="447" selection-start-column="43" selection-end-line="447" selection-end-column="43" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="db.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/db/db.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-148">
-              <caret line="20" column="28" lean-forward="true" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+            <state relative-caret-position="276">
+              <caret line="158" column="0" lean-forward="true" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -199,8 +199,8 @@
         <option value="$PROJECT_DIR$/server/lib/helpers.js" />
         <option value="$PROJECT_DIR$/client/react/competition.jsx" />
         <option value="$PROJECT_DIR$/client/react/api-helpers.js" />
-        <option value="$PROJECT_DIR$/server/db/db.js" />
         <option value="$PROJECT_DIR$/server/routes.js" />
+        <option value="$PROJECT_DIR$/server/db/db.js" />
       </list>
     </option>
   </component>
@@ -213,6 +213,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="-31" />
     <option name="y" value="23" />
     <option name="width" value="884" />
     <option name="height" value="816" />
@@ -350,15 +351,15 @@
       <workItem from="1557420219498" duration="256000" />
       <workItem from="1557420805030" duration="4000" />
       <workItem from="1557422140954" duration="2041000" />
-      <workItem from="1557427639455" duration="8587000" />
+      <workItem from="1557427639455" duration="8940000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51470000" />
+    <option name="totallyTimeSpent" value="51823000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="884" height="816" extended-state="0" />
+    <frame x="-31" y="23" width="884" height="816" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24773756" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -670,14 +671,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="984" column="41" lean-forward="true" selection-start-line="984" selection-start-column="41" selection-end-line="984" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="128">
@@ -724,18 +717,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/db/db.js">
+    <entry file="file://$PROJECT_DIR$/server/routes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-148">
-          <caret line="20" column="28" lean-forward="true" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+        <state relative-caret-position="81">
+          <caret line="447" column="43" lean-forward="true" selection-start-line="447" selection-start-column="43" selection-end-line="447" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/routes.js">
+    <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="447" column="43" lean-forward="true" selection-start-line="447" selection-start-column="43" selection-end-line="447" selection-end-column="43" />
+        <state relative-caret-position="645">
+          <caret line="1008" column="35" lean-forward="true" selection-start-line="1008" selection-start-column="35" selection-end-line="1008" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/db/db.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="158" column="0" lean-forward="true" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
           <folding />
         </state>
       </provider>
