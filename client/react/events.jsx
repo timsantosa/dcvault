@@ -267,7 +267,7 @@ class Events extends React.Component {
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
                     <li>Registration closes June 27th (no late entries)</li>
-                    <li>Registration Fee - $35</li>
+                    <li>Registration Fee - $35 early registration. $50 after June 5th.</li>
                     <li>Online Registration information coming soon.</li>
                 </ul>
                 <span className='event-block-details-header'>Team Competition</span>
