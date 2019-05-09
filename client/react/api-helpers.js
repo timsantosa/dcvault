@@ -194,6 +194,16 @@ apiHelpers.finalizePayment = (purchaseInfo) => {
   })
 }
 
+apiHelpers.finalizeEventPayment = (purchaseInfo) => {
+  let token = getToken()
+    return aios.post('/event/finalize', {purchaseInfo: purchaseInfo, token: token})
+        .then((response) => {
+          return response
+        }).catch((error) => {
+          return error.response
+        })
+}
+
 apiHelpers.validateEmail = (email) => {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ // eslint-disable-line
   return re.test(email)
@@ -243,6 +253,9 @@ apiHelpers.resendVerification = (email) => {
 
 apiHelpers.sendConfirmationEmail = (email) => {
   return axios.post('/registration/confirm', {email: email})
+}
+apiHelpers.sendEventConfirmationEmail = (email) => {
+    return axios.post('/event/confirm', {email: email})
 }
 
 apiHelpers.getDiscountAmount = (code) => {

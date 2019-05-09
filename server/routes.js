@@ -433,6 +433,60 @@ module.exports = (app, db) => {
     }
   })
 
+    app.post('/event/finalize', (req, res) => {
+        if (!req.body.purchaseInfo || !req.body.token) {
+            res.status(400).send({ok: false, message: 'missing purchase details'})
+        } else {
+            let athlete = req.body.purchaseInfo.athleteInfo
+            db.tables.EventAthletes.findOne({where: {firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob}}).then((foundAthlete) => {
+                let athleteData = {
+                    firstName: athlete.fname,
+                    lastName: athlete.lname,
+                    dob: athlete.dob,
+                    email: athlete.email,
+                    emergencyContactName: athlete['emergency-contact'],
+                    emergencyContactRelation: athlete['emergency-relation'],
+                    emergencyContactMDN: athlete['emergency-phone'],
+                    school: athlete.school,
+                    state: athlete.state,
+                    usatf: athlete.usatf,
+                    gender: athlete.gender,
+                    pr: athlete.pr,
+                    team: athlete.team,
+                    accomplishments: athlete.accomplishments
+
+                }
+                if (!foundAthlete) {
+                    return db.tables.EventAthletes.create(athleteData)
+                } else {
+                    return foundAthlete.update(athleteData)
+                }
+            }).then((newAthlete) => {
+                let purchaseInfo = req.body.purchaseInfo
+                db.tables.EventPurchases.create({
+                    waiverSignatory: purchaseInfo.agreement.name,
+                    waiverDate: purchaseInfo.agreement.date,
+                    paymentId: purchaseInfo.payment.paymentId,
+                    payerId: purchaseInfo.payment.payerId,
+                    athlete: athlete.fname + athlete.lname
+                })
+            })
+                .catch((error) => {
+                    res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
+                })
+        }
+    })
+
+    app.post('/event/confirm', (req, res) => {
+        let email = req.body.email
+        if (email) {
+            helpers.sendEventConfirmationEmails(email)
+            res.send({ok: true, message: 'email sent'})
+        } else {
+            res.status(400).send({ok: false, message: 'no or bad email'})
+        }
+    })
+
   app.get('/registration/options', (req, res) => {
     db.tables.TrainingOptions.find({where: {id: 1}}).then(options => {
       if (!options) {

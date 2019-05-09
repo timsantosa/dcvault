@@ -109,12 +109,27 @@ module.exports.sendConfirmationEmails = (email) => {
     ]
   }
 
+
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       return console.log(error)
     }
     console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
   })
+}
+module.exports.sendEventConfirmationEmails = (email) => {
+    let mailOptions = {
+        from: '"DC Vault" <' + config.email.username + '>', // sender address
+        subject: 'Welcome to DC Vault', // Subject line
+        to: email,
+        html: '<p>Thank you for registering for the Independence Day Pole Vault Championships. Please review the content below closely and let us know if you have any questions.</p>',
+    }
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error)
+        }
+        console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+    })
 }
 
 module.exports.randString = (len) => {

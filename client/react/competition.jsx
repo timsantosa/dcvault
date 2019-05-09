@@ -551,7 +551,7 @@ class Payment extends React.Component {
         super(props)
         let price
         if (new Date('June 5, 2019' > new Date())) {
-            price = 50
+            price = .01
         } else {
             price = 35
         }
@@ -689,7 +689,7 @@ class Confirmation extends React.Component {
             message: 'Please wait, your purchase is being processed'
         }
 
-        apiHelpers.finalizePayment(this.props.data)
+        apiHelpers.finalizeEventPayment(this.props.data)
             .then((response) => {
                 if (!response.data.ok) {
                     this.setState({
@@ -704,7 +704,7 @@ class Confirmation extends React.Component {
 
                     //Send the athlete a confirmation email
                     if (apiHelpers.validateEmail(athleteEmail)) {
-                        apiHelpers.sendConfirmationEmail(athleteEmail)
+                        apiHelpers.sendEventConfirmationEmail(athleteEmail)
                     }
                 }
             })
