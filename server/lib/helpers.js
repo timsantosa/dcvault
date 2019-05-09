@@ -117,6 +117,29 @@ module.exports.sendConfirmationEmails = (email) => {
   })
 }
 
+//Use this helper to send confirmation emails for event registration
+module.exports.sendEventEmails = (email) => {
+    let mailOptions = {
+        from: '"DC Vault" <' + config.email.username + '>', // sender address
+        subject: 'Welcome to DC Vault', // Subject line
+        to: email,
+        html: '<p>Thank you for registering for our DC Vault Independence Day Pole Vault Championships. Let us know if you have any questions.</p>\',
+        attachments: [
+            {
+                filename: 'DC Vault Parking Pass.pdf',
+                path: path.join(__dirname, '/../files/parking-pass.pdf')
+            }
+        ]
+    }
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error)
+        }
+        console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+    })
+}
+
 module.exports.randString = (len) => {
   len = len || 16
   let retVal = ''

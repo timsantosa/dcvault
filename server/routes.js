@@ -471,6 +471,76 @@ module.exports = (app, db) => {
     })
   })
 
+    //Need to update this after finishing backend
+    app.post('/event/finalize', (req, res) => {
+        if (!req.body.purchaseInfo || !req.body.token) {
+            res.status(400).send({ok: false, message: 'missing purchase details'})
+        } else {
+            let user = jwt.decode(req.body.token, config.auth.secret)
+            db.tables.Users.find({where: {id: user.id, email: user.email}}).then((user) => {
+                if (!user) {
+                    res.status(403).send({ok: false, message: 'bad user token'})
+                } else {
+                    let athlete = req.body.purchaseInfo.athleteInfo
+                    db.tables.Athletes.findOne({where: {firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob}}).then((foundAthlete) => {
+                        let athleteData = {
+                            firstName: athlete.fname,
+                            lastName: athlete.lname,
+                            dob: athlete.dob,
+                            email: athlete.email,
+                            emergencyContactName: athlete['emergency-contact'],
+                            emergencyContactRelation: athlete['emergency-relation'],
+                            emergencyContactMDN: athlete['emergency-phone'],
+                            school: athlete.school,
+                            state: athlete.state,
+                            usatf: athlete.usatf,
+                            gender: athlete.gender,
+                            userId: user.id,
+                            medConditions: athlete.conditions
+                        }
+                        if (!foundAthlete) {
+                            return db.tables.Athletes.create(athleteData)
+                        } else {
+                            return foundAthlete.update(athleteData)
+                        }
+                    }).then((newAthlete) => {
+                        let purchaseInfo = req.body.purchaseInfo
+                        let athleteId = newAthlete.dataValues.id
+                        let userId = newAthlete.dataValues.userId
+                        db.tables.Purchases.create({
+                            athleteId: athleteId,
+                            userId: userId,
+                            quarter: purchaseInfo.selectPackage.quarter,
+                            group: purchaseInfo.selectPackage.group,
+                            facility: purchaseInfo.selectPackage.facility,
+                            waiverSignatory: purchaseInfo.agreement.name,
+                            waiverDate: purchaseInfo.agreement.date,
+                            paymentId: purchaseInfo.payment.paymentId,
+                            payerId: purchaseInfo.payment.payerId
+                        }).then(() => {
+                            db.tables.Invites.destroy({where: {code: purchaseInfo.selectPackage.invite}})
+                            db.tables.Discounts.destroy({where: {code: purchaseInfo.payment.discount}})
+                            res.send({ok: true, message: 'purchase record saved'})
+                        })
+                    })
+                }
+            })
+                .catch((error) => {
+                    res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
+                })
+        }
+    })
+
+    app.post('/event/confirm', (req, res) => {
+        let email = req.body.email
+        if (email) {
+            helpers.sendConfirmationEmails(email)
+            res.send({ok: true, message: 'email sent'})
+        } else {
+            res.status(400).send({ok: false, message: 'no or bad email'})
+        }
+    })
+
   // DELETE REQ?
 
   // End Registration Endpoints
