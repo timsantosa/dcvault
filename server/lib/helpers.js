@@ -123,7 +123,7 @@ module.exports.sendEventEmails = (email) => {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
         subject: 'Welcome to DC Vault', // Subject line
         to: email,
-        html: '<p>Thank you for registering for our DC Vault Independence Day Pole Vault Championships. Let us know if you have any questions.</p>\',
+        html: '<p>Thank you for registering for our DC Vault Independence Day Pole Vault Championships. Let us know if you have any questions.</p>',
         attachments: [
             {
                 filename: 'DC Vault Parking Pass.pdf',

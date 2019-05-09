@@ -77,7 +77,14 @@ if (currentPage.indexOf('account') !== -1) {
     render(<Login />, document.getElementById('login'))
     render(<Events />, document.getElementById('events-container'))
     render(<Competition />, document.getElementById('competition-page'))
-} else {
+} else if(currentPage.indexOf('compete') !== -1){
+  if(currentPage.indexOf('info') !== -1){
+    render(<Login />, document.getElementById('login'))
+  }else{
+    render(<Login />, document.getElementById('login'))
+    render(<Competition />, document.getElementById('competition-page'))
+  }
+} else{
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))
   render(<Training />, document.getElementById('training'))
