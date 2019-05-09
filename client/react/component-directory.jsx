@@ -68,7 +68,7 @@ if (currentPage.indexOf('account') !== -1) {
     render(<Login />, document.getElementById('login'))
     render(<Register />, document.getElementById('registration-page'))
   }
-} else if (currentPage.indexOf('admin') !== -1) {
+} else if (currentPage.indexOf('admin') !== -1) {//test page
   render(<AdminPanel />, document.getElementById('admin-panel'))
 } else if (currentPage.indexOf('poles') !== -1) {
   render(<PoleApp />, document.getElementById('pole-panel'))
