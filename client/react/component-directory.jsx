@@ -10,7 +10,7 @@ import ContactModal from './contact-modal.jsx'
 import GenericModal from './generic-modal.jsx'
 import PoleApp from './pole-app.jsx'
 import Events from './events.jsx'
-import Competition from './competition'
+import Competition from './competition.jsx'
 
 let currentPage = window.location.pathname
 let hashString = window.location.hash
