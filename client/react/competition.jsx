@@ -71,7 +71,7 @@ class Competition extends React.Component {
         if (this.state.registrationOpen) {
             return (
                 <section id='competition'>
-                    <div className='containter'>
+                    <div className='container'>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
                                 <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>If you have any trouble registering, wish to clarify any of the information, or would like to learn more about our events, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>click here</a> to contact us.</p>
@@ -465,7 +465,7 @@ class Agreement extends React.Component {
             errorText: ''
         })
 
-        let output = parseFormValues($('#agreement').serializeArray())
+        let output = parseFormValues($('#event-agreement').serializeArray())
 
         if (!output.hasOwnProperty('name') || !output.hasOwnProperty('date')) {
             this.setState({
@@ -499,7 +499,7 @@ class Agreement extends React.Component {
         return (
             <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
-                    <form id='agreement' className='form-labels-on-top'>
+                    <form id='event-agreement' className='form-labels-on-top'>
                         <div className='form-title-row'>
                             <h1>Waiver Agreement</h1>
                         </div>
@@ -620,7 +620,7 @@ class Payment extends React.Component {
     }
 
     continue (data) {
-        this.props.advance('payment', {
+        this.props.advance('event-payment', {
             paymentId: data.paymentID,
             payerId: data.payerID
         })
@@ -713,7 +713,7 @@ class Confirmation extends React.Component {
         return (
             <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
-                    <form id='confirmation' className='form-labels-on-top'>
+                    <form id='event-confirmation' className='form-labels-on-top'>
                         <div className='form-title-row'>
                             <h1>{this.state.title}</h1>
                         </div>

@@ -437,22 +437,22 @@ module.exports = (app, db) => {
         if (!req.body.purchaseInfo || !req.body.token) {
             res.status(400).send({ok: false, message: 'missing purchase details'})
         } else {
-            let athlete = req.body.purchaseInfo.athleteInfo
-            db.tables.EventAthletes.findOne({where: {firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob}}).then((foundAthlete) => {
+            let event_athlete = req.body.purchaseInfo.athleteInfo
+            db.tables.EventAthletes.findOne({where: {firstName: event_athlete.fname, lastName: event_athlete.lname, dob: event_athlete.dob}}).then((foundAthlete) => {
                 let athleteData = {
-                    firstName: athlete.fname,
-                    lastName: athlete.lname,
-                    dob: athlete.dob,
-                    email: athlete.email,
-                    emergencyContactName: athlete['emergency-contact'],
-                    emergencyContactRelation: athlete['emergency-relation'],
-                    emergencyContactMDN: athlete['emergency-phone'],
-                    state: athlete.state,
-                    usatf: athlete.usatf,
-                    gender: athlete.gender,
-                    pr: athlete.pr,
-                    team: athlete.team,
-                    accomplishments: athlete.accomplishments
+                    firstName: event_athlete.fname,
+                    lastName: event_athlete.lname,
+                    dob: event_athlete.dob,
+                    email: event_athlete.email,
+                    emergencyContactName: event_athlete['emergency-contact'],
+                    emergencyContactRelation: event_athlete['emergency-relation'],
+                    emergencyContactMDN: event_athlete['emergency-phone'],
+                    state: event_athlete.state,
+                    usatf: event_athlete.usatf,
+                    gender: event_athlete.gender,
+                    pr: event_athlete.pr,
+                    team: event_athlete.team,
+                    accomplishments: event_athlete.accomplishments
 
                 }
                 if (!foundAthlete) {
@@ -467,7 +467,7 @@ module.exports = (app, db) => {
                     waiverDate: purchaseInfo.agreement.date,
                     paymentId: purchaseInfo.payment.paymentId,
                     payerId: purchaseInfo.payment.payerId,
-                    athlete: athlete.fname + athlete.lname
+                    athlete: event_athlete.fname + event_athlete.lname
                 })
             })
                 .catch((error) => {
