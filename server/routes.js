@@ -56,7 +56,6 @@ module.exports = (app, db) => {
   })
 
   app.post('/poles/add', (req, res) => {
-    console.log("ADDED POLE")
     if (!req.body.token || !req.body.newPole) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
@@ -442,6 +441,7 @@ module.exports = (app, db) => {
             let event_athlete = req.body.purchaseInfo.athleteInfo
             console.log(req.body.purchaseInfo)
             db.tables.EventAthletes.findOne({where: {firstName: event_athlete.fname, lastName: event_athlete.lname, dob: event_athlete.dob}}).then((foundAthlete) => {
+              console.log("Start findOne")
                 let athleteData = {
                     firstName: event_athlete.fname,
                     lastName: event_athlete.lname,
@@ -459,7 +459,9 @@ module.exports = (app, db) => {
 
                 }
                 if (!foundAthlete) {
+                    console.log("New Athlete")
                     return db.tables.EventAthletes.create(athleteData)
+                    console.log("New Athlete Created")
                 } else {
                     return foundAthlete.update(athleteData)
                 }
@@ -472,6 +474,7 @@ module.exports = (app, db) => {
                     payerId: purchaseInfo.payment.payerId,
                     athlete: event_athlete.fname + event_athlete.lname
                 })
+                console.log("purchase info added")
             })
                 .catch((error) => {
                     res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
