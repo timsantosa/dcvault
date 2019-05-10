@@ -71,6 +71,7 @@ module.exports = (app, db) => {
           res.status(400).send({ok: false, message: 'bad JSON in newPole'})
         } else {
           db.tables.Poles.create(newPole).then(newPole => {
+            console.log(newPole)
             res.send({ok: true, message: 'pole record added successfully', newPole})
           })
         }
@@ -464,8 +465,8 @@ module.exports = (app, db) => {
             db.tables.EventPurchases.create({
                 waiverSignatory: purchaseInfo.agreement.name,
                 waiverDate: purchaseInfo.agreement.date,
-                paymentId: purchaseInfo.payment.paymentId,
-                payerId: purchaseInfo.payment.payerId,
+                paymentId: purchaseInfo.event-payment.paymentId,
+                payerId: purchaseInfo.event-payment.payerId,
                 athlete: event_athlete.fname + event_athlete.lname
             })
             console.log("purchase info added")
