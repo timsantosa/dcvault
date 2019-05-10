@@ -471,7 +471,7 @@ module.exports = (app, db) => {
                 })
             })
                 .catch((error) => {
-                    res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
+                    res.status(501).send({ok: false, message: 'a db error has occurred', error: error})
                 })
         }
     })
