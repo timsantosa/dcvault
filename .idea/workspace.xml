@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/server/db/db.js" afterPath="$PROJECT_DIR$/server/db/db.js" />
       <change beforePath="$PROJECT_DIR$/server/routes.js" afterPath="$PROJECT_DIR$/server/routes.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -63,7 +64,7 @@
       <file leaf-file-name="api-helpers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/api-helpers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
+            <state relative-caret-position="1355">
               <caret line="189" column="23" lean-forward="true" selection-start-line="189" selection-start-column="23" selection-end-line="189" selection-end-column="23" />
               <folding />
             </state>
@@ -73,8 +74,8 @@
       <file leaf-file-name="routes.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-361">
-              <caret line="63" column="40" lean-forward="true" selection-start-line="63" selection-start-column="40" selection-end-line="63" selection-end-column="40" />
+            <state relative-caret-position="368">
+              <caret line="459" column="0" lean-forward="true" selection-start-line="459" selection-start-column="0" selection-end-line="459" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -83,8 +84,8 @@
       <file leaf-file-name="db.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/db/db.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1729">
-              <caret line="151" column="53" lean-forward="false" selection-start-line="151" selection-start-column="53" selection-end-line="151" selection-end-column="53" />
+            <state relative-caret-position="398">
+              <caret line="152" column="52" lean-forward="false" selection-start-line="152" selection-start-column="52" selection-end-line="152" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -123,7 +124,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>email</find>
       <find>confirmation</find>
       <find>registration/confirm</find>
       <find>SelectPackage</find>
@@ -152,6 +152,7 @@
       <find>athlete</find>
       <find>event-athlete</find>
       <find>athleteinfo</find>
+      <find>event</find>
       <find>purchase</find>
     </findStrings>
     <dirStrings>
@@ -182,9 +183,9 @@
         <option value="$PROJECT_DIR$/client/compete/index.html" />
         <option value="$PROJECT_DIR$/client/react/component-directory.jsx" />
         <option value="$PROJECT_DIR$/server/lib/helpers.js" />
-        <option value="$PROJECT_DIR$/server/db/db.js" />
         <option value="$PROJECT_DIR$/client/react/competition.jsx" />
         <option value="$PROJECT_DIR$/client/react/api-helpers.js" />
+        <option value="$PROJECT_DIR$/server/db/db.js" />
         <option value="$PROJECT_DIR$/server/routes.js" />
       </list>
     </option>
@@ -342,12 +343,12 @@
       <workItem from="1557420219498" duration="256000" />
       <workItem from="1557420805030" duration="4000" />
       <workItem from="1557422140954" duration="2041000" />
-      <workItem from="1557427639455" duration="15702000" />
+      <workItem from="1557427639455" duration="16464000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58585000" />
+    <option name="totallyTimeSpent" value="59347000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="980" extended-state="6" />
@@ -691,16 +692,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="690" column="39" lean-forward="false" selection-start-line="690" selection-start-column="19" selection-end-line="690" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/lib/helpers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-168">
@@ -708,14 +699,6 @@
           <folding>
             <marker date="1557435066779" expanded="true" signature="4726:4899" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/db/db.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1729">
-          <caret line="151" column="53" lean-forward="false" selection-start-line="151" selection-start-column="53" selection-end-line="151" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -737,9 +720,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="690" column="39" lean-forward="false" selection-start-line="690" selection-start-column="19" selection-end-line="690" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/db/db.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="152" column="52" lean-forward="false" selection-start-line="152" selection-start-column="52" selection-end-line="152" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client/react/api-helpers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
+        <state relative-caret-position="1355">
           <caret line="189" column="23" lean-forward="true" selection-start-line="189" selection-start-column="23" selection-end-line="189" selection-end-column="23" />
           <folding />
         </state>
@@ -747,8 +748,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/routes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-361">
-          <caret line="63" column="40" lean-forward="true" selection-start-line="63" selection-start-column="40" selection-end-line="63" selection-end-column="40" />
+        <state relative-caret-position="368">
+          <caret line="459" column="0" lean-forward="true" selection-start-line="459" selection-start-column="0" selection-end-line="459" selection-end-column="0" />
           <folding />
         </state>
       </provider>

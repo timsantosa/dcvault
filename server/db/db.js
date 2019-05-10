@@ -43,6 +43,7 @@ columns.athletes = {
   school: Sequelize.STRING,
   medConditions: Sequelize.TEXT
   // User FK
+
 }
 
 columns.eventAthletes = {
@@ -59,6 +60,7 @@ columns.eventAthletes = {
     gender: Sequelize.STRING,
     state: Sequelize.STRING,
     accomplishments: Sequelize.TEXT
+
 }
 
 columns.poles = {

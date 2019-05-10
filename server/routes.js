@@ -444,23 +444,23 @@ module.exports = (app, db) => {
             let athleteData = {
                 firstName: event_athlete.fname,
                 lastName: event_athlete.lname,
-                dob: event_athlete.dob,
                 email: event_athlete.email,
-                emergencyContactName: event_athlete['emergency-contact'],
-                emergencyContactRelation: event_athlete['emergency-relation'],
-                emergencyContactMDN: event_athlete['emergency-phone'],
-                state: event_athlete.state,
-                usatf: event_athlete.usatf,
-                gender: event_athlete.gender,
+                dob: event_athlete.dob,
                 pr: event_athlete.pr,
                 team: event_athlete.team,
+                usatf: event_athlete.usatf,
+                emergencyContactName: event_athlete['emergency-contact'],
+                emergencyContactMDN: event_athlete['emergency-phone'],
+                emergencyContactRelation: event_athlete['emergency-relation'],
+                gender: event_athlete.gender,
+                state: event_athlete.state,
                 accomplishments: event_athlete.accomplishments
 
             }
 
             db.tables.EventAthletes.create(athleteData)
             console.log("Athlete Created")
-
+            /*
             let purchaseInfo = req.body.purchaseInfo
             db.tables.EventPurchases.create({
                 waiverSignatory: purchaseInfo.agreement.name,
@@ -469,6 +469,7 @@ module.exports = (app, db) => {
                 payerId: purchaseInfo.event-payment.payerId,
                 athlete: event_athlete.fname + event_athlete.lname
             })
+            */
             console.log("purchase info added")
                 .catch((error) => {
                     res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
