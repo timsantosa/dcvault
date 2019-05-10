@@ -438,6 +438,7 @@ module.exports = (app, db) => {
             res.status(400).send({ok: false, message: 'missing purchase details'})
         } else {
             let event_athlete = req.body.purchaseInfo.athleteInfo
+            console.log(req.body.purchaseInfo)
             db.tables.EventAthletes.findOne({where: {firstName: event_athlete.fname, lastName: event_athlete.lname, dob: event_athlete.dob}}).then((foundAthlete) => {
                 let athleteData = {
                     firstName: event_athlete.fname,
@@ -471,7 +472,7 @@ module.exports = (app, db) => {
                 })
             })
                 .catch((error) => {
-                    res.status(501).send({ok: false, message: 'a db error has occurred', error: error})
+                    res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
                 })
         }
     })
