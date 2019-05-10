@@ -56,6 +56,7 @@ module.exports = (app, db) => {
   })
 
   app.post('/poles/add', (req, res) => {
+    console.log("ADDED POLE")
     if (!req.body.token || !req.body.newPole) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
