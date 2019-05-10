@@ -434,6 +434,7 @@ module.exports = (app, db) => {
   })
 
     app.post('/event/finalize', (req, res) => {
+      console.log("Start Request")
         if (!req.body.purchaseInfo || !req.body.token) {
             res.status(400).send({ok: false, message: 'missing purchase details'})
         } else {
