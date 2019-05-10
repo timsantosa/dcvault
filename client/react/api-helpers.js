@@ -195,7 +195,6 @@ apiHelpers.finalizePayment = (purchaseInfo) => {
 }
 
 apiHelpers.finalizeEventPayment = (purchaseInfo) => {
-  console.log("api helper")
   let token = getToken()
     return axios.post('/event/finalize', {purchaseInfo: purchaseInfo, token: token})
         .then((response) => {

@@ -440,42 +440,35 @@ module.exports = (app, db) => {
         } else {
             let event_athlete = req.body.purchaseInfo.athleteInfo
             console.log(req.body.purchaseInfo)
-            db.tables.EventAthletes.findOne({where: {firstName: event_athlete.fname, lastName: event_athlete.lname, dob: event_athlete.dob}}).then((foundAthlete) => {
-              console.log("Start findOne")
-                let athleteData = {
-                    firstName: event_athlete.fname,
-                    lastName: event_athlete.lname,
-                    dob: event_athlete.dob,
-                    email: event_athlete.email,
-                    emergencyContactName: event_athlete['emergency-contact'],
-                    emergencyContactRelation: event_athlete['emergency-relation'],
-                    emergencyContactMDN: event_athlete['emergency-phone'],
-                    state: event_athlete.state,
-                    usatf: event_athlete.usatf,
-                    gender: event_athlete.gender,
-                    pr: event_athlete.pr,
-                    team: event_athlete.team,
-                    accomplishments: event_athlete.accomplishments
+            let athleteData = {
+                firstName: event_athlete.fname,
+                lastName: event_athlete.lname,
+                dob: event_athlete.dob,
+                email: event_athlete.email,
+                emergencyContactName: event_athlete['emergency-contact'],
+                emergencyContactRelation: event_athlete['emergency-relation'],
+                emergencyContactMDN: event_athlete['emergency-phone'],
+                state: event_athlete.state,
+                usatf: event_athlete.usatf,
+                gender: event_athlete.gender,
+                pr: event_athlete.pr,
+                team: event_athlete.team,
+                accomplishments: event_athlete.accomplishments
 
-                }
-                if (!foundAthlete) {
-                    console.log("New Athlete")
-                    return db.tables.EventAthletes.create(athleteData)
-                    console.log("New Athlete Created")
-                } else {
-                    return foundAthlete.update(athleteData)
-                }
-            }).then(() => {
-                let purchaseInfo = req.body.purchaseInfo
-                db.tables.EventPurchases.create({
-                    waiverSignatory: purchaseInfo.agreement.name,
-                    waiverDate: purchaseInfo.agreement.date,
-                    paymentId: purchaseInfo.payment.paymentId,
-                    payerId: purchaseInfo.payment.payerId,
-                    athlete: event_athlete.fname + event_athlete.lname
-                })
-                console.log("purchase info added")
+            }
+
+            db.tables.EventAthletes.create(athleteData)
+            console.log("Athlete Created")
+
+            let purchaseInfo = req.body.purchaseInfo
+            db.tables.EventPurchases.create({
+                waiverSignatory: purchaseInfo.agreement.name,
+                waiverDate: purchaseInfo.agreement.date,
+                paymentId: purchaseInfo.payment.paymentId,
+                payerId: purchaseInfo.payment.payerId,
+                athlete: event_athlete.fname + event_athlete.lname
             })
+            console.log("purchase info added")
                 .catch((error) => {
                     res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
                 })
