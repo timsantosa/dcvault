@@ -465,8 +465,8 @@ module.exports = (app, db) => {
             db.tables.EventPurchases.create({
                 waiverSignatory: purchaseInfo.agreement.name,
                 waiverDate: purchaseInfo.agreement.date,
-                paymentId: purchaseInfo.event-payment.paymentId,
-                payerId: purchaseInfo.event-payment.payerId,
+                paymentId: purchaseInfo['event-payment'].paymentId,
+                payerId: purchaseInfo['event-payment'].payerId,
                 athlete: event_athlete.fname + event_athlete.lname
             })
 
