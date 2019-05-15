@@ -467,6 +467,8 @@ module.exports = (app, db) => {
                 paymentId: purchaseInfo['event-payment'].paymentId,
                 payerId: purchaseInfo['event-payment'].payerId,
                 athlete: event_athlete.fname + event_athlete.lname
+            }).then(() => {
+                res.send({ok: true, message: 'purchase record saved'})
             })
                 .catch((error) => {
                     res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
