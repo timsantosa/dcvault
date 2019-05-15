@@ -150,8 +150,8 @@ const syncTables = (schema, force) => {
   tables.Invites = schema.define('invite', columns.invites)
   tables.Addresses = schema.define('address', columns.addresses)
   tables.TrainingOptions = schema.define('trainingOptions', columns.trainingOptions)
-  tables.EventAthletes = schema.define('eventAthletes', columns.eventAthletes)
-  tables.EventPurchases = schema.define('eventPurchases', columns.eventPurchases)
+  tables.EventAthletes = schema.define('eventAthlete', columns.eventAthletes)
+  tables.EventPurchases = schema.define('eventPurchase', columns.eventPurchases)
 
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
