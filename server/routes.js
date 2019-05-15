@@ -459,7 +459,6 @@ module.exports = (app, db) => {
             }
 
             db.tables.EventAthletes.create(athleteData)
-            console.log("Athlete Created")
 
             let purchaseInfo = req.body.purchaseInfo
             db.tables.EventPurchases.create({
@@ -469,8 +468,6 @@ module.exports = (app, db) => {
                 payerId: purchaseInfo['event-payment'].payerId,
                 athlete: event_athlete.fname + event_athlete.lname
             })
-
-            console.log("purchase info added")
                 .catch((error) => {
                     res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
                 })
