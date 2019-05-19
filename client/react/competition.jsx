@@ -26,15 +26,15 @@ class Competition extends React.Component {
             data: updatedData
         })
 
-        if (newPageNum === 2) {
+        if (newPageNum === 1) {
             this.setState({
                 currentPage: (<Agreement advance={this.advance.bind(this)} />)
             })
-        } else if (newPageNum === 3) {
+        } else if (newPageNum === 2) {
             this.setState({
                 currentPage: (<Payment advance={this.advance.bind(this)} data={this.state.data} />)
             })
-        } else if (newPageNum === 4) {
+        } else if (newPageNum === 3) {
             this.setState({
                 currentPage: (<Confirmation advance={this.advance.bind(this)} data={this.state.data} />)
             })
@@ -111,8 +111,7 @@ class AthleteInfo extends React.Component {
         super(props)
         this.state = {
             errorText: [],
-            showUSATFinfo: false,
-            pageNum: 1
+            showUSATFinfo: false
         }
     }
 

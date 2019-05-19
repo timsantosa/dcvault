@@ -19,8 +19,8 @@
       <file leaf-file-name="competition.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="365">
-              <caret line="105" column="0" lean-forward="true" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
+            <state relative-caret-position="178">
+              <caret line="113" column="32" lean-forward="false" selection-start-line="113" selection-start-column="32" selection-end-line="113" selection-end-column="32" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -31,7 +31,7 @@
       <file leaf-file-name="register.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10273">
+            <state relative-caret-position="11085">
               <caret line="739" column="44" lean-forward="false" selection-start-line="739" selection-start-column="44" selection-end-line="739" selection-end-column="44" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
@@ -370,12 +370,12 @@
       <workItem from="1557420805030" duration="4000" />
       <workItem from="1557422140954" duration="2041000" />
       <workItem from="1557427639455" duration="19398000" />
-      <workItem from="1557956650243" duration="7336000" />
+      <workItem from="1557956650243" duration="7624000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="69617000" />
+    <option name="totallyTimeSpent" value="69905000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="977" extended-state="6" />
@@ -770,7 +770,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10273">
+        <state relative-caret-position="11085">
           <caret line="739" column="44" lean-forward="false" selection-start-line="739" selection-start-column="44" selection-end-line="739" selection-end-column="44" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
@@ -780,8 +780,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="105" column="0" lean-forward="true" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
+        <state relative-caret-position="178">
+          <caret line="113" column="32" lean-forward="false" selection-start-line="113" selection-start-column="32" selection-end-line="113" selection-end-column="32" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
