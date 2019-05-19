@@ -120,9 +120,19 @@ module.exports.sendConfirmationEmails = (email) => {
 module.exports.sendEventConfirmationEmails = (email) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: 'Welcome to DC Vault', // Subject line
+        subject: 'July 4th Independence Day Championship', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the Independence Day Pole Vault Championships. Please review the content below closely and let us know if you have any questions.</p>',
+        html: '<p>Thank you for registering for the 2019 Independence Day Pole Vault Championships!</p>' +
+        '<br><br><p>- Please read over our online event information carefully and pay close attention to information regarding Spike use.</p>' +
+        '<p>- For your specific flight time, please check our online event information on July 1st when the final competitor Flights will be posted.</p>' +
+        '<p>- In the event you plan to store poles overnight, please let us know ahead of time as to which drop-off/pick-up window you intend to utilize.</p>' +
+        '<p>If you have other questions let us know - <a href="mailto:events@dcvault.org">Events@DCVault.org</a></p>',
+        attachments: [
+            {
+                filename: 'DC Vault Parking Pass.pdf',
+                path: path.join(__dirname, '/../files/parking-pass.pdf')
+            }
+        ]
     }
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
