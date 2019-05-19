@@ -111,7 +111,8 @@ class AthleteInfo extends React.Component {
         super(props)
         this.state = {
             errorText: [],
-            showUSATFinfo: false
+            showUSATFinfo: false,
+            pageNum: 1
         }
     }
 
