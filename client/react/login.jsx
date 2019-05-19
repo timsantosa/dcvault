@@ -236,7 +236,7 @@ class Login extends React.Component {
               <div className='col-xs-5 login-modal-element'>
                 Password:
               </div>
-              <div className='col-xs-7 login-modal-element'>
+              <div className='col-xs-12 login-modal-element'>
                 <input className='login-input' type='password' ref='passwordInput' />
                 {forgotButton}
               </div>
