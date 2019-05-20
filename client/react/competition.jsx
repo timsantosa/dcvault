@@ -294,7 +294,7 @@ class AthleteInfo extends React.Component {
 
                         <div className = 'form-row'>
                             <label>
-                                <span className = 'required'>Club/Team Name (Write N/A if unattached)</span>
+                                <span className = 'required'>Club/Team Name (N/A if unattached)</span>
                                 <input type = 'text' name = 'team'/>
                             </label>
                         </div>
@@ -412,7 +412,7 @@ class AthleteInfo extends React.Component {
 
                         <div className='form-row'>
                             <label>
-                                <span className='required'>Accomplishments</span>
+                                <span>Accomplishments</span>
                                 <textarea rows='6' cols='40' name='accomplishments' />
                             </label>
                         </div>
