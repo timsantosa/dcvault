@@ -19,8 +19,8 @@
       <file leaf-file-name="competition.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="405" column="73" lean-forward="true" selection-start-line="405" selection-start-column="73" selection-end-line="405" selection-end-column="73" />
+            <state relative-caret-position="291">
+              <caret line="555" column="22" lean-forward="true" selection-start-line="555" selection-start-column="22" selection-end-line="555" selection-end-column="22" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -135,7 +135,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>/registration/final</find>
       <find>tables</find>
       <find>training</find>
       <find>pr</find>
@@ -165,6 +164,7 @@
       <find>forgotBUt</find>
       <find>school</find>
       <find>conditions</find>
+      <find>.01</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/client/register</dir>
@@ -384,12 +384,12 @@
       <workItem from="1557420805030" duration="4000" />
       <workItem from="1557422140954" duration="2041000" />
       <workItem from="1557427639455" duration="19398000" />
-      <workItem from="1557956650243" duration="15794000" />
+      <workItem from="1557956650243" duration="16188000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78075000" />
+    <option name="totallyTimeSpent" value="78469000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="977" extended-state="0" />
@@ -797,8 +797,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="405" column="73" lean-forward="true" selection-start-line="405" selection-start-column="73" selection-end-line="405" selection-end-column="73" />
+        <state relative-caret-position="291">
+          <caret line="555" column="22" lean-forward="true" selection-start-line="555" selection-start-column="22" selection-end-line="555" selection-end-column="22" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>

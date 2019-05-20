@@ -551,9 +551,9 @@ class Payment extends React.Component {
         super(props)
         let price
         if (new Date('June 5, 2019' > new Date())) {
-            price = .01
-        } else {
             price = 35
+        } else {
+            price = 50
         }
 
 
