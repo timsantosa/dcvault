@@ -144,7 +144,7 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'accomplishments']
+        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
@@ -412,7 +412,7 @@ class AthleteInfo extends React.Component {
 
                         <div className='form-row'>
                             <label>
-                                <span className = 'required'>Accomplishments (N/A to omit)</span>
+                                <span>Accomplishments (Optional)</span>
                                 <textarea rows='6' cols='40' name='accomplishments' />
                             </label>
                         </div>
