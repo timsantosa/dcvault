@@ -412,7 +412,7 @@ class AthleteInfo extends React.Component {
 
                         <div className='form-row'>
                             <label>
-                                <span>Accomplishments</span>
+                                <span className = 'required'>Accomplishments (N/A to omit)</span>
                                 <textarea rows='6' cols='40' name='accomplishments' />
                             </label>
                         </div>
