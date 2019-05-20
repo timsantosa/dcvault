@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/client/react/competition.jsx" afterPath="$PROJECT_DIR$/client/react/competition.jsx" />
+      <change beforePath="$PROJECT_DIR$/client/react/events.jsx" afterPath="$PROJECT_DIR$/client/react/events.jsx" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -16,10 +16,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="competition.jsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="316">
+              <caret line="198" column="24" lean-forward="false" selection-start-line="198" selection-start-column="24" selection-end-line="198" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="competition.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
+            <state relative-caret-position="182">
               <caret line="555" column="22" lean-forward="true" selection-start-line="555" selection-start-column="22" selection-end-line="555" selection-end-column="22" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
@@ -53,7 +63,7 @@
       <file leaf-file-name="component-directory.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/component-directory.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1280">
+            <state relative-caret-position="1073">
               <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
@@ -67,6 +77,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="292">
               <caret line="260" column="18" lean-forward="false" selection-start-line="260" selection-start-column="18" selection-end-line="260" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="events.jsx" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="329">
+              <caret line="265" column="63" lean-forward="true" selection-start-line="265" selection-start-column="63" selection-end-line="265" selection-end-column="63" />
               <folding />
             </state>
           </provider>
@@ -89,26 +109,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="281">
               <caret line="396" column="20" lean-forward="false" selection-start-line="396" selection-start-column="14" selection-end-line="396" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/config/config.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="14" lean-forward="true" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="20" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -188,7 +188,6 @@
         <option value="$PROJECT_DIR$/client/react/independence-day.jsx" />
         <option value="$PROJECT_DIR$/client/index.html" />
         <option value="$PROJECT_DIR$/client/npva/index.html" />
-        <option value="$PROJECT_DIR$/client/react/events.jsx" />
         <option value="$PROJECT_DIR$/client/compete/index.html" />
         <option value="$PROJECT_DIR$/client/react/component-directory.jsx" />
         <option value="$PROJECT_DIR$/client/react/api-helpers.js" />
@@ -201,6 +200,7 @@
         <option value="$PROJECT_DIR$/server/lib/helpers.js" />
         <option value="$PROJECT_DIR$/client/react/register.jsx" />
         <option value="$PROJECT_DIR$/client/react/competition.jsx" />
+        <option value="$PROJECT_DIR$/client/react/events.jsx" />
       </list>
     </option>
   </component>
@@ -272,6 +272,12 @@
               <item name="dcvault" type="462c0819:PsiDirectoryNode" />
               <item name="client" type="462c0819:PsiDirectoryNode" />
               <item name="config" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dcvault" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dcvault" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="events" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dcvault" type="b2602c69:ProjectViewProjectNode" />
@@ -384,12 +390,12 @@
       <workItem from="1557420805030" duration="4000" />
       <workItem from="1557422140954" duration="2041000" />
       <workItem from="1557427639455" duration="19398000" />
-      <workItem from="1557956650243" duration="16188000" />
+      <workItem from="1557956650243" duration="16427000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78469000" />
+    <option name="totallyTimeSpent" value="78708000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="977" extended-state="0" />
@@ -580,14 +586,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/dev/client/index.html" />
-    <entry file="file://$PROJECT_DIR$/client/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="198" column="24" lean-forward="false" selection-start-line="198" selection-start-column="24" selection-end-line="198" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/dev/package.json" />
     <entry file="file://$PROJECT_DIR$/client/dev/package-lock.json" />
     <entry file="file://$PROJECT_DIR$/client/compete/info/index.html">
@@ -618,14 +616,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-27167">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="619">
-          <caret line="462" column="26" lean-forward="false" selection-start-line="462" selection-start-column="26" selection-end-line="462" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -733,14 +723,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/poles/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-600">
-          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/routes.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="281">
@@ -777,11 +759,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/component-directory.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1280">
+        <state relative-caret-position="1073">
           <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/poles/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-600">
+          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -795,13 +785,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="198" column="24" lean-forward="false" selection-start-line="198" selection-start-column="24" selection-end-line="198" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
+        <state relative-caret-position="182">
           <caret line="555" column="22" lean-forward="true" selection-start-line="555" selection-start-column="22" selection-end-line="555" selection-end-column="22" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="329">
+          <caret line="265" column="63" lean-forward="true" selection-start-line="265" selection-start-column="63" selection-end-line="265" selection-end-column="63" />
+          <folding />
         </state>
       </provider>
     </entry>
