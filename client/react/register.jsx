@@ -956,7 +956,7 @@ class Payment extends React.Component {
 
   calculatePrice () {
     let price = (this.state.price * (1 - this.state.discount)) * 1.03
-    price = parseFloat(price) < 10 ? 10 : price
+    price = parseFloat(price) < 10 ? .01 : price
     price += this.state.lateFee
     this.renderButton(price)
   }
@@ -1066,7 +1066,7 @@ class Payment extends React.Component {
     }
 
     let currentPrice = (this.state.price * (1 - this.state.discount))
-    currentPrice = currentPrice < 10 ? (10).toFixed(2) : currentPrice.toFixed(2)
+    currentPrice = currentPrice < 10 ? (.01).toFixed(2) : currentPrice.toFixed(2)
     let currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
     let lateFee = this.state.lateFee
 

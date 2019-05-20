@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/client/react/competition.jsx" afterPath="$PROJECT_DIR$/client/react/competition.jsx" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/client/react/register.jsx" afterPath="$PROJECT_DIR$/client/react/register.jsx" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -16,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="competition.jsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="competition.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3553">
-              <caret line="392" column="65" lean-forward="true" selection-start-line="392" selection-start-column="65" selection-end-line="392" selection-end-column="65" />
+            <state relative-caret-position="197">
+              <caret line="642" column="18" lean-forward="true" selection-start-line="642" selection-start-column="18" selection-end-line="642" selection-end-column="18" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -38,11 +39,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="register.jsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="register.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8451">
-              <caret line="739" column="44" lean-forward="false" selection-start-line="739" selection-start-column="44" selection-end-line="739" selection-end-column="44" />
+            <state relative-caret-position="1678">
+              <caret line="1106" column="0" lean-forward="true" selection-start-line="1106" selection-start-column="0" selection-end-line="1106" selection-end-column="0" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -185,7 +186,6 @@
         <option value="$PROJECT_DIR$/client/react/training.jsx" />
         <option value="$PROJECT_DIR$/client/register/info/index.html" />
         <option value="$PROJECT_DIR$/client/admin/index.html" />
-        <option value="$PROJECT_DIR$/client/react/register.jsx" />
         <option value="$PROJECT_DIR$/client/react/independence-day.jsx" />
         <option value="$PROJECT_DIR$/client/index.html" />
         <option value="$PROJECT_DIR$/client/npva/index.html" />
@@ -201,6 +201,7 @@
         <option value="$PROJECT_DIR$/server/routes.js" />
         <option value="$PROJECT_DIR$/server/lib/helpers.js" />
         <option value="$PROJECT_DIR$/client/react/competition.jsx" />
+        <option value="$PROJECT_DIR$/client/react/register.jsx" />
       </list>
     </option>
   </component>
@@ -384,12 +385,12 @@
       <workItem from="1557420805030" duration="4000" />
       <workItem from="1557422140954" duration="2041000" />
       <workItem from="1557427639455" duration="19398000" />
-      <workItem from="1557956650243" duration="15265000" />
+      <workItem from="1557956650243" duration="15435000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="77546000" />
+    <option name="totallyTimeSpent" value="77716000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="977" extended-state="0" />
@@ -785,20 +786,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
+    <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8451">
-          <caret line="739" column="44" lean-forward="false" selection-start-line="739" selection-start-column="44" selection-end-line="739" selection-end-column="44" />
+        <state relative-caret-position="197">
+          <caret line="642" column="18" lean-forward="true" selection-start-line="642" selection-start-column="18" selection-end-line="642" selection-end-column="18" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/competition.jsx">
+    <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3553">
-          <caret line="392" column="65" lean-forward="true" selection-start-line="392" selection-start-column="65" selection-end-line="392" selection-end-column="65" />
+        <state relative-caret-position="1678">
+          <caret line="1106" column="0" lean-forward="true" selection-start-line="1106" selection-start-column="0" selection-end-line="1106" selection-end-column="0" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
