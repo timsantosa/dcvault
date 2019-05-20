@@ -19,7 +19,7 @@ class Competition extends React.Component {
 
     advance (page, info) {
         let updatedData = this.state.data
-        let newPageNum = this.state.pageNum + 1
+        let newPageNum = this.state.pageNum + 2
         updatedData[page] = info
         this.setState({
             pageNum: newPageNum,
