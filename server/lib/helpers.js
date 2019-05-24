@@ -130,7 +130,7 @@ module.exports.sendEventConfirmationEmails = (email) => {
         attachments: [
             {
                 filename: 'DC Vault Parking Pass.pdf',
-                path: path.join(__dirname, '/../files/parking-pass.pdf')
+                path: path.join(__dirname, '/../files/jul4pass.pdf')
             }
         ]
     }
