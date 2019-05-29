@@ -66,7 +66,7 @@ class AdminPanel extends React.Component {
               invites: response.data.invites || [],
               displayData: filteredData,
               filteredData: filteredData,
-              fullData: combinedData,
+              fullData: combinedData
             })
           } else {
             window.location.href = '/'
