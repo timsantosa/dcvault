@@ -709,11 +709,18 @@ module.exports = (app, db) => {
                         name: foundUser.name,
                         isAdmin: foundUser.isAdmin
                       }
-                      res.status(200).send({ok: true, message: 'found user info', user: user, athletes: athletes, invites: invites, discounts: discounts, purchases: purchases})
+                        db.tables.EventAthletes.findAll().then((eventAthletes) => {
+                            eventAthletes = eventAthletes.map(eventAthlete =>{
+                                return eventAthlete
+                            })
+
+                        res.status(200).send({ok: true, message: 'found user info', user: user, athletes: athletes, invites: invites, discounts: discounts, purchases: purchases, eventAthletes: eventAthletes})
+                        })
                     })
                   })
                 })
               })
+
             } else {
               db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchases) => {
                 db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athletes) => {
