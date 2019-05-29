@@ -55,7 +55,6 @@ class AdminPanel extends React.Component {
         if (response.data.ok) {
           if (response.data.user.isAdmin) {
             let combinedData = this.combineData(response.data.athletes, response.data.purchases)
-            let eventData = this.stringifyEventData(response.data.eventAthletes)
             let filteredData = this.filterByCurrentQuarter(combinedData)
             this.setState({
               name: response.data.user.name || 'None Entered',
@@ -69,8 +68,6 @@ class AdminPanel extends React.Component {
               displayData: filteredData,
               filteredData: filteredData,
               fullData: combinedData,
-              eventAthletes: reponse.data.eventAthletes || [],
-              eAthleteData: eventData
             })
           } else {
             window.location.href = '/'
@@ -227,18 +224,6 @@ class AdminPanel extends React.Component {
           </div>
         </div>
 
-        <div className='row'>
-          <div className ='col-xs-12'>
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                  <span className='title'>Registered Event Athletes</span>
-              </div>
-              <div className='body-box'>
-                <SuperTable data={this.state.eAthleteData} shownColumns={['firstName', 'lastName', 'email','team','pr', 'usatf','emergencyContactMDN','state','accomplishments']} />
-              </div>
-            </div>
-          </div>
-        </div>
 
 
         <div className='row'>

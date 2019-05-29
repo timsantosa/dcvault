@@ -709,13 +709,8 @@ module.exports = (app, db) => {
                         name: foundUser.name,
                         isAdmin: foundUser.isAdmin
                       }
-                        db.tables.EventAthletes.findAll().then((eventAthletes) => {
-                            eventAthletes = eventAthletes.map(eventAthlete =>{
-                                return eventAthlete
-                            })
 
-                        res.status(200).send({ok: true, message: 'found user info', user: user, athletes: athletes, invites: invites, discounts: discounts, purchases: purchases, eventAthletes: eventAthletes})
-                        })
+                        res.status(200).send({ok: true, message: 'found user info', user: user, athletes: athletes, invites: invites, discounts: discounts, purchases: purchases})
                     })
                   })
                 })
