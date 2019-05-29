@@ -20,8 +20,7 @@ class AdminPanel extends React.Component {
       purchases: [],
       discounts: [],
       invites: [],
-      displayData: [],
-      eAthleteData: []
+      displayData: []
     }
   }
 
@@ -101,14 +100,6 @@ class AdminPanel extends React.Component {
     }
   }
 
-  stringifyEventData(eventAthletes){
-    let returnArr = []
-    for(let i = 0; i < eventAthletes.length; i++){
-      let athleteClone = JSON.parse(JSON.stringify(eventAthletes[i]))
-      returnArr.push(athleteClone)
-    }
-    return returnArr
-  }
 
   combineData (athletes, purchases) {
     let returnArr = []
