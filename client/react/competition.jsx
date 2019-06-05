@@ -549,12 +549,7 @@ class Agreement extends React.Component {
 class Payment extends React.Component {
     constructor (props) {
         super(props)
-        let price
-        if (new Date('June 5, 2019' > new Date())) {
-            price = 35
-        } else {
-            price = 50
-        }
+        let price = 50
 
 
         this.state = {
