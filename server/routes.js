@@ -710,7 +710,7 @@ module.exports = (app, db) => {
                         isAdmin: foundUser.isAdmin
                       }
 
-                        res.status(200).send({ok: true, message: 'found user info', user: user, athletes: athletes, invites: invites, discounts: discounts, purchases: purchases})
+                      res.status(200).send({ok: true, message: 'found user info', user: user, athletes: athletes, invites: invites, discounts: discounts, purchases: purchases})
                     })
                   })
                 })

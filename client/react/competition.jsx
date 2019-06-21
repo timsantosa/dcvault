@@ -549,7 +549,7 @@ class Agreement extends React.Component {
 class Payment extends React.Component {
     constructor (props) {
         super(props)
-        let price = 50
+        let price = 35
 
 
         this.state = {
