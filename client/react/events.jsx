@@ -254,7 +254,7 @@ class Events extends React.Component {
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
-                    <li>Registration closes June 27th (no late entries)</li>
+                    <li>Registration closes June 30th (no late entries)</li>
                     <li>Registration Fee - $35 registration.</li>
                     <li><b><a href="/compete">Register Online Now!</a></b></li>
                 </ul>
@@ -266,7 +266,7 @@ class Events extends React.Component {
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
-                    <li>Registration closes June 27th (no late entries)</li>
+                    <li>Registration closes June 30th (no late entries)</li>
                     <li>Registration Fee - $35 registration.</li>
                     <li><b><a href="/compete">Register Online Now!</a></b></li>
                 </ul>
@@ -482,6 +482,22 @@ class Events extends React.Component {
                     </ul>
                 </ul>
 
+            </div>)
+        },
+        {
+            date: new Date('July 14, 2019'),
+            partial: (<div className='event-block' id='14JUL2019'>
+                <p className='event-block-title'>Fly-Kids DC - Pole Vault Experience at Eastern Market!</p>
+                <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
+                    <span className='event-block-location'>Eastern Market - 225 7th St SE, Washington, District of Columbia 20003</span></p>
+                <ul className='event-block-details'>
+                    <li>Open <span className='red-text'>Pole Vault</span> Experience for kids ages 6-11.</li>
+                    <li>No registration necessary. Come as you are and look for the FLY-KIDS DC pole vault pit!</li>
+                    <li>Kids will have the chance to jump at a safety bar with the <span className = 'red-text'>DC Vault</span> staff while parents explore Eastern Market, shop at vendor booths, sip coffee at Peregrine, have breakfast at Bullfrog Bagels, or brunch at a variety of locations!</li>
+
+                    <li>RSVP on Facebook <a href='https://www.facebook.com/events/500071877401666/'>here!</a> </li>
+                    <li>Check out the <a href='https://www.facebook.com/EasternMarketDC/'>Venue!</a></li>
+                </ul>
             </div>)
         }
 
