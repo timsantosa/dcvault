@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/client/index.html" afterPath="$PROJECT_DIR$/client/index.html" />
       <change beforePath="$PROJECT_DIR$/client/react/events.jsx" afterPath="$PROJECT_DIR$/client/react/events.jsx" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -17,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="333">
-              <caret line="212" column="68" lean-forward="true" selection-start-line="212" selection-start-column="68" selection-end-line="212" selection-end-column="68" />
+            <state relative-caret-position="2925">
+              <caret line="195" column="10" lean-forward="true" selection-start-line="195" selection-start-column="10" selection-end-line="195" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -71,11 +70,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="events.jsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="events.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="471">
-              <caret line="491" column="76" lean-forward="true" selection-start-line="491" selection-start-column="76" selection-end-line="491" selection-end-column="129" />
+            <state relative-caret-position="261">
+              <caret line="477" column="52" lean-forward="true" selection-start-line="477" selection-start-column="52" selection-end-line="477" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -167,8 +166,8 @@
         <option value="$PROJECT_DIR$/client/react/admin-panel.jsx" />
         <option value="$PROJECT_DIR$/server/routes.js" />
         <option value="$PROJECT_DIR$/client/react/competition.jsx" />
-        <option value="$PROJECT_DIR$/client/react/events.jsx" />
         <option value="$PROJECT_DIR$/client/index.html" />
+        <option value="$PROJECT_DIR$/client/react/events.jsx" />
       </list>
     </option>
   </component>
@@ -367,12 +366,12 @@
       <workItem from="1557427639455" duration="19398000" />
       <workItem from="1557956650243" duration="22343000" />
       <workItem from="1559141895880" duration="361000" />
-      <workItem from="1561135150697" duration="1186000" />
+      <workItem from="1561135150697" duration="1712000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="86171000" />
+    <option name="totallyTimeSpent" value="86697000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="797" extended-state="6" />
@@ -765,18 +764,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
+    <entry file="file://$PROJECT_DIR$/client/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="471">
-          <caret line="491" column="76" lean-forward="true" selection-start-line="491" selection-start-column="76" selection-end-line="491" selection-end-column="129" />
+        <state relative-caret-position="2925">
+          <caret line="195" column="10" lean-forward="true" selection-start-line="195" selection-start-column="10" selection-end-line="195" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/index.html">
+    <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="212" column="68" lean-forward="true" selection-start-line="212" selection-start-column="68" selection-end-line="212" selection-end-column="68" />
+        <state relative-caret-position="261">
+          <caret line="477" column="52" lean-forward="true" selection-start-line="477" selection-start-column="52" selection-end-line="477" selection-end-column="52" />
           <folding />
         </state>
       </provider>

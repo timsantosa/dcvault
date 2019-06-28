@@ -488,7 +488,7 @@ class Events extends React.Component {
             date: new Date('July 14, 2019'),
             partial: (<div className='event-block' id='14JUL2019'>
                 <p className='event-block-title'>Fly-Kids DC - Pole Vault Experience at Eastern Market!</p>
-                <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
+                <p className='event-block-info'><span className='event-block-date'>Sunday, July 14th 2019</span>
                     <span className='event-block-location'>Eastern Market - 225 7th St SE, Washington, District of Columbia 20003</span></p>
                 <ul className='event-block-details'>
                     <li>Open <span className='red-text'>Pole Vault</span> Experience for kids ages 6-11.</li>
