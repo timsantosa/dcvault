@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react/events.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/events.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -66,8 +67,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="262" column="79" selection-start-line="262" selection-start-column="79" selection-end-line="262" selection-end-column="79" />
+            <state relative-caret-position="280">
+              <caret line="287" column="95" selection-start-line="287" selection-start-column="95" selection-end-line="287" selection-end-column="95" />
             </state>
           </provider>
         </entry>
@@ -75,8 +76,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/account-panel.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="156" column="22" lean-forward="true" selection-start-line="156" selection-start-column="22" selection-end-line="156" selection-end-column="75" />
+            <state relative-caret-position="2310">
+              <caret line="156" column="22" selection-start-line="156" selection-start-column="22" selection-end-line="156" selection-end-column="75" />
             </state>
           </provider>
         </entry>
@@ -171,7 +172,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="4" />
     <option name="y" value="23" />
     <option name="width" value="1440" />
@@ -182,7 +183,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -277,6 +277,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -354,15 +355,16 @@
       <workItem from="1559141895880" duration="361000" />
       <workItem from="1561135150697" duration="1712000" />
       <workItem from="1561956365578" duration="197000" />
-      <workItem from="1562004080945" duration="982000" />
+      <workItem from="1562004080945" duration="1119000" />
+      <workItem from="1562007659617" duration="101000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="87876000" />
+    <option name="totallyTimeSpent" value="88114000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="23" width="1440" height="804" extended-state="6" />
+    <frame x="4" y="23" width="1440" height="801" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17829457" />
@@ -653,6 +655,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client/react/account-panel.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2310">
+          <caret line="156" column="22" selection-start-line="156" selection-start-column="22" selection-end-line="156" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client/react/admin-panel.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="855">
@@ -660,17 +669,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/account-panel.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="156" column="22" lean-forward="true" selection-start-line="156" selection-start-column="22" selection-end-line="156" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="262" column="79" selection-start-line="262" selection-start-column="79" selection-end-line="262" selection-end-column="79" />
+        <state relative-caret-position="280">
+          <caret line="287" column="95" selection-start-line="287" selection-start-column="95" selection-end-line="287" selection-end-column="95" />
         </state>
       </provider>
     </entry>

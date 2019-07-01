@@ -281,7 +281,7 @@ class Events extends React.Component {
                 </ul>
                 <span className='event-block-details-header'>Individual Awards</span>
                 <ul className='event-block-details'>
-                    <li>T.B.A.</li>
+                    <li>Medals will be given to 1st, 2nd, and 3rd place finishers in each age group.</li>
                 </ul>
                 <span className='event-block-details-header'>Venue</span>
                 <ul className='event-block-details'>
