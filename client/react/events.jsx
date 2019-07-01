@@ -254,7 +254,7 @@ class Events extends React.Component {
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
-                    <li>Registration now closed</li>
+                    <li>Registration now closed - <a href='/files/flight.xlsx' download>CLICK HERE FOR FLIGHT AND GROUP INFO</a></li>
                 </ul>
                 <span className='event-block-details-header'>Expand For Full Info Below</span>
             </div>),
@@ -264,7 +264,7 @@ class Events extends React.Component {
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
-                    <li>Registration now closed</li>
+                    <li>Registration now closed - <a href='/files/flight.xlsx' download>CLICK HERE FOR FLIGHT AND GROUP INFO</a></li>
                 </ul>
                 <span className='event-block-details-header'>Team Competition</span>
                 <ul className='event-block-details'>
@@ -320,18 +320,29 @@ class Events extends React.Component {
                 <ul className = 'event-block-details'>
                     <li>Wednesday - July 3rd</li>
                     <ul>
-                        <li>6:00 - 7:30 pm - Pole Dropoff and open runway practice</li>
+                        <li>6:00 - 7:30 pm - Pole Drop-off and open runway practice</li>
                     </ul>
-                    <li>Thursday - July 4th (subject to change - final schedule and flight list will be posted July 1)</li>
+                    <li>Thursday - July 4th (Final Schedule)</li>
                     <ul>
-                        <li>10:30-11:30pm - Flights 1&2 check-in + warmups (10:30-10:45am - pole pickup & drop-off)</li>
-                        <li>11:30-1:30pm - Flights 1&2 competition</li>
-                        <li>1:30-2:30pm - Flights 3&4 check-in + warmups (1:30-1:45am - pole pickup & drop-off)</li>
-                        <li>2:30-4:30pm - Flights 3&4 competition</li>
-                        <li>4:30-5:30pm - Elite check-in + warmups + BBQ time...free hotdogs while they last! (4:30-4:45pm - pole pickup & drop-off)</li>
-                        <li>5:30-7:30pm - Elite competition</li>
-                        <li>7:30-7:45pm - Pole Dropoff</li>
-                        <li>9:09pm - National Fireworks!</li>
+                        <li><b>Flight 1 (0.0m - 3.19m):</b></li>
+                        <li>12:30pm-1:30pm - check-in & pole pickup/drop-off</li>
+                        <li>1:00pm-2:00pm - warmups</li>
+                        <li>2:00pm - competition</li>
+
+                        <li><b>Flight 2 (3.20m - 3.99m):</b></li>
+                        <li>12:30pm-1:30pm - check-in & pole pickup/drop-off</li>
+                        <li>1:00pm-2:00pm - warmups</li>
+                        <li>2:00pm - competition</li>
+
+                        <li><b>Flight 3 (4.0m +):</b></li>
+                        <li>3:00pm-4:00pm - check-in & pole pickup/drop-off</li>
+                        <li>3:30-4:30pm - warmups</li>
+                        <li>4:30pm - competition</li>
+
+                        <li><b>Additional:</b></li>
+                        <li>2:00pm - Fire up the grill for Free BBQ</li>
+                        <li>5:30pm - Pole drop-off for those attending the National Fireworks</li>
+                        <li>9:00pm - National Fireworks!</li>
                         <li>11:00pm - Pole Pickup</li>
                     </ul>
                     <li>Friday - July 5th</li>
