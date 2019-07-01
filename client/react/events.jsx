@@ -254,9 +254,7 @@ class Events extends React.Component {
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
-                    <li>Registration closes June 30th (no late entries)</li>
-                    <li>Registration Fee - $35 registration.</li>
-                    <li><b><a href="/compete">Register Online Now!</a></b></li>
+                    <li>Registration now closed</li>
                 </ul>
                 <span className='event-block-details-header'>Expand For Full Info Below</span>
             </div>),
@@ -266,9 +264,7 @@ class Events extends React.Component {
                     <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
-                    <li>Registration closes June 30th (no late entries)</li>
-                    <li>Registration Fee - $35 registration.</li>
-                    <li><b><a href="/compete">Register Online Now!</a></b></li>
+                    <li>Registration now closed</li>
                 </ul>
                 <span className='event-block-details-header'>Team Competition</span>
                 <ul className='event-block-details'>
