@@ -256,7 +256,7 @@ class Events extends React.Component {
                 <ul className='event-block-details'>
                     <li>Registration now closed - <a href='/files/flight.xlsx' download>CLICK HERE FOR FLIGHT AND GROUP INFO</a></li>
                 </ul>
-                <span className='event-block-details-header'>Expand For Full Info Below</span>
+                <span className='event-block-details-header'>Expand For Full Info and Schedule Below</span>
             </div>),
             full: (<div className='event-block'>
                 <p className='event-block-title'>Independence Day - Pole Vault Championships</p>

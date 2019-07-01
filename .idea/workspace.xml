@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react/events.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/events.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -67,8 +66,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="267" column="21" lean-forward="true" selection-start-line="267" selection-start-column="21" selection-end-line="267" selection-end-column="21" />
+            <state relative-caret-position="316">
+              <caret line="262" column="79" selection-start-line="262" selection-start-column="79" selection-end-line="262" selection-end-column="79" />
             </state>
           </provider>
         </entry>
@@ -176,7 +175,7 @@
     <option name="x" value="4" />
     <option name="y" value="23" />
     <option name="width" value="1440" />
-    <option name="height" value="806" />
+    <option name="height" value="804" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -355,15 +354,15 @@
       <workItem from="1559141895880" duration="361000" />
       <workItem from="1561135150697" duration="1712000" />
       <workItem from="1561956365578" duration="197000" />
-      <workItem from="1562004080945" duration="791000" />
+      <workItem from="1562004080945" duration="982000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="87685000" />
+    <option name="totallyTimeSpent" value="87876000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="23" width="1440" height="806" extended-state="6" />
+    <frame x="4" y="23" width="1440" height="804" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17829457" />
@@ -670,8 +669,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/events.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="267" column="21" lean-forward="true" selection-start-line="267" selection-start-column="21" selection-end-line="267" selection-end-column="21" />
+        <state relative-caret-position="316">
+          <caret line="262" column="79" selection-start-line="262" selection-start-column="79" selection-end-line="262" selection-end-column="79" />
         </state>
       </provider>
     </entry>
