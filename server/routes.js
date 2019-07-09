@@ -145,7 +145,7 @@ module.exports = (app, db) => {
   })
 
   app.post('/rentals/request', (req, res) => {
-    if (!req.body.token || !req.body.athleteId || !req.body.period || !req.body.quarter) {
+    if (!req.body.token || !req.body.athleteId || !req.body.period || (req.body.period == 'quarterly' && !req.body.quarter)) {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
