@@ -2,18 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/account/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/account/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/admin/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/admin/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/compete/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/compete/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/compete/info/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/compete/info/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/events/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/events/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/npva/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/npva/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/poles/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/poles/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/react/events.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/events.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/react/training.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/training.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/register/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/register/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/register/info/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/register/info/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/app.js" afterDir="false" />
     </list>
@@ -44,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/register/info/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="470">
-              <caret line="110" column="21" lean-forward="true" selection-start-line="110" selection-start-column="21" selection-end-line="110" selection-end-column="21" />
+            <state relative-caret-position="314">
+              <caret line="98" column="20" lean-forward="true" selection-start-line="98" selection-start-column="20" selection-end-line="98" selection-end-column="20" />
               <folding>
                 <element signature="n#style#0;n#p#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#p#0;n#li#0;n#ul#0;n#div#0;n#div#3;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -433,12 +421,12 @@
       <workItem from="1562968079316" duration="1721000" />
       <workItem from="1562969884404" duration="248000" />
       <workItem from="1562986065021" duration="920000" />
-      <workItem from="1562987839670" duration="836000" />
+      <workItem from="1562987839670" duration="1054000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="97819000" />
+    <option name="totallyTimeSpent" value="98037000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="806" extended-state="6" />
@@ -767,8 +755,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/register/info/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="470">
-          <caret line="110" column="21" lean-forward="true" selection-start-line="110" selection-start-column="21" selection-end-line="110" selection-end-column="21" />
+        <state relative-caret-position="314">
+          <caret line="98" column="20" lean-forward="true" selection-start-line="98" selection-start-column="20" selection-end-line="98" selection-end-column="20" />
           <folding>
             <element signature="n#style#0;n#p#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#p#0;n#li#0;n#ul#0;n#div#0;n#div#3;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
