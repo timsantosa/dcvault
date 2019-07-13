@@ -8,9 +8,11 @@ class Training extends React.Component {
     this.state = {
       trainingCards: [
           {
-              title: 'Discounts',
-              priceModifier: 'BY REQUEST',
-              description: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as...</br>10% - College Student (full time)</br>10% - Active Duty and Retired Military</br>25% - DC Residents</br>25% - DCPS Students</br>25% - Family Discount (2 or more)</br>Does not apply to equipment rental, special training sessions, or events. Discounts cannot be combined.</br>Please contact us (dcvault@dcvault.org) to apply for a discount code.'
+              title: 'FLY-KIDS DC',
+              ages: 'Ages 6-10',
+              price:'$125',
+              priceModifier:'PER COURSE',
+              description: 'Our FLY-KIDS DC program is designed for children ages 6-10 years of age. This innovative program introduces young kids to the basics of pole vaulting in a fun, engaging environment. Using custom made children\'s pole vault equipment and an innovative approach to training, kids are  actually able to pole vault within their first lesson! Kids will run, jump, climb and swing their way to new heights and be able to show off their skills in a public exhibition at venues like Eastern Market and the National Mall upon completion of their course! '
           },
         {
 
@@ -56,10 +58,9 @@ class Training extends React.Component {
           description: 'Professional, Level V athletes work in private session on a personalized, comprehensive, year-round training program. Technical focus is on mastering tertiary phases of the vault, with strong emphasis placed on high level refinement of energy transitions. Speed and strength development is customized for the individual athlete to produce peak performance during championship competitions. It incorporates recovery phases and non-traditional range of motion and biomechanical movements for stabilization, technical consistency and injury prevention.'
         },
           {
-              title: 'Trial Session',
-              price: '$50',
-              priceModifier: 'BY REQUEST',
-              description: 'Want to give DC Vault a try before signing up for a full program? Take a one-time trial session during a regularly scheduled practice. If you decide you want to sign up for training afterwards, the fee will be applied towards the program that you register for! '
+            title: 'Discounts',
+            priceModifier: 'BY REQUEST',
+            description: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as...</br>10% - College Student (full time)</br>10% - Active Duty and Retired Military</br>25% - DC Residents</br>25% - DCPS Students</br>25% - Family Discount (2 or more)</br>Does not apply to equipment rental, special training sessions, or events. Discounts cannot be combined.</br>Please contact us (dcvault@dcvault.org) to apply for a discount code.'
           },
         {
           title: 'Private Lessons',

@@ -33,7 +33,7 @@ class Events extends React.Component {
         partial: (<div className='event-block' id='08JUL2018'>
           <p className='event-block-title'>DC VAULT 10-YEAR ANNIVERSARY ​& TRAINING CENTER LAUNCH EVENT!​</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8 2018</span>
-            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+            <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
           <ul className='event-block-details'>
             <li>Elite Competition: Featuring 2015 World Champion - SHAWN BARBER!</li>
             <li>Open Competition: All Ages - Free Entry!</li>
@@ -44,7 +44,7 @@ class Events extends React.Component {
         full: (<div className='event-block'>
           <p className='event-block-title'>DC VAULT 10-YEAR ANNIVERSARY ​& TRAINING CENTER LAUNCH EVENT!​</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8 2018</span>
-            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+            <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
           <span className='event-block-details-header'>Events</span>
           <ul className='event-block-details'>
             <li>Elite Competition: Featuring 2015 World Champion - SHAWN BARBER!</li>
@@ -61,7 +61,7 @@ class Events extends React.Component {
           <span className='event-block-details-header'>Facility</span>
           <ul className='event-block-details'>
             <li>DC Vault Training Center</li>
-            <li>2200 East Capitol street NE, Washington DC 20003 </li>
+            <li>2100 East Capitol street NE, Washington DC 20003 </li>
             <li>Facility Features </li>
             <ul>
               <li>3 Mondo Runways</li>
@@ -103,7 +103,7 @@ class Events extends React.Component {
         partial: (<div className='event-block' id='12JUL2018'>
           <p className='event-block-title'>Free Beginners Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Thursday, Jul 12 2018</span>
-            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+            <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
           <ul className='event-block-details'>
             <li>Youth 6-14 / Adult 21 and up</li>
             <li>Clinic runs from 5:30pm to 7:00pm</li>
@@ -118,7 +118,7 @@ class Events extends React.Component {
         partial: (<div className='event-block' id='14JUL2018'>
           <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Saturday, Jul 14 2018</span>
-            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+            <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
           <ul className='event-block-details'>
             <li>Open to participants of all ages</li>
             <li>Clinic runs from 10:30am to 12:30pm</li>
@@ -133,7 +133,7 @@ class Events extends React.Component {
         partial: (<div className='event-block' id='10MAR2019'>
           <p className='event-block-title'>Free Beginner + Intermediate Pole Vault Clinic</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Mar 10 2019</span>
-            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+            <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
           <ul className='event-block-details'>
             <li>Open to participants of all ages</li>
             <li>Clinic runs from 12:00pm-2:00pm</li>
@@ -148,7 +148,7 @@ class Events extends React.Component {
             partial: (<div className='event-block' id='5MAY2019'>
                 <p className='event-block-title'>Capitol Hill Pole Vault Clinic - Free!</p>
                 <p className='event-block-info'><span className='event-block-date'>Sunday, May 5 2019</span>
-                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                    <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
                     <li>Open to <span className = 'red-text'>Capitol Hill</span> Residents! (1st street to RFK stadium + H street NE to L street SE)</li>
                     <li>Experience: No experience necessary</li>
@@ -159,7 +159,7 @@ class Events extends React.Component {
                     <li>Dogs: Family dogs welcome! Bring a leash and water for your critter please. </li>
                     <li>Spectators: Friends and Family are welcome to watch.</li>
                     <li>Facility: DC Vault Pole Vault Training Facility</li>
-                    <li>Address: 2200 East Capitol street NE Washington DC</li>
+                    <li>Address: 2100 East Capitol street NE Washington DC</li>
                     <li>Parking: Available in Lot #3 </li>
                     <li>Registration: Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> to register. <span className = 'red-text'>Limited Space</span> - Register early to guarantee a slot! </li>
                 </ul>
@@ -170,7 +170,7 @@ class Events extends React.Component {
             partial: (<div className='event-block' id='17APR2019'>
                 <p className='event-block-title'>DC Fray Adult Pole Vault Class</p>
                 <p className='event-block-info'><span className='event-block-date'>Wednesday, Apr 17 2019</span>
-                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                    <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
                     <li>DC Fray and DC Vault team up to host the Fray Life Adult Pole Vault Class!</li>
                     <li>Class runs from 6:30pm-8:00pm</li>
@@ -187,7 +187,7 @@ class Events extends React.Component {
             partial: (<div className='event-block' id='28APR2019'>
                 <p className='event-block-title'>VA Highschool Clinic - Free!</p>
                 <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
-                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                    <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
                     <li>Time: <span className='red-text'>10am-12pm</span></li>
 
@@ -218,7 +218,7 @@ class Events extends React.Component {
             partial: (<div className='event-block' id='28APR20192'>
                 <p className='event-block-title'>Open Vault Day - Free!</p>
                 <p className='event-block-info'><span className='event-block-date'>Sunday, Apr 28 2019</span>
-                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                    <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
                     <li>Time: <span className='red-text'>12pm-1:30pm</span></li>
 
@@ -251,7 +251,7 @@ class Events extends React.Component {
             partial: (<div className='event-block' id='04JUL2019'>
                 <p className='event-block-title'>Independence Day - Pole Vault Championships</p>
                 <p className='event-block-info'><span className='event-block-date'>Thursday, July 4th 2019</span>
-                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                    <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
                     <li>Registration now closed - <a href='/files/flight.xlsx' download>CLICK HERE FOR FLIGHT AND GROUP INFO</a></li>
@@ -261,7 +261,7 @@ class Events extends React.Component {
             full: (<div className='event-block'>
                 <p className='event-block-title'>Independence Day - Pole Vault Championships</p>
                 <p className='event-block-info'><span className='event-block-date'>Thursday, July 4th 2019</span>
-                    <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+                    <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
                 <span className='event-block-details-header'>Registration</span>
                 <ul className='event-block-details'>
                     <li>Registration now closed - <a href='/files/flight.xlsx' download>CLICK HERE FOR FLIGHT AND GROUP INFO</a></li>
@@ -289,7 +289,7 @@ class Events extends React.Component {
                     <li>This ‘dog friendly’ facility features 3 Mondo Runways, 3 UCS Pits (1700, 1900, 2100), a complete series of UCS Spirit Vaulting Poles, a variety of training implements and of course... a BBQ Grill! As a bonus, participants have immediate access to the RFK Skate Park for those who want to bring their boards.</li>
                     <li>Location:</li>
                     <ul>
-                        <li>2200 East Capitol street NE Washington DC 20002</li>
+                        <li>2100 East Capitol street NE Washington DC 20002</li>
                         <li>Parking: Lot #3</li>
                         <li>Metro: Stadium/Armory metro station (Blue, Orange, and Silver lines)</li>
                     </ul>
