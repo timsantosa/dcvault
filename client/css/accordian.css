@@ -125,7 +125,13 @@
 
 .accordian-sector:hover .accordian-sector-underlay, .accordian-sector:focus .accordian-sector-underlay,
 .accordian-sector:active .accordian-sector-underlay {
-    opacity: 0
+    opacity: 1
+}
+@media(min-width:768px) {
+    .accordian-sector:hover .accordian-sector-underlay, .accordian-sector:focus .accordian-sector-underlay,
+    .accordian-sector:active .accordian-sector-underlay {
+        opacity: 0
+    }
 }
 
 .accordian-sector:hover .accordian-sector-expand, .accordian-sector:focus .accordian-sector-expand,
@@ -140,7 +146,13 @@
 
 .accordian-sector a:hover ~ .accordian-sector-underlay, .accordian-sector a:focus ~ .accordian-sector-underlay,
 .accordian-sector a:active ~ .accordian-sector-underlay {
-    opacity: 0
+    opacity: 1
+}
+@media(min-width:768px) {
+    .accordian-sector a:hover ~ .accordian-sector-underlay, .accordian-sector a:focus ~ .accordian-sector-underlay,
+    .accordian-sector a:active ~ .accordian-sector-underlay {
+        opacity: 0
+    }
 }
 
 .accordian-sector a:hover .accordian-sector-expand, .accordian-sector a:focus .accordian-sector-expand,
@@ -288,31 +300,31 @@
     height: 70%;
 }
 
+/*Image section (not being used)*/
 .accordian-sector-content_image {
     display: none;
+    float: left;
     height: 0;
-    padding-bottom: 50%;
-    width: 55%
+    padding-bottom: 47%; /*Changing the height of the image in the content box */
+    width: 40%
 }
 
 @media(min-width:768px) {
     .accordian-sector-content_image {
-        display: block;
+        display: none; /*Change this to block to show the image again*/
         float: left;
-        height: 0;
-        padding-bottom: 47%; /*Changing the height of the image in the content box */
-        width: 40%
     }
 }
 
 @media(min-width:800px) and (max-width:840px) {
     .accordian-sector-content_image {
+        display: none;
         width: 30%
     }
 }
 
 .accordian-sector-content.border-box {
-    background-color: rgba(0, 0, 0, 0.60)
+    background-color: rgba(0, 0, 0, 0.6)
 }
 
 .accordian-sector-content_icon {
@@ -357,14 +369,14 @@
 .accordian-sector-content_desc {
     float: left;
     margin-top: 10px;
-    width: 90%
+    width: 90%;
 }
 
 @media(min-width:768px) {
     .accordian-sector-content_desc {
         float: left;
         margin-left: 5%;
-        width: 55%
+        width: 90%
     }
 }
 
@@ -376,8 +388,8 @@
 
 .accordian-sector-content_desc-inner {
     float: left;
-    margin-left: 20px;
-    width: 70%
+    margin-left: 5vw; /* Centering the text box mobile*/
+    width: 95% /*The width of the text box*/
 }
 
 @media(min-width:768px) {
@@ -388,16 +400,17 @@
 }
 
 .accordian-sector-content_desc-inner_info {
-    font-size: 20px;
+    font-size: 15px;
     line-height: 1.2;
+    margin-top:0px;
     margin-bottom: 10px
 }
 
 @media(min-width:768px) {
     .accordian-sector-content_desc-inner_info {
-        font-size: auto;
+        font-size: 20px;
         line-height: 1.5;
-        margin: 10px 0
+        margin: 0px 0;
     }
 }
 
@@ -420,24 +433,27 @@
 .my-inner_details {
     font-family: Lato;
     font-size: 14px;
-    max-height: 220px; /* Changes the size of the text box description*/
-    line-height: 1.55;
-    margin-bottom: .80rem;
+    max-height: 150px;
     overflow-y: scroll;
+    padding: 0 0 17%;
+    margin-bottom: 0px;
 }
 
 /*
 .scrollable-content::-webkit-scrollbar * {
     background:transparent; // manage scrollbar background color here
-}
+}ƒ
 */
 
 
 @media(min-width:768px) {
     .my-inner_details {
-        font-size: 14px;
+        font-size: 16px;
+        margin-right: auto;
         height: auto;
-        margin-right: auto
+        padding: 0;
+        height: 35vh;
+        max-height: 500px;
     }
 }
 
@@ -488,15 +504,24 @@
 }
 
 .accordian-sector-underlay {
-    background-color: #111;
+    background-color: #434343;
     bottom: 0;
     left: 0;
     position: absolute;
     right: 0;
     top: 0;
-    opacity: .5;
+    opacity: 1; /*blocks photos in mobile view*/
     transition: all .15s ease-out;
     z-index: 3
+}
+
+/*Not sure what this does*/
+@media(min-width:768px) {
+    .accordian-sector-underlay{
+        background-color: BLACK !important;
+        opacity: .5;
+    }
+
 }
 
 .accordian-sector-underlay.is-visible {
@@ -508,6 +533,8 @@
     display: none;
     opacity: 0
 }
+
+
 
 .accordian-sector hr {
     background: #a9a9a9;
@@ -573,7 +600,7 @@
 
     .accordian .sector-2 .accordian-sector.is-active {
         height: 60vh;
-        max-height: 300px;
+        max-height: 400px;
         width: 100%
     }
 
@@ -600,7 +627,7 @@
 
     .accordian .sector-3 .accordian-sector.is-active {
         height: 60vh;
-        max-height: 300px;
+        max-height: 400px;
         width: 100%
     }
 
@@ -627,7 +654,7 @@
 
     .accordian .sector-4 .accordian-sector.is-active {
         height: 60vh;
-        max-height: 300px;
+        max-height: 400px;
         width: 100%
     }
 
@@ -654,7 +681,7 @@
 
     .accordian .sector-5 .accordian-sector.is-active {
         height: 60vh;
-        max-height: 300px;
+        max-height: 400px;
         width: 100%
     }
 
