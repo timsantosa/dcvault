@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/client/css/accordian.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/css/accordian.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/css/extras.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/css/extras.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/staff-test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/staff-test/index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -24,8 +23,8 @@
             <file pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/client/css/accordian.css">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="218">
-                    <caret line="236" column="20" lean-forward="true" selection-start-line="236" selection-start-column="20" selection-end-line="236" selection-end-column="20" />
+                  <state relative-caret-position="306">
+                    <caret line="456" column="42" lean-forward="true" selection-start-line="456" selection-start-column="42" selection-end-line="456" selection-end-column="42" />
                   </state>
                 </provider>
               </entry>
@@ -342,12 +341,12 @@
       <workItem from="1562987839670" duration="2083000" />
       <workItem from="1563142370731" duration="589000" />
       <workItem from="1563670555460" duration="4311000" />
-      <workItem from="1564441158229" duration="6889000" />
+      <workItem from="1564441158229" duration="7318000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="110855000" />
+    <option name="totallyTimeSpent" value="111284000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1631" y="23" width="1440" height="806" extended-state="0" />
@@ -749,8 +748,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/css/accordian.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="236" column="20" lean-forward="true" selection-start-line="236" selection-start-column="20" selection-end-line="236" selection-end-column="20" />
+        <state relative-caret-position="306">
+          <caret line="456" column="42" lean-forward="true" selection-start-line="456" selection-start-column="42" selection-end-line="456" selection-end-column="42" />
         </state>
       </provider>
     </entry>
