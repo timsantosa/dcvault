@@ -233,7 +233,8 @@
     line-height: 1.2;
     margin-left: 65px;
     text-align: left;
-    width: 75%
+    width: 75%;
+    font-size: 18px;
 }
 
 @media(min-width:768px) {
@@ -241,7 +242,8 @@
         margin: 0;
         min-height: 100px;
         text-align: center;
-        width: 100%
+        width: 100%;
+        font-size:24px;
     }
 }
 
@@ -403,7 +405,7 @@
     font-size: 15px;
     line-height: 1.2;
     margin-top:0px;
-    margin-bottom: 10px
+    margin-bottom: 0px
 }
 
 @media(min-width:768px) {
@@ -411,6 +413,13 @@
         font-size: 20px;
         line-height: 1.5;
         margin: 0px 0;
+    }
+}
+
+@media(min-width:667px) and (max-width:812px) {
+    .accordian-sector-content_desc-inner_info {
+        font-size: 14px;
+        line-height: 1.2;
     }
 }
 
@@ -454,6 +463,17 @@
         padding: 0;
         height: 35vh;
         max-height: 500px;
+    }
+}
+
+@media(min-width:667px) and (max-width:812px){
+    .my-inner_details{
+        font-size:12px;
+        max-height: 100px;
+        overflow-y: scroll;
+        padding: 0 0 17%;
+        height: 20vh;
+        margin-bottom: 0px;
     }
 }
 
