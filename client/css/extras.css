@@ -76,6 +76,19 @@ a {
   font-weight: bolder;
 }
 
+.gray-text{
+  font-size: 16px;
+  font-weight: bolder;
+}
+
+@media(min-width:813px){
+  .gray-text {
+    font-size: 24px;
+    font-weight: bolder;
+  }
+}
+
+
 .vertical-container {
   display: flex;
   display: -ms-flexbox;
