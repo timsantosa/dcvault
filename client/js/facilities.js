@@ -34,7 +34,11 @@ var textValues = {
 <p class="content-text smaller-text">2200 East Capitol Street NE DC</p>\
 <p class="content-text smaller-text">(NW corner of 22nd and East Capitol)</p> \
 <p class="content-text" style="font-weight: bold">What</p>\
-<p class="content-text smaller-text">Outdoor Pole Vault Training Center located on East Capitol street near the RFK Stadium. Used for training entry level through elite athletes, youth through adult, in group and private settings.</p>',
+<p class="content-text smaller-text"> DC Vault\'s premier home training facility is designed to work with athletes of all levels, from 5 year old beginners to World Champions! The quarter million-dollar, state of the art facility was constructed in 2018 and is recognized as one of the best equipped pole vault facilities in the USA. \ <br>\
+\ <br>\
+The facility features 3 Mondo runways, a UCS 1800 series pole vault mat, a UCS 1900 series pole vault mat and an elite grade UCS 2100 series pole vault mat. The facility also boasts 4 customized Sorinex Strength Training Rigs, a wire camera for in-motion video analysis, a high ring swing training station, a swing-up-inversion trainer, climbing ropes and a customized storage facility which doubles as an office and event check-in booth. Additional equipment includes an extensive array of Sorinex and Rogue strength equipment, customized vault training implements, a complete UCS pole series ranging from a 10\'8" 90lb pole straight through to a 17\'1" 205lb pole, as well as custom youth poles ranging from 8\' 40lbs to 9\' 90lbs in size. \
+\ <br>\ <br>\
+Parking is available in Lot 3 and metro access is available across the street at the Stadium-Armory metro station. </p>',
 
 }
 
