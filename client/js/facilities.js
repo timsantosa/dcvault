@@ -3,21 +3,6 @@
 var textValues = {
   DEFAULT: 'Through a variety of partnerships, DC Vault provides training at 7 facilities in the Washington, DC metropolitan area. Each facility has been uniquely outfitted with a wide array of specialized equipment provided by the club, allowing for training targeted to athletes of all skill levels.',
 
-  NCS: '<p class="minor-heading">National <span class="red-text">Cathedral</span> Site (NCS)</p>\
-<p class="content-text" style="font-weight: bold">Where</p>\
-<p class="content-text smaller-text">Washington National Cathedral</p>\
-<p class="content-text smaller-text">3501 Garfield St NW, Washington, DC 20007</p> \
-<p class="content-text smaller-text">Facility - Steuart Field - Outdoor Track</p>\
-<p class="content-text" style="font-weight: bold">What</p>\
-<p class="content-text smaller-text">Outdoor training site, primarily used for Level-II thru Level-V training, private lessons and small group lessons.</p>',
-
-  CUA: '<p class="minor-heading">Catholic <span class="red-text">University</span> Of America (CUA)</p>\
-<p class="content-text" style="font-weight: bold">Where</p>\
-<p class="content-text smaller-text">Catholic University of America</p>\
-<p class="content-text smaller-text">4026 John McCormack Rd NE, Washington, DC</p> \
-<p class="content-text smaller-text">Facility - DuFour Athletic Center - Fieldhouse / Outdoor Track</p>\
-<p class="content-text" style="font-weight: bold">What</p>\
-<p class="content-text smaller-text">Indoor and Outdoor training site, primarily used for Level-III and Level-IV training.</p>',
 
   PREP: '<p class="minor-heading">Georgetown <span class="red-text">Preparatory</span> School (PREP)</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
@@ -51,32 +36,20 @@ var textValues = {
 <p class="content-text" style="font-weight: bold">What</p>\
 <p class="content-text smaller-text">Outdoor Pole Vault Training Center located on East Capitol street near the RFK Stadium. Used for training entry level through elite athletes, youth through adult, in group and private settings.</p>',
 
-  PA: '<p class="minor-heading"><span class="red-text">Mercersburg</span> Academy (PA)</p>\
-<p class="content-text" style="font-weight: bold">Where</p>\
-<p class="content-text smaller-text">Mercersburg Academy</p>\
-<p class="content-text smaller-text">300 Ease Seminary Street, Mercersburg, PA 17236</p>\
-<p class="content-text" style="font-weight: bold">What</p>\
-<p class="content-text smaller-text">Indoor training site, primarily used for PA based Level-I and Level-II developmental training.</p>'
 }
 
 var locations = {
-  NCS: {lat: 38.927475, lng: -77.068477},
-  CUA: {lat: 38.942606, lng: -76.998025},
   PREP: {lat: 39.032617, lng: -77.108889},
   PG: {lat: 38.911269, lng: -76.866919},
   BALT: {lat: 39.403604, lng: -76.626360},
   DCV: {lat: 38.890134, lng: -76.976392},
-  PA: {lat: 39.828266, lng: -77.900424}
 }
 
 var tooltips = {
-  NCS: 'National Cathedral',
-  CUA: 'Catholic University of America',
   PREP: 'Georgetown Preparatory School',
   PG: 'Prince George\'s County Sportsplex',
   BALT: 'Loyola Blakefield',
   DCV: 'DC VAULT',
-  PA: 'Mercersburg Academy'
 }
 
 // Begin calculate center
@@ -145,12 +118,9 @@ window.initMap = function () {
   })
 
   markers = {
-    NCS: new window.google.maps.Marker({position: locations.NCS, map: map, title: tooltips.NCS}),
-    CUA: new window.google.maps.Marker({position: locations.CUA, map: map, title: tooltips.CUA}),
     PREP: new window.google.maps.Marker({position: locations.PREP, map: map, title: tooltips.PREP}),
     PG: new window.google.maps.Marker({position: locations.PG, map: map, title: tooltips.PG}),
     BALT: new window.google.maps.Marker({position: locations.BALT, map: map, title: tooltips.BALT}),
     DCV: new window.google.maps.Marker({position: locations.DCV, map: map, title: tooltips.DCV}),
-    PA: new window.google.maps.Marker({position: locations.PA, map: map, title: tooltips.PA})
   }
 }
