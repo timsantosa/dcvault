@@ -17,7 +17,7 @@ class Calendar extends React.Component {
     $(function () {
       containerEl.fullCalendar({
         header: {
-          left: 'prev,next today',
+          left: 'prev,next ',
           center: 'title',
           right: 'month,listWeek'
         },
