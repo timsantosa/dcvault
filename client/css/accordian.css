@@ -231,21 +231,20 @@
 
 .accordian-coach_name{
     margin-bottom: 0px;
+    text-align:center;
 }
 
 @media(min-width:768px){
     .accordian-coach_name{
         margin-bottom:20px;
-        text-align: center;
     }
 }
 
 .accordian-sector-title_desc {
     line-height: 1.2;
-    margin-left: 65px;
     margin-bottom: 2vh;
-    text-align: left;
-    width: 75%;
+    text-align: center;
+    width: 100%;
     font-size: 18px;
 }
 
@@ -253,8 +252,6 @@
     .accordian-sector-title_desc {
         margin: 0;
         min-height: 100px;
-        text-align: center;
-        width: 100%;
         font-size:24px;
     }
 }

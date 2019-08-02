@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/client/staff-test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/staff-test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/css/accordian.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/css/accordian.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -48,11 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/staff-test/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="489">
-              <caret line="184" column="103" lean-forward="true" selection-start-line="184" selection-start-column="103" selection-end-line="184" selection-end-column="103" />
+            <state relative-caret-position="69">
+              <caret line="156" lean-forward="true" selection-start-line="156" selection-end-line="156" />
               <folding>
                 <element signature="n#div#0;n#header#0;n#body#0;n#html#0;n#!!top" />
                 <element signature="n#div#1;n#header#0;n#body#0;n#html#0;n#!!top" />
@@ -77,11 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/css/accordian.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="244" column="18" selection-start-line="244" selection-start-column="18" selection-end-line="244" selection-end-column="18" />
+            <state relative-caret-position="478">
+              <caret line="251" column="34" lean-forward="true" selection-start-line="251" selection-start-column="34" selection-end-line="251" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -169,8 +169,8 @@
         <option value="$PROJECT_DIR$/client/index.html" />
         <option value="$PROJECT_DIR$/client/js/facilities.js" />
         <option value="$PROJECT_DIR$/client/react/calendar.jsx" />
-        <option value="$PROJECT_DIR$/client/css/accordian.css" />
         <option value="$PROJECT_DIR$/client/staff-test/index.html" />
+        <option value="$PROJECT_DIR$/client/css/accordian.css" />
       </list>
     </option>
   </component>
@@ -310,12 +310,12 @@
       <workItem from="1564441158229" duration="7425000" />
       <workItem from="1564536893444" duration="1605000" />
       <workItem from="1564666206716" duration="3621000" />
-      <workItem from="1564703134667" duration="2186000" />
+      <workItem from="1564703134667" duration="2646000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="118803000" />
+    <option name="totallyTimeSpent" value="119263000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="806" extended-state="6" />
@@ -701,17 +701,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/css/accordian.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="244" column="18" selection-start-line="244" selection-start-column="18" selection-end-line="244" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/staff-test/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="489">
-          <caret line="184" column="103" lean-forward="true" selection-start-line="184" selection-start-column="103" selection-end-line="184" selection-end-column="103" />
+        <state relative-caret-position="69">
+          <caret line="156" lean-forward="true" selection-start-line="156" selection-end-line="156" />
           <folding>
             <element signature="n#div#0;n#header#0;n#body#0;n#html#0;n#!!top" />
             <element signature="n#div#1;n#header#0;n#body#0;n#html#0;n#!!top" />
@@ -732,6 +725,13 @@
             <element signature="n#div#4;n#div#1;n#div#0;n#div#0;n#section#1;n#body#0;n#html#0;n#!!top" />
             <element signature="n#style#0;n#div#0;n#div#0;n#div#4;n#div#1;n#div#0;n#div#0;n#section#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/css/accordian.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="478">
+          <caret line="251" column="34" lean-forward="true" selection-start-line="251" selection-start-column="34" selection-end-line="251" selection-end-column="34" />
         </state>
       </provider>
     </entry>
