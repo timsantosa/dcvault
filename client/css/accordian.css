@@ -229,9 +229,14 @@
     }
 }
 
+.accordian-coach_name{
+    margin-bottom: 0px;
+}
+
 .accordian-sector-title_desc {
     line-height: 1.2;
     margin-left: 65px;
+    margin-bottom: 2vh;
     text-align: left;
     width: 75%;
     font-size: 18px;
