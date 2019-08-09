@@ -357,13 +357,13 @@ class SelectPackage extends React.Component {
             <div className='form-row'>
               <label><span className='required'>Training Session</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fall</span>
@@ -387,13 +387,19 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: (this.state.checkedSession === 'summer') ? 'block' : 'none'}}>
+                <div style={{display: (this.state.checkedSession === 'fall') ? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
+                    <span>FLY-KIDS DC</span>
+                  </label>
+                </div>
+                <div style={{display: (this.state.checkedSession === 'fall') ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='group' value='youth' checked={this.state.checkedGroup === 'youth'} onChange={this.adjustOptions.bind(this)} />
                     <span>Youth</span>
                   </label>
                 </div>
-                <div style={{display: (this.state.checkedSession === 'summer') ? 'block' : 'none'}} >
+                <div style={{display: (this.state.checkedSession === 'fall') ? 'block' : 'none'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
                     <span>Adult</span>
@@ -912,7 +918,10 @@ class Payment extends React.Component {
     super(props)
     let price
     let group = this.props.data.selectPackage.group
-    if (group === 'youth' || group === 'adult') {
+
+    if(group === 'fly-kids'){
+      price = 125
+    }else if (group === 'youth' || group === 'adult') {
       price = 225
     } else if (group === 'elite' || group === 'professional') {
       price = 0
@@ -956,7 +965,7 @@ class Payment extends React.Component {
 
   calculatePrice () {
     let price = (this.state.price * (1 - this.state.discount)) * 1.03
-    price = parseFloat(price) < 10 ? .01 : price
+    price = parseFloat(price) < 10 ? 1 : price
     price += this.state.lateFee
     this.renderButton(price)
   }
@@ -1066,7 +1075,7 @@ class Payment extends React.Component {
     }
 
     let currentPrice = (this.state.price * (1 - this.state.discount))
-    currentPrice = currentPrice < 10 ? (.01).toFixed(2) : currentPrice.toFixed(2)
+    currentPrice = currentPrice < 10 ? (1).toFixed(2) : currentPrice.toFixed(2)
     let currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
     let lateFee = this.state.lateFee
 
