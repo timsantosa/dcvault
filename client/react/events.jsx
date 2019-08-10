@@ -506,6 +506,43 @@ class Events extends React.Component {
                     <li>Check out the <a href='https://www.facebook.com/EasternMarketDC/'>Venue!</a></li>
                 </ul>
             </div>)
+        },
+        {
+            date: new Date('August 14, 2019'),
+            partial: (<div className='event-block' id='14AUG2019'>
+                <p className='event-block-title'>DC Fray Adult Pole Vault Class</p>
+                <p className='event-block-info'><span className='event-block-date'>Wednesday, Aug 14 2019</span>
+                    <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
+                <ul className='event-block-details'>
+                    <li>DC Fray and DC Vault team up to host the Fray Life Adult Pole Vault Class!</li>
+                    <li>Class runs from 6:30pm-8:00pm</li>
+                    <li>NO EXPERIENCE NECESSARY!</li>
+                    <li>Participants should bring water and comfortable sports clothing appropriate for the weather</li>
+                    <li>Adult 21 and up</li>
+                    <li><span className='red-text'>Limited Space</span> - Register early to guarantee a slot</li>
+                    <li>Adults Can register to participate in this special event at <a href="https://dcfray.com/events/pole-vaulting-3-2-2-2/">here</a></li>
+                </ul>
+            </div>)
+        },
+        {
+            date: new Date('September 8, 2019'),
+            partial: (<div className='event-block' id='8SEP2019'>
+                <p className='event-block-title'>FLY-KIDS DC TRIAL CLASS</p>
+                <p className='event-block-info'><span className='event-block-date'>Sunday, Sep 8 2019</span>
+                    <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
+                <ul className='event-block-details'>
+                    <li>Ages: 5-10</li>
+                    <li>Time: 12:45pm-1:45pm</li>
+                    <li>Bring: Water</li>
+                    <li>Spectators: Welcome</li>
+                    <li>Dogs: Welcome (bring water and a leash!)</li>
+                    <li>Facility: DC Vault Pole Vault Training Center</li>
+                    <li>Parking: Lot #3</li>
+                    <li>Cost: $20</li>
+                    <li>Register (Trial Class): Email <a href='mailto:events@dcvault.org'>events@dcvault.org</a></li>
+                    <li>Register (Fall Course): DCVault.com (Training Section)</li>
+                </ul>
+            </div>)
         }
 
 
@@ -524,7 +561,7 @@ class Events extends React.Component {
     })
 
     contentDivs.upcoming = contentDivs.upcoming.sort((a, b) =>
-       b.date - a.date
+        a.date - b.date
     );
 
     contentDivs.past = contentDivs.past.sort((a, b) =>
