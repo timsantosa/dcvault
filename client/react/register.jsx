@@ -882,7 +882,7 @@ class Agreement extends React.Component {
               <img className='waiver-image' src='../img/forms/youth-comp-2.png' />
               <img className='waiver-image' src='../img/forms/youth-comp-3.png' />
 
-            <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's legal guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/release-form.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
+            <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's legal guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/DC Vault Waiver - Competition.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
 
             <div className='row'>
               <div className='col-xs-12 col-md-6'>
