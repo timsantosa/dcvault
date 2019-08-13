@@ -17,7 +17,7 @@ class Training extends React.Component {
         {
 
           title: 'Youth/Adult',
-          ages: 'Youth: 13 and under, Adult: 21+',
+          ages: 'Youth: 11-13, Adult: 21+',
           price: '$225',
           priceModifier: 'PER COURSE',
           location: 'DCV, BALT',
