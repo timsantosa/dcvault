@@ -532,7 +532,7 @@ class Events extends React.Component {
                     <span className='event-block-location'>2100 East Capitol street NE, Washington DC</span></p>
                 <ul className='event-block-details'>
                     <li>Ages: 5-10</li>
-                    <li>Time: 12:45pm-1:45pm</li>
+                    <li>Time: 11:30am-12:30pm</li>
                     <li>Bring: Water</li>
                     <li>Spectators: Welcome</li>
                     <li>Dogs: Welcome (bring water and a leash!)</li>
