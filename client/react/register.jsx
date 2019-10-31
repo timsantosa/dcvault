@@ -391,19 +391,19 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}}>
+                <div style={{display:'block'}}>
                   <label>
                     <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
                     <span>FLY-KIDS DC (ages 6-10)</span>
                   </label>
                 </div>
-                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='group' value='youth' checked={this.state.checkedGroup === 'youth'} onChange={this.adjustOptions.bind(this)} />
                     <span>Youth (ages 11-13)</span>
                   </label>
                 </div>
-                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}} >
+                <div style={{display:'block'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
                     <span>Adult (ages 21+)</span>
@@ -480,7 +480,7 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedFacility ? 'block' : 'none'}}>
               <label><span className='required'>Apparel</span></label>
               <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>T-shirts are an additional $20. Contact us if you would like to purchase more than 1.</span>
+              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like team apparel? DC Vault T-shirts can be purchased for an additional $20. </span>
               <br/><br/>
               <img className='apparel-img' src='../img/forms/apparel.jpg' width='100%' height='auto'/>
               <br/><br/><br/>
@@ -721,7 +721,7 @@ class AthleteInfo extends React.Component {
 
             <div className='form-row'>
               <label>
-                <span>Additional Email (Opt-in for Email Announcements)</span>
+                <span>Notification Email (for announcements, schedule adjustments, etc.) </span>
                 <input type='text' name='lstserv' />
               </label>
             </div>

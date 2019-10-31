@@ -19,7 +19,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="676">
+            <state relative-caret-position="-390">
               <caret line="458" selection-start-line="458" selection-end-line="458" />
               <folding>
                 <element signature="n#section#1;n#body#0;n#html#0;n#!!top" />
@@ -74,23 +74,35 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/css/accordian.css">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2865">
-              <caret line="191" column="5" selection-start-line="191" selection-start-column="5" selection-end-line="191" selection-end-column="5" />
+            <state relative-caret-position="143">
+              <caret line="721" column="38" lean-forward="true" selection-start-line="721" selection-start-column="38" selection-end-line="721" selection-end-column="38" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/react/calendar.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="401" column="103" lean-forward="true" selection-start-line="401" selection-start-column="103" selection-end-line="401" selection-end-column="103" />
+            <state relative-caret-position="195">
+              <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/css/fullcalendar.min.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="7840" selection-start-line="4" selection-start-column="7833" selection-end-line="4" selection-end-column="7840" />
             </state>
           </provider>
         </entry>
@@ -109,15 +121,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="452">
               <caret line="377" column="42" selection-start-line="377" selection-start-column="42" selection-end-line="377" selection-end-column="42" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/lib/bootstrap/css/bootstrap.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38205">
-              <caret line="2547" column="1" selection-start-line="2547" selection-start-column="1" selection-end-line="2547" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -420,18 +423,18 @@
       <workItem from="1570215921509" duration="740000" />
       <workItem from="1570985341238" duration="2728000" />
       <workItem from="1572291950111" duration="14693000" />
-      <workItem from="1572547821104" duration="1882000" />
+      <workItem from="1572547821104" duration="2356000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="152797000" />
+    <option name="totallyTimeSpent" value="153271000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="814" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.10641297" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19943622" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -621,23 +624,6 @@
     <entry file="file://$PROJECT_DIR$/client/react/generic-modal.jsx">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/css/fullcalendar.min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="7840" selection-start-line="4" selection-start-column="7833" selection-end-line="4" selection-end-column="7840" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/calendar.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/staff-test/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="635">
@@ -798,31 +784,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="676">
-          <caret line="458" selection-start-line="458" selection-end-line="458" />
-          <folding>
-            <element signature="n#section#1;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#1;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#div#2;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#3;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#div#3;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#3;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#4;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#4;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/register/info/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="263">
@@ -850,10 +811,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client/react/calendar.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/css/fullcalendar.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="7840" selection-start-line="4" selection-start-column="7833" selection-end-line="4" selection-end-column="7840" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-390">
+          <caret line="458" selection-start-line="458" selection-end-line="458" />
+          <folding>
+            <element signature="n#section#1;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#2;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#3;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#3;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#4;n#div#1;n#div#0;n#div#0;n#section#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="401" column="103" lean-forward="true" selection-start-line="401" selection-start-column="103" selection-end-line="401" selection-end-column="103" />
+        <state relative-caret-position="143">
+          <caret line="721" column="38" lean-forward="true" selection-start-line="721" selection-start-column="38" selection-end-line="721" selection-end-column="38" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
