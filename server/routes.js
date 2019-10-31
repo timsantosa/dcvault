@@ -391,6 +391,7 @@ module.exports = (app, db) => {
               lastName: athlete.lname,
               dob: athlete.dob,
               email: athlete.email,
+              listServ: athlete.lstserv,
               emergencyContactName: athlete['emergency-contact'],
               emergencyContactRelation: athlete['emergency-relation'],
               emergencyContactMDN: athlete['emergency-phone'],
@@ -417,6 +418,7 @@ module.exports = (app, db) => {
               group: purchaseInfo.selectPackage.group,
               facility: purchaseInfo.selectPackage.facility,
               waiverSignatory: purchaseInfo.agreement.name,
+              size: purchaseInfo.selectPackage.apparel,
               waiverDate: purchaseInfo.agreement.date,
               paymentId: purchaseInfo.payment.paymentId,
               payerId: purchaseInfo.payment.payerId

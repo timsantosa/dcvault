@@ -33,6 +33,7 @@ columns.athletes = {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
   email: {type: Sequelize.STRING, unique: false},
+  listServ: Sequelize.STRING,
   emergencyContactName: Sequelize.STRING,
   emergencyContactMDN: Sequelize.STRING,
   emergencyContactRelation: Sequelize.STRING,
@@ -96,7 +97,8 @@ columns.purchases = {
   waiverSignatory: Sequelize.STRING,
   waiverDate: Sequelize.STRING,
   paymentId: Sequelize.STRING,
-  payerId: Sequelize.STRING
+  payerId: Sequelize.STRING,
+  size: Sequelize.STRING
 }
 
 columns.eventPurchases = {

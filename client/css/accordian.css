@@ -241,6 +241,7 @@
 }
 
 .accordian-sector-title_desc {
+    font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
     line-height: 1.2;
     margin-bottom: 2vh;
     text-align: center;
@@ -707,8 +708,8 @@
     .accordian .sector-5 .accordian-sector {
         position: relative;
         transition: all .25s ease-in;
-        height: 16vh;
-        max-height: 70px;
+        height: 20vh;
+        max-height: 125px;
         width: 100%
     }
 

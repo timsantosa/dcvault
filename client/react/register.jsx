@@ -151,6 +151,7 @@ class SelectPackage extends React.Component {
       youthAdult: false,
       checkedGroup: null,
       checkedSession: null,
+      checkedFacility: null,
       showInvite: false,
       showEmergingElite: false,
       showElite: false,
@@ -182,11 +183,12 @@ class SelectPackage extends React.Component {
     output.quarter = $('input[name="quarter"]:checked').val()
     output.group = $('input[name="group"]:checked').val()
     output.facility = $('input[name="facility"]:checked').val()
+    output.apparel = $('input[name="apparel"]:checked').val()
     if (this.state.inviteCode) {
       output.invite = this.state.inviteCode
     }
 
-    if (output.quarter === undefined || output.group === undefined || output.facility === undefined) {
+    if (output.quarter === undefined || output.group === undefined || output.facility === undefined || output.apparel === undefined) {
       this.setState({
         errorText: 'Please fill in all required fields'
       })
@@ -205,7 +207,7 @@ class SelectPackage extends React.Component {
     if ((month === 11 && day >= 15) || month === 12 || month === 1 || month === 2) {
       activeQuarter = 'winter'
       this.setState({
-        showYouthAdult: false
+        showYouthAdult: true
       })
     }
 
@@ -235,9 +237,11 @@ class SelectPackage extends React.Component {
   adjustOptions () {
     let group = $('input[name="group"]:checked').val()
     let quarter = $('input[name="quarter"]:checked').val()
+    let facility = $('input[name="facility"]:checked').val()
     this.setState({
       checkedGroup: group,
-      checkedSession: quarter
+      checkedSession: quarter,
+      checkedFacility: facility
     })
 
       /*
@@ -247,7 +251,7 @@ class SelectPackage extends React.Component {
       this.setState({
         availableFacilities: {
           dcv: false,
-          balt: true,
+          balt: false,
           pa: false,
           prep: true
         }
@@ -363,13 +367,13 @@ class SelectPackage extends React.Component {
                     <span>Summer</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fall</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
                     <span>Winter</span>
@@ -393,13 +397,13 @@ class SelectPackage extends React.Component {
                     <span>FLY-KIDS DC (ages 6-10)</span>
                   </label>
                 </div>
-                <div style={{display: (this.state.checkedSession === 'fall') ? 'block' : 'none'}}>
+                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='group' value='youth' checked={this.state.checkedGroup === 'youth'} onChange={this.adjustOptions.bind(this)} />
                     <span>Youth (ages 11-13)</span>
                   </label>
                 </div>
-                <div style={{display: (this.state.checkedSession === 'fall') ? 'block' : 'none'}} >
+                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
                     <span>Adult (ages 21+)</span>
@@ -454,24 +458,76 @@ class SelectPackage extends React.Component {
               <div className='form-radio-buttons'>
                 <div style={{display: this.state.availableFacilities.dcv ? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='facility' value='dcv' />
+                    <input type='radio' name='facility' value='dcv' checked={this.state.checkedFacility === 'dcv'} onChange={this.adjustOptions.bind(this)}/>
                     <span>Washington, DC (DCV)</span>
                   </label>
                 </div>
                 <div style={{display: this.state.availableFacilities.balt ? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='facility' value='balt' />
+                    <input type='radio' name='facility' value='balt' checked={this.state.checkedFacility === 'balt'} onChange={this.adjustOptions.bind(this)}/>
                     <span>Baltimore (BALT)</span>
                   </label>
                 </div>
                 <div style={{display: this.state.availableFacilities.prep ? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='facility' value='prep' />
+                    <input type='radio' name='facility' value='prep' checked={this.state.checkedFacility === 'prep'} onChange={this.adjustOptions.bind(this)}/>
                     <span>North Bethesda, MD (PREP)</span>
                   </label>
                 </div>
               </div>
             </div>
+
+            <div className='form-row' style={{display: this.state.checkedFacility ? 'block' : 'none'}}>
+              <label><span className='required'>Apparel</span></label>
+              <br/>
+              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>T-shirts are an additional $20. Contact us if you would like to purchase more than 1.</span>
+              <br/><br/>
+              <img className='apparel-img' src='../img/forms/apparel.jpg' width='100%' height='auto'/>
+              <br/><br/><br/>
+              <div className='form-radio-buttons'>
+                <span style={{fontWeight:'normal'}}><i>Youth</i></span>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='apparel' value='yxs' />
+                    <span>XS</span>
+                  </label>
+                </div>
+
+                <span style={{fontWeight:'normal'}}><i>Unisex</i></span>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='apparel' value='xs' />
+                    <span>XS</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='apparel' value='sm' />
+                    <span>S</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='apparel' value='md' />
+                    <span>M</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='apparel' value='lg' />
+                    <span>L</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='apparel' value='none' />
+                    <span>None</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+
 
             <div className='form-row'>
               <button type='button' onClick={this.continue.bind(this)}>Continue</button>
@@ -660,6 +716,13 @@ class AthleteInfo extends React.Component {
               <label>
                 <span className='required'>Athlete Email</span>
                 <input type='text' name='email' />
+              </label>
+            </div>
+
+            <div className='form-row'>
+              <label>
+                <span>Additional Email (Opt-in for Email Announcements)</span>
+                <input type='text' name='lstserv' />
               </label>
             </div>
 
@@ -971,6 +1034,11 @@ class Payment extends React.Component {
     let price = (this.state.price * (1 - this.state.discount)) * 1.03
     price = parseFloat(price) < 10 ? 1 : price
     price += this.state.lateFee
+    let apparel = this.props.data.selectPackage.apparel
+    if (apparel === 'none'){
+    }else{
+      price += 20
+    }
     this.renderButton(price)
   }
 
@@ -1080,8 +1148,15 @@ class Payment extends React.Component {
 
     let currentPrice = (this.state.price * (1 - this.state.discount))
     currentPrice = currentPrice < 10 ? (1).toFixed(2) : currentPrice.toFixed(2)
-    let currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
+    let size = this.props.data.selectPackage.apparel
+    let currentProcessingFee = 0
+    if (size === 'none'){
+      currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
+    }else{
+      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 20) * 0.03).toFixed(2)
+    }
     let lateFee = this.state.lateFee
+
 
     return (
       <div className='row'>
@@ -1095,6 +1170,7 @@ class Payment extends React.Component {
               <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                   <p className='price-text'>Registration Fee: <span className='red-text'>${currentPrice}</span></p>
+                  {size !== 'none' ? (<p className='price-text'>Apparel Fee: <span className='red-text'>${20}</span></p>) : ''}
                   <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                   {lateFee > 0 ? (<p className='price-text'>Late Fee: <span className='red-text'>${lateFee.toFixed(2)}</span></p>) : ''}
                 </div>

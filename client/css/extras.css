@@ -78,13 +78,23 @@ a {
 
 .gray-text{
   font-size: 16px;
-  font-weight: bolder;
+  color: #aaa;
 }
 
-@media(min-width:813px){
+.dark-text {
+  font-size: 16px;
+  color: #434343;
+}
+
+
+@media(min-width:768px){
   .gray-text {
     font-size: 24px;
-    font-weight: bolder;
+    color: white;
+  }
+  .dark-text {
+    font-size: 24px;
+    color: white;
   }
 }
 
