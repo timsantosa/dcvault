@@ -721,7 +721,7 @@ class AthleteInfo extends React.Component {
 
             <div className='form-row'>
               <label>
-                <span>Notification Email (for announcements, schedule adjustments, etc.) </span>
+                <span className='required'>Notification Email (for announcements, schedule adjustments, etc.) </span>
                 <input type='text' name='lstserv' />
               </label>
             </div>
