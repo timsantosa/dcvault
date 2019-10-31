@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/img/forms/apparel.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/client/img/forms/apparel.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react/pole-app.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/pole-app.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react/register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/register.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/react/training.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/training.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/register/info/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/register/info/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/db/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/db/db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/routes.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -92,8 +86,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="267" column="12" lean-forward="true" selection-start-line="267" selection-start-column="12" selection-end-line="267" selection-end-column="12" />
+            <state relative-caret-position="240">
+              <caret line="401" column="103" lean-forward="true" selection-start-line="401" selection-start-column="103" selection-end-line="401" selection-end-column="103" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -426,12 +420,12 @@
       <workItem from="1570215921509" duration="740000" />
       <workItem from="1570985341238" duration="2728000" />
       <workItem from="1572291950111" duration="14693000" />
-      <workItem from="1572547821104" duration="1517000" />
+      <workItem from="1572547821104" duration="1882000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="152432000" />
+    <option name="totallyTimeSpent" value="152797000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="814" extended-state="6" />
@@ -858,8 +852,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="267" column="12" lean-forward="true" selection-start-line="267" selection-start-column="12" selection-end-line="267" selection-end-column="12" />
+        <state relative-caret-position="240">
+          <caret line="401" column="103" lean-forward="true" selection-start-line="401" selection-start-column="103" selection-end-line="401" selection-end-column="103" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>

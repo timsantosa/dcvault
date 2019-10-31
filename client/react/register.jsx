@@ -391,7 +391,7 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: (this.state.checkedSession === 'fall') ? 'block' : 'none'}}>
+                <div style={{display: (this.state.checkedSession === 'fall' || this.state.checkedSession === 'winter') ? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
                     <span>FLY-KIDS DC (ages 6-10)</span>
