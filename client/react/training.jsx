@@ -10,18 +10,18 @@ class Training extends React.Component {
           {
               title: 'FLY-KIDS DC',
               ages: 'Ages 6-10',
-              price:'$125',
+                price:'$150',
               priceModifier:'PER COURSE',
-              description: 'Our FLY-KIDS DC program is designed for children ages 6-10 years of age. This innovative program introduces young kids to the basics of pole vaulting in a fun, engaging environment. Using custom made children\'s pole vault equipment and an innovative approach to training, kids are  actually able to pole vault within their first lesson! Kids will run, jump, climb and swing their way to new heights and be able to show off their skills in a public exhibition at venues like Eastern Market and the National Mall upon completion of their course! '
+              description: 'Our FLY-KIDS DC program is designed for children ages 6-10 years of age. This innovative program introduces young kids to the basics of pole vaulting in a fun, engaging environment. Using custom made children\'s pole vault equipment and an innovative approach to training, kids are actually able to pole vault within their first lesson! Kids will run, jump, climb and swing their way to new heights! '
           },
         {
 
           title: 'Youth/Adult',
           ages: 'Youth: 11-13, Adult: 21+',
-          price: '$225',
+          price: '$300',
           priceModifier: 'PER COURSE',
           location: 'DCV, BALT',
-          dates: 'Spring, Summer, and Fall',
+          dates: 'Spring, Summer, Fall, and Winter',
           description: 'We offer a program specifically designed for youth or adult athletes. Classes cover Primary Phases of the vault and are suitable for beginner through intermediate youth, or beginner to advanced adults. Class is held on weekdays or weekends depending on the training program. Check our schedule for upcoming courses.'
         },
         {

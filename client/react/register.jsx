@@ -268,10 +268,10 @@ class SelectPackage extends React.Component {
     } else {
       this.setState({
         availableFacilities: {
-          dcv: true,
+          dcv: false,
           balt: false,
           pa: false,
-          prep: false
+          prep: true
         }
       })
     }
@@ -485,6 +485,12 @@ class SelectPackage extends React.Component {
               <img className='apparel-img' src='../img/forms/apparel.jpg' width='100%' height='auto'/>
               <br/><br/><br/>
               <div className='form-radio-buttons'>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='apparel' value='none' />
+                    <span>No Thanks</span>
+                  </label>
+                </div>
                 <span style={{fontWeight:'normal'}}><i>Youth</i></span>
                 <div style={{display: 'block'}}>
                   <label>
@@ -516,12 +522,6 @@ class SelectPackage extends React.Component {
                   <label>
                     <input type='radio' name='apparel' value='lg' />
                     <span>L</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='apparel' value='none' />
-                    <span>None</span>
                   </label>
                 </div>
               </div>
@@ -987,9 +987,9 @@ class Payment extends React.Component {
     let group = this.props.data.selectPackage.group
 
     if(group === 'fly-kids'){
-      price = 125
+      price = 150
     }else if (group === 'youth' || group === 'adult') {
-      price = 225
+      price = 300
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'beginner' || group === 'intermediate' || group === 'beginner-intermediate') {

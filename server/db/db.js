@@ -33,7 +33,7 @@ columns.athletes = {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
   email: {type: Sequelize.STRING, unique: false},
-  listServ: Sequelize.STRING,
+  notifications: Sequelize.STRING,
   emergencyContactName: Sequelize.STRING,
   emergencyContactMDN: Sequelize.STRING,
   emergencyContactRelation: Sequelize.STRING,

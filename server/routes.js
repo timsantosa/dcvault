@@ -391,7 +391,7 @@ module.exports = (app, db) => {
               lastName: athlete.lname,
               dob: athlete.dob,
               email: athlete.email,
-              listServ: athlete.lstserv,
+              notifications: athlete.lstserv,
               emergencyContactName: athlete['emergency-contact'],
               emergencyContactRelation: athlete['emergency-relation'],
               emergencyContactMDN: athlete['emergency-phone'],
