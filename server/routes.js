@@ -690,13 +690,18 @@ module.exports = (app, db) => {
               db.tables.Purchases.findAll().then((purchases) => {
                 db.tables.Athletes.findAll().then((athletes) => {
                   let quarter = helpers.getCurrentQuarter()
+
                   let year = new Date().getFullYear()
                   athletes = athletes.map(athlete => {
                     let currentlyRegistered = false
                     for (let i = 0; i < purchases.length; i++) {
                       let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
-                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1 && purchaseYear === year) {
-                        currentlyRegistered = true
+                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1) {
+                        if (quarter === "winter" && ((purchaseYear === year) || purchaseYear+1 === year)){
+                           currentlyRegistered = true
+                        }else if(purchaseYear === year){
+                          currentlyRegistered = true
+                        }
                         break
                       }
                     }
