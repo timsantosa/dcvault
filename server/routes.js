@@ -737,6 +737,7 @@ module.exports = (app, db) => {
 
                       if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1) {
                         console.log(purchaseYear)
+                        console.log(purchases[i].waiverSignatory)
                         if (quarter === "winter" && ((purchaseYear === year) || purchaseYear+1 === year)){
                           currentlyRegistered = true
                         }else if(purchaseYear === year){
