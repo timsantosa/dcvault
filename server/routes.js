@@ -700,11 +700,13 @@ module.exports = (app, db) => {
                       if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1) {
 
                         if (quarter === "winter" && ((purchaseYear === year) || purchaseYear+1 === year)){
-                           currentlyRegistered = true
+                          currentlyRegistered = true
+                          break
                         }else if(purchaseYear === year){
                           currentlyRegistered = true
+                          break
                         }
-                        break
+
                       }
                     }
                     athlete.dataValues.currentlyRegistered = currentlyRegistered
@@ -740,10 +742,11 @@ module.exports = (app, db) => {
                         console.log(purchases[i].waiverSignatory)
                         if (quarter === "winter" && ((purchaseYear === year) || purchaseYear+1 === year)){
                           currentlyRegistered = true
+                          break
                         }else if(purchaseYear === year){
                           currentlyRegistered = true
+                          break
                         }
-                        break
                       }
                     }
                     athlete.dataValues.currentlyRegistered = currentlyRegistered
