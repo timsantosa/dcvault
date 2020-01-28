@@ -241,7 +241,6 @@ class Login extends React.Component {
                 {forgotButton}
               </div>
               <div className = 'col-xs-15 login-modal-element'>
-                  We experienced an unexpected issue which caused some information to be lost or altered. If you cannot login please try re-registering your DCVault account.
               </div>
 
             </div>
