@@ -20,13 +20,12 @@ var textValues = {
 <p class="content-text" style="font-weight: bold">What</p>\
 <p class="content-text smaller-text">Indoor training site, primarily used for Level-V training.</p>',
 
-  BALT: '<p class="minor-heading">Loyola <span class="red-text">Blakefield</span> (BALT)</p>\
+  BALT: '<p class="minor-heading">Baltimore (BALT)</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
-<p class="content-text smaller-text">Loyola Blakefield</p>\
-<p class="content-text smaller-text">500 Chestnut Ave, Towson, MD</p> \
-<p class="content-text smaller-text">Facility - Knott Hall - Fieldhouse / Outdoor Track</p>\
+<p class="content-text smaller-text">We Travel to You!</p>\
 <p class="content-text" style="font-weight: bold">What</p>\
-<p class="content-text smaller-text">Indoor and Outdoor Training site, primarily used for Baltimore based Level-I and Level-II development training.</p>',
+<p class="content-text smaller-text">We offer private lessons in the Baltimore area to athletes who are unable to make it to one of our facilities. </p>\
+<p class="content-text smaller-text">We will bring poles or other needed equipment to the training location of your choice. Contact us for details!</p>',
 
   DCV: '<p class="minor-heading">DC <span class="red-text">VAULT</span> (DCV)</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
@@ -45,14 +44,14 @@ Parking is available in Lot 3 and metro access is available across the street at
 var locations = {
   PREP: {lat: 39.032617, lng: -77.108889},
   PG: {lat: 38.911269, lng: -76.866919},
-  BALT: {lat: 39.403604, lng: -76.626360},
+  BALT: {lat: 39.284213, lng: -76.610312},
   DCV: {lat: 38.890134, lng: -76.976392},
 }
 
 var tooltips = {
   PREP: 'Georgetown Preparatory School',
   PG: 'Prince George\'s County Sportsplex',
-  BALT: 'Loyola Blakefield',
+  BALT: 'Baltimore',
   DCV: 'DC VAULT',
 }
 

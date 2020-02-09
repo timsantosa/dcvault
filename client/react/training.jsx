@@ -8,31 +8,32 @@ class Training extends React.Component {
     this.state = {
       trainingCards: [
           {
-              title: 'FLY-KIDS DC',
+              title: 'Fly-Kids',
               ages: 'Ages 6-10',
-                price:'$150',
-              priceModifier:'PER COURSE',
-              description: 'Our FLY-KIDS DC program is designed for children ages 6-10 years of age. This innovative program introduces young kids to the basics of pole vaulting in a fun, engaging environment. Using custom made children\'s pole vault equipment and an innovative approach to training, kids are actually able to pole vault within their first lesson! Kids will run, jump, climb and swing their way to new heights! '
+                price:'$120',
+              priceModifier:'SPECIALTY',
+              location: 'DCV',
+              description: 'Our FLY-KIDS DC program is designed for children ages 6-10 years of age. This innovative monthly program introduces young kids to the basics of pole vaulting in a fun, engaging environment. Using custom made children\'s pole vault equipment and an innovative approach to training, kids are actually able to pole vault within their first lesson! Kids will run, jump, climb and swing their way to new heights!'
           },
         {
 
-          title: 'Youth/Adult',
-          ages: 'Youth: 11-13, Adult: 21+',
+          title: 'Adult',
+          ages: 'Ages 21+',
           price: '$300',
-          priceModifier: 'PER COURSE',
-          location: 'DCV, BALT',
+          priceModifier: 'SPECIALTY',
+          location: 'DCV, PREP',
           dates: 'Spring, Summer, Fall, and Winter',
-          description: 'We offer a program specifically designed for youth or adult athletes. Classes cover Primary Phases of the vault and are suitable for beginner through intermediate youth, or beginner to advanced adults. Class is held on weekdays or weekends depending on the training program. Check our schedule for upcoming courses.'
+          description: 'A flexible program for adult athletes with demanding schedules that allows participants register for a limited number of sessions that can be used in just a few weeks or spread out over several months. Classes focus on the individual in that Adults can set their own training objectives. Adults are trained separately from other athletes when enough participants register for a single class (coordinate with your friends!).  '
         },
         {
           title: 'Beginner/Intermediate',
           ages: 'All Ages',
           price: '$450',
-          priceModifier: 'PER QTR',
-          location: 'DCV, BALT',
-          duration: '3-month course',
+          priceModifier: 'MONTH/QUARTER',
+          location: 'DCV, PREP',
+          duration: 'Monthly + Quarterly Packages',
           dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
-          description: 'Beginner/Level-1 athletes focus on development of primary phases of the vault, whereas Intermediate/Level II athletes focus on mastering primary phases and introduction to secondary phases of the vault. Class is held on weekends and includes static and dynamic stretching, biomechanically focused warm-up, primary and secondary phase drills, vaulting and introductory speed and strength conditioning. Bonus Sessions are often added to the mid-week training schedule and are optional for those athletes who would like to get in more practice.'
+          description: 'Beginner, Level-1 athletes focus on introduction to the vault, while Intermediate, Level II athletes focus on mastering primary phases of the vault. Class includes static and dynamic stretching, biomechanically focused warm-up, drills and vaulting. '
         },
         {
           title: 'Emerging Elite',
@@ -40,7 +41,7 @@ class Training extends React.Component {
           location: 'DCV',
           duration: '6-month course',
           dates: 'Fall and Winter',
-          description: 'Emerging Elite, Level III athletes focus on mastering secondary phases of the vault. Class is held on weekends and at multiple times during the week. Athletes participate in a 6-month comprehensive training program designed to produce maximum level of performance during the competitive season. Classes include static and dynamic stretching, biomechanically focused warm-up, secondary phase drills, vaulting and extensive speed and strength conditioning.'
+          description: 'Emerging Elite, Level III athletes focus on mastering secondary phases of the vault. Athletes participate in a 6-month comprehensive training program designed to produce maximum level of performance during the competitive season. Classes include static and dynamic stretching, biomechanically focused warm-up, secondary phase drills, vaulting and extensive speed and strength conditioning.'
         },
         {
           title: 'Elite',
@@ -48,7 +49,7 @@ class Training extends React.Component {
           location: 'DCV',
           duration: '9-month course',
           dates: 'Fall, Winter, and Spring',
-          description: 'Elite, Level IV athletes focus on high level refinement of secondary phases of the vault, as well as mastering tertiary phases of the vault. Athletes participate in a 9-month comprehensive training program designed to produce two seasonal peaks in performance (indoor and outdoor championships)and to transition athletes to professional level training.'
+          description: 'Elite, Level IV athletes focus on high level refinement of secondary phases of the vault, as well as mastering tertiary phases of the vault. Athletes participate in a 9-month comprehensive training program designed to produce two seasonal peaks in performance (indoor and outdoor championships) and to transition athletes to professional level training.'
         },
         {
           title: 'Professional',
@@ -58,21 +59,23 @@ class Training extends React.Component {
           description: 'Professional, Level V athletes work in private session on a personalized, comprehensive, year-round training program. Technical focus is on mastering tertiary phases of the vault, with strong emphasis placed on high level refinement of energy transitions. Speed and strength development is customized for the individual athlete to produce peak performance during championship competitions. It incorporates recovery phases and non-traditional range of motion and biomechanical movements for stabilization, technical consistency and injury prevention.'
         },
           {
-            title: 'Discounts',
-            priceModifier: 'BY REQUEST',
-            description: 'DC Vault offers a variety of discounts to needy athletes, local residents and service members, such as...</br>10% - College Student (full time)</br>10% - Active Duty and Retired Military</br>25% - DC Residents</br>25% - DCPS Students</br>25% - Family Discount (2 or more)</br>Does not apply to equipment rental, special training sessions, or events. Discounts cannot be combined.</br>Please contact us (dcvault@dcvault.org) to apply for a discount code.'
+            title: 'Strength Training',
+            ages: 'Ages 13+',
+            priceModifier: 'SPECIALTY',
+            description: 'Athletes participating in the DC Vault Strength Program will learn fundamentals of weightlifting, calisthenics, balance and flexibility, using methods similar to DC Vault\'s elite development programs. \n' +
+                'With movements transferable to the vault, focus is placed on technical elements and biomechanics to ensure safety, improve motor skills, and result in the greatest gains for each athlete.'
           },
         {
           title: 'Private Lessons',
-          price: '$175',
+          price: '$200',
           priceModifier: 'BY REQUEST',
           description: '1 hour in duration, offered for all skill levels. Private lessons are limited in availability. Please contact us for scheduling.'
         },
         {
           title: 'Pole Rental',
-          price: '$175',
+          price: '$200',
           priceModifier: 'PER QTR',
-          description: 'Note - Poles are provided FREE OF CHARGE for use during DC Vault classes.</br>As a typical athlete will progress through 3-6 poles during a season, the cost of purchasing poles (ranging from $300-$800 each) can add up quickly. Our pole rental program allows athletes to check out one pole at a time for non-club related activities, such as high school practice or competition.'
+          description: 'Poles are provided FREE OF CHARGE for use during DC Vault classes.</br>A typical athlete will progress through 3-6 poles seasonally. At $400-$900 each, costs can add up quickly. Our pole rental program allows athletes to check out one pole at a time for Non-DCV related activities, such as a school team competition.'
         }
       ],
       showDescription: false,
@@ -84,12 +87,14 @@ class Training extends React.Component {
 
   }
 
+  //        <p className='option-info'>{card.ages ? card.ages : ''}</p>
+  //old ages options above the circle
   render () { // All components have a render function in which you will return this 'HTML-like' syntax
     return (
       <div id='training-container' className='container'>
-        <p className='section-header'>Training <span className='red-text'>Options</span></p>
+        <p className='section-header'>Training <span className='red-text'>Programs</span></p>
         <div className='red-button' onClick={() => { window.location.href = '/register/info' }} style={{marginBottom: '30px'}}>
-          <span className='button-text'>Course Information - Sign Up</span>
+          <span className='button-text'>Course Sign Up</span>
         </div>
         <div className='row' style={{width: '100%', margin: '0'}}>
           {
@@ -135,10 +140,9 @@ class TrainingCard extends React.Component {
     return (
       <div className={classString}>
         <p className='option-title'>{card.title}</p>
-        <p className='option-info'>{card.ages ? card.ages : ''}</p>
         <div className='option-price-container-1'>
           <div className='option-price-container-2'>
-            <p className='option-price'>{card.price ? card.price : 'N/A'}</p>
+            <p className='option-price'>{card.ages ? card.ages : 'N/A'}</p>
             <p className='option-price-modifier'>{card.priceModifier ? card.priceModifier : ''}</p>
           </div>
         </div>
