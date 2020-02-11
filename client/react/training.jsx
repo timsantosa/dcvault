@@ -26,12 +26,12 @@ class Training extends React.Component {
           description: 'A flexible program for adult athletes with demanding schedules that allows participants register for a limited number of sessions that can be used in just a few weeks or spread out over several months. Classes focus on the individual in that Adults can set their own training objectives. Adults are trained separately from other athletes when enough participants register for a single class (coordinate with your friends!).  '
         },
         {
-          title: 'Beginner/Intermediate',
+          title: 'Beginner-Intermediate',
           ages: 'All Ages',
           price: '$450',
-          priceModifier: 'MONTH/QUARTER',
+          priceModifier: 'MONTHLY/QUARTERLY',
           location: 'DCV, PREP',
-          duration: 'Monthly + Quarterly Packages',
+          duration: 'Monthly + Quarterly',
           dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
           description: 'Beginner, Level-1 athletes focus on introduction to the vault, while Intermediate, Level II athletes focus on mastering primary phases of the vault. Class includes static and dynamic stretching, biomechanically focused warm-up, drills and vaulting. '
         },
@@ -60,6 +60,7 @@ class Training extends React.Component {
         },
           {
             title: 'Strength Training',
+            location:'DCV',
             ages: 'Ages 13+',
             priceModifier: 'SPECIALTY',
             description: 'Athletes participating in the DC Vault Strength Program will learn fundamentals of weightlifting, calisthenics, balance and flexibility, using methods similar to DC Vault\'s elite development programs. \n' +
@@ -68,13 +69,14 @@ class Training extends React.Component {
         {
           title: 'Private Lessons',
           price: '$200',
+          ages: 'All Ages',
           priceModifier: 'BY REQUEST',
           description: '1 hour in duration, offered for all skill levels. Private lessons are limited in availability. Please contact us for scheduling.'
         },
         {
           title: 'Pole Rental',
           price: '$200',
-          priceModifier: 'PER QTR',
+          priceModifier: 'WEEKLY/QUARTERLY',
           description: 'Poles are provided FREE OF CHARGE for use during DC Vault classes.</br>A typical athlete will progress through 3-6 poles seasonally. At $400-$900 each, costs can add up quickly. Our pole rental program allows athletes to check out one pole at a time for Non-DCV related activities, such as a school team competition.'
         }
       ],
@@ -127,16 +129,18 @@ class TrainingCard extends React.Component {
     }
 
     let descriptionString = ''
-    if (card.duration) {
-      descriptionString += card.duration + '</br>'
-    }
+
     if (card.location) {
       descriptionString += 'Locations: ' + card.location + '</br>'
     }
     if (card.ages) {
       descriptionString += 'Ages: ' + card.ages + '</br>'
     }
+    if (card.duration) {
+      descriptionString += card.duration + '</br>'
+    }
     descriptionString += card.description
+
     return (
       <div className={classString}>
         <p className='option-title'>{card.title}</p>
