@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/client/react/pole-app.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/pole-app.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/react/register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/register.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/register/info/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/register/info/index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -33,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/register/info/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="258" column="103" selection-start-line="258" selection-start-column="103" selection-end-line="258" selection-end-column="103" />
+            <state relative-caret-position="186">
+              <caret line="256" column="54" lean-forward="true" selection-start-line="256" selection-start-column="54" selection-end-line="256" selection-end-column="54" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#p#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -452,12 +451,12 @@
       <workItem from="1580841409108" duration="12764000" />
       <workItem from="1581463743569" duration="822000" />
       <workItem from="1581466692552" duration="179000" />
-      <workItem from="1581618189083" duration="2667000" />
+      <workItem from="1581618189083" duration="2761000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="195984000" />
+    <option name="totallyTimeSpent" value="196078000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="816" extended-state="0" />
@@ -891,8 +890,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/register/info/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="258" column="103" selection-start-line="258" selection-start-column="103" selection-end-line="258" selection-end-column="103" />
+        <state relative-caret-position="186">
+          <caret line="256" column="54" lean-forward="true" selection-start-line="256" selection-start-column="54" selection-end-line="256" selection-end-column="54" />
           <folding>
             <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#p#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
