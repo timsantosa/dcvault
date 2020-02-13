@@ -29,11 +29,11 @@ class Training extends React.Component {
           title: 'Beginner-Intermediate',
           ages: 'All Ages',
           price: '$450',
-          priceModifier: 'MONTHLY - QUARTERLY',
+          priceModifier: 'MONTHLY QUARTERLY',
           location: 'DCV, PREP',
           duration: 'Monthly + Quarterly',
           dates: 'Spring, Summer, Fall, and Winter (see schedule for upcoming classes)',
-          description: 'Beginner, Level-1 athletes focus on introduction to the vault, while Intermediate, Level II athletes focus on mastering primary phases of the vault. Class includes static and dynamic stretching, biomechanically focused warm-up, drills and vaulting. '
+          description: 'Athletes under age 11 must get pre-approval to register for this group. Beginner, Level-1 athletes focus on introduction to the vault, while Intermediate, Level II athletes focus on mastering primary phases of the vault. Class includes static and dynamic stretching, biomechanically focused warm-up, drills and vaulting. '
         },
         {
           title: 'Emerging Elite',
@@ -76,7 +76,7 @@ class Training extends React.Component {
         {
           title: 'Pole Rental',
           price: '$200',
-          priceModifier: 'WEEKLY - QUARTERLY',
+          priceModifier: 'WEEKLY QUARTERLY',
           description: 'Poles are provided FREE OF CHARGE for use during DC Vault classes.</br>A typical athlete will progress through 3-6 poles seasonally. At $400-$900 each, costs can add up quickly. Our pole rental program allows athletes to check out one pole at a time for Non-DCV related activities, such as a school team competition.'
         }
       ],

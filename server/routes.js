@@ -429,6 +429,10 @@ module.exports = (app, db) => {
             if (noapp === 'none'){
               console.log("No Apparel!")
               app = 'none'
+            }else{
+              if (app === ''){
+                app = 'purchased, need size'
+              }
             }
 
             db.tables.Purchases.create({
