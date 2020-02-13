@@ -85,6 +85,9 @@ module.exports.sendConfirmationEmails = (email) => {
     subject: 'Welcome to DC Vault', // Subject line
     to: email,
     html: '<p>Thank you for registering with DC Vault. Please review the content below closely and let us know if you have any questions.</p>\
+      <h3>!! NEW CLASS RESERVATION APP !!</h3>\
+      <p>To help you keep track of the training package you signed up for, we have implemented a new reservation app called Zenplanner. This will help you pre-select the practice times you want to attend each week, keep track of your vault package allocation, track performance metrics, and more! </p>\
+      <p>Please look out for an instructional email on how to create your athlete account before our spring quarter starts in March, as well as an email from us on how to use your new app!</p>\
       <h3>SCHEDULE</h3>\
       <p>Please refer to our online calendar for your training schedule. Your group dates, times and location for the upcoming training period are posted on this schedule. Any changes due to scheduling conflicts, weather or other unforeseen circumstances will be posted here as well. Please be sure to check the schedule prior to your training sessions at all times.</p> \
       <h3>WHAT TO EXPECT</h3>\

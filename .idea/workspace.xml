@@ -7,7 +7,6 @@
       <change beforePath="$PROJECT_DIR$/client/react/admin-panel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/admin-panel.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react/pole-app.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/pole-app.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react/register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/register.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/register/info/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/register/info/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/db/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/db/db.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/lib/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/lib/helpers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/routes.js" afterDir="false" />
@@ -26,7 +25,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/react/training.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
+            <state relative-caret-position="975">
               <caret line="66" column="55" selection-start-line="66" selection-start-column="54" selection-end-line="66" selection-end-column="55" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
@@ -35,10 +34,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/register/info/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
+            <state relative-caret-position="-250">
               <caret line="73" column="22" selection-start-line="73" selection-start-column="22" selection-end-line="73" selection-end-column="22" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -94,14 +93,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8115">
-              <caret line="541" column="26" selection-start-line="541" selection-start-column="26" selection-end-line="541" selection-end-column="26" />
+            <state relative-caret-position="244">
+              <caret line="280" column="22" lean-forward="true" selection-start-line="280" selection-start-column="22" selection-end-line="280" selection-end-column="22" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/lib/helpers.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="373">
+              <caret line="96" column="24" lean-forward="true" selection-start-line="96" selection-start-column="24" selection-end-line="96" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -232,13 +240,13 @@
         <option value="$PROJECT_DIR$/client/npva/index.html" />
         <option value="$PROJECT_DIR$/client/poles/index.html" />
         <option value="$PROJECT_DIR$/client/react/account-panel.jsx" />
-        <option value="$PROJECT_DIR$/server/lib/helpers.js" />
         <option value="$PROJECT_DIR$/server/routes.js" />
         <option value="$PROJECT_DIR$/client/js/facilities.js" />
         <option value="$PROJECT_DIR$/client/index.html" />
-        <option value="$PROJECT_DIR$/client/react/register.jsx" />
         <option value="$PROJECT_DIR$/client/react/training.jsx" />
         <option value="$PROJECT_DIR$/client/register/info/index.html" />
+        <option value="$PROJECT_DIR$/server/lib/helpers.js" />
+        <option value="$PROJECT_DIR$/client/react/register.jsx" />
       </list>
     </option>
   </component>
@@ -252,7 +260,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -324,6 +331,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -438,15 +446,16 @@
       <workItem from="1580329031005" duration="15287000" />
       <workItem from="1580841409108" duration="12764000" />
       <workItem from="1581463743569" duration="822000" />
-      <workItem from="1581466692552" duration="31000" />
+      <workItem from="1581466692552" duration="179000" />
+      <workItem from="1581618189083" duration="893000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="193169000" />
+    <option name="totallyTimeSpent" value="194210000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="816" extended-state="6" />
+    <frame x="0" y="23" width="1440" height="816" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19943622" />
@@ -770,20 +779,6 @@
     <entry file="file://$PROJECT_DIR$/client/less/new-age.less">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/lib/helpers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="143" column="6" lean-forward="true" selection-start-line="143" selection-start-column="6" selection-end-line="143" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="224" column="49" selection-start-line="224" selection-start-column="49" selection-end-line="224" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/js/player.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -816,18 +811,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/training.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
+        <state relative-caret-position="975">
           <caret line="66" column="55" selection-start-line="66" selection-start-column="54" selection-end-line="66" selection-end-column="55" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8115">
-          <caret line="541" column="26" selection-start-line="541" selection-start-column="26" selection-end-line="541" selection-end-column="26" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
@@ -876,7 +861,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/register/info/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
+        <state relative-caret-position="-250">
           <caret line="73" column="22" selection-start-line="73" selection-start-column="22" selection-end-line="73" selection-end-column="22" />
           <folding>
             <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -927,6 +912,30 @@
             <element signature="n#style#0;n#p#0;n#li#4;n#ul#0;n#div#0;n#div#18;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#p#0;n#div#0;n#div#19;n#div#0;n#div#0;n#div#0;n#section#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#div#0;n#div#1;n#div#0;n#div#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2007">
+          <caret line="224" column="49" selection-start-line="224" selection-start-column="49" selection-end-line="224" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/lib/helpers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="373">
+          <caret line="96" column="24" lean-forward="true" selection-start-line="96" selection-start-column="24" selection-end-line="96" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="244">
+          <caret line="280" column="22" lean-forward="true" selection-start-line="280" selection-start-column="22" selection-end-line="280" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>

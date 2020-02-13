@@ -411,14 +411,37 @@ module.exports = (app, db) => {
             let purchaseInfo = req.body.purchaseInfo
             let athleteId = newAthlete.dataValues.id
             let userId = newAthlete.dataValues.userId
+            let grp = purchaseInfo.selectPackage.group
+            let mem = purchaseInfo.selectPackage.membership
+            let mth = purchaseInfo.selectPackage.month
+            let noapp = purchaseInfo.selectPackage.yesApparel
+            let app = purchaseInfo.selectPackage.apparel
+
+
+            if (grp !== 'fly-kids' && mem !== 'basic'){
+              mth = 'none'
+            }
+            if (!mem){
+              mem = 'none'
+            }
+            console.log("yesApparel" + noapp)
+            console.log("app" + app)
+            if (noapp === 'none'){
+              console.log("No Apparel!")
+              app = 'none'
+            }
+
             db.tables.Purchases.create({
               athleteId: athleteId,
               userId: userId,
               quarter: purchaseInfo.selectPackage.quarter,
+              month: mth,
               group: purchaseInfo.selectPackage.group,
               facility: purchaseInfo.selectPackage.facility,
               waiverSignatory: purchaseInfo.agreement.name,
-              size: purchaseInfo.selectPackage.apparel,
+              size: app,
+              strength: purchaseInfo.selectPackage.strength,
+              membership: mem,
               waiverDate: purchaseInfo.agreement.date,
               paymentId: purchaseInfo.payment.paymentId,
               payerId: purchaseInfo.payment.payerId
@@ -738,8 +761,7 @@ module.exports = (app, db) => {
                       let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
 
                       if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1) {
-                        console.log(purchaseYear)
-                        console.log(purchases[i].waiverSignatory)
+
                         if (quarter === "winter" && ((purchaseYear === year) || purchaseYear+1 === year)){
                           currentlyRegistered = true
                           break

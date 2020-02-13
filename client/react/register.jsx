@@ -115,11 +115,7 @@ class Register extends React.Component {
             </div>
             {this.state.currentPage}
             {progressBar}
-            <div className='row'>
-              <div className='col-xs-12 col-md-6 col-md-push-3'>
-                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Registration opens on the 1st of the month prior to a given quarter. A $25 late fee is applied if registration occurs after the start of the quarter.</p>
-              </div>
-            </div>
+
           </div>
         </section>
       )
@@ -152,6 +148,9 @@ class SelectPackage extends React.Component {
       checkedGroup: null,
       checkedSession: null,
       checkedFacility: null,
+      checkedMonth:null,
+      checkedMembership: null,
+      checkedYesApparel: null,
       showInvite: false,
       showEmergingElite: false,
       showElite: false,
@@ -184,6 +183,10 @@ class SelectPackage extends React.Component {
     output.group = $('input[name="group"]:checked').val()
     output.facility = $('input[name="facility"]:checked').val()
     output.apparel = $('input[name="apparel"]:checked').val()
+    output.strength = $('input[name="strength"]:checked').val()
+    output.month = $('input[name="month"]:checked').val()
+    output.membership = $('input[name="membership"]:checked').val()
+    output.yesApparel = $('input[name="yesapparel"]:checked').val()
     if (this.state.inviteCode) {
       output.invite = this.state.inviteCode
     }
@@ -238,10 +241,16 @@ class SelectPackage extends React.Component {
     let group = $('input[name="group"]:checked').val()
     let quarter = $('input[name="quarter"]:checked').val()
     let facility = $('input[name="facility"]:checked').val()
+    let month = $('input[name="month"]:checked').val()
+    let membership = $('input[name="membership"]:checked').val()
+    let yesApparel = $('input[name="yesapparel"]:checked').val()
     this.setState({
       checkedGroup: group,
       checkedSession: quarter,
-      checkedFacility: facility
+      checkedFacility: facility,
+      checkedMonth: month,
+      checkedMembership: membership,
+      checkedYesApparel: yesApparel
     })
 
       /*
@@ -250,28 +259,39 @@ class SelectPackage extends React.Component {
     if (quarter === 'winter' && (group === 'beginner-intermediate' || group === 'youth' || group === 'adult')) {
       this.setState({
         availableFacilities: {
-          dcv: false,
+          dcv: true,
           balt: false,
           pa: false,
           prep: true
         }
       })
-    } else if (quarter === 'spring' && (group === 'elite' || group === 'emerging-elite' || group === 'professional')) {
+    } else if (quarter === 'spring') {
+      if (group === 'fly-kids'){
+        this.setState({
+          availableFacilities: {
+            dcv: true,
+            balt: false,
+            pa: false,
+            prep: false
+          }
+        })
+      }else {
+        this.setState({
+          availableFacilities: {
+            dcv: true,
+            balt: false,
+            pa: false,
+            prep: false
+          }
+        })
+      }
+    } else {
       this.setState({
         availableFacilities: {
           dcv: true,
           balt: false,
           pa: false,
           prep: false
-        }
-      })
-    } else {
-      this.setState({
-        availableFacilities: {
-          dcv: false,
-          balt: false,
-          pa: false,
-          prep: true
         }
       })
     }
@@ -358,6 +378,8 @@ class SelectPackage extends React.Component {
         <div className='col-xs-12' style={{textAlign: 'center'}}>
           <form id='select-package' className='form-labels-on-top'>
 
+
+
             <div className='form-row'>
               <label><span className='required'>Training Session</span></label>
               <div className='form-radio-buttons'>
@@ -373,13 +395,13 @@ class SelectPackage extends React.Component {
                     <span>Fall</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
                     <span>Winter</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
                     <span>Spring</span>
@@ -394,25 +416,19 @@ class SelectPackage extends React.Component {
                 <div style={{display:'block'}}>
                   <label>
                     <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
-                    <span>FLY-KIDS DC (ages 6-10)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='group' value='youth' checked={this.state.checkedGroup === 'youth'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Youth (ages 11-13)</span>
+                    <span>Fly-Kids</span>
                   </label>
                 </div>
                 <div style={{display:'block'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Adult (ages 21+)</span>
+                    <span>Adult</span>
                   </label>
                 </div>
                 <div>
                   <label>
                     <input type='radio' name='group' value='beginner-intermediate' checked={this.state.checkedGroup === 'beginner-intermediate'} onChange={this.adjustOptions.bind(this)} />
-                    <span>All Ages Beginner/Intermediate</span>
+                    <span>All Ages</span>
                   </label>
                 </div>
                 <div style={{display: this.state.showEmergingElite ? 'block' : 'none'}}>
@@ -453,7 +469,70 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedGroup ? 'block' : 'none'}}>
+
+
+            <div className='form-row' style={{display: this.state.checkedGroup && ((this.state.checkedGroup === 'beginner-intermediate'))? 'block' : 'none'}}>
+              <label><span>Membership Level</span></label>
+              <div className='form-radio-buttons'>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='membership' value='basic' checked={this.state.checkedMembership === 'basic'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Basic</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='membership' value='apprentice' checked={this.state.checkedMembership === 'apprentice'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Apprentice</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='membership' value='master' checked={this.state.checkedMembership === 'master'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Master</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='membership' value='champion' checked={this.state.checkedMembership === 'champion'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Champion</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+
+            <div className='form-row' style={{display: this.state.checkedGroup && ((this.state.checkedGroup === 'fly-kids' || this.state.checkedMembership ==='basic'))? 'block' : 'none'}}>
+              <label><span>Month</span></label>
+              <div className='form-radio-buttons'>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='month' value='march' checked={this.state.checkedMonth === 'march'} onChange={this.adjustOptions.bind(this)} />
+                    <span>March</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='month' value='april' checked={this.state.checkedMonth === 'april'} onChange={this.adjustOptions.bind(this)} />
+                    <span>April</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='month' value='may' checked={this.state.checkedMonth === 'may'} onChange={this.adjustOptions.bind(this)} />
+                    <span>May</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' ? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display: this.state.availableFacilities.dcv ? 'block' : 'none'}}>
@@ -477,7 +556,33 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedFacility ? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedFacility  && (this.state.checkedGroup !== 'fly-kids')? 'block' : 'none'}}>
+              <label><span>Strength Training</span></label>
+              <br/>
+              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the DC Vault Strength Training Program for $50? </span>
+              <br/><br/>
+
+              <div className='form-radio-buttons'>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='strength' value='none' />
+                    <span>No Thanks</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='strength' value='yes' />
+                    <span>Yes!</span>
+                  </label>
+                </div>
+              </div>
+
+
+            </div>
+
+
+            <div className='form-row' style={{display: this.state.checkedFacility? 'block' : 'none'}}>
+
               <label><span className='required'>Apparel</span></label>
               <br/>
               <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like team apparel? DC Vault T-shirts can be purchased for an additional $20. </span>
@@ -487,12 +592,20 @@ class SelectPackage extends React.Component {
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='apparel' value='none' />
+                    <input type='radio' name='yesapparel' value='none' checked={this.state.checkedYesApparel === 'none'} onChange={this.adjustOptions.bind(this)}/>
                     <span>No Thanks</span>
                   </label>
                 </div>
-                <span style={{fontWeight:'normal'}}><i>Youth</i></span>
                 <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='yesapparel' value='yes' checked={this.state.checkedYesApparel === 'yes'} onChange={this.adjustOptions.bind(this)}/>
+                    <span>Yes!</span>
+                  </label>
+                </div>
+              </div>
+              <div className='form-radio-buttons' style={{display: this.state.checkedYesApparel === 'yes'? 'block' : 'none'}}>
+                <span style={{fontWeight:'normal'}}><i>Youth</i></span>
+                <div>
                   <label>
                     <input type='radio' name='apparel' value='yxs' />
                     <span>XS</span>
@@ -500,33 +613,43 @@ class SelectPackage extends React.Component {
                 </div>
 
                 <span style={{fontWeight:'normal'}}><i>Unisex</i></span>
-                <div style={{display: 'block'}}>
+                <div>
                   <label>
                     <input type='radio' name='apparel' value='xs' />
                     <span>XS</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div>
                   <label>
                     <input type='radio' name='apparel' value='sm' />
                     <span>S</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div>
                   <label>
                     <input type='radio' name='apparel' value='md' />
                     <span>M</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div>
                   <label>
                     <input type='radio' name='apparel' value='lg' />
                     <span>L</span>
                   </label>
                 </div>
               </div>
-            </div>
 
+
+
+
+
+
+
+
+
+
+
+            </div>
 
 
             <div className='form-row'>
@@ -985,15 +1108,24 @@ class Payment extends React.Component {
     super(props)
     let price
     let group = this.props.data.selectPackage.group
+    let membership = this.props.data.selectPackage.membership
 
     if(group === 'fly-kids'){
       price = 150
-    }else if (group === 'youth' || group === 'adult') {
+    }else if (group === 'adult') {
       price = 300
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'beginner' || group === 'intermediate' || group === 'beginner-intermediate') {
-      price = 450
+      if(membership === 'basic'){
+        price = 225
+      }else if (membership === 'apprentice'){
+        price = 450
+      }else if (membership === 'master'){
+        price = 575
+      }else{
+        price = 650
+      }
     } else {
       price = 600
     }
@@ -1004,13 +1136,13 @@ class Payment extends React.Component {
     let lateFee = 0
 
     if (quarter === 'winter' && (month === 12 || month === 1 || month === 2)) {
-      lateFee = 25
+      lateFee = 0
     } else if (quarter === 'spring' && (month === 3 || month === 4 || month === 5)) {
-      lateFee = 25
+      lateFee = 0
     } else if (quarter === 'summer' && (month === 6 || month === 7 || month === 8)) {
-      lateFee = 25
+      lateFee = 0
     } else if (quarter === 'fall' && (month === 9 || month === 10 || month === 11)) {
-      lateFee = 25
+      lateFee = 0
     }
 
     this.state = {
@@ -1031,14 +1163,22 @@ class Payment extends React.Component {
   }
 
   calculatePrice () {
-    let price = (this.state.price * (1 - this.state.discount)) * 1.03
+    let price = (this.state.price * (1 - this.state.discount))
     price = parseFloat(price) < 10 ? 1 : price
     price += this.state.lateFee
+    let group = this.props.data.selectPackage.group
     let apparel = this.props.data.selectPackage.apparel
+    let str = this.props.data.selectPackage.strength
     if (apparel === 'none'){
     }else{
       price += 20
     }
+    if(str === 'none' || group ==='fly-kids'){
+    }else{
+      price += 50
+    }
+    price = price * 1.03
+
     this.renderButton(price)
   }
 
@@ -1149,14 +1289,26 @@ class Payment extends React.Component {
     let currentPrice = (this.state.price * (1 - this.state.discount))
     currentPrice = currentPrice < 10 ? (1).toFixed(2) : currentPrice.toFixed(2)
     let size = this.props.data.selectPackage.apparel
+    let str = this.props.data.selectPackage.strength
+    let group = this.props.data.selectPackage.group
     let currentProcessingFee = 0
-    if (size === 'none'){
+    if (size === 'none' && str === 'none'){
       currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
     }else{
-      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 20) * 0.03).toFixed(2)
+      if (str === 'none') {
+        currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 20) * 0.03).toFixed(2)
+      }else if (size === 'none' && group !== 'fly-kids'){
+        currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 50) * 0.03).toFixed(2)
+      }else{
+        currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 70) * 0.03).toFixed(2)
+      }
     }
     let lateFee = this.state.lateFee
 
+    /*
+    old late fee code
+    {lateFee > 0 ? (<p className='price-text'>Late Fee: <span className='red-text'>${lateFee.toFixed(2)}</span></p>) : ''}
+     */
 
     return (
       <div className='row'>
@@ -1171,8 +1323,8 @@ class Payment extends React.Component {
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                   <p className='price-text'>Registration Fee: <span className='red-text'>${currentPrice}</span></p>
                   {size !== 'none' ? (<p className='price-text'>Apparel Fee: <span className='red-text'>${20}</span></p>) : ''}
+                  {(str !== 'none') && (group !== 'fly-kids') ? (<p className='price-text'>Strength Training Fee: <span className='red-text'>${50}</span></p>) : ''}
                   <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
-                  {lateFee > 0 ? (<p className='price-text'>Late Fee: <span className='red-text'>${lateFee.toFixed(2)}</span></p>) : ''}
                 </div>
               </div>
             </div>

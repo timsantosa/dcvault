@@ -98,7 +98,10 @@ columns.purchases = {
   waiverDate: Sequelize.STRING,
   paymentId: Sequelize.STRING,
   payerId: Sequelize.STRING,
-  size: Sequelize.STRING
+  size: Sequelize.STRING,
+  month: Sequelize.STRING,
+  strength: Sequelize.STRING,
+  membership: Sequelize.STRING
 }
 
 columns.eventPurchases = {
