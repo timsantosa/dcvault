@@ -191,7 +191,7 @@ class SelectPackage extends React.Component {
       output.invite = this.state.inviteCode
     }
 
-    if (output.quarter === undefined || output.group === undefined || output.facility === undefined || output.strength === undefined || output.yesApparel === undefined) {
+    if (output.quarter === undefined || output.group === undefined || output.facility === undefined || output.yesApparel === undefined) {
       this.setState({
         errorText: 'Please fill in all required fields'
       })
