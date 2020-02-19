@@ -532,7 +532,7 @@ class SelectPackage extends React.Component {
 
 
 
-            <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' ? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' || this.state.checkedGroup === 'emerging-elite' || this.state.checkedGroup === 'elite' || this.state.checkedGroup === 'professional'? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display: this.state.availableFacilities.dcv ? 'block' : 'none'}}>
