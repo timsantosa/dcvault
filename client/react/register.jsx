@@ -1168,8 +1168,9 @@ class Payment extends React.Component {
     price += this.state.lateFee
     let group = this.props.data.selectPackage.group
     let apparel = this.props.data.selectPackage.apparel
+    let apparelRes = this.props.data.selectPackage.yesApparel
     let str = this.props.data.selectPackage.strength
-    if (apparel === 'none'){
+    if (apparelRes === 'none'){
     }else{
       price += 20
     }
