@@ -1289,15 +1289,16 @@ class Payment extends React.Component {
     let currentPrice = (this.state.price * (1 - this.state.discount))
     currentPrice = currentPrice < 10 ? (1).toFixed(2) : currentPrice.toFixed(2)
     let size = this.props.data.selectPackage.apparel
+    let apparelRes = this.props.data.selectPackage.yesApparel
     let str = this.props.data.selectPackage.strength
     let group = this.props.data.selectPackage.group
     let currentProcessingFee = 0
-    if (size === 'none' && str === 'none'){
+    if (apparelRes === 'none' && str === 'none'){
       currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
     }else{
       if (str === 'none') {
         currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 20) * 0.03).toFixed(2)
-      }else if (size === 'none' && group !== 'fly-kids'){
+      }else if (apparelRes === 'none' && group !== 'fly-kids'){
         currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 50) * 0.03).toFixed(2)
       }else{
         currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 70) * 0.03).toFixed(2)
@@ -1322,7 +1323,7 @@ class Payment extends React.Component {
               <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                   <p className='price-text'>Registration Fee: <span className='red-text'>${currentPrice}</span></p>
-                  {size !== 'none' ? (<p className='price-text'>Apparel Fee: <span className='red-text'>${20}</span></p>) : ''}
+                  {apparelRes !== 'none' ? (<p className='price-text'>Apparel Fee: <span className='red-text'>${20}</span></p>) : ''}
                   {(str !== 'none') && (group !== 'fly-kids') ? (<p className='price-text'>Strength Training Fee: <span className='red-text'>${50}</span></p>) : ''}
                   <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                 </div>

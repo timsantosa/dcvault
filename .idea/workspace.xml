@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0563ded-3e5d-4f53-8bd6-484e572889b0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react/pole-app.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/pole-app.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react/register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react/register.jsx" afterDir="false" />
     </list>
@@ -91,8 +90,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="481">
-              <caret line="529" column="20" lean-forward="true" selection-start-line="529" selection-start-column="20" selection-end-line="529" selection-end-column="20" />
+            <state relative-caret-position="376">
+              <caret line="1321" column="38" lean-forward="true" selection-start-line="1321" selection-start-column="38" selection-end-line="1321" selection-end-column="38" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -173,7 +172,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>quarter</find>
       <find>gray</find>
       <find>fname</find>
       <find>school</find>
@@ -185,7 +183,6 @@
       <find>currentlyRegistered</find>
       <find>checkedGroup</find>
       <find>selectPack</find>
-      <find>size</find>
       <find>displayData</find>
       <find>.log</find>
       <find>console.log</find>
@@ -203,6 +200,8 @@
       <find>br</find>
       <find>tooltips</find>
       <find>apparel</find>
+      <find>yesApp</find>
+      <find>size</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/client/register</dir>
@@ -452,12 +451,12 @@
       <workItem from="1581463743569" duration="822000" />
       <workItem from="1581466692552" duration="179000" />
       <workItem from="1581618189083" duration="2960000" />
-      <workItem from="1582132972742" duration="461000" />
+      <workItem from="1582132972742" duration="1156000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="196738000" />
+    <option name="totallyTimeSpent" value="197433000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="811" extended-state="6" />
@@ -937,8 +936,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/react/register.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="529" column="20" lean-forward="true" selection-start-line="529" selection-start-column="20" selection-end-line="529" selection-end-column="20" />
+        <state relative-caret-position="376">
+          <caret line="1321" column="38" lean-forward="true" selection-start-line="1321" selection-start-column="38" selection-end-line="1321" selection-end-column="38" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
