@@ -1111,7 +1111,7 @@ class Payment extends React.Component {
     let membership = this.props.data.selectPackage.membership
 
     if(group === 'fly-kids'){
-      price = 150
+      price = 120
     }else if (group === 'adult') {
       price = 300
     } else if (group === 'elite' || group === 'professional') {
