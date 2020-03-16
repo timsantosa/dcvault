@@ -29,7 +29,93 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
-        date: new Date('June 8, 2018'),
+        date: new Date('April 16, 2020'),
+        partial: (<div className='event-block' id='16APR2020'>
+          <p className='event-block-title'>DC Spring Fling - urself over a bar</p>
+          <p className='event-block-info'>
+            <span className='event-block-date'>Thursday, Apr 16 2020</span>
+            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+          <span className='event-block-details-header'>Venue</span>
+          <ul className='event-block-details'>
+            <li>DC Vault</li>
+            <li>Washington DC</li>
+            <li>Exterior Lighting</li>
+            <li>Parking On-Site (Lot #3)</li>
+          </ul>
+          <span className='event-block-details-header'>Entry Fee</span>
+          <ul className='event-block-details'>
+            <li>$5 - Spectators (includes food)</li>
+            <li>$10 - DC Vault competitors (includes food)</li>
+            <li>$20 - Open competitors (includes food) </li>
+            <li>Free - Puppy dogs and toddlers</li>
+          </ul>
+          <span className='event-block-details-header'>Expand For Full Info and Schedule Below</span>
+        </div>),
+        full: (<div className='event-block'>
+          <p className='event-block-title'>DC Spring Fling - urself over a bar</p>
+          <p className='event-block-info'><span className='event-block-date'>Thursday, Apr 16 2020</span>
+            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+          <span className='event-block-details-header'>Venue</span>
+          <ul className='event-block-details'>
+            <li>DC Vault</li>
+            <li>Washington DC</li>
+            <li>Exterior Lighting</li>
+            <li>Parking On-Site (Lot #3)</li>
+          </ul>
+          <span className='event-block-details-header'>Ages</span>
+          <ul className='event-block-details'>
+            <li>6 and up</li>
+          </ul>
+          <span className='event-block-details-header'>Opening Height</span>
+          <ul className='event-block-details'>
+            <li>TBD based on entry marks</li>
+            <li>Bars can go as low as 5' </li>
+            <li>Fly-Kids (ages 6-10) can compete as low as 4' </li>
+          </ul>
+          <span className='event-block-details-header'>Sanctioning</span>
+          <ul className='event-block-details'>
+            <li>This is not a sanctioned event </li>
+            <li>"DC Vault sudden death rules" in effect - if you no-height, you get one attempt at the next bar to advance and stay in the fight!</li>
+          </ul>
+          <span className='event-block-details-header'>Registration</span>
+          <ul className='event-block-details'>
+            <li>On-site registration at the event. </li>
+            <li>Please email us at Events@dcvault.org if you think you are coming so we can plan for approximate # of participants (not required to participate)</li>
+          </ul>
+          <span className='event-block-details-header'>Entry Fee</span>
+          <ul className='event-block-details'>
+            <li>$5 - Spectators (includes food)</li>
+            <li>$10 - DC Vault competitors (includes food)</li>
+            <li>$20 - Open competitors (includes food) </li>
+            <li>Free - Puppy dogs and toddlers</li>
+          </ul>
+          <span className='event-block-details-header'>Food</span>
+          <ul className='event-block-details'>
+            <li>Free Grilled Hot Dogs for competitors and spectators (a few veggie dogs will be available)</li>
+            <li>Grill is lit at 7:30pm</li>
+            <li>Bottled water provided</li>
+          </ul>
+        </div>)
+      },
+      {
+        date: new Date('April 8, 2020'),
+        partial: (<div className='event-block' id='8APR2020'>
+            <p className='event-block-title'>Adult Pole Vault Experience - DC Fray</p>
+            <p className='event-block-info'><span className='event-block-date'>Wednesday, Apr 8 2020</span>
+                <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+            <ul className='event-block-details'>
+                <li>Ever wanted to try pole vaulting? Join DC Fray and DC Vault for some fun and a private lesson with expert vaulters! This outdoor pole vaulting training center is used for training everything from entry-level through elite athletes– and now, you!</li>
+                <li>This is an adult beginner pole vaulting lesson. You’ll be shown the basic fundamentals of pole vaulting while learning how to carry, run, and plant a vaulting pole, how to swing and turn using high rings and ropes, and finally, how to jump into a vault mat and clear a low bar. Starting at 5 feet and moving up from there, this event couldn’t get any better.</li>
+                <li>DC Vault will grill hot dogs for staff and attendees at the end of the event!</li>
+                <li>Participants should bring water and comfortable sports clothing appropriate for the weather</li>
+                <li>Spots are limited. Cost: $25 per vaulter</li>
+                <li>Must be 21+</li>
+                <li>Adults Can register to participate in this special event at <a href="https://dcfray.com/events/pole-vaulting-4-8">here</a></li>
+            </ul>
+        </div>)
+    },
+      {
+        date: new Date('July 8, 2018'),
         partial: (<div className='event-block' id='08JUL2018'>
           <p className='event-block-title'>DC VAULT 10-YEAR ANNIVERSARY ​& TRAINING CENTER LAUNCH EVENT!​</p>
           <p className='event-block-info'><span className='event-block-date'>Sunday, Jul 8 2018</span>
