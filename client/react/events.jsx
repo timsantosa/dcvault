@@ -29,11 +29,11 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
-        date: new Date('April 16, 2020'),
-        partial: (<div className='event-block' id='16APR2020'>
+        date: new Date('May 16, 2020'),
+        partial: (<div className='event-block' id='16MAY2020'>
           <p className='event-block-title'>DC Spring Fling - urself over a bar</p>
           <p className='event-block-info'>
-            <span className='event-block-date'>Thursday, Apr 16 2020</span>
+            <span className='event-block-date'>Saturday, Apr 16 2020</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
           <span className='event-block-details-header'>Venue</span>
           <ul className='event-block-details'>
@@ -48,6 +48,13 @@ class Events extends React.Component {
             <li>$10 - DC Vault competitors (includes food)</li>
             <li>$20 - Open competitors (includes food) </li>
             <li>Free - Puppy dogs and toddlers</li>
+          </ul>
+          <span className='event-block-details-header'>Schedule</span>
+          <ul className='event-block-details'>
+            <li>Registration: 1:00pm - 1:45pm</li>
+            <li>Warm-ups: 1:00-pm - 2:00pm</li>
+            <li>Competition: 2:00pm - 5:00pm</li>
+            <li>BBQ Grill: 2:30pm - 5:00pm</li>
           </ul>
           <span className='event-block-details-header'>Expand For Full Info and Schedule Below</span>
         </div>),
@@ -89,19 +96,26 @@ class Events extends React.Component {
             <li>$20 - Open competitors (includes food) </li>
             <li>Free - Puppy dogs and toddlers</li>
           </ul>
+          <span className='event-block-details-header'>Schedule</span>
+          <ul className='event-block-details'>
+            <li>Registration: 1:00pm - 1:45pm</li>
+            <li>Warm-ups: 1:00-pm - 2:00pm</li>
+            <li>Competition: 2:00pm - 5:00pm</li>
+            <li>BBQ Grill: 2:30pm - 5:00pm</li>
+          </ul>
           <span className='event-block-details-header'>Food</span>
           <ul className='event-block-details'>
             <li>Free Grilled Hot Dogs for competitors and spectators (a few veggie dogs will be available)</li>
-            <li>Grill is lit at 7:30pm</li>
+            <li>Grill is lit at 2:00pm</li>
             <li>Bottled water provided</li>
           </ul>
         </div>)
       },
       {
-        date: new Date('April 8, 2020'),
-        partial: (<div className='event-block' id='8APR2020'>
+        date: new Date('May 6, 2020'),
+        partial: (<div className='event-block' id='06MAY2020'>
             <p className='event-block-title'>Adult Pole Vault Experience - DC Fray</p>
-            <p className='event-block-info'><span className='event-block-date'>Wednesday, Apr 8 2020</span>
+            <p className='event-block-info'><span className='event-block-date'>Wednesday, May 6 2020</span>
                 <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
             <ul className='event-block-details'>
                 <li>Ever wanted to try pole vaulting? Join DC Fray and DC Vault for some fun and a private lesson with expert vaulters! This outdoor pole vaulting training center is used for training everything from entry-level through elite athletes– and now, you!</li>
