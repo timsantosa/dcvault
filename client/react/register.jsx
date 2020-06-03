@@ -383,7 +383,7 @@ class SelectPackage extends React.Component {
             <div className='form-row'>
               <label><span className='required'>Training Session</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer</span>
@@ -401,7 +401,7 @@ class SelectPackage extends React.Component {
                     <span>Winter</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
                     <span>Spring</span>
@@ -511,20 +511,20 @@ class SelectPackage extends React.Component {
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='march' checked={this.state.checkedMonth === 'march'} onChange={this.adjustOptions.bind(this)} />
-                    <span>March</span>
+                    <input type='radio' name='month' value='june' checked={this.state.checkedMonth === 'june'} onChange={this.adjustOptions.bind(this)} />
+                    <span>June</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='april' checked={this.state.checkedMonth === 'april'} onChange={this.adjustOptions.bind(this)} />
-                    <span>April</span>
+                    <input type='radio' name='month' value='july' checked={this.state.checkedMonth === 'july'} onChange={this.adjustOptions.bind(this)} />
+                    <span>July</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='may' checked={this.state.checkedMonth === 'may'} onChange={this.adjustOptions.bind(this)} />
-                    <span>May</span>
+                    <input type='radio' name='month' value='august' checked={this.state.checkedMonth === 'august'} onChange={this.adjustOptions.bind(this)} />
+                    <span>August</span>
                   </label>
                 </div>
               </div>
