@@ -81,7 +81,7 @@ class Competition extends React.Component {
                         {progressBar}
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
-                                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Early registration is open until June 5th.</p>
+                                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Due to COVID-19 each event is limited to 15 competitors!</p>
                             </div>
                         </div>
                     </div>
@@ -273,7 +273,6 @@ class AthleteInfo extends React.Component {
                             <h1>Meet Registration</h1>
                             <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Please select which meets you would like to register for. Each meet is $25 per entry.
                                 <br></br>
-                                Note the asterisk by each date to indicate performance requirements for entry.
                             </p>
                     </div>
 
@@ -281,13 +280,13 @@ class AthleteInfo extends React.Component {
                         <label>
                             <span className='required'>Dates</span>
                             <input type="checkbox" name="dates1" value="june20" />
-                            <label for="june20">&nbsp;&nbsp;&#42;&nbsp;June 20th</label>
+                            <label for="june20">&nbsp;&nbsp;&#42;&#42;&nbsp;June 20th</label>
                             <br></br>
                             <input type="checkbox" name="dates2" value="june24"/>
                             <label for="june24">&nbsp;&nbsp;June 24th</label>
                             <br></br>
                             <input type="checkbox" name="dates3" value="july4" />
-                            <label for="july4">&nbsp;&nbsp;&#42;&#42;&#42;&nbsp;July 4th</label>
+                            <label for="july4">&nbsp;&nbsp;&#42;&#42;&#42;&nbsp;July 4th Championship</label>
                             <br></br>
                             <input type="checkbox" name="dates4" value="july8" />
                             <label for="july8">&nbsp;&nbsp;&#42;&nbsp;July 8th</label>
@@ -299,7 +298,7 @@ class AthleteInfo extends React.Component {
                             <label for="july22">&nbsp;&nbsp;July 22nd</label>
                             <br></br>
                             <input type="checkbox" name="dates7" value="august1" />
-                            <label for="august1">&nbsp;&nbsp;&#42;&nbsp;August 1st</label>
+                            <label for="august1">&nbsp;&nbsp;&#42;&#42;&#42;&nbsp;August 1st Moon Vault</label>
                             <br></br>
                             <input type="checkbox" name="dates8" value="august5" />
                             <label for="august5">&nbsp;&nbsp;August 5th</label>
@@ -315,12 +314,11 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-row'>
                     <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>
-                        &#42; indicates performance marks required for entry
+                        &#42; Medals awarded at all starred events
                         <br></br>
-                        Girls 10'6" (3.25m) / Guys 13'6" (4.10m)
+                        &#42;&#42; Entry marks required (F 10' / M 13')
                         <br></br>
-                        <br></br>
-                        &#42;&#42;&#42; indicates special event medals awarded 1st-3rd + free shirts
+                        &#42;&#42;&#42; Special Event
                         <br></br>
                         <br></br>
                     </p>
@@ -600,6 +598,8 @@ class Agreement extends React.Component {
                         <img className='waiver-image' src='../img/forms/youth-comp-3.png' />
 
                         <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's legal guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/DC Vault Waiver - Competition.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
+                        <br></br>
+                        <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you also agree to notify us if you or anyone in your family has tested positive for COVID-19. You will also notify us if you have any of the following <a style={{color: '#C0282D'}} target='_blank' href='https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html'>symptoms</a> the week of the event.</p>
 
                         <div className='row'>
                             <div className='col-xs-12 col-md-6'>

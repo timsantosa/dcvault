@@ -145,7 +145,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions2 = {
       from: '"DC Vault" <' + config.email.username + '>', // sender address
       subject: 'New Event Registrant', // Subject line
-      to: "timmysantosa@gmail.com",
+      to: "events@dcvault.org",
       html:  '<p>Details</p>' +athleteInfo,
       attachments: [
       ]
