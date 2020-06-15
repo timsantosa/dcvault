@@ -126,7 +126,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         subject: 'DC Vault Summer Pole Vault Series 2020', // Subject line
         to: email,
         html: '<p>Thank you for registering for one of our DC Vault Summer Pole Vault Series 2020 Events</p>' +
-        '<br><p>- Please read over our online event information carefully and pay close attention to information regarding Spike use.</p>' +
+        '<br><p>- Please read over our online event information carefully.</p>' +
         '<p>- You will recieve additional details the week of your event.</p>' +
         '<p>If you have other questions let us know - <a href="mailto:events@dcvault.org">Events@DCVault.org</a></p>',
         attachments: [
