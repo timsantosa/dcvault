@@ -111,7 +111,8 @@ class AthleteInfo extends React.Component {
         super(props)
         this.state = {
             errorText: [],
-            showUSATFinfo: false
+            showUSATFinfo: false,
+            dateOptions: []
         }
     }
 
@@ -137,6 +138,27 @@ class AthleteInfo extends React.Component {
             }
         }
         $('input[name=usatf]').val(usatfFormatted.slice(0, 10).join(''))
+    }
+
+    //Link on how to get the list of check boxes
+    //https://stackoverflow.com/questions/37129437/how-do-i-use-react-and-forms-to-get-an-array-of-checked-checkbox-values
+    formatDateList (e) {
+        //current array of options
+        const dateOptions = this.state.dateOptions
+        let index
+
+        // check if the check box is checked or unchecked
+        if(e.target.checked){
+            //add the numerical value of the checkbox to options array
+            dateOptions.push(+e.target.value)
+        } else{
+            // or remove the value from the unchecked checkbox from the array
+            index = dateOptions.indexOf(+e.target.value)
+            dateOptions.splice(index, 1)
+        }
+
+        // update the state with the new array of options
+        this.setState({dateOptions: dateOptions})
     }
 
     continue () {
@@ -241,11 +263,68 @@ class AthleteInfo extends React.Component {
                 </div>
             </div>
         }
-
+        
         return (
             <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                     <form id='event-athlete-info' className='form-labels-on-top'>
+
+                    <div className='form-title-row'>
+                            <h1>Meet Registration</h1>
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Please select which meets you would like to register for. Each meet is $25 per entry.
+                                <br></br>
+                                Note the asterisk by each date to indicate performance requirements for entry.
+                            </p>
+                    </div>
+
+                    <div className='form-row'>
+                        <label>
+                            <span className='required'>Dates</span>
+                            <input type="checkbox" name="dates1" value="june20" />
+                            <label for="june20">&nbsp;&nbsp;&#42;&nbsp;June 20th</label>
+                            <br></br>
+                            <input type="checkbox" name="dates2" value="june24"/>
+                            <label for="june24">&nbsp;&nbsp;June 24th</label>
+                            <br></br>
+                            <input type="checkbox" name="dates3" value="july4" />
+                            <label for="july4">&nbsp;&nbsp;&#42;&#42;&#42;&nbsp;July 4th</label>
+                            <br></br>
+                            <input type="checkbox" name="dates4" value="july8" />
+                            <label for="july8">&nbsp;&nbsp;&#42;&nbsp;July 8th</label>
+                            <br></br>
+                            <input type="checkbox" name="dates5" value="july18" />
+                            <label for="july18">&nbsp;&nbsp;July 18th</label>
+                            <br></br>
+                            <input type="checkbox" name="dates6" value="july22" />
+                            <label for="july22">&nbsp;&nbsp;July 22nd</label>
+                            <br></br>
+                            <input type="checkbox" name="dates7" value="august1" />
+                            <label for="august1">&nbsp;&nbsp;&#42;&nbsp;August 1st</label>
+                            <br></br>
+                            <input type="checkbox" name="dates8" value="august5" />
+                            <label for="august5">&nbsp;&nbsp;August 5th</label>
+                            <br></br>
+                            <input type="checkbox" name="dates9" value="august15" />
+                            <label for="august15">&nbsp;&nbsp;August 15th</label>
+                            <br></br>
+                            <input type="checkbox" name="dates10" value="august19" />
+                            <label for="august19">&nbsp;&nbsp;&#42;&nbsp;August 19th</label>
+                            <br></br>
+                        </label>
+                    </div>
+
+                    <div className='form-row'>
+                    <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>
+                        &#42; indicates performance marks required for entry
+                        <br></br>
+                        Girls 10'6" (3.25m) / Guys 13'6" (4.10m)
+                        <br></br>
+                        <br></br>
+                        &#42;&#42;&#42; indicates special event medals awarded 1st-3rd + free shirts
+                        <br></br>
+                        <br></br>
+                    </p>
+                    </div>
 
                         <div className='form-title-row'>
                             <h1>Athlete Information</h1>
@@ -273,6 +352,13 @@ class AthleteInfo extends React.Component {
 
                         <div className='form-row'>
                             <label>
+                                <span className='required'>Age</span>
+                                <input type='number' name='age' />
+                            </label>
+                        </div>
+
+                        <div className='form-row'>
+                            <label>
                                 <span className='required'>Athlete DOB (mm/dd/yyyy)</span>
                                 <input type='text' name='dob' onChange={this.formatDOB.bind(this)} />
                             </label>
@@ -280,7 +366,7 @@ class AthleteInfo extends React.Component {
 
                         <div className='form-row'>
                             <label>
-                                <span className='required'>Athlete Email</span>
+                                <span className='required'>Contact Email</span>
                                 <input type='text' name='email' />
                             </label>
                         </div>
@@ -310,7 +396,7 @@ class AthleteInfo extends React.Component {
                                     </div>
                                 </div>
                                 <p className='info-text' style={{display: this.state.showUSATFinfo ? 'block' : 'none'}}>
-                                    For more information on USATF numbers, go to <a style={{color: '#C0282D'}} target='_blank' href='https://usatf.org'>USATF.org</a>. If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} target='_blank' href='https://www.usatf.org/membership/help/number.asp'>here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} target='_blank' href='http://www.usatf.org/Products---Services/Individual-Memberships.aspx'>here</a>.
+                                        We are sanctioned by USATF. As such, our participants need a current USATF membership ($30 for 1-year). If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} target='_blank' href='https://www.usatf.org/membership/help/number.asp'>here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} target='_blank' href='http://www.usatf.org/Products---Services/Individual-Memberships.aspx'>here</a>.
                                 </p>
                                 <input type='text' name='usatf' onChange={this.formatUSATF.bind(this)} />
                             </label>
@@ -497,12 +583,14 @@ class Agreement extends React.Component {
         }
 
         return (
+
             <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                     <form id='event-agreement' className='form-labels-on-top'>
                         <div className='form-title-row'>
                             <h1>Waiver Agreement</h1>
                         </div>
+
 
                         <img className='waiver-image' src='../img/forms/adult-comp-1.png' />
                         <img className='waiver-image' src='../img/forms/adult-comp-2.png' />
@@ -549,8 +637,29 @@ class Agreement extends React.Component {
 class Payment extends React.Component {
     constructor (props) {
         super(props)
-        let price = 35
-
+        let price = 0
+        if(this.props.data.athleteInfo.dates1){
+            price+=25
+          }
+          if(this.props.data.athleteInfo.dates2){
+            price+=25
+          }
+          if(this.props.data.athleteInfo.dates3){
+            price+=25          }
+          if(this.props.data.athleteInfo.dates4){
+            price+=25          }
+          if(this.props.data.athleteInfo.dates5){
+            price+=25          }
+          if(this.props.data.athleteInfo.dates6){
+            price+=25          }
+          if(this.props.data.athleteInfo.dates7){
+            price+=25          }
+          if(this.props.data.athleteInfo.dates8){
+            price+=25          }
+          if(this.props.data.athleteInfo.dates9){
+            price+=25          }
+          if(this.props.data.athleteInfo.dates10){
+            price+=25          }
 
         this.state = {
             price: price,
@@ -574,7 +683,40 @@ class Payment extends React.Component {
         amount = parseFloat(amount)
 
         var cont = this.continue.bind(this)
-        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email
+        var dateLst = ""
+        if(this.props.data.athleteInfo.dates1){
+            dateLst += this.props.data.athleteInfo.dates1 + ", "
+        }
+        if(this.props.data.athleteInfo.dates2){
+            dateLst += this.props.data.athleteInfo.dates2 + ", "
+        }
+        if(this.props.data.athleteInfo.dates3){
+            dateLst += this.props.data.athleteInfo.dates3 + ", "
+        }
+        if(this.props.data.athleteInfo.dates4){
+            dateLst += this.props.data.athleteInfo.dates4 + ", "
+        }
+        if(this.props.data.athleteInfo.dates5){
+            dateLst += this.props.data.athleteInfo.dates5 + ", "
+        }
+        if(this.props.data.athleteInfo.dates6){
+            dateLst += this.props.data.athleteInfo.dates6 + ", "
+        }
+        if(this.props.data.athleteInfo.dates7){
+            dateLst += this.props.data.athleteInfo.dates7 + ", "
+        }
+        if(this.props.data.athleteInfo.dates8){
+            dateLst += this.props.data.athleteInfo.dates8 + ", "
+        }
+        if(this.props.data.athleteInfo.dates9){
+            dateLst += this.props.data.athleteInfo.dates9 + ", "
+        }
+        if(this.props.data.athleteInfo.dates10){
+            dateLst += this.props.data.athleteInfo.dates10 + ", "
+        }
+        this.props.data.athleteInfo.dates1 = dateLst
+        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competitions: ' + dateLst
+
 
         paypal.Button.render({ // eslint-disable-line
             env: window.configVariables.PAYPAL_MODE, // sandbox | production
@@ -698,7 +840,7 @@ class Confirmation extends React.Component {
 
                     //Send the athlete a confirmation email
                     if (apiHelpers.validateEmail(athleteEmail)) {
-                        apiHelpers.sendEventConfirmationEmail(athleteEmail)
+                        apiHelpers.sendEventConfirmationEmail(athleteEmail, this.props.data)
                     }
                 }
             })

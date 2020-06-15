@@ -469,7 +469,10 @@ module.exports = (app, db) => {
             res.status(400).send({ok: false, message: 'missing purchase details'})
         } else {
             let event_athlete = req.body.purchaseInfo.athleteInfo
-            console.log(req.body.purchaseInfo)
+            let dateLst = ""
+
+            //dateLst += event_athlete.date1
+            //console.log(req.body.purchaseInfo)
             let athleteData = {
                 firstName: event_athlete.fname,
                 lastName: event_athlete.lname,
@@ -483,7 +486,9 @@ module.exports = (app, db) => {
                 emergencyContactRelation: event_athlete['emergency-relation'],
                 gender: event_athlete.gender,
                 state: event_athlete.state,
-                accomplishments: event_athlete.accomplishments
+                accomplishments: event_athlete.accomplishments,
+                dates: event_athlete.dates1,
+                age: event_athlete.age
 
             }
 
@@ -507,8 +512,30 @@ module.exports = (app, db) => {
 
     app.post('/event/confirm', (req, res) => {
         let email = req.body.email
+        let event_athlete = req.body.purchaseInfo.athleteInfo
+        let athleteData = {
+          firstName: event_athlete.fname,
+          lastName: event_athlete.lname,
+          email: event_athlete.email,
+          dob: event_athlete.dob,
+          pr: event_athlete.pr,
+          team: event_athlete.team,
+          usatf: event_athlete.usatf,
+          emergencyContactName: event_athlete['emergency-contact'],
+          emergencyContactMDN: event_athlete['emergency-phone'],
+          emergencyContactRelation: event_athlete['emergency-relation'],
+          gender: event_athlete.gender,
+          state: event_athlete.state,
+          accomplishments: event_athlete.accomplishments,
+          dates: event_athlete.dates1,
+          age: event_athlete.age
+
+      }
+      let emailData = JSON.stringify(athleteData)
+      emailData = emailData.replace(/,/g, "<br>")
+      console.log(emailData)
         if (email) {
-            helpers.sendEventConfirmationEmails(email)
+            helpers.sendEventConfirmationEmails(email, emailData)
             res.send({ok: true, message: 'email sent'})
         } else {
             res.status(400).send({ok: false, message: 'no or bad email'})

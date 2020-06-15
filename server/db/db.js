@@ -60,7 +60,9 @@ columns.eventAthletes = {
     emergencyContactRelation: Sequelize.STRING,
     gender: Sequelize.STRING,
     state: Sequelize.STRING,
-    accomplishments: Sequelize.TEXT
+    accomplishments: Sequelize.TEXT,
+    dates: Sequelize.TEXT,
+    age: Sequelize.INTEGER
 
 }
 
