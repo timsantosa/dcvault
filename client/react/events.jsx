@@ -29,6 +29,72 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('August 1, 2020'),
+        partial: (<div className='event-block' id='1AUG2020'>
+          <p className='event-block-title'>Moon Vault</p>
+          <p className='event-block-info'>
+            <span className='event-block-date'>Saturday, August 1st 2020</span>
+            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+          <b>JOIN US FOR AN EVENING OF VAULTING UNDER THE MOON!</b> <br></br>
+          <span className='event-block-details-header'>Venue</span>
+          <ul className='event-block-details'>
+            <li>DC Vault Pole Vault Center</li>
+            <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+            <li>Parking On-Site (Lot #3)</li>
+            <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
+            <li>Due to COVID-19 each event is <b>limited to 15 competitors!</b></li>
+          </ul>
+          <span className='event-block-details-header'>Entry Fee</span>
+          <ul className='event-block-details'>
+            <li>$25 - Competitiors</li>
+            <li>$15 - Pole Rental (Free for DCV members)</li>
+            <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
+          </ul>
+          <span className='event-block-details-header'>Schedule</span>
+          <ul className='event-block-details'>
+            <li>7:30pm-8:30pm (warmup) / 8:30pm-10:30pm (competition)</li>
+          </ul>
+          <span className='event-block-details-header'>Awards</span>
+          <ul className='event-block-details'>
+            <li>Medals will be awarded for 1st through 3rd places and an additional "special award" will be provided for the highest men's and women's jump</li>
+            <li>All participants will receive free event shirts</li>
+            <li>Due to COVID-19, this year's event will be significantly limited in scope and in the number of participants. As such, we won't be scoring teams for this event, but will resume doing so in 2021  </li>
+          </ul>
+        </div>)
+        },
+      {
+        date: new Date('July 4, 2020'),
+        partial: (<div className='event-block' id='4JUL2020'>
+          <p className='event-block-title'>Independence Day Pole Vault Championships 2020</p>
+          <p className='event-block-info'>
+            <span className='event-block-date'>Saturday, July 4th 2020</span>
+            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+          <b>JOIN US FOR A DAY OF POLE VAULTING AND THE NATIONAL FIREWORKS CELEBRATION</b> <br></br>
+          <span className='event-block-details-header'>Venue</span>
+          <ul className='event-block-details'>
+            <li>DC Vault Pole Vault Center</li>
+            <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+            <li>Parking On-Site (Lot #3)</li>
+            <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
+            <li>Due to COVID-19 each event is <b>limited to 15 competitors!</b></li>
+          </ul>
+          <span className='event-block-details-header'>Entry Fee</span>
+          <ul className='event-block-details'>
+            <li>$25 - Competitiors</li>
+            <li>$15 - Pole Rental (Free for DCV members)</li>
+            <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
+          </ul>
+          <span className='event-block-details-header'>Schedule</span>
+          <ul className='event-block-details'>
+            <li>4pm-5pm (warmup) / 5pm-7pm (competition)</li>
+          </ul>
+          <span className='event-block-details-header'>Awards</span>
+          <ul className='event-block-details'>
+            <li>Medals will be awarded for 1st through 3rd places</li>
+          </ul>
+        </div>)
+        },
+      {
         date: new Date('August 19, 2020'),
         partial: (<div className='event-block' id='19AUG2020'>
           <p className='event-block-title'>DC Vault - Summer Pole Vault Series 2020</p>
