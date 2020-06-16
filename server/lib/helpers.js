@@ -154,7 +154,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
       if (error) {
           return console.log(error)
       }
-      console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+      console.log('Message %s sent to %s response: %s', info.messageId, "events@dcvault.org", info.response)
   })
 }
 
