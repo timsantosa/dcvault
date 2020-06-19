@@ -42,7 +42,6 @@ class Events extends React.Component {
             <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
             <li>Parking On-Site (Lot #3)</li>
             <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
-            <li>Due to COVID-19 each event is <b>limited to 15 competitors!</b></li>
           </ul>
           <span className='event-block-details-header'>Entry Fee</span>
           <ul className='event-block-details'>
@@ -76,7 +75,6 @@ class Events extends React.Component {
             <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
             <li>Parking On-Site (Lot #3)</li>
             <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
-            <li>Due to COVID-19 each event is <b>limited to 15 competitors!</b></li>
           </ul>
           <span className='event-block-details-header'>Entry Fee</span>
           <ul className='event-block-details'>
@@ -87,73 +85,6 @@ class Events extends React.Component {
           <span className='event-block-details-header'>Schedule</span>
           <ul className='event-block-details'>
             <li>4pm-5pm (warmup) / 5pm-7pm (competition)</li>
-          </ul>
-          <span className='event-block-details-header'>Awards</span>
-          <ul className='event-block-details'>
-            <li>Medals will be awarded for 1st through 3rd places</li>
-          </ul>
-        </div>)
-        },
-      {
-        date: new Date('August 19, 2020'),
-        partial: (<div className='event-block' id='19AUG2020'>
-          <p className='event-block-title'>DC Vault - Summer Pole Vault Series 2020</p>
-          <p className='event-block-info'>
-            <span className='event-block-date'>June 20th - August 19th 2020</span>
-            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
-          <b>Compete in the Nation's Capital!</b> <br></br>
-          <b>Weekly Events - Alternating Wednesdays and Saturdays all Summer!</b><br></br><br></br>
-          <span className='event-block-details-header'>Venue</span>
-          <ul className='event-block-details'>
-            <li>DC Vault Pole Vault Center</li>
-            <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
-            <li>Parking On-Site (Lot #3)</li>
-            <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
-            <li>Due to COVID-19 each event is <b>limited to 15 competitors!</b></li>
-          </ul>
-          <span className='event-block-details-header'>Entry Fee</span>
-          <ul className='event-block-details'>
-            <li>$25 - Competitiors</li>
-            <li>$15 - Pole Rental (Free for DCV members)</li>
-            <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
-          </ul>
-          <span className='event-block-details-header'>Schedule</span>
-          <ul className='event-block-details'>
-            <li>Wednesdays 6pm-7pm (warmup) / 7pm-9pm (competition)</li>
-            <li>Saturdays 10am-11am (warmup) / 11am-1pm (competition)</li>
-          </ul>
-          <span className='event-block-details-header'>Special Event Schedule</span>
-          <ul className='event-block-details'>
-            <li>Jul 4th - Independence Day PV Championships - 4pm-5pm (warmup) / 5pm-7pm (competition)</li>
-            <li>Aug 1st - MOON VAULT - 7:30pm-8:30pm (warmup) / 8:30pm-10:30pm (competition)</li>
-          </ul>
-          <span className='event-block-details-header'>Expand For Full Info and Schedule Below</span>
-        </div>),
-        full: (<div className='event-block'>
-          <p className='event-block-title'>DC Vault - Summer Pole Vault Series 2020</p>
-          <p className='event-block-info'>
-            <span className='event-block-date'>June 20th - August 19th 2020</span>
-            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
-          <b>Compete in the Nation's Capital!</b> <br></br>
-          <b>Weekly Events - Alternating Wednesdays and Saturdays all Summer!</b><br></br><br></br>
-          <span className='event-block-details-header'>Venue</span>
-          <ul className='event-block-details'>
-            <li>DC Vault Pole Vault Center</li>
-            <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
-            <li>Parking On-Site (Lot #3)</li>
-            <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
-            <li>Due to COVID-19 each event is <b>limited to 15 competitors!</b></li>
-          </ul>
-          <span className='event-block-details-header'>Entry Fee</span>
-          <ul className='event-block-details'>
-            <li>$25 - Competitiors</li>
-            <li>$15 - Pole Rental (Free for DCV members)</li>
-            <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
-          </ul>
-          <span className='event-block-details-header'>Schedule</span>
-          <ul className='event-block-details'>
-            <li>Wednesdays 6pm-7pm (warmup) / 7pm-9pm (competition)</li>
-            <li>Saturdays 10am-11am (warmup) / 11am-1pm (competition)</li>
           </ul>
           <span className='event-block-details-header'>Special Event Schedule</span>
           <ul className='event-block-details'>
@@ -177,6 +108,67 @@ class Events extends React.Component {
           <span className="red-text">&#42;</span> Medals awarded at all starred events <br></br>
           <span className="red-text">&#42;&#42;</span> Entry marks required (F 10' / M 13') <br></br>
           <span className="red-text">&#42;&#42;&#42;</span> Special Event <br></br>
+          <span className='event-block-details-header'>Awards</span>
+          <ul className='event-block-details'>
+            <li>Medals will be awarded for 1st through 3rd places</li>
+          </ul>
+        </div>)
+        },
+      {
+        date: new Date('August 19, 2020'),
+        partial: (<div className='event-block'>
+          <p className='event-block-title'>DC Vault - Summer Pole Vault Series 2020</p>
+          <p className='event-block-info'>
+            <span className='event-block-date'>June 20th - August 19th 2020</span>
+            <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+          <b>Compete in the Nation's Capital!</b> <br></br>
+          <b>Weekly Events - Alternating Wednesdays and Saturdays all Summer!</b><br></br><br></br>
+          <span className='event-block-details-header'>Venue</span>
+          <ul className='event-block-details'>
+            <li>DC Vault Pole Vault Center</li>
+            <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+            <li>Parking On-Site (Lot #3)</li>
+            <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
+          </ul>
+          <span className='event-block-details-header'>Entry Fee</span>
+          <ul className='event-block-details'>
+            <li>$25 - Competitiors</li>
+            <li>$15 - Pole Rental (Free for DCV members)</li>
+            <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
+          </ul>
+          <span className='event-block-details-header'>Dates</span>
+          <ul className='event-block-details'>
+            <li><span className="red-text">&#42;&#42;</span> Saturday June 20</li>
+            <li>Wednesday June 24</li>
+            <li><span className="red-text">&#42;&#42;&#42;</span> Saturday July 4th</li>
+            <li><span className="red-text">&#42;</span> Wednesday July 8</li>
+            <li>Saturday July 18</li>
+            <li>Wednesday July 22</li>
+            <li><span className="red-text">&#42;&#42;&#42;</span> Saturday August 1</li>
+            <li>Wednesday August 5</li>
+            <li>Saturday August 15</li>
+            <li><span className="red-text">&#42;</span> Saturday August 19</li>
+          </ul>
+          <span className='event-block-details-header'>Key</span>
+          <ul className='event-block-details'>
+            <li><span className="red-text">&#42;</span> Medals awarded at all starred events</li>
+            <li><span className="red-text">&#42;&#42;</span> Entry marks required (F 10' / M 13') </li>
+            <li><span className="red-text">&#42;&#42;&#42;</span> Special Event </li>
+          </ul>
+          <span className='event-block-details-header'>Schedule</span>
+          <ul className='event-block-details'>
+            <li>Wednesdays 6pm-7pm (warmup) / 7pm-9pm (competition)</li>
+            <li>Saturdays 10am-11am (warmup) / 11am-1pm (competition)</li>
+          </ul>
+          <span className='event-block-details-header'>Special Event Schedule</span>
+          <ul className='event-block-details'>
+            <li>Jul 4th - Independence Day PV Championships - 4pm-5pm (warmup) / 5pm-7pm (competition)</li>
+            <li>Aug 1st - MOON VAULT - 7:30pm-8:30pm (warmup) / 8:30pm-10:30pm (competition)</li>
+          </ul>
+          <span className='event-block-details-header'>Awards</span>
+          <ul className='event-block-details'>
+            <li>Medals will be awarded for 1st through 3rd places</li>
+          </ul>
           <b>Athletes who take Gold at all medal events will earn the limited edition DC Vault White medal</b>
         </div>)
       },
