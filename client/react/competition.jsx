@@ -81,7 +81,7 @@ class Competition extends React.Component {
                         {progressBar}
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
-                                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Please Note:</span> Due to COVID-19 each event is limited to 15 competitors!</p>
+                                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><a onclick="document.getElementById('contact-button').click()">Contact us</a></p>
                             </div>
                         </div>
                     </div>
