@@ -85,9 +85,69 @@ module.exports.sendConfirmationEmails = (email) => {
     subject: 'Welcome to DC Vault', // Subject line
     to: email,
     html: '<p>Thank you for registering with DC Vault. Please review the content below closely and let us know if you have any questions.</p>\
+      <h3>ANNOUNCEMENT</h3>\
+      <p>As DC Vault reopens for the summer, we do so with new rules in place meant to comply with the DC Phase 1 reopening guidance. Please review the following information for clients carefully.</p>\
+      <h3>CLASS - DAYS and SIZE LIMITATIONS</h3>\
+      <p>\
+        <ul>\
+          <li>Beginner/Intermediate classes for All Ages and Adult Groups will be held on Monday, Thursday and Sunday</li>\
+          <li>Strength Class will be held Thursday and Sunday</li>\
+          <li>Youth Class will be held Sunday</li>\
+          <li>Private Lessons are offered Wednesdays (inquire to reserve or for other possible days)</li>\
+          <li>Class sizes are limited to 12 participants training in two separate groups of 6! </li>\
+          <ul>\
+            <li>To ensure the correct number of participants show for each class, you will receive instructions on how to activate your new <b>Zen Planner account</b></li>\
+            <li>Use your Zen Planner account to reserve your seat for the class times you wish to attend</b></li>\
+            <li><b>NOTE:</b> If using the mobile app for Zen Planner, you will not see the classes on the monthly calendar view due to the mobile app display. Swipe through the individual daily views to see which classes are open to you based on the package you registered for. The desktop calendar view has more functionality.</b></li>\
+          </ul>\
+        </ul\
+      </p>\
+      <h3>CLASS - NEW GUIDELINES </h3>\
+      <p>\
+        <ul>\
+          <li>Arrival</li>\
+            <ul>\
+              <li>Face masks must be worn at all times while at the DC Vault facility </li>\
+              <ul>\
+                <li>Ensure the mask type allows you to breathe freely!</li>\
+              </ul>\
+              <li>Spectators will NOT be permitted inside the DC Vault fence but can observe from the grassy area surrounding the facility by the skate park</li>\
+              <li>Upon arrival, wait outside the E. Capitol street gate by one of the social distancing marker flags until instructed to enter</li>\
+              <li>Gates will open at the start of your training session</li>\
+            </ul>\
+          <li>Warmups</li>\
+            <ul>\
+              <li>Weekdays: warmup on your own before your class time and before you enter the facility</li>\
+              <li>Weekends: warmups will be conducted inside the facility and directed by coaches</li>\
+            </ul>\
+          <li>Entry</li>\
+            <ul>\
+              <li>Upon entry you will be screened and asked to sterilize your hands</li>\
+              <li>Place any personal items next to one of the social distancing flags and wait there for instruction</li>\
+            </ul>\
+          <li>Equipment / Storage Shed</li>\
+            <ul>\
+              <li>Do NOT enter the storage shed at any time</li>\
+              <li>Coaches will sterilize and issue all equipment/poles</li>\
+              <li>Do NOT share any equipment - use only the pole the coaches issue to you</li>\
+              <li>At the end of practice, coaches will return your equipment to storage</li>\
+            </ul>\
+          <li>Distancing</li>\
+            <ul>\
+              <li>You will be instructed on social distancing guidelines before starting practice</li>\
+              <li>Markers will be in place for athletes to ensure correct distancing</li>\
+              <li>Athletes failing to follow these guidelines will be asked to leave the practice session</li>\
+            </ul>\
+          <li>Other</li>\
+            <ul>\
+              <li>It is now summer, be sure to bring plenty of water and sunblock</li>\
+              <li>Dogs are always welcome, just bring a leash</li>\
+            </ul>\
+        </ul>\
+      </p>\
       <h3>!! NEW CLASS RESERVATION APP !!</h3>\
       <p>To help you keep track of the training package you signed up for, we have implemented a new reservation app called Zenplanner. This will help you pre-select the practice times you want to attend each week, keep track of your vault package allocation, track performance metrics, and more! </p>\
-      <p>Please look out for an instructional email on how to create your athlete account before our spring quarter starts in March, as well as an email from us on how to use your new app!</p>\
+      <p>Please look out for an instructional email on how to create your athlete account before the start of our trianing quarter, as well as an email from us on how to use your new app!</p>\
       <h3>SCHEDULE</h3>\
       <p>Please refer to our online calendar for your training schedule. Your group dates, times and location for the upcoming training period are posted on this schedule. Any changes due to scheduling conflicts, weather or other unforeseen circumstances will be posted here as well. Please be sure to check the schedule prior to your training sessions at all times.</p> \
       <h3>WHAT TO EXPECT</h3>\
@@ -125,10 +185,64 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
         subject: 'DC Vault Summer Pole Vault Series 2020', // Subject line
         to: email,
-        html: '<p>Thank you for registering for one of our DC Vault Summer Pole Vault Series 2020 Events</p>' +
-        '<br><p>- Please read over our online event information carefully.</p>' +
-        '<p>- You will recieve additional details the week of your event.</p>' +
-        '<p>If you have other questions let us know - <a href="mailto:events@dcvault.org">Events@DCVault.org</a></p>',
+        html: '<p>Thank you for registering for the DC Vault 2020 Summer Pole Vault Series! </p>\
+        <p>In preparation for your upcoming event, please review the information below. </p>\
+        <h3>FACILITY</h3>\
+        <p>\
+          <ul>\
+            <li>DC Vault Address: 2200 East Capitol street NE</li>\
+            <li>Parking: Lot 3</li>\
+            <li>Venue Access: Enter through the East Capitol street facing front gate on the sidewalk</li>\
+            <li>Dog Friendly: Bring a leash and water</li>\
+          </ul\
+        </p>\
+        <h3>EVENT</h3>\
+        <p>\
+          <ul>\
+            <li>Gates: Open at the designated warm-up time</li>\
+            <li>Check In: Athletes check in upon entry</li>\
+            <li>Spectators: May be set up along the fence line outside or inside the venue depending on capacity</li>\
+            <li>Social Distancing: All participants and spectators will be required to maintain 10 ft distance from non-household members</li>\
+            <li>Apparel: Vault apparel, to include hats, bags, shirts and tights, is available for sale at the event</li>\
+            <li>Poles: Pole rentals are available at the event for $15</li>\
+            <li>Pole Storage: Can be arranged for those driving from out of state or watching the National Fireworks after the Jul 4 event</li>\
+            <li>Food: Due to COVID-19 DC Vault cannot provide the usual free grilled food at this summers events (grill will be back in 2021!)</li>\
+            <li>Restrooms: Due to COVID-19, on-site portable toilets may not be available during your event </li>\
+            <ul>\
+              <li>Nearby Public Restrooms: Available at Eastern Market </li>\
+              <li>Address: 225 7th St SE, Washington, DC 20003 </li>\
+            </ul>\
+          </ul\
+        </p>\
+        <h3>AWARDS</h3>\
+        <p>\
+          <ul>\
+            <li>Medals: Awarded for 1st - 3rd place on Jun 20, Jul 4, Jul 8, Aug 1, Aug 19</li>\
+            <ul>\
+              <li>Series Champions who take Gold at all 5 medal events will be awarded the limited edition DC Vault White Medal</li>\
+            </ul>\
+            <li>Sanctioning: All medal event dates are USATF sanctioned events</li>\
+            <li>Results: All sanctioned events will have results reported to USATF</li>\
+          </ul\
+        </p>\
+        <h3>BRING</h3>\
+        <p>\
+          <ul>\
+            <li>Water</li>\
+            <li>Sunblock</li>\
+            <li>Cash: If you intend to purchase spikes or apparel</li>\
+          </ul\
+        </p>\
+        <h3>WEATHER</h3>\
+        <p>\
+          <ul>\
+            <li>Any cancellations due to weather will be announced via email 2 hours prior to the open runway time of your event</li>\
+            <li>In the event of a weather cancellation competitors will be given the choice to participate on another competition date or receive a refund</li>\
+          </ul\
+          <br>\
+          We hope you have a great time at your event!\
+        </p>\
+        <p>If you have other questions let us know - <a href="mailto:events@dcvault.org">Events@DCVault.org</a></p>',
         attachments: [
             {
                 filename: 'DC Vault Parking Pass.pdf',
