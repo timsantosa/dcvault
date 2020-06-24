@@ -310,8 +310,6 @@ class AthleteInfo extends React.Component {
                     <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>
                         &#42; Medals awarded at all starred events
                         <br></br>
-                        &#42;&#42; Entry marks required (F 10' / M 13')
-                        <br></br>
                         &#42;&#42;&#42; Special Event
                         <br></br>
                         <br></br>

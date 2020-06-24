@@ -93,7 +93,7 @@ class Events extends React.Component {
           </ul>
           <span className='event-block-details-header'>Dates</span>
           <ul className='event-block-details'>
-            <li><span className="red-text">&#42;&#42;</span> Saturday June 20</li>
+            <li><span className="red-text">&#42;</span> Saturday June 20</li>
             <li>Wednesday June 24</li>
             <li><span className="red-text">&#42;&#42;&#42;</span> Saturday July 4th</li>
             <li><span className="red-text">&#42;</span> Wednesday July 8</li>
@@ -106,7 +106,6 @@ class Events extends React.Component {
             <br></br>
           </ul>
           <span className="red-text">&#42;</span> Medals awarded at all starred events <br></br>
-          <span className="red-text">&#42;&#42;</span> Entry marks required (F 10' / M 13') <br></br>
           <span className="red-text">&#42;&#42;&#42;</span> Special Event <br></br>
           <span className='event-block-details-header'>Awards</span>
           <ul className='event-block-details'>
@@ -138,7 +137,7 @@ class Events extends React.Component {
           </ul>
           <span className='event-block-details-header'>Dates</span>
           <ul className='event-block-details'>
-            <li><span className="red-text">&#42;&#42;</span> Saturday June 20</li>
+            <li><span className="red-text">&#42;</span> Saturday June 20</li>
             <li>Wednesday June 24</li>
             <li><span className="red-text">&#42;&#42;&#42;</span> Saturday July 4th</li>
             <li><span className="red-text">&#42;</span> Wednesday July 8</li>
@@ -152,7 +151,6 @@ class Events extends React.Component {
           <span className='event-block-details-header'>Key</span>
           <ul className='event-block-details'>
             <li><span className="red-text">&#42;</span> Medals awarded at all starred events</li>
-            <li><span className="red-text">&#42;&#42;</span> Entry marks required (F 10' / M 13') </li>
             <li><span className="red-text">&#42;&#42;&#42;</span> Special Event </li>
           </ul>
           <span className='event-block-details-header'>Schedule</span>
