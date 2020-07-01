@@ -51,7 +51,7 @@ class Events extends React.Component {
           </ul>
           <span className='event-block-details-header'>Schedule</span>
           <ul className='event-block-details'>
-            <li>7:30pm-8:30pm (warmup) / 8:30pm-10:30pm (competition)</li>
+            <li>8pm-9pm (warmup) / 9pm-11pm (competition)</li>
           </ul>
           <span className='event-block-details-header'>Awards</span>
           <ul className='event-block-details'>
@@ -86,27 +86,10 @@ class Events extends React.Component {
           <ul className='event-block-details'>
             <li>4pm-5pm (warmup) / 5pm-7pm (competition)</li>
           </ul>
-          <span className='event-block-details-header'>Special Event Schedule</span>
+          <span className='event-block-details-header'>Event Schedule</span>
           <ul className='event-block-details'>
             <li>Jul 4th - Independence Day PV Championships - 4pm-5pm (warmup) / 5pm-7pm (competition)</li>
-            <li>Aug 1st - MOON VAULT - 7:30pm-8:30pm (warmup) / 8:30pm-10:30pm (competition)</li>
           </ul>
-          <span className='event-block-details-header'>Dates</span>
-          <ul className='event-block-details'>
-            <li><span className="red-text">&#42;</span> Saturday June 20</li>
-            <li>Wednesday June 24</li>
-            <li><span className="red-text">&#42;&#42;&#42;</span> Saturday July 4th</li>
-            <li><span className="red-text">&#42;</span> Wednesday July 8</li>
-            <li>Saturday July 18</li>
-            <li>Wednesday July 22</li>
-            <li><span className="red-text">&#42;&#42;&#42;</span> Saturday August 1</li>
-            <li>Wednesday August 5</li>
-            <li>Saturday August 15</li>
-            <li><span className="red-text">&#42;</span> Saturday August 19</li>
-            <br></br>
-          </ul>
-          <span className="red-text">&#42;</span> Medals awarded at all starred events <br></br>
-          <span className="red-text">&#42;&#42;&#42;</span> Special Event <br></br>
           <span className='event-block-details-header'>Awards</span>
           <ul className='event-block-details'>
             <li>Medals will be awarded for 1st through 3rd places</li>
@@ -161,7 +144,7 @@ class Events extends React.Component {
           <span className='event-block-details-header'>Special Event Schedule</span>
           <ul className='event-block-details'>
             <li>Jul 4th - Independence Day PV Championships - 4pm-5pm (warmup) / 5pm-7pm (competition)</li>
-            <li>Aug 1st - MOON VAULT - 7:30pm-8:30pm (warmup) / 8:30pm-10:30pm (competition)</li>
+            <li>Aug 1st - MOON VAULT - 8pm-9pm (warmup) / 9pm-11pm (competition)</li>
           </ul>
           <span className='event-block-details-header'>Awards</span>
           <ul className='event-block-details'>
