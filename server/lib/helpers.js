@@ -206,12 +206,6 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
             <li>Apparel: Vault apparel, to include hats, bags, shirts and tights, is available for sale at the event</li>\
             <li>Poles: Pole rentals are available at the event for $15</li>\
             <li>Pole Storage: Can be arranged for those driving from out of state or watching the National Fireworks after the Jul 4 event</li>\
-            <li>Food: Due to COVID-19 DC Vault cannot provide the usual free grilled food at this summers events (grill will be back in 2021!)</li>\
-            <li>Restrooms: Due to COVID-19, on-site portable toilets may not be available during your event </li>\
-            <ul>\
-              <li>Nearby Public Restrooms: Available at Eastern Market </li>\
-              <li>Address: 225 7th St SE, Washington, DC 20003 </li>\
-            </ul>\
           </ul\
         </p>\
         <h3>AWARDS</h3>\
