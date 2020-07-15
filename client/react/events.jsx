@@ -35,7 +35,18 @@ class Events extends React.Component {
           <p className='event-block-info'>
             <span className='event-block-date'>Saturday, August 1st 2020</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
-          <b>JOIN US FOR AN EVENING OF VAULTING UNDER THE MOON!</b> <br></br>
+          <b>Compete under the Full Moon in the Nation's Capital!</b> <br></br>
+          <span className='event-block-details-header'>Event Features</span>
+          <ul className='event-block-details'>
+            <li>Glowing-Vaulters in Body-Glow paint</li>
+            <li>Free glowing party favors for kids</li>
+            <li>Glow-bling for spectators</li>
+            <li>Free grilled hot-dogs and burgers</li>
+            <li>Prizes for best glow-costume </li>
+            <li>Best Glow-Pet costume competition (bring your puppy dogs!)</li>
+            <li>Glowing FLY-KIDS competition (ages 5-10)</li>
+            <li>Medals awarded for 1st-3rd place finishes in Fly-Kids, Men's and Women's competition</li>
+          </ul>
           <span className='event-block-details-header'>Venue</span>
           <ul className='event-block-details'>
             <li>DC Vault Pole Vault Center</li>
@@ -45,20 +56,22 @@ class Events extends React.Component {
           </ul>
           <span className='event-block-details-header'>Entry Fee</span>
           <ul className='event-block-details'>
-            <li>$25 - Competitiors</li>
+            <li>$25 - Competitors (register online)</li>
+            <li>Spectator Entry Fee: $5 (cash at the gates)</li>
+            <ul>
+              <li>Spectators are welcome to sit outside the fence to watch free of charge</li>
+            </ul>
             <li>$15 - Pole Rental (Free for DCV members)</li>
             <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
+            <li>Spikes: 1/8" SPIKES ONLY at this venue (available for $5/set if you cannot bring your own)</li>
           </ul>
           <span className='event-block-details-header'>Schedule</span>
           <ul className='event-block-details'>
-            <li>8pm-9pm (warmup) / 9pm-11pm (competition)</li>
+            <li>7:45pm (gates open)</li>
+            <li>8pm-9pm (warmup)</li>
+            <li>9pm-11pm (competition)</li>
           </ul>
-          <span className='event-block-details-header'>Awards</span>
-          <ul className='event-block-details'>
-            <li>Medals will be awarded for 1st through 3rd places and an additional "special award" will be provided for the highest men's and women's jump</li>
-            <li>All participants will receive free event shirts</li>
-            <li>Due to COVID-19, this year's event will be significantly limited in scope and in the number of participants. As such, we won't be scoring teams for this event, but will resume doing so in 2021  </li>
-          </ul>
+          <img src = "../img/logos/moonvault.jpg" alt="Moon Vault" width = '350'></img>
         </div>)
         },
       {
@@ -104,7 +117,6 @@ class Events extends React.Component {
             <span className='event-block-date'>June 20th - August 19th 2020</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
           <b>Compete in the Nation's Capital!</b> <br></br>
-          <b>Weekly Events - Alternating Wednesdays and Saturdays all Summer!</b><br></br><br></br>
           <span className='event-block-details-header'>Venue</span>
           <ul className='event-block-details'>
             <li>DC Vault Pole Vault Center</li>
@@ -124,11 +136,7 @@ class Events extends React.Component {
             <li>Wednesday June 24</li>
             <li><span className="red-text">&#42;&#42;&#42;</span> Saturday July 4th</li>
             <li><span className="red-text">&#42;</span> Wednesday July 8</li>
-            <li>Saturday July 18</li>
-            <li>Wednesday July 22</li>
             <li><span className="red-text">&#42;&#42;&#42;</span> Saturday August 1</li>
-            <li>Wednesday August 5</li>
-            <li>Saturday August 15</li>
             <li><span className="red-text">&#42;</span> Saturday August 19</li>
           </ul>
           <span className='event-block-details-header'>Key</span>
