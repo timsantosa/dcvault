@@ -137,7 +137,7 @@ class Events extends React.Component {
             <li><span className="red-text">&#42;&#42;&#42;</span> Saturday July 4th</li>
             <li><span className="red-text">&#42;</span> Wednesday July 8</li>
             <li><span className="red-text">&#42;&#42;&#42;</span> Saturday August 1</li>
-            <li><span className="red-text">&#42;</span> Saturday August 19</li>
+            <li><span className="red-text">&#42;</span> Wednesday August 19</li>
           </ul>
           <span className='event-block-details-header'>Key</span>
           <ul className='event-block-details'>
