@@ -62,7 +62,7 @@ class Events extends React.Component {
               <li>Spectators are welcome to sit outside the fence to watch free of charge</li>
             </ul>
             <li>$15 - Pole Rental (Free for DCV members)</li>
-            <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
+            <li>Registration Closed</li>
             <li>Spikes: 1/8" SPIKES ONLY at this venue (available for $5/set if you cannot bring your own)</li>
           </ul>
           <span className='event-block-details-header'>Schedule</span>
@@ -93,7 +93,6 @@ class Events extends React.Component {
           <ul className='event-block-details'>
             <li>$25 - Competitiors</li>
             <li>$15 - Pole Rental (Free for DCV members)</li>
-            <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
           </ul>
           <span className='event-block-details-header'>Schedule</span>
           <ul className='event-block-details'>
