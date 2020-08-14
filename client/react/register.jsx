@@ -518,20 +518,20 @@ class SelectPackage extends React.Component {
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='june' checked={this.state.checkedMonth === 'june'} onChange={this.adjustOptions.bind(this)} />
-                    <span>June</span>
+                    <input type='radio' name='month' value='sept' checked={this.state.checkedMonth === 'sept'} onChange={this.adjustOptions.bind(this)} />
+                    <span>September</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='july' checked={this.state.checkedMonth === 'july'} onChange={this.adjustOptions.bind(this)} />
-                    <span>July</span>
+                    <input type='radio' name='month' value='oct' checked={this.state.checkedMonth === 'oct'} onChange={this.adjustOptions.bind(this)} />
+                    <span>October</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='august' checked={this.state.checkedMonth === 'august'} onChange={this.adjustOptions.bind(this)} />
-                    <span>August</span>
+                    <input type='radio' name='month' value='nov' checked={this.state.checkedMonth === 'nov'} onChange={this.adjustOptions.bind(this)} />
+                    <span>November</span>
                   </label>
                 </div>
               </div>

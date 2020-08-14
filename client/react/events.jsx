@@ -37,10 +37,10 @@ class Events extends React.Component {
             <span className='event-block-details-header'>Event Info</span>
             <ul className='event-block-details'>
                 <li>Four 30-minute Fly-Kids intro classes</li>
-                <li>Limited to 6 participant per class</li>
+                <li>Limited to 6 participants per class</li>
                 <li>Beginners welcome!</li>
                 <li>Ages 6-10</li>
-                <li>Kids will be shown very basic fundamentals of kids pole vaulting</li>
+                <li>Kids will be shown very basic fundamentals of pole vaulting</li>
                 <li>Participants will have a chance to jump over a (soft) bar into the Fly-Kids landing mat</li>
                 <li>Location - corner of 7th and C st NE</li>
                 <li>Check-in 10 minutes prior to your groups start-time</li>
