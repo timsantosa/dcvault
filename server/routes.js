@@ -417,7 +417,7 @@ module.exports = (app, db) => {
             let noapp = purchaseInfo.selectPackage.yesApparel
             let app = purchaseInfo.selectPackage.apparel
 
-
+            //If the group is fly-kids or basic then the membe
             if (grp !== 'fly-kids' && mem !== 'basic'){
               mth = 'none'
             }
