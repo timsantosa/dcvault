@@ -29,9 +29,152 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('September 12, 2020'),
+        partial: (<div className='event-block' id='12SEP2020'>
+            <p className='event-block-title'>FLY-KIDS at EASTERN MARKET!</p>
+            <p className='event-block-info'><span className='event-block-date'>Saturday, September 12 2020</span>
+                <span className='event-block-location'>Eastern Market - Corner of 7th and C st NE</span></p>
+            <span className='event-block-details-header'>Event Info</span>
+            <ul className='event-block-details'>
+                <li>Four 30-minute Fly-Kids intro classes</li>
+                <li>Limited to 6 participant per class</li>
+                <li>Beginners welcome!</li>
+                <li>Ages 6-10</li>
+                <li>Kids will be shown very basic fundamentals of kids pole vaulting</li>
+                <li>Participants will have a chance to jump over a (soft) bar into the Fly-Kids landing mat</li>
+                <li>Location - corner of 7th and C st NE</li>
+                <li>Check-in 10 minutes prior to your groups start-time</li>
+                <li>Must arrive on time to participate!</li>
+            </ul>
+            <span className='event-block-details-header'>Schedule</span>
+            <ul className='event-block-details'>
+                <li>10-10:30am – DC Vault Fly-Kids Exhibition</li>
+                <li>10:30-11am – Group 1</li>
+                <li>11-11:30am – Group 2</li>
+                <li>11:30-12pm – Group 3</li>
+                <li>12-12:30pm – Group 4</li>
+            </ul>
+            <span className='event-block-details-header'>Registration</span>
+            <ul className='event-block-details'>
+                <li>Free to participate</li>
+                <li>Pre-Registration Required</li>
+                <li>~Registration Coming Soon!~</li>
+            </ul>
+        </div>)
+        },
+      {
+        date: new Date('October 30, 2020'),
+        partial: (<div className='event-block' id='30OCT2020'>
+        <p className='event-block-title'>Halloween Vault</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Friday, October 30th 2020</span>
+          <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only</li>
+          <li>Registration Deadline is midnight Oct 25th </li>
+          <li>~Registration Coming Soon!~</li>
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$25 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches are able to watch from outside the fence free of charge if they prefer</li>
+        </ul>
+        <span className='event-block-details-header'>Venue</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
+        </ul>
+        <span className='event-block-details-header'>Facility Address</span>
+        <ul className='event-block-details'>
+          <li>2200 East Capitol street NE Washington DC </li>
+          <li>NOTE: Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
+        </ul>
+        </div>),
+        full: (<div className='event-block' id='30OCT2020'>
+        <p className='event-block-title'>Halloween Vault</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Friday, October 30th 2020</span>
+          <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only</li>
+          <li>Registration Deadline is midnight Oct 25th </li>
+          <li>~Registration Coming Soon!~</li>
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$25 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches are able to watch from outside the fence free of charge if they prefer</li>
+        </ul>
+        <span className='event-block-details-header'>Venue</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
+        </ul>
+        <span className='event-block-details-header'>Facility Address</span>
+        <ul className='event-block-details'>
+          <li>2200 East Capitol street NE Washington DC </li>
+          <li>NOTE: Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Drop-off/Pick-up</span>
+        <ul className='event-block-details'>
+          <li>If you need to store poles overnight they can be picked up Saturday, October 31st from 12pm-1pm</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li>$15 cash at check-in</li>
+          <li>You may be sharing your rental pole</li>
+          <li>ID will be held until pole is returned</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
+          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
+          <li>Available for $5 per set at the event if you don't have them already</li>
+          <li>Can be purchased online at Amazon</li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>5:45pm (gates open)</li>
+          <li>6:00pm (Fly-Kids competition + Runway opens for men's and women's warmups)</li>
+          <li>7:00pm (Men's and Women's competition begins)</li>
+        </ul>
+        <span className='event-block-details-header'>Event Features</span>
+        <ul className='event-block-details'>
+          <li>Halloween Costumed Vaulters + Body-Glow Paint</li>
+          <li>Spooky FLY-KIDS competition (ages 5-10)</li>
+          <li>Free glowing party favors for participants and spectators!</li>
+          <li>Free candy for kids!</li>
+          <li>Sanctioned Event - Medals awarded for 1st-3rd place finishes</li>
+          <li>Black Lights on site for Glow Costumes! </li>
+          <li>Wear your best Halloween costume, glow/uv body paint, face paint, reflective clothing, etc. </li>
+          <li>Free Grilled hotdogs for all competitors and spectators!</li>
+        </ul>
+        <span className='event-block-details-header'>Pets</span>
+        <ul className='event-block-details'>
+          <li>Bring your Halloween Pet in Costume!</li>
+          <li>Spooky-Pets competition will be held during an intermission - no pre-registration require</li>
+        </ul>
+        <span className='event-block-details-header'>COVID Precautions</span>
+        <ul className='event-block-details'>
+          <li>Masks must be worn by all attendees when unable to maintain a social distance of 6 feet or more from others</li>
+          <li>All attendees will have temperature taken at entry and will be administered hand sanitizer</li>
+          <li>Athletes must maintain a minimum distance of 6 feet from one another at all times (waiting for jumps in line, etc.)</li>
+          <li>Athletes who are sharing rental poles must use hand sanitizer each time a pole is exchanged</li>
+        </ul>
+      </div>)
+      },
+      {
         date: new Date('August 1, 2020'),
         partial: (<div className='event-block' id='1AUG2020'>
-          <p className='event-block-title'>Moon Vault</p>
+          <p className='event-block-title'>Moon Vault (EXPAND FOR RESULTS)</p>
           <p className='event-block-info'>
             <span className='event-block-date'>Saturday, August 1st 2020</span>
             <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
@@ -72,6 +215,107 @@ class Events extends React.Component {
             <li>9pm-11pm (competition)</li>
           </ul>
           <img src = "../img/logos/moonvault.jpg" alt="Moon Vault" width = '350'></img>
+        </div>),
+        full: (<div className='event-block' id='1AUG2020'>
+        <p className='event-block-title'>Moon Vault</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Saturday, August 1st 2020</span>
+          <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+        <b>Compete under the Full Moon in the Nation's Capital!</b> <br></br>
+        <span className='event-block-details-header'>Event Features</span>
+        <ul className='event-block-details'>
+          <li>Glowing-Vaulters in Body-Glow paint</li>
+          <li>Free glowing party favors for kids</li>
+          <li>Glow-bling for spectators</li>
+          <li>Free grilled hot-dogs and burgers</li>
+          <li>Prizes for best glow-costume </li>
+          <li>Best Glow-Pet costume competition (bring your puppy dogs!)</li>
+          <li>Glowing FLY-KIDS competition (ages 5-10)</li>
+          <li>Medals awarded for 1st-3rd place finishes in Fly-Kids, Men's and Women's competition</li>
+        </ul>
+        <span className='event-block-details-header'>Venue</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li>Athletes enter the facility from the E. Capitol street sidewalk gate</li>
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$25 - Competitors (register online)</li>
+          <li>Spectator Entry Fee: $5 (cash at the gates)</li>
+          <ul>
+            <li>Spectators are welcome to sit outside the fence to watch free of charge</li>
+          </ul>
+          <li>$15 - Pole Rental (Free for DCV members)</li>
+          <li>Registration Closed</li>
+          <li>Spikes: 1/8" SPIKES ONLY at this venue (available for $5/set if you cannot bring your own)</li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>7:45pm (gates open)</li>
+          <li>8pm-9pm (warmup)</li>
+          <li>9pm-11pm (competition)</li>
+        </ul>
+        <img src = "../img/logos/moonvault.jpg" alt="Moon Vault" width = '350'></img>
+        <br></br>
+        <span className='event-block-details-header'>Men's Results</span>
+        <ol className='event-block-details'>
+          <li>4.75 - Pete Geraghty - DC Vault</li>
+          <li>4.60 - Frankie Amore - VaultWorX</li>
+          <li>4.60 - Chris Spiess - DC Vault</li>
+          <li>4.60 - Ryan Kochert - Unattached</li>
+          <li>4.45 - Matt Bigelow - Flying Circus</li>
+          <li>4.45 - Wyatt Stewart - Unattached</li>
+          <li>4.15 - Ian Hoffman - DC Vault</li>
+          <li>4.15 - Timothy Santosa - DC Vault</li>
+          <li>4.15 - Alejandro Adorno - WareHouse Pole Vault</li>
+          <li>4.00 - Robert Kalinowski - WareHouse Pole Vault</li>
+          <li>4.00 - Kevin Munson - DC Vault</li>
+          <li>3.70 - Jordan Figueroa - DC Vault</li>
+          <li>3.70 - Richard Mangogna - Unattached</li>
+          <li>3.20 - Matthew Lourenco - St Anthony's High</li>
+          <li>3.20 - Jackson Schreher - Fauquier High</li>
+          <li>2.90 - Liam Conrardy - Unattached</li>
+          <li>NM - Chad Ackerman - DC Vault</li>
+          <li>NM - Joseph Kurelowech - Unattached</li>
+          <li>NM - Nicolas Laurenco - St Anthony's High</li>
+          <li>NM - Elyas Shafiq - Unattached</li>
+          <li>Scratch - Jason Cheung - DC Vault</li>
+          <li>Scratch - Ashton McCullers - DC Vault</li>
+        </ol>
+        <span className='event-block-details-header'>Women's Results</span>
+        <ol className='event-block-details'>
+          <li>3.65 - Kallie Knott - Vertical Village</li>
+          <li>3.65 - Katya Olsen - DC Vault</li>
+          <li>2.60 - Aliyah Hilman - Sandstorm</li>
+          <li>2.60 - Deeya Garg - DC Vault</li>
+          <li>2.15 - Katie Kaneko - DC Vault</li>
+          <li>1.85 - Kiran Saini - DC Vault</li>
+          <li>NM - Marissa D'Angelo - Unattached</li>
+          <li>NM - Naami Wagner - DC Vault</li>
+          <li>NM - Sienna Jacobson - DC Vault</li>
+          <li>NM - Megan Futty - Unattached</li>
+          <li>NM - Elizabeth Fitzgerald - DC Vault</li>
+          <li>NM - Caroline Waterson - DC Vault </li>
+        </ol>
+      </div>)
+      },
+      {
+        date: new Date('May 6, 2020'),
+        partial: (<div className='event-block' id='06MAY2020'>
+            <p className='event-block-title'>Adult Pole Vault Experience - DC Fray</p>
+            <p className='event-block-info'><span className='event-block-date'>Wednesday, May 6 2020</span>
+                <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+            <ul className='event-block-details'>
+                <li>Ever wanted to try pole vaulting? Join DC Fray and DC Vault for some fun and a private lesson with expert vaulters! This outdoor pole vaulting training center is used for training everything from entry-level through elite athletes– and now, you!</li>
+                <li>This is an adult beginner pole vaulting lesson. You’ll be shown the basic fundamentals of pole vaulting while learning how to carry, run, and plant a vaulting pole, how to swing and turn using high rings and ropes, and finally, how to jump into a vault mat and clear a low bar. Starting at 5 feet and moving up from there, this event couldn’t get any better.</li>
+                <li>DC Vault will grill hot dogs for staff and attendees at the end of the event!</li>
+                <li>Participants should bring water and comfortable sports clothing appropriate for the weather</li>
+                <li>Spots are limited. Cost: $25 per vaulter</li>
+                <li>Must be 21+</li>
+                <li>Adults Can register to participate in this special event at <a href="https://dcfray.com/events/pole-vaulting-4-8">here</a></li>
+            </ul>
         </div>)
         },
       {
