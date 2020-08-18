@@ -279,8 +279,6 @@ class AthleteInfo extends React.Component {
                     <div className='form-row'>
                         <label>
                             <span className='required'>Dates (Registration closed for dates not listed)</span>
-                            <input type="checkbox" name="dates10" value="august19" />
-                            <label for="august19">&nbsp;&nbsp;&#42;&nbsp;August 19th</label>
                             <br></br>
                         </label>
                     </div>

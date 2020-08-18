@@ -371,7 +371,7 @@ class Events extends React.Component {
           <ul className='event-block-details'>
             <li>$25 - Competitiors</li>
             <li>$15 - Pole Rental (Free for DCV members)</li>
-            <li>Advanced Registration Required: <a href="https://dcvault.com/compete">Register Here!</a></li>
+            <li>Registration Closed!</li>
           </ul>
           <span className='event-block-details-header'>Dates</span>
           <ul className='event-block-details'>
