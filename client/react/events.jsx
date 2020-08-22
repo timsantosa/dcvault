@@ -58,7 +58,7 @@ class Events extends React.Component {
             <ul className='event-block-details'>
                 <li>Free to participate</li>
                 <li>Pre-Registration Required</li>
-                <li>~Registration Coming Soon!~</li>
+                <li>To register email <a href='mailto:events@dcvault.org'>events@dcvault.org</a> with your information and what time slot you would like to sign up for.</li>
             </ul>
         </div>)
         },
