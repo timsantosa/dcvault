@@ -31,9 +31,9 @@ class Events extends React.Component {
       {
         date: new Date('September 12, 2020'),
         partial: (<div className='event-block' id='12SEP2020'>
-            <p className='event-block-title'>FLY-KIDS at EASTERN MARKET!</p>
+            <p className='event-block-title'><span className='red-text'>FLY-KIDS</span> at <span className='red-text'>EASTERN</span> MARKET!</p>
             <p className='event-block-info'><span className='event-block-date'>Saturday, September 12 2020</span>
-                <span className='event-block-location'>Eastern Market - Corner of 7th and C st NE</span></p>
+                <span className='event-block-location'>Eastern Market - Corner of 7th and C st SE</span></p>
             <span className='event-block-details-header'>Event Info</span>
             <ul className='event-block-details'>
                 <li>Four 30-minute Fly-Kids intro classes</li>
@@ -42,7 +42,7 @@ class Events extends React.Component {
                 <li>Ages 6-10</li>
                 <li>Kids will be shown very basic fundamentals of pole vaulting</li>
                 <li>Participants will have a chance to jump over a (soft) bar into the Fly-Kids landing mat</li>
-                <li>Location - corner of 7th and C st NE</li>
+                <li>Location - corner of 7th and C st SE</li>
                 <li>Check-in 10 minutes prior to your groups start-time</li>
                 <li>Must arrive on time to participate!</li>
             </ul>
@@ -65,7 +65,7 @@ class Events extends React.Component {
       {
         date: new Date('October 30, 2020'),
         partial: (<div className='event-block' id='30OCT2020'>
-        <p className='event-block-title'>Halloween Vault</p>
+        <p className='event-block-title'>Halloween <span className='red-text'>Vault</span></p>
         <p className='event-block-info'>
           <span className='event-block-date'>Friday, October 30th 2020</span>
           <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
@@ -1054,7 +1054,7 @@ class Events extends React.Component {
           <div>
             <div className='row'>
               <div className='col-xs-12'>
-                <p className='subsection-header'>Upcoming Events</p>
+                <p className='subsection-header'><span className='red-text'>Upcoming</span> Events</p>
               </div>
             </div>
             <div className='row'>
