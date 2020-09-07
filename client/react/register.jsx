@@ -597,10 +597,10 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='strength' value='none' checked={this.state.checkedStrength === 'none'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>No Thanks</span>
+                    <span>No Thanks (STRENGTH CLASS FULL)</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='strength' value='yes' checked={this.state.checkedStrength === 'yes'} onChange={this.adjustOptions.bind(this)}/>
                     <span>Yes!</span>
