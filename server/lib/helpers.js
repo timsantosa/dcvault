@@ -86,7 +86,7 @@ module.exports.sendConfirmationEmails = (email) => {
     to: email,
     html: '<p>Thank you for registering with DC Vault. Please review the content below closely and let us know if you have any questions.</p>\
       <h3>ANNOUNCEMENT</h3>\
-      <p>As DC Vault reopens for the summer, we do so with new rules in place meant to comply with the DC Phase 1 reopening guidance. Please review the following information for clients carefully.</p>\
+      <p>As DC Vault reopens for the summer, we do so with new rules in place meant to comply with the DC reopening guidance. Please review the following information for clients carefully.</p>\
       <h3>CLASS - DAYS and SIZE LIMITATIONS</h3>\
       <p>\
         <ul>\
@@ -94,7 +94,7 @@ module.exports.sendConfirmationEmails = (email) => {
           <li>Strength Class will be held Thursday and Sunday</li>\
           <li>Youth Class will be held Sunday</li>\
           <li>Private Lessons are offered Wednesdays (inquire to reserve or for other possible days)</li>\
-          <li>Class sizes are limited to 12 participants training in two separate groups of 6! </li>\
+          <li>Class sizes are limited to 20 participants training in separate groups! </li>\
           <ul>\
             <li>To ensure the correct number of participants show for each class, you will receive instructions on how to activate your new <b>Zen Planner account</b></li>\
             <li>Use your Zen Planner account to reserve your seat for the class times you wish to attend</b></li>\

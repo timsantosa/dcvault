@@ -108,7 +108,7 @@ class Training extends React.Component {
           }
         </div>
         <div className='center-content' style={{marginTop: '15px'}}>
-          <p className='info-text' style={{textAlign: 'center'}}>To apply for a discount code or training group invitation, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a></p>
+          <p className='info-text' style={{textAlign: 'center'}}>To register for training please click <a className='red-text'onClick={() => { window.location.href = '/register/info' }}>here</a></p>
         </div>
         <ReactTooltip html />
       </div>
