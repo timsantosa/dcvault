@@ -183,10 +183,10 @@ module.exports.sendConfirmationEmails = (email) => {
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: 'DC Vault Summer Pole Vault Series 2020', // Subject line
+        subject: 'DCV Halloween Vault 2020', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the DC Vault 2020 Summer Pole Vault Series! </p>\
-        <p>In preparation for your upcoming event, please review the information below. </p>\
+        html: '<p>Thank you for registering for the DC Vault 2020 Halloween Vault! </p>\
+        <p>In preparation for your upcoming event, please review the information below as well as the event information listed on our <a href="www.dcvault.com/events">website</a> </p>\
         <h3>FACILITY</h3>\
         <p>\
           <ul>\
@@ -205,25 +205,13 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
             <li>Social Distancing: All participants and spectators will be required to maintain 10 ft distance from non-household members</li>\
             <li>Apparel: Vault apparel, to include hats, bags, shirts and tights, is available for sale at the event</li>\
             <li>Poles: Pole rentals are available at the event for $15</li>\
-            <li>Pole Storage: Can be arranged for those driving from out of state or watching the National Fireworks after the Jul 4 event</li>\
-          </ul\
-        </p>\
-        <h3>AWARDS</h3>\
-        <p>\
-          <ul>\
-            <li>Medals: Awarded for 1st - 3rd place on Jun 20, Jul 4, Jul 8, Aug 1, Aug 19</li>\
-            <ul>\
-              <li>Series Champions who take Gold at all 5 medal events will be awarded the limited edition DC Vault White Medal</li>\
-            </ul>\
-            <li>Sanctioning: All medal event dates are USATF sanctioned events</li>\
-            <li>Results: All sanctioned events will have results reported to USATF</li>\
+            <li>Pole Storage: Can be arranged for those driving from out of state</li>\
           </ul\
         </p>\
         <h3>BRING</h3>\
         <p>\
           <ul>\
             <li>Water</li>\
-            <li>Sunblock</li>\
             <li>Cash: If you intend to purchase spikes or apparel</li>\
           </ul\
         </p>\
@@ -231,7 +219,6 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         <p>\
           <ul>\
             <li>Any cancellations due to weather will be announced via email 2 hours prior to the open runway time of your event</li>\
-            <li>In the event of a weather cancellation competitors will be given the choice to participate on another competition date or receive a refund</li>\
           </ul\
           <br>\
           We hope you have a great time at your event!\

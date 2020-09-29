@@ -71,13 +71,13 @@ class Events extends React.Component {
           <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
-          <li>Advanced Registration Only</li>
+          <li>Advanced Registration Only - Registration Open September 30th</li>
           <li>Registration Deadline is midnight Oct 25th </li>
-          <li>~Registration Coming Soon!~</li>
+          <li>Register <a href="www.dcvault.com/compete">here</a></li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
-          <li>$25 for competitors</li>
+          <li>$35 for competitors</li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches are able to watch from outside the fence free of charge if they prefer</li>
         </ul>
