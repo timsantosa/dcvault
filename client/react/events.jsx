@@ -142,8 +142,9 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'>Schedule</span>
         <ul className='event-block-details'>
-          <li>5:45pm (gates open)</li>
-          <li>6:00pm (Fly-Kids competition + Runway opens for men's and women's warmups)</li>
+          <li>5:30pm (gates open)</li>
+          <li>5:45pm (Fly-Kids competition Ages 5-10)</li>
+          <li>6:30pm (Men's and Women's runway opens for warmups)</li>
           <li>7:00pm (Men's and Women's competition begins)</li>
         </ul>
         <span className='event-block-details-header'>Event Features</span>
