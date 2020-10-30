@@ -92,6 +92,13 @@ class Events extends React.Component {
           <li>2200 East Capitol street NE Washington DC </li>
           <li>NOTE: Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
         </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>5:30pm (gates open)</li>
+          <li>5:45pm (Fly-Kids competition Ages 5-10)</li>
+          <li>6:30pm (Men's and Women's runway opens for warmups)</li>
+          <li>7:00pm (Men's and Women's competition begins)</li>
+        </ul>
         </div>),
         full: (<div className='event-block' id='30OCT2020'>
         <p className='event-block-title'>Halloween Vault</p>
