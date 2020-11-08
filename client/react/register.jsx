@@ -1156,7 +1156,7 @@ class Payment extends React.Component {
         this.props.data.selectPackage.membership = fkmembership
       }
     }else if (group === 'adult') {
-      price = 375
+      price = 325
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'beginner' || group === 'intermediate' || group === 'beginner-intermediate') {
