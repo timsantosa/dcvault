@@ -20,12 +20,13 @@ var textValues = {
 <p class="content-text" style="font-weight: bold">What</p>\
 <p class="content-text smaller-text">Indoor training site, primarily used for Level-V training.</p>',
 
-  BALT: '<p class="minor-heading">Baltimore (BALT)</p>\
+  VA: '<p class="minor-heading">Dulles Sportsplex</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
-<p class="content-text smaller-text">We Travel to You!</p>\
+<p class="content-text smaller-text">Dulles Sportsplex</p>\
+<p class="content-text smaller-text">21610 Atlantic Blvd, Sterling, VA 20166</p>\
 <p class="content-text" style="font-weight: bold">What</p>\
-<p class="content-text smaller-text">We offer private lessons in the Baltimore area to athletes who are unable to make it to one of our facilities. </p>\
-<p class="content-text smaller-text">We will bring poles or other needed equipment to the training location of your choice. Contact us for details!</p>',
+<p class="content-text smaller-text">Indoor training site, primarily used for All Ages Beginner-Intermediate development training.</p>\
+<p class="content-text smaller-text">Our New Winter Facility Info can be found at https://dullessportsplex.com</p>',
 
   DCV: '<p class="minor-heading">DC <span class="red-text">VAULT</span> (DCV)</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
@@ -44,14 +45,14 @@ Parking is available in Lot 3 and metro access is available across the street at
 var locations = {
   PREP: {lat: 39.032617, lng: -77.108889},
   PG: {lat: 38.911269, lng: -76.866919},
-  BALT: {lat: 39.284213, lng: -76.610312},
+  VA: {lat: 39.016517, lng: -77.425610},
   DCV: {lat: 38.890134, lng: -76.976392},
 }
 
 var tooltips = {
   PREP: 'Georgetown Preparatory School',
   PG: 'Prince George\'s County Sportsplex',
-  BALT: 'Baltimore',
+  VA: 'Dulles Sportsplex',
   DCV: 'DC VAULT',
 }
 
@@ -123,7 +124,7 @@ window.initMap = function () {
   markers = {
     PREP: new window.google.maps.Marker({position: locations.PREP, map: map, title: tooltips.PREP}),
     PG: new window.google.maps.Marker({position: locations.PG, map: map, title: tooltips.PG}),
-    BALT: new window.google.maps.Marker({position: locations.BALT, map: map, title: tooltips.BALT}),
+    VA: new window.google.maps.Marker({position: locations.VA, map: map, title: tooltips.VA}),
     DCV: new window.google.maps.Marker({position: locations.DCV, map: map, title: tooltips.DCV}),
   }
 }

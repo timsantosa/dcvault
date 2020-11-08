@@ -167,7 +167,7 @@ class SelectPackage extends React.Component {
       activeQuarter: '',
       availableFacilities: {
         dcv: true,
-        balt: true,
+        va: true,
         pa: true,
         prep: true
       }
@@ -209,11 +209,11 @@ class SelectPackage extends React.Component {
     let month = today.getMonth() + 1
     let day = today.getDate()
     let activeQuarter = ''
-
-    if ((month === 11 && day >= 15) || month === 12 || month === 1 || month === 2) {
+    console.log(month)
+    if (month === 11 || month === 12 || month === 1 || month === 2) {
       activeQuarter = 'winter'
       this.setState({
-        showYouthAdult: true
+        showYouthAdult: false
       })
     }
 
@@ -225,7 +225,7 @@ class SelectPackage extends React.Component {
       activeQuarter = 'summer'
     }
 
-    if ((month === 8 && day >= 15) || month === 9 || month === 10 || month === 11) {
+    if ((month === 8 && day >= 15) || month === 9 || month === 10) {
       activeQuarter = 'fall'
     }
 
@@ -266,10 +266,10 @@ class SelectPackage extends React.Component {
     if (quarter === 'winter' && (group === 'beginner-intermediate' || group === 'youth' || group === 'adult')) {
       this.setState({
         availableFacilities: {
-          dcv: true,
-          balt: false,
+          dcv: false,
+          va: true,
           pa: false,
-          prep: true
+          prep: false
         }
       })
     } else if (quarter === 'spring') {
@@ -277,7 +277,7 @@ class SelectPackage extends React.Component {
         this.setState({
           availableFacilities: {
             dcv: true,
-            balt: false,
+            va: false,
             pa: false,
             prep: false
           }
@@ -286,7 +286,7 @@ class SelectPackage extends React.Component {
         this.setState({
           availableFacilities: {
             dcv: true,
-            balt: false,
+            va: false,
             pa: false,
             prep: false
           }
@@ -296,7 +296,7 @@ class SelectPackage extends React.Component {
       this.setState({
         availableFacilities: {
           dcv: true,
-          balt: false,
+          va: false,
           pa: false,
           prep: false
         }
@@ -396,13 +396,13 @@ class SelectPackage extends React.Component {
                     <span>Summer</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fall</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
                     <span>Winter</span>
@@ -420,7 +420,7 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display:'block'}}>
+                <div style={{display:'none'}}>
                   <label>
                     <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fly-Kids</span>
@@ -493,13 +493,13 @@ class SelectPackage extends React.Component {
                     <span>Apprentice</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='membership' value='master' checked={this.state.checkedMembership === 'master'} onChange={this.adjustOptions.bind(this)} />
                     <span>Master</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='membership' value='champion' checked={this.state.checkedMembership === 'champion'} onChange={this.adjustOptions.bind(this)} />
                     <span>Champion</span>
@@ -518,20 +518,20 @@ class SelectPackage extends React.Component {
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='sept' checked={this.state.checkedMonth === 'sept'} onChange={this.adjustOptions.bind(this)} />
-                    <span>September</span>
+                    <input type='radio' name='month' value='dec' checked={this.state.checkedMonth === 'dec'} onChange={this.adjustOptions.bind(this)} />
+                    <span>December</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='oct' checked={this.state.checkedMonth === 'oct'} onChange={this.adjustOptions.bind(this)} />
-                    <span>October</span>
+                    <input type='radio' name='month' value='jan' checked={this.state.checkedMonth === 'jan'} onChange={this.adjustOptions.bind(this)} />
+                    <span>January</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='nov' checked={this.state.checkedMonth === 'nov'} onChange={this.adjustOptions.bind(this)} />
-                    <span>November</span>
+                    <input type='radio' name='month' value='feb' checked={this.state.checkedMonth === 'feb'} onChange={this.adjustOptions.bind(this)} />
+                    <span>February</span>
                   </label>
                 </div>
               </div>
@@ -572,10 +572,10 @@ class SelectPackage extends React.Component {
                     <span>Washington, DC (DCV)</span>
                   </label>
                 </div>
-                <div style={{display: this.state.availableFacilities.balt ? 'block' : 'none'}}>
+                <div style={{display: this.state.availableFacilities.va ? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='facility' value='balt' checked={this.state.checkedFacility === 'balt'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>Baltimore (BALT)</span>
+                    <input type='radio' name='facility' value='va' checked={this.state.checkedFacility === 'va'} onChange={this.adjustOptions.bind(this)}/>
+                    <span>Virginia (VA)</span>
                   </label>
                 </div>
                 <div style={{display: this.state.availableFacilities.prep ? 'block' : 'none'}}>
@@ -587,7 +587,7 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedFacility  && (this.state.checkedGroup !== 'fly-kids') && (this.state.checkedGroup !== 'adult') && (this.state.checkedMembership !== 'basic') && (this.state.checkedMembership !== 'apprentice')? 'block' : 'none'}}>
+            <div className='form-row' style={{display: !this.state.checkedFacility && this.state.checkedFacility  && (this.state.checkedGroup !== 'fly-kids') && (this.state.checkedGroup !== 'adult') && (this.state.checkedMembership !== 'basic') && (this.state.checkedMembership !== 'apprentice')? 'block' : 'none'}}>
               <label><span>Strength Training</span></label>
               <br/>
               <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the DC Vault Strength Training Program for $75? </span>
@@ -1156,14 +1156,14 @@ class Payment extends React.Component {
         this.props.data.selectPackage.membership = fkmembership
       }
     }else if (group === 'adult') {
-      price = 300
+      price = 375
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'beginner' || group === 'intermediate' || group === 'beginner-intermediate') {
       if(membership === 'basic'){
-        price = 225
+        price = 325
       }else if (membership === 'apprentice'){
-        price = 450
+        price = 575
       }else if (membership === 'master'){
         price = 575
       }else{

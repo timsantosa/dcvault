@@ -96,7 +96,7 @@ class Training extends React.Component {
       <div id='training-container' className='container'>
         <p className='section-header'>Training <span className='red-text'>Programs</span></p>
         <div className='red-button' onClick={() => { window.location.href = '/register/info' }} style={{marginBottom: '30px'}}>
-          <span className='button-text'>Course Sign Up</span>
+          <span className='button-text'>Fees and Sign-up</span>
         </div>
         <div className='row' style={{width: '100%', margin: '0'}}>
           {
