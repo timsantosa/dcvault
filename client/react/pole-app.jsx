@@ -40,6 +40,24 @@ class PoleApp extends React.Component {
         this.setState({
           poles: res.data.poles
         })
+        let poleCopy = this.state.poles.sort((a, b) => {
+          let aVal = a['length']
+          let bVal = b['length']
+          aVal = a.feet + (a.inches / 12)
+          bVal = b.feet + (b.inches / 12)
+
+          if (aVal > bVal) {
+            return 1
+          } else if (aVal < bVal) {
+            return -1
+          } else {
+            return 0
+          }
+        })
+        
+        this.setState({
+          poles: poleCopy
+        })
       }
     })
 
