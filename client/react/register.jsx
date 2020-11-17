@@ -484,13 +484,13 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='basic' checked={this.state.checkedMembership === 'basic'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Basic</span>
+                    <span>Basic (one month)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='apprentice' checked={this.state.checkedMembership === 'apprentice'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Apprentice</span>
+                    <span>Apprentice (full quarter)</span>
                   </label>
                 </div>
                 <div style={{display: 'none'}}>
