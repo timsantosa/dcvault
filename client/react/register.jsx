@@ -110,7 +110,7 @@ class Register extends React.Component {
           <div className='containter'>
             <div className='row'>
               <div className='col-xs-12 col-md-6 col-md-push-3'>
-                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>If you have any trouble registering, wish to clarify any of the information, or would like to learn more about <span className='red-text'>Private Lessons</span> or our many available <span className='red-text'>Discounts</span>, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>click here</a> to contact us.</p>
+                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Private Lessons</span> or available <span className='red-text'>Discounts</span>, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>click here</a> to contact us.</p>
               </div>
             </div>
             {this.state.currentPage}
@@ -420,7 +420,7 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display:'none'}}>
+                <div style={{display:'block'}}>
                   <label>
                     <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fly-Kids</span>
@@ -429,7 +429,7 @@ class SelectPackage extends React.Component {
                 <div style={{display:'block'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Adult</span>
+                    <span>Adult (21+)</span>
                   </label>
                 </div>
                 <div>
@@ -496,13 +496,13 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='master' checked={this.state.checkedMembership === 'master'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Master</span>
+                    <span>Master (Full Quarter(</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='champion' checked={this.state.checkedMembership === 'champion'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Champion</span>
+                    <span>Champion (Full Quarter)</span>
                   </label>
                 </div>
               </div>
