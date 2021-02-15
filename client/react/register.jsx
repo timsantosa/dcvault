@@ -423,7 +423,7 @@ class SelectPackage extends React.Component {
                 <div style={{display:'block'}}>
                   <label>
                     <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Fly-Kids</span>
+                    <span>Fly-Kids (6-10)</span>
                   </label>
                 </div>
                 <div style={{display:'block'}} >
@@ -490,13 +490,13 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='apprentice' checked={this.state.checkedMembership === 'apprentice'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Apprentice (full quarter)</span>
+                    <span>Apprentice (Full Quarter)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='master' checked={this.state.checkedMembership === 'master'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Master (Full Quarter(</span>
+                    <span>Master (Full Quarter)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
