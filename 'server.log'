@@ -424,3 +424,26 @@ DB Initialized
 127.0.0.1 - - [03/May/2021:03:01:56 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
 127.0.0.1 - - [03/May/2021:03:01:58 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
 127.0.0.1 - - [03/May/2021:03:01:58 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [03/May/2021:03:03:41 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+127.0.0.1 - - [03/May/2021:03:03:41 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+127.0.0.1 - - [03/May/2021:03:06:04 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+127.0.0.1 - - [03/May/2021:03:06:08 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+127.0.0.1 - - [03/May/2021:03:06:22 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
