@@ -445,6 +445,7 @@ module.exports = (app, db) => {
               waiverSignatory: purchaseInfo.agreement.name,
               size: app,
               strength: purchaseInfo.selectPackage.strength,
+              strengthFam: purchaseInfo.selectPackage.strengthFam,
               membership: mem,
               waiverDate: purchaseInfo.agreement.date,
               paymentId: purchaseInfo.payment.paymentId,
