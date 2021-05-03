@@ -4,3 +4,4 @@ client/config/
 client/js/react-components.js
 server.log
 'server.log'
+*.log'
