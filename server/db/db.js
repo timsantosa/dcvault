@@ -103,6 +103,7 @@ columns.purchases = {
   size: Sequelize.STRING,
   month: Sequelize.STRING,
   strength: Sequelize.STRING,
+  strengthFam: Sequelize.STRING,
   membership: Sequelize.STRING
 }
 
