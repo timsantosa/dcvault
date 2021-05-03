@@ -209,7 +209,7 @@ class AdminPanel extends React.Component {
                 <span style={{textDecoration: showAllRecords ? 'line-through' : '', display: 'block'}}><input id='showCurrent' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} defaultChecked /> Show Current Quarter</span>
                 <span style={{textDecoration: showAllRecords ? 'line-through' : '', display: 'block'}}><input id='showUpcoming' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} /> Show Upcoming Quarter</span>
                 <span style={{display: 'block'}}><input id='showAll' type='checkbox' onChange={this.updateDisplayRecords.bind(this)} /> Show All Records</span>
-                <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'membership','quarter','month','strength','size','notification', 'emergencyContactMDN']} />
+                <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'membership','quarter','month','strength','strengthFam','size','notification', 'emergencyContactMDN']} />
               </div>
             </div>
           </div>
