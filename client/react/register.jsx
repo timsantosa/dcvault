@@ -153,7 +153,6 @@ class SelectPackage extends React.Component {
       checkedFKMembership: null,
       checkedYesApparel: null,
       checkedStrength: 'none',
-      checkedStrengthFam: 'none',
       showInvite: false,
       showEmergingElite: false,
       showElite: false,
@@ -257,7 +256,6 @@ class SelectPackage extends React.Component {
       checkedMonth: month,
       checkedMembership: membership,
       checkedStrength: strength,
-      checkedStrengthFam: strengthFam,
       checkedFKMembership: fkmembership,
       checkedYesApparel: yesApparel
     })
@@ -491,12 +489,6 @@ class SelectPackage extends React.Component {
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='membership' value='advanced' checked={this.state.checkedMembership === 'advanced'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Advanced (one month)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
                     <input type='radio' name='membership' value='apprentice' checked={this.state.checkedMembership === 'apprentice'} onChange={this.adjustOptions.bind(this)} />
                     <span>Apprentice (Full Quarter)</span>
                   </label>
@@ -526,20 +518,20 @@ class SelectPackage extends React.Component {
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='jun' checked={this.state.checkedMonth === 'jun'} onChange={this.adjustOptions.bind(this)} />
-                    <span>June</span>
+                    <input type='radio' name='month' value='mar' checked={this.state.checkedMonth === 'mar'} onChange={this.adjustOptions.bind(this)} />
+                    <span>March</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='jul' checked={this.state.checkedMonth === 'jul'} onChange={this.adjustOptions.bind(this)} />
-                    <span>July</span>
+                    <input type='radio' name='month' value='apr' checked={this.state.checkedMonth === 'apr'} onChange={this.adjustOptions.bind(this)} />
+                    <span>April</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='aug' checked={this.state.checkedMonth === 'aug'} onChange={this.adjustOptions.bind(this)} />
-                    <span>August</span>
+                    <input type='radio' name='month' value='may' checked={this.state.checkedMonth === 'may'} onChange={this.adjustOptions.bind(this)} />
+                    <span>May</span>
                   </label>
                 </div>
               </div>
@@ -617,26 +609,6 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='strength' value='yes' checked={this.state.checkedStrength === 'yes'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>Yes!</span>
-                  </label>
-                </div>
-              </div>
-
-              <label><span>Strength Membership</span></label>
-              <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the DC Vault Family Member Pass for $50? </span>
-              <br/><br/>
-
-              <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='strength' value='none' checked={this.state.checkedStrengthFam === 'none'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>No Thanks</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='strength' value='yes' checked={this.state.checkedStrengthFam === 'yes'} onChange={this.adjustOptions.bind(this)}/>
                     <span>Yes!</span>
                   </label>
                 </div>
