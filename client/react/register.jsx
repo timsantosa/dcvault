@@ -603,7 +603,7 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedFacility  && ((this.state.checkedGroup === 'master') || (this.state.checkedGroup === 'champion'))? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedFacility  && ((this.state.checkedMembership === 'master')||(this.state.checkedMembership === "champion"))? 'block' : 'none'}}>
               <label><span>Strength Training</span></label>
               <br/>
               <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the DC Vault Strength Training Program for $100? </span>
