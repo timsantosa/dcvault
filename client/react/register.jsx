@@ -631,7 +631,7 @@ class SelectPackage extends React.Component {
 
               <label><span>Strength Facility Membership</span></label>
               <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the DC Vault Family Member Pass for $50? <b>(See training info for details)</b></span>
+              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the Family Fitness Pass for $50? <b>(See training info for details)</b></span>
               <br/><br/>
 
               <div className='form-radio-buttons'>
