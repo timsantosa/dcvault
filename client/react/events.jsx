@@ -291,7 +291,7 @@ class Events extends React.Component {
           <li>You may be sharing your rental pole</li>
           <li>ID will be held until pole is returned</li>
         </ul>
-        <span className='event-block-details-header'>Pole Rentals</span>
+        <span className='event-block-details-header'>Spikes</span>
         <ul className='event-block-details'>
           <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
           <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
