@@ -29,6 +29,159 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('June 26, 2021'),
+        partial: (<div className='event-block' id='26JUN2021'>
+        <p className='event-block-title'>DMV <span className='red-text'>Pole Vault</span> Championships</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Saturday, June 26th 2021</span>
+          <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only - Registration Open May 30th</li>
+          <li>Register <a href="https://dmvpvchamps.milesplit.com">Here</a></li>
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$35 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>
+        </ul>
+        <span className='event-block-details-header'>Venue</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>
+        </ul>
+        <span className='event-block-details-header'>Facility Address</span>
+        <ul className='event-block-details'>
+          <li>2200 East Capitol street NE Washington DC </li>
+          <li><u>NOTE:</u> Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>
+          <li>Gates Open</li>
+          <ul>
+            <li>10:00 am</li>
+          </ul>
+          <li>Elementary + Middle School</li>
+          <ul>
+            <li>10:00-11:00 warmups</li>
+            <li>11:00-12:00 competition</li>
+          </ul>
+          <li>High School</li>
+          <ul>
+            <li>12:00-1:00 warmups</li>
+            <li>1:00-3:00 competition</li>
+          </ul>
+          <li>Collegiate/Open</li>
+          <ul>
+            <li>3:00-4:00 warmups</li>
+            <li>4:00-6:00 competition</li>
+          </ul>
+        </ul>
+        </div>),
+        full: (<div className='event-block' id='26JUN2021'>
+        <p className='event-block-title'>DMV <span className='red-text'>Pole Vault</span> Championships</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Saturday, June 26th 2021</span>
+          <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only - Registration Open May 30th</li>
+          <li>Register <a href="https://dmvpvchamps.milesplit.com">Here</a></li>
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$35 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>
+        </ul>
+        <span className='event-block-details-header'>Venue</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>
+        </ul>
+        <span className='event-block-details-header'>Facility Address</span>
+        <ul className='event-block-details'>
+          <li>2200 East Capitol street NE Washington DC </li>
+          <li><u>NOTE:</u> Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Drop-off/Pick-up</span>
+        <ul className='event-block-details'>
+          <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li>$15 cash at check-in</li>
+          <li>You may be sharing your rental pole</li>
+          <li>ID will be held until pole is returned</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
+          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
+          <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>
+          <ul>
+            <li>Recommended so you don’t waste time at the event trying to change spikes!</li>
+          </ul>
+          <li>Available for $5 per set at the event (bring your own spike wrench)</li>
+          
+        </ul>
+        <span className='event-block-details-header'>Awards/Results/Sanctioning</span>
+        <ul className='event-block-details'>
+          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>
+          <li>Athletes who take gold at all 3 DC Vault summer events will earn the limited-edition DC Vault white medal</li>
+          <li>Scored Divisions</li>
+          <ul>
+            <li>Elementary (ages 5-10)</li>
+            <li>Middle School (ages 11-13)</li>
+            <li>High School (ages 14-18)</li>
+            <li>Collegiate/Open (ages 19+)</li>
+          </ul>
+          <li>USATF Sanctioned</li>
+          <li>Results/Performance marks will be published at <a href="https://milesplit.com">Milesplit.com</a> and at <a href="https://dcvault.com/events">DCVault.com/events</a></li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+        <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>
+          <li>Gates Open</li>
+          <ul>
+            <li>10:00 am</li>
+          </ul>
+          <li>Elementary + Middle School</li>
+          <ul>
+            <li>10:00-11:00 warmups</li>
+            <li>11:00-12:00 competition</li>
+          </ul>
+          <li>High School</li>
+          <ul>
+            <li>12:00-1:00 warmups</li>
+            <li>1:00-3:00 competition</li>
+          </ul>
+          <li>Collegiate/Open</li>
+          <ul>
+            <li>3:00-4:00 warmups</li>
+            <li>4:00-6:00 competition</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Event Features</span>
+        <ul className='event-block-details'>
+          <li>Free Grilled hotdogs and veggie dogs for competitors and spectators!</li>
+          <li>Bring something special for yourself if you’d like to grill it up!</li>
+        </ul>
+        <span className='event-block-details-header'>Pets</span>
+        <ul className='event-block-details'>
+          <li>Dog friendly venue!</li>
+          <li>Bring a leash and water for your critter</li>
+        </ul>
+
+      </div>)
+      },
+      {
         date: new Date('September 12, 2020'),
         partial: (<div className='event-block' id='12SEP2020'>
             <p className='event-block-title'><span className='red-text'>FLY-KIDS</span> at <span className='red-text'>EASTERN</span> MARKET!</p>
