@@ -31,8 +31,8 @@ class Events extends React.Component {
       {
         date: new Date('June 26, 2021'),
         partial: (<div className='event-block' id='26JUN2021'>
-        <img src = "../img/logos/dmvchamps.jpg" alt="DMV Champs" width = '350'></img>
         <p className='event-block-title'>DMV <span className='red-text'>Pole Vault</span> Championships</p>
+        <img src = "../img/logos/dmvchamps.JPG" alt="DMV Champs" width = '350'></img>
         <p className='event-block-info'>
           <span className='event-block-date'>Saturday, June 26th 2021</span>
           <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
@@ -84,8 +84,8 @@ class Events extends React.Component {
         </ul>
         </div>),
         full: (<div className='event-block' id='26JUN2021'>
-        <img src = "../img/logos/dmvchamps.jpg" alt="DMV Champs" width = '350'></img>
         <p className='event-block-title'>DMV <span className='red-text'>Pole Vault</span> Championships</p>
+        <img src = "../img/logos/dmvchamps.JPG" alt="DMV Champs" width = '350'></img>
         <p className='event-block-info'>
           <span className='event-block-date'>Saturday, June 26th 2021</span>
           <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
