@@ -35,8 +35,10 @@ class Events extends React.Component {
         <img src = "../img/logos/ucsdmv.JPG" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>Saturday, June 26th 2021</span>
-          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span></p>
-        <span className='event-block-details-header'>Registration</span>
+        </p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>        <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
           <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
@@ -89,8 +91,10 @@ class Events extends React.Component {
         <p className='event-block-title'>2021 DMV <span className='red-text'>Pole Vault</span> Championships</p>
         <img src = "../img/logos/ucsdmv.JPG" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
-          <span className='event-block-date'>Saturday, June 26th 2021</span>
-          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span></p>
+          <span className='event-block-date'>Saturday, June 26th 2021</span></p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
