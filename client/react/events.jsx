@@ -31,14 +31,15 @@ class Events extends React.Component {
       {
         date: new Date('June 26, 2021'),
         partial: (<div className='event-block' id='26JUN2021'>
-        <p className='event-block-title'>DMV <span className='red-text'>Pole Vault</span> Championships</p>
+        <p className='event-block-title'>2021 DMV <span className='red-text'>Pole Vault</span> Championships</p>
         <p className='event-block-info'>
           <span className='event-block-date'>Saturday, June 26th 2021</span>
           <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
-          <li>Registration Open Soon!</li>
+          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
+          <li>Registration Closes June 20th 2021</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -84,7 +85,7 @@ class Events extends React.Component {
         <img src = "../img/logos/dmvchamps.JPG" alt="DMV Champs" width = '350'></img>
         </div>),
         full: (<div className='event-block' id='26JUN2021'>
-        <p className='event-block-title'>DMV <span className='red-text'>Pole Vault</span> Championships</p>
+        <p className='event-block-title'>2021 DMV <span className='red-text'>Pole Vault</span> Championships</p>
         <p className='event-block-info'>
           <span className='event-block-date'>Saturday, June 26th 2021</span>
           <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
