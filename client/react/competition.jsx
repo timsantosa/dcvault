@@ -351,10 +351,10 @@ class AthleteInfo extends React.Component {
                                 <span className='required'>Division</span>
                                 <select name='division'>
                                     <option value=''>Select Division</option>
-                                    <option value='AL'>Elementary</option>
-                                    <option value='AK'>Middle School</option>
-                                    <option value='AZ'>High School</option>
-                                    <option value='AR'>Collegiate / Open</option>
+                                    <option value='Elementary'>Elementary</option>
+                                    <option value='Middle SChool'>Middle School</option>
+                                    <option value='High School'>High School</option>
+                                    <option value='Collegiate/Open'>Collegiate / Open</option>
                                 </select>
                             </label>
                         </div>
