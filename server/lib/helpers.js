@@ -183,50 +183,111 @@ module.exports.sendConfirmationEmails = (email) => {
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: 'DMV Championships 2021 Registration', // Subject line
+        subject: '2021 DMV Pole Vault Championships', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the 2021 DMV Championships! </p>\
-        <p>In preparation for your upcoming event, please review the information below as well as the event information listed on our <a href="www.dcvault.com/events">website</a> </p>\
-        <h3>FACILITY</h3>\
+        html: '<p>2021 DMV Pole Vault Championships</p>\
         <p>\
+          <span>Saturday, June 26th 2021</span>\
+          <span>2200 East Capitol street NE, Washington DC</span></p>\
+          <span>Registration</span>\
+        <ul>\
+          <li>Advanced Registration Only - Registration Open May 30th</li>\
+          <li>Registration Closes June 20th 2021</li>\
+        </ul>\
+        <span>Entry Fee</span>\
+        <ul>\
+          <li>$35 for competitors</li>\
+          <li>$5 for all non-competitors entering the facility (cash)</li>\
+          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>\
+        </ul>\
+        <span>Venue</span>\
+        <ul>\
+          <li>DC Vault Pole Vault Center</li>\
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>\
+          <li>Parking On-Site (Lot #3)</li>\
+          <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>\
+        </ul>\
+        <span>Facility Address</span>\
+        <ul>\
+          <li>2200 East Capitol street NE Washington DC </li>\
+          <li><u>NOTE:</u> Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>\
+        </ul>\
+        <span>Pole Drop-off/Pick-up</span>\
+        <ul>\
+          <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>\
+        </ul>\
+        <span>Pole Rentals</span>\
+        <ul>\
+          <li>$15 cash at check-in</li>\
+          <li>You may be sharing your rental pole</li>\
+          <li>ID will be held until pole is returned</li>\
+        </ul>\
+        <span>Pole Rentals</span>\
+        <ul>\
+          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>\
+          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>\
+          <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>\
           <ul>\
-            <li>DC Vault Address: 2200 East Capitol street NE</li>\
-            <li>Parking: Lot 3</li>\
-            <li>Venue Access: Enter through the East Capitol street facing front gate on the sidewalk</li>\
-            <li>Dog Friendly: Bring a leash and water</li>\
-          </ul\
-        </p>\
-        <h3>EVENT</h3>\
-        <p>\
+            <li>Recommended so you don’t waste time at the event trying to change spikes!</li>\
+          </ul>\
+          <li>Available for $5 per set at the event (bring your own spike wrench)</li>\
+        </ul>\
+        <span>Awards/Results/Sanctioning</span>\
+        <ul>\
+          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>\
+          <li>Athletes who take gold at all 3 DC Vault summer events will earn the limited-edition DC Vault white medal</li>\
+          <li>Scored Divisions</li>\
           <ul>\
-            <li>Gates: Open at the designated warm-up time</li>\
-            <li>Check In: Athletes check in upon entry</li>\
-            <li>Spectators: May be set up along the fence line outside or inside the venue depending on capacity</li>\
-            <li>Apparel: Vault apparel, to include hats, bags, shirts and tights, is available for sale at the event</li>\
-            <li>Poles: Pole rentals are available at the event for $15</li>\
-            <li>Pole Storage: Can be arranged for those driving from out of state</li>\
-          </ul\
-        </p>\
-        <h3>BRING</h3>\
-        <p>\
+            <li>Elementary (ages 5-10)</li>\
+            <li>Middle School (ages 11-13)</li>\
+            <li>High School (ages 14-18)</li>\
+            <li>Collegiate/Open (ages 19+)</li>\
+          </ul>\
+          <li>USATF Sanctioned</li>\
+          <li>Results/Performance marks will be published at <a href="https://milesplit.com">Milesplit.com</a> and at <a href="https://dcvault.com/events">DCVault.com/events</a></li>\
+        </ul>\
+        <span>Schedule</span>\
+        <ul>\
+        <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>\
+          <li>Gates Open</li>\
           <ul>\
-            <li>Water</li>\
-            <li>Cash: If you intend to purchase spikes or apparel</li>\
-          </ul\
-        </p>\
-        <h3>WEATHER</h3>\
-        <p>\
+            <li>10:00 am</li>\
+          </ul>\
+          <li>Elementary + Middle School</li>\
           <ul>\
-            <li>Any cancellations due to weather will be announced via email 2 hours prior to the open runway time of your event</li>\
-          </ul\
-          <br>\
-          We hope you have a great time at your event!\
-        </p>\
+            <li>10:00-11:00 warmups</li>\
+            <li>11:00-12:00 competition</li>\
+          </ul>\
+          <li>High School</li>\
+          <ul>\
+            <li>12:00-1:00 warmups</li>\
+            <li>1:00-3:00 competition</li>\
+          </ul>\
+          <li>Collegiate/Open</li>\
+          <ul>\
+            <li>3:00-4:00 warmups</li>\
+            <li>4:00-6:00 competition</li>\
+          </ul>\
+        </ul>\
+        <span>Event Features</span>\
+        <ul>\
+          <li>Free Grilled hotdogs and veggie dogs for competitors and spectators!</li>\
+          <li>Bring something special for yourself if you’d like to grill it up!</li>\
+        </ul>\
+        <span>Pets</span>\
+        <ul>\
+          <li>Dog friendly venue!</li>\
+          <li>Bring a leash and water for your critter</li>\
+        </ul>\
         <p>If you have other questions let us know - <a href="mailto:events@dcvault.org">Events@DCVault.org</a></p>',
         attachments: [
             {
                 filename: 'DC Vault Parking Pass.pdf',
                 path: path.join(__dirname, '/../files/parking-pass.pdf')
+            },
+            {
+              filename: 'staysafe.pdf',
+              path: path.join(__dirname, '/../files/staysafe.pdf')
             }
         ]
     }

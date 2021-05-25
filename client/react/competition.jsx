@@ -273,7 +273,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Please select DMV Championships for entry. Entry is $35
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Please select 2021 DMV Pole Vault Championships for entry. Entry is $35
                                 <br></br>
                             </p>
                     </div>
@@ -282,7 +282,7 @@ class AthleteInfo extends React.Component {
                         <label>
                             <span className='required'>Competition</span>
                             <input type ="checkbox" name="dates1" value="dmvchamps"/>
-                            <label for="dmvchamps">&nbsp;&nbsp;DMV Championships</label>
+                            <label for="dmvchamps">&nbsp;&nbsp;2021 DMV Pole Vault Championships (Registration Closes 6/20/21)</label>
                             <br></br>
                         </label>
                     </div>
