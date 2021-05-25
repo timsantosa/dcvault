@@ -187,8 +187,8 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         to: email,
         html: '<p>2021 DMV Pole Vault Championships</p>\
         <p>\
-          <span>Saturday, June 26th 2021</span>\
-          <span>2200 East Capitol street NE, Washington DC</span></p>\
+          <span>Saturday, June 26th 2021</span></p>\
+          <p><span>2200 East Capitol street NE, Washington DC</span></p>\
           <span>Registration</span>\
         <ul>\
           <li>Advanced Registration Only</li>\
