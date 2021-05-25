@@ -166,7 +166,7 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division']
+        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
@@ -181,6 +181,7 @@ class AthleteInfo extends React.Component {
             complete = false
         }
 
+        /*
         if (output.usatf.length !== 0 && output.usatf.length !== 10) {
             let errorText = this.state.errorText
             errorText.push('Please provide a valid USATF membership number')
@@ -189,6 +190,7 @@ class AthleteInfo extends React.Component {
             })
             complete = false
         }
+        */
 
         if (output.dob.length !== 0 && output.dob.length !== 10) {
             let errorText = this.state.errorText
@@ -357,22 +359,7 @@ class AthleteInfo extends React.Component {
                             </label>
                         </div>
 
-                        <div className='form-row'>
-                            <label>
-                                <div className='row'>
-                                    <div className='col-xs-10'>
-                                        <span className='required'>Athlete USATF Number</span>
-                                    </div>
-                                    <div className='col-xs-2'>
-                                        <span onClick={this.toggleUSATFinfo.bind(this)} style={{color: '#C0282D'}}>?</span>
-                                    </div>
-                                </div>
-                                <p className='info-text' style={{display: this.state.showUSATFinfo ? 'block' : 'none'}}>
-                                        We are sanctioned by USATF. As such, our participants need a current USATF membership ($30 for 1-year). If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} target='_blank' href='https://www.usatf.org/membership/help/number.asp'>here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} target='_blank' href='http://www.usatf.org/Products---Services/Individual-Memberships.aspx'>here</a>.
-                                </p>
-                                <input type='text' name='usatf' onChange={this.formatUSATF.bind(this)} />
-                            </label>
-                        </div>
+                        
 
                         <div className='form-row'>
                             <label>
