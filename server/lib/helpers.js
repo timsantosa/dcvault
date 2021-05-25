@@ -183,7 +183,7 @@ module.exports.sendConfirmationEmails = (email) => {
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: 'DCV Halloween Vault 2020', // Subject line
+        subject: 'DMV Championships 2021 Registration', // Subject line
         to: email,
         html: '<p>Thank you for registering for the 2021 DMV Championships! </p>\
         <p>In preparation for your upcoming event, please review the information below as well as the event information listed on our <a href="www.dcvault.com/events">website</a> </p>\
