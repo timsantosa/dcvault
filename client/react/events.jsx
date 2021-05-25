@@ -83,7 +83,7 @@ class Events extends React.Component {
           </ul>
         </ul>
         <img src = "../img/logos/ucsdmv.JPG" alt="DMV Champs" width = '350'></img>
-        <center><span className='red-text'>Click Arrow to Expand!</span></center>
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
         full: (<div className='event-block' id='26JUN2021'>
         <p className='event-block-title'>2021 DMV <span className='red-text'>Pole Vault</span> Championships</p>
