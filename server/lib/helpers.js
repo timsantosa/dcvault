@@ -185,7 +185,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
         subject: 'DCV Halloween Vault 2020', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the DC Vault 2020 Halloween Vault! </p>\
+        html: '<p>Thank you for registering for the 2021 DMV Championships! </p>\
         <p>In preparation for your upcoming event, please review the information below as well as the event information listed on our <a href="www.dcvault.com/events">website</a> </p>\
         <h3>FACILITY</h3>\
         <p>\
@@ -202,7 +202,6 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
             <li>Gates: Open at the designated warm-up time</li>\
             <li>Check In: Athletes check in upon entry</li>\
             <li>Spectators: May be set up along the fence line outside or inside the venue depending on capacity</li>\
-            <li>Social Distancing: All participants and spectators will be required to maintain 10 ft distance from non-household members</li>\
             <li>Apparel: Vault apparel, to include hats, bags, shirts and tights, is available for sale at the event</li>\
             <li>Poles: Pole rentals are available at the event for $15</li>\
             <li>Pole Storage: Can be arranged for those driving from out of state</li>\

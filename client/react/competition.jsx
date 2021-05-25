@@ -166,7 +166,7 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state']
+        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'usatf', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
@@ -271,7 +271,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Please select Halloween Vault for entry. Entry is $35
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Please select DMV Championships for entry. Entry is $35
                                 <br></br>
                             </p>
                     </div>
@@ -279,8 +279,8 @@ class AthleteInfo extends React.Component {
                     <div className='form-row'>
                         <label>
                             <span className='required'>Competition</span>
-                            <input type ="checkbox" name="dates1" value="halloween"/>
-                            <label for="halloween">&nbsp;&nbsp;Halloween Vault</label>
+                            <input type ="checkbox" name="dates1" value="dmvchamps"/>
+                            <label for="dmvchamps">&nbsp;&nbsp;DMV Championships</label>
                             <br></br>
                         </label>
                     </div>
@@ -340,8 +340,20 @@ class AthleteInfo extends React.Component {
 
                         <div className = 'form-row'>
                             <label>
-                                <span className = 'required'>Club/Team Name (N/A if unattached)</span>
+                                <span className = 'required'>Club/School Team Name (N/A if unattached)</span>
                                 <input type = 'text' name = 'team'/>
+                            </label>
+                        </div>
+                        <div className='form-row'>
+                            <label>
+                                <span className='required'>Division</span>
+                                <select name='division'>
+                                    <option value=''>Select Division</option>
+                                    <option value='AL'>Elementary</option>
+                                    <option value='AK'>Middle School</option>
+                                    <option value='AZ'>High School</option>
+                                    <option value='AR'>Collegiate / Open</option>
+                                </select>
                             </label>
                         </div>
 
@@ -677,7 +689,7 @@ class Payment extends React.Component {
             dateLst += this.props.data.athleteInfo.dates10 + ", "
         }
         this.props.data.athleteInfo.dates1 = dateLst
-        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competitions: ' + dateLst
+        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\n State:' + this.props.data.athleteInfo.state + '\n Division: ' + this.props.data.athleteInfo.division +  '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competitions: ' + dateLst
 
 
         paypal.Button.render({ // eslint-disable-line

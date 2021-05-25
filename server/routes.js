@@ -487,6 +487,7 @@ module.exports = (app, db) => {
                 emergencyContactRelation: event_athlete['emergency-relation'],
                 gender: event_athlete.gender,
                 state: event_athlete.state,
+                division: event_athlete.division,
                 accomplishments: event_athlete.accomplishments,
                 dates: event_athlete.dates1,
                 age: event_athlete.age
@@ -527,6 +528,7 @@ module.exports = (app, db) => {
           emergencyContactRelation: event_athlete['emergency-relation'],
           gender: event_athlete.gender,
           state: event_athlete.state,
+          division: event_athlete.division,
           accomplishments: event_athlete.accomplishments,
           dates: event_athlete.dates1,
           age: event_athlete.age
