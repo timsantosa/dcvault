@@ -35,9 +35,11 @@ class Events extends React.Component {
         <img src = "../img/logos/ucsdmv.JPG" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>Saturday, June 26th 2021</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
         <p className='event-block-info'>
-          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+          
         </p>        <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
@@ -92,9 +94,8 @@ class Events extends React.Component {
         <img src = "../img/logos/ucsdmv.JPG" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>Saturday, June 26th 2021</span></p>
-        <p className='event-block-info'>
+          <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
-        </p>
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
