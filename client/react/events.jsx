@@ -91,7 +91,7 @@ class Events extends React.Component {
           <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
-          <li>Advanced Registration Only - Registration Open May 30th</li>
+          <li>Advanced Registration Only</li>
           <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
           <li>Registration Closes June 20th 2021</li>
         </ul>
@@ -181,7 +181,7 @@ class Events extends React.Component {
           <li>Dog friendly venue!</li>
           <li>Bring a leash and water for your critter</li>
         </ul>
-        <img src = "../img/logos/dmvchamps.JPG" alt="DMV Champs" width = '350'></img>
+        <img src = "../img/logos/ucsdmv.JPG" alt="DMV Champs" width = '350'></img>
 
       </div>)
       },

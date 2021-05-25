@@ -191,7 +191,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
           <span>2200 East Capitol street NE, Washington DC</span></p>\
           <span>Registration</span>\
         <ul>\
-          <li>Advanced Registration Only - Registration Open May 30th</li>\
+          <li>Advanced Registration Only</li>\
           <li>Registration Closes June 20th 2021</li>\
         </ul>\
         <span>Entry Fee</span>\
@@ -215,6 +215,11 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         <span>Pole Drop-off/Pick-up</span>\
         <ul>\
           <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>\
+        </ul>\
+        <span>Parking/Hotels</span>\
+        <ul>\
+          <li>Parking in Lot #3 (pass attached)</li>\
+          <li>Areas to Stay (see attached)</li>\
         </ul>\
         <span>Pole Rentals</span>\
         <ul>\
@@ -286,7 +291,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
                 path: path.join(__dirname, '/../files/parking-pass.pdf')
             },
             {
-              filename: 'staysafe.pdf',
+              filename: 'areastostay.pdf',
               path: path.join(__dirname, '/../files/staysafe.pdf')
             }
         ]
