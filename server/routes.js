@@ -419,7 +419,11 @@ module.exports = (app, db) => {
 
             //If the group is fly-kids or basic then the membe
             if (grp !== 'fly-kids' && mem !== 'basic'){
-              mth = 'none'
+              if (grp == 'adult'){
+                mem = 'adult'
+              }else{
+                mth = 'none'
+              }
             }
             if (!mem){
               mem = 'none'

@@ -29,6 +29,44 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('July 17, 2021'),
+        full: (<div className='event-block' id='17JUL2021'>
+        <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>July 16th-17th 2021</span>
+          <br></br>
+          <span className='event-block-date'>Eastern Market - Washington DC</span>
+        </p>
+        <p className='event-block-info'>
+          
+        </p>        
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only</li>
+          <li>Registration and Event info Coming Soon</li>
+        </ul>
+        </div>)
+      },
+      {
+        date: new Date('August 14, 2021'),
+        full: (<div className='event-block' id='14AUG2021'>
+        <p className='event-block-title'>Moon<span className='red-text'>Vault</span></p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>August 14th 2021</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <p className='event-block-info'>
+          
+        </p>        
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only</li>
+          <li>Registration and Event info Coming Soon</li>
+        </ul>
+        </div>)
+      },
+      {
         date: new Date('June 26, 2021'),
         partial: (<div className='event-block' id='26JUN2021'>
         <p className='event-block-title'>2021 DMV <span className='red-text'>Pole Vault</span> Championships</p>

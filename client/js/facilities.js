@@ -25,7 +25,7 @@ var textValues = {
 <p class="content-text smaller-text">Dulles Sportsplex</p>\
 <p class="content-text smaller-text">21610 Atlantic Blvd, Sterling, VA 20166</p>\
 <p class="content-text" style="font-weight: bold">What</p>\
-<p class="content-text smaller-text">Indoor training site, primarily used for All Ages Beginner-Intermediate development training.</p>\
+<p class="content-text smaller-text">Winter quarter indoor training site, primarily used for All Ages Beginner-Intermediate development training.</p>\
 <p class="content-text smaller-text">Our New Winter Facility Info can be found at https://dullessportsplex.com</p>',
 
   DCV: '<p class="minor-heading">DC <span class="red-text">VAULT</span> (DCV)</p>\
