@@ -30,7 +30,7 @@ class Events extends React.Component {
     let contents = [
       {
         date: new Date('July 17, 2021'),
-        full: (<div className='event-block' id='17JUL2021'>
+        partial: (<div className='event-block' id='17JUL2021'>
         <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
         <p className='event-block-info'>
           <span className='event-block-date'>July 16th-17th 2021</span>
@@ -49,7 +49,7 @@ class Events extends React.Component {
       },
       {
         date: new Date('August 14, 2021'),
-        full: (<div className='event-block' id='14AUG2021'>
+        partial: (<div className='event-block' id='14AUG2021'>
         <p className='event-block-title'>Moon<span className='red-text'>Vault</span></p>
         <p className='event-block-info'>
           <span className='event-block-date'>August 14th 2021</span>
