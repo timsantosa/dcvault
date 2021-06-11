@@ -61,7 +61,7 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'>Arrival / Parking</span>
         <ul className='event-block-details'>
-          <li>Parking is available on site at 777 C street SE in the trader Joes Parking Garage (see map here)</li>
+          <li>Parking is available on site at 777 C street SE in the trader Joes Parking Garage <a style={{color: '#C0282D'}} href='../files/emarket-map.pdf' target='_blank'>(see map here)</a></li>
           <li><u>NOTE:</u> Unload Poles BEFORE turning onto C street if parking in the garage</li>
           <li><u>Additional Parking Garage located 1 block away at 600 Pennsylvania Ave NE (Colonial Parking)</u></li>
           <li>Metered On-Street Parking is available on 8th street and Pennsylvania avenue</li>
@@ -129,7 +129,7 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'>Arrival / Parking</span>
         <ul className='event-block-details'>
-          <li>Parking is available on site at 777 C street SE in the trader Joes Parking Garage (see map here)</li>
+          <li>Parking is available on site at 777 C street SE in the trader Joes Parking Garage <a style={{color: '#C0282D'}} href='../files/emarket-map.pdf' target='_blank'>(see map here)</a></li>
           <li><u>NOTE:</u> Unload Poles BEFORE turning onto C street if parking in the garage</li>
           <li><u>Additional Parking Garage located 1 block away at 600 Pennsylvania Ave NE (Colonial Parking)</u></li>
           <li>Metered On-Street Parking is available on 8th street and Pennsylvania avenue</li>
@@ -165,8 +165,8 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'>Pole Drop-off/Pick-up</span>
         <ul className='event-block-details'>
-          <li>Poles can be dropped off on the East end of the C street vault setup (see map here) </li>
-          <li>Poles may be placed inside the event site in the designated pole location only! (see map here)</li>
+          <li>Poles can be dropped off on the East end of the C street vault setup <a style={{color: '#C0282D'}} href='../files/emarket-map.pdf' target='_blank'>(see map here)</a> </li>
+          <li>Poles may be placed inside the event site in the designated pole location only! <a style={{color: '#C0282D'}} href='../files/emarket-map.pdf' target='_blank'>(see map here)</a></li>
           <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>
         </ul>
         <span className='event-block-details-header'>Pole Rentals</span>
