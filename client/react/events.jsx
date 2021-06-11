@@ -32,6 +32,7 @@ class Events extends React.Component {
         date: new Date('July 17, 2021'),
         partial: (<div className='event-block' id='17JUL2021'>
         <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
+        <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>July 16th-17th 2021</span>
           <br></br>
@@ -45,6 +46,7 @@ class Events extends React.Component {
           <li>Advanced Registration Only</li>
           <li>Registration Opens June 21st</li>
           <li>Registration Closes July 10th (midnight)</li>
+          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
 
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
@@ -57,10 +59,13 @@ class Events extends React.Component {
           <li>Eastern Market, 777 C street SE, Washington DC</li>
           <li>Event Setup on C street SE (between 7th street SE and 8th street SE)</li>
         </ul>
-        <span className='event-block-details-header'>Facility Address</span>
+        <span className='event-block-details-header'>Arrival / Parking</span>
         <ul className='event-block-details'>
-          <li>2200 East Capitol street NE Washington DC </li>
-          <li><u>NOTE:</u> Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
+          <li>Parking is available on site at 777 C street SE in the trader Joes Parking Garage (see map here)</li>
+          <li><u>NOTE:</u> Unload Poles BEFORE turning onto C street if parking in the garage</li>
+          <li><u>Additional Parking Garage located 1 block away at 600 Pennsylvania Ave NE (Colonial Parking)</u></li>
+          <li>Metered On-Street Parking is available on 8th street and Pennsylvania avenue</li>
+          <li>Free On-Street Parking is available in the surrounding neighborhood (easier to find near East Capitol street)</li>
         </ul>
         <span className='event-block-details-header'>Schedule</span>
         <ul className='event-block-details'>
@@ -90,7 +95,110 @@ class Events extends React.Component {
             <li>4:30pm - competition</li>
           </ul>
         </ul>
-        </div>)
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+
+        </div>),
+                full: (<div className='event-block' id='26JUN2021'>
+        <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
+        <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>July 16th-17th 2021</span>
+          <br></br>
+          <span className='event-block-date'>Eastern Market, 777 C Street SE - Washington DC</span>
+        </p>
+        <p className='event-block-info'>
+          
+        </p>        
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only</li>
+          <li>Registration Opens June 21st</li>
+          <li>Registration Closes July 10th (midnight)</li>
+          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
+
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$45 Early-Bird Registration (June 21st – June 30th)</li>
+          <li>$60 Registration (July 1st – July 10th)</li>
+        </ul>
+        <span className='event-block-details-header'>Venue / Address</span>
+        <ul className='event-block-details'>
+          <li>Eastern Market, 777 C street SE, Washington DC</li>
+          <li>Event Setup on C street SE (between 7th street SE and 8th street SE)</li>
+        </ul>
+        <span className='event-block-details-header'>Arrival / Parking</span>
+        <ul className='event-block-details'>
+          <li>Parking is available on site at 777 C street SE in the trader Joes Parking Garage (see map here)</li>
+          <li><u>NOTE:</u> Unload Poles BEFORE turning onto C street if parking in the garage</li>
+          <li><u>Additional Parking Garage located 1 block away at 600 Pennsylvania Ave NE (Colonial Parking)</u></li>
+          <li>Metered On-Street Parking is available on 8th street and Pennsylvania avenue</li>
+          <li>Free On-Street Parking is available in the surrounding neighborhood (easier to find near East Capitol street)</li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>Friday July 16th</li>
+          <ul>
+            <li>5:00pm - 7:00pm - Open Runway</li>
+          </ul>
+          <li>Saturday July 17th (Note: rolling schedule - arrive early in case your time slot moves up!)</li>
+          <li>Flight 1 </li>
+          <ul>
+            <li>8:00am - warmupss</li>
+            <li>9:00 am - competition</li>
+          </ul>
+          <li>Fly Kids</li>
+          <ul>
+            <li>11:00am - warmups</li>
+            <li>11:30am - competition</li>
+          </ul>
+          <li>Flight 2</li>
+          <ul>
+            <li>12:30pm - warmups</li>
+            <li>1:30pm - competition</li>
+          </ul>
+          <li>Flight 3</li>
+          <ul>
+            <li>3:30pm - warmups</li>
+            <li>4:30pm - competition</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Pole Drop-off/Pick-up</span>
+        <ul className='event-block-details'>
+          <li>Poles can be dropped off on the East end of the C street vault setup (see map here) </li>
+          <li>Poles may be placed inside the event site in the designated pole location only! (see map here)</li>
+          <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li>$15 cash at check-in</li>
+          <li>NOTE: You may be sharing your rental pole</li>
+          <li>ID will be held until pole is returned</li>
+        </ul>
+
+        <span className='event-block-details-header'>Awards/Results/Sanctioning</span>
+        <ul className='event-block-details'>
+          <li>Medals will be awarded in all flights for male and female competitors, 1st through 3rd places</li>
+          <li>Athletes who take gold at all 3 DC Vault summer events will earn the limited-edition DC Vault white medal</li>
+          <li>Scored Flights</li>
+          <ul>
+            <li>Fly-Kids (ages 5-10)</li>
+            <li>Flight 1 (ages 11 and up - PR 0 – 9’11”)</li>
+            <li>Flight 2 (ages 11 and up - PR 10’-13’11”)</li>
+            <li>Flight 3 (ages 11 and up - PR 14’+)</li>
+          </ul>
+          <li>USATF Sanctioned</li>
+          <li>Results/Performance marks will be published at <a href="https://milesplit.com">Milesplit.com</a> and at <a href="https://dcvault.com/events">DCVault.com/events</a></li>
+        </ul>
+        <span className='event-block-details-header'>Spectator Info</span>
+        <ul className='event-block-details'>
+          <li>Individual seats can be set up around the event</li>
+          <li>Tents are NOT allowed</li>
+          <li>Some on site seating will be available </li>
+          <li>Bathroom Facilities and water fountains are located inside the Eastern Market building, located on 7th street</li>
+        </ul>
+
+      </div>)
       },
       {
         date: new Date('August 14, 2021'),
