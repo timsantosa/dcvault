@@ -35,7 +35,7 @@ class Events extends React.Component {
         <p className='event-block-info'>
           <span className='event-block-date'>July 16th-17th 2021</span>
           <br></br>
-          <span className='event-block-date'>Eastern Market - Washington DC</span>
+          <span className='event-block-date'>Eastern Market, 777 C Street SE - Washington DC</span>
         </p>
         <p className='event-block-info'>
           
@@ -43,7 +43,52 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
-          <li>Registration and Event info Coming Soon</li>
+          <li>Registration Opens June 21st</li>
+          <li>Registration Closes July 10th (midnight)</li>
+
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$45 Early-Bird Registration (June 21st – June 30th)</li>
+          <li>$60 Registration (July 1st – July 10th)</li>
+        </ul>
+        <span className='event-block-details-header'>Venue / Address</span>
+        <ul className='event-block-details'>
+          <li>Eastern Market, 777 C street SE, Washington DC</li>
+          <li>Event Setup on C street SE (between 7th street SE and 8th street SE)</li>
+        </ul>
+        <span className='event-block-details-header'>Facility Address</span>
+        <ul className='event-block-details'>
+          <li>2200 East Capitol street NE Washington DC </li>
+          <li><u>NOTE:</u> Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>Friday July 16th</li>
+          <ul>
+            <li>5:00pm - 7:00pm - Open Runway</li>
+          </ul>
+          <li>Saturday July 17th (Note: rolling schedule - arrive early in case your time slot moves up!)</li>
+          <li>Flight 1 </li>
+          <ul>
+            <li>8:00am - warmupss</li>
+            <li>9:00 am - competition</li>
+          </ul>
+          <li>Fly Kids</li>
+          <ul>
+            <li>11:00am - warmups</li>
+            <li>11:30am - competition</li>
+          </ul>
+          <li>Flight 2</li>
+          <ul>
+            <li>12:30pm - warmups</li>
+            <li>1:30pm - competition</li>
+          </ul>
+          <li>Flight 3</li>
+          <ul>
+            <li>3:30pm - warmups</li>
+            <li>4:30pm - competition</li>
+          </ul>
         </ul>
         </div>)
       },
@@ -168,7 +213,7 @@ class Events extends React.Component {
           <li>You may be sharing your rental pole</li>
           <li>ID will be held until pole is returned</li>
         </ul>
-        <span className='event-block-details-header'>Spikes</span>
+        <span className='event-block-details-header'>Pole Rentals</span>
         <ul className='event-block-details'>
           <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
           <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
@@ -302,14 +347,14 @@ class Events extends React.Component {
         </ul>
         </div>),
         full: (<div className='event-block' id='30OCT2020'>
-        <p className='event-block-title'>Halloween Vault</p>
+                <p className='event-block-title'>Halloween <span className='red-text'>Vault</span></p>
         <p className='event-block-info'>
           <span className='event-block-date'>Friday, October 30th 2020</span>
           <span className='event-block-location'>2200 East Capitol street NE, Washington DC</span></p>
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
-        <li>Advanced Registration Only - Registration Open September 30th</li>
-          <li>Registration</li>
+          <li>Advanced Registration Only - Registration Open September 30th</li>
+          <li>Registration Closed</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -329,52 +374,12 @@ class Events extends React.Component {
           <li>2200 East Capitol street NE Washington DC </li>
           <li>NOTE: Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
         </ul>
-        <span className='event-block-details-header'>Pole Drop-off/Pick-up</span>
-        <ul className='event-block-details'>
-          <li>If you need to store poles overnight they can be picked up Saturday, October 31st from 12pm-1pm</li>
-        </ul>
-        <span className='event-block-details-header'>Pole Rentals</span>
-        <ul className='event-block-details'>
-          <li>$15 cash at check-in</li>
-          <li>You may be sharing your rental pole</li>
-          <li>ID will be held until pole is returned</li>
-        </ul>
-        <span className='event-block-details-header'>Spikes</span>
-        <ul className='event-block-details'>
-          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
-          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
-          <li>Available for $5 per set at the event if you don't have them already</li>
-          <li>Can be purchased online at Amazon</li>
-        </ul>
         <span className='event-block-details-header'>Schedule</span>
         <ul className='event-block-details'>
           <li>5:30pm (gates open)</li>
           <li>5:45pm (Fly-Kids competition Ages 5-10)</li>
           <li>6:30pm (Men's and Women's runway opens for warmups)</li>
           <li>7:00pm (Men's and Women's competition begins)</li>
-        </ul>
-        <span className='event-block-details-header'>Event Features</span>
-        <ul className='event-block-details'>
-          <li>Halloween Costumed Vaulters + Body-Glow Paint</li>
-          <li>Spooky FLY-KIDS competition (ages 5-10)</li>
-          <li>Free glowing party favors for participants and spectators!</li>
-          <li>Free candy for kids!</li>
-          <li>Sanctioned Event - Medals awarded for 1st-3rd place finishes</li>
-          <li>Black Lights on site for Glow Costumes! </li>
-          <li>Wear your best Halloween costume, glow/uv body paint, face paint, reflective clothing, etc. </li>
-          <li>Free Grilled hotdogs for all competitors and spectators!</li>
-        </ul>
-        <span className='event-block-details-header'>Pets</span>
-        <ul className='event-block-details'>
-          <li>Bring your Halloween Pet in Costume!</li>
-          <li>Spooky-Pets competition will be held during an intermission - no pre-registration require</li>
-        </ul>
-        <span className='event-block-details-header'>COVID Precautions</span>
-        <ul className='event-block-details'>
-          <li>Masks must be worn by all attendees when unable to maintain a social distance of 6 feet or more from others</li>
-          <li>All attendees will have temperature taken at entry and will be administered hand sanitizer</li>
-          <li>Athletes must maintain a minimum distance of 6 feet from one another at all times (waiting for jumps in line, etc.)</li>
-          <li>Athletes who are sharing rental poles must use hand sanitizer each time a pole is exchanged</li>
         </ul>
       </div>)
       },
