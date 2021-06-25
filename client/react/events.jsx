@@ -234,8 +234,7 @@ class Events extends React.Component {
         </p>        <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
-          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
-          <li>Registration Closes June 20th 2021</li>
+          <li>Registration Closed</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -258,25 +257,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Schedule</span>
         <ul className='event-block-details'>
           <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>
-          <li>Gates Open</li>
-          <ul>
-            <li>10:00 am</li>
-          </ul>
-          <li>Elementary + Middle School</li>
-          <ul>
-            <li>10:00-11:00 warmups</li>
-            <li>11:00-12:00 competition</li>
-          </ul>
-          <li>High School</li>
-          <ul>
-            <li>12:00-1:00 warmups</li>
-            <li>1:00-3:00 competition</li>
-          </ul>
-          <li>Collegiate/Open</li>
-          <ul>
-            <li>3:00-4:00 warmups</li>
-            <li>4:00-6:00 competition</li>
-          </ul>
+          <li><a style={{color: '#C0282D'}} href='../files/dmvstartlist.pdf' target='_blank'>See Start List and Event Schedule here!</a> </li>
         </ul>
         <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
@@ -349,25 +330,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Schedule</span>
         <ul className='event-block-details'>
         <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>
-          <li>Gates Open</li>
-          <ul>
-            <li>10:00 am</li>
-          </ul>
-          <li>Elementary + Middle School</li>
-          <ul>
-            <li>10:00-11:00 warmups</li>
-            <li>11:00-12:00 competition</li>
-          </ul>
-          <li>High School</li>
-          <ul>
-            <li>12:00-1:00 warmups</li>
-            <li>1:00-3:00 competition</li>
-          </ul>
-          <li>Collegiate/Open</li>
-          <ul>
-            <li>3:00-4:00 warmups</li>
-            <li>4:00-6:00 competition</li>
-          </ul>
+        <li><a style={{color: '#C0282D'}} href='../files/dmvstartlist.pdf' target='_blank'>See Start List and Event Schedule here!</a> </li>
         </ul>
         <span className='event-block-details-header'>Event Features</span>
         <ul className='event-block-details'>
