@@ -257,7 +257,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Schedule</span>
         <ul className='event-block-details'>
           <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>
-          <li><a style={{color: '#C0282D'}} href='../files/dmvstartlist.pdf' target='_blank'>See Start List and Event Schedule here!</a> </li>
+          <li><a style={{color: '#C0282D'}} href='../files/dmvstartlist.xlsx' target='_blank'>See Start List and Event Schedule here!</a> </li>
         </ul>
         <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
@@ -330,7 +330,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Schedule</span>
         <ul className='event-block-details'>
         <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>
-        <li><a style={{color: '#C0282D'}} href='../files/dmvstartlist.pdf' target='_blank'>See Start List and Event Schedule here!</a> </li>
+        <li><a style={{color: '#C0282D'}} href='../files/dmvstartlist.xlsx' target='_blank'>See Start List and Event Schedule here!</a> </li>
         </ul>
         <span className='event-block-details-header'>Event Features</span>
         <ul className='event-block-details'>
