@@ -183,9 +183,11 @@ module.exports.sendConfirmationEmails = (email) => {
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: '2021 DMV Pole Vault Championships', // Subject line
+        subject: 'National Street Vault 2021', // Subject line
         to: email,
-        html: '<p>National<span>Street Vault</span> 2021</p>\
+        html: '<p>Thank you for registering for the 2021 National Street Vault!</p>\
+        <p>Please note: Final event information will be sent to you after July 10th. This information will include spectator and competitor instructions, as well as your "final" assigned competition flight and start time. \
+        The "tentative" flight schedule is listed below in the current event information. We do not expect much deviation from that schedule. </p>\
         <p>\
           <span>July 16th-17th 2021</span>\
           <br></br>\
@@ -215,7 +217,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
           <li>Metered On-Street Parking is available on 8th street and Pennsylvania avenue</li>\
           <li>Free On-Street Parking is available in the surrounding neighborhood (easier to find near East Capitol street)</li>\
         </ul>\
-        <span>Schedule</span>\
+        <span>Tentative Schedule</span>\
         <ul>\
           <li>Friday July 16th</li>\
           <ul>\
@@ -259,7 +261,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
           <li>Athletes who take gold at all 3 DC Vault summer events will earn the limited-edition DC Vault white medal</li>\
           <li>Scored Flights</li>\
           <ul>\
-            <li>Fly-Kids (ages 5-10)</li>\
+            <li>Fly-Kids (ages 5-9)</li>\
             <li>Flight 1 (ages 11 and up - PR 0 – 9’11”)</li>\
             <li>Flight 2 (ages 11 and up - PR 10’-13’11”)</li>\
             <li>Flight 3 (ages 11 and up - PR 14’+)</li>\

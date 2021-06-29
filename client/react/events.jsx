@@ -176,7 +176,7 @@ class Events extends React.Component {
           <li>Athletes who take gold at all 3 DC Vault summer events will earn the limited-edition DC Vault white medal</li>
           <li>Scored Flights</li>
           <ul>
-            <li>Fly-Kids (ages 5-10)</li>
+            <li>Fly-Kids (ages 5-9)</li>
             <li>Flight 1 (ages 11 and up - PR 0 – 9’11”)</li>
             <li>Flight 2 (ages 11 and up - PR 10’-13’11”)</li>
             <li>Flight 3 (ages 11 and up - PR 14’+)</li>
