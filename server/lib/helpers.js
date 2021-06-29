@@ -185,114 +185,100 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
         subject: '2021 DMV Pole Vault Championships', // Subject line
         to: email,
-        html: '<p>2021 DMV Pole Vault Championships</p>\
+        html: '<p>National<span>Street Vault</span> 2021</p>\
         <p>\
-          <span>Saturday, June 26th 2021</span></p>\
-          <p><span>2200 East Capitol street NE, Washington DC</span></p>\
-          <span>Registration</span>\
+          <span>July 16th-17th 2021</span>\
+          <br></br>\
+          <span>Eastern Market, 777 C Street SE - Washington DC</span>\
+        </p>\
+        <p>\
+        </p>\
+        <span>Registration</span>\
         <ul>\
           <li>Advanced Registration Only</li>\
-          <li>Registration Closes June 20th 2021</li>\
+          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>\
+          <li>Registration Closes July 10th (or when divisions are full)</li>\
         </ul>\
         <span>Entry Fee</span>\
         <ul>\
-          <li>$35 for competitors</li>\
-          <li>$5 for all non-competitors entering the facility (cash)</li>\
-          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>\
+          <li>$60 Registration</li>\
         </ul>\
-        <span>Venue</span>\
+        <span>Venue / Address</span>\
         <ul>\
-          <li>DC Vault Pole Vault Center</li>\
-          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>\
-          <li>Parking On-Site (Lot #3)</li>\
-          <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>\
+          <li>Eastern Market, 777 C street SE, Washington DC</li>\
+          <li>Event Setup on C street SE (between 7th street SE and 8th street SE)</li>\
         </ul>\
-        <span>Facility Address</span>\
+        <span>Arrival / Parking</span>\
         <ul>\
-          <li>2200 East Capitol street NE Washington DC </li>\
-          <li><u>NOTE:</u> Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>\
+          <li><u>NOTE:</u> Unload Poles BEFORE turning onto C street if parking in the garage</li>\
+          <li><u>Additional Parking Garage located 1 block away at 600 Pennsylvania Ave NE (Colonial Parking)</u></li>\
+          <li>Metered On-Street Parking is available on 8th street and Pennsylvania avenue</li>\
+          <li>Free On-Street Parking is available in the surrounding neighborhood (easier to find near East Capitol street)</li>\
+        </ul>\
+        <span>Schedule</span>\
+        <ul>\
+          <li>Friday July 16th</li>\
+          <ul>\
+            <li>5:00pm - 7:00pm - Open Runway</li>\
+          </ul>\
+          <li>Saturday July 17th (Note: rolling schedule - arrive early in case your time slot moves up!)</li>\
+          <li>Flight 1 </li>\
+          <ul>\
+            <li>8:00am - warmups</li>\
+            <li>9:00 am - competition</li>\
+          </ul>\
+          <li>Fly Kids</li>\
+          <ul>\
+            <li>11:00am - warmups</li>\
+            <li>11:30am - competition</li>\
+          </ul>\
+          <li>Flight 2</li>\
+          <ul>\
+            <li>12:30pm - warmups</li>\
+            <li>1:30pm - competition</li>\
+          </ul>\
+          <li>Flight 3</li>\
+          <ul>\
+            <li>3:30pm - warmups</li>\
+            <li>4:30pm - competition</li>\
+          </ul>\
         </ul>\
         <span>Pole Drop-off/Pick-up</span>\
         <ul>\
           <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>\
         </ul>\
-        <span>Parking/Hotels</span>\
-        <ul>\
-          <li>Parking in Lot #3 (pass attached)</li>\
-          <li>Areas to Stay (see attached)</li>\
-        </ul>\
         <span>Pole Rentals</span>\
         <ul>\
-          <li>$15 cash at check-in</li>\
-          <li>You may be sharing your rental pole</li>\
+          <li>$30 cash at check-in</li>\
+          <li>NOTE: You may be sharing your rental pole</li>\
           <li>ID will be held until pole is returned</li>\
-        </ul>\
-        <span>Pole Rentals</span>\
-        <ul>\
-          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>\
-          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>\
-          <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>\
-          <ul>\
-            <li>Recommended so you don’t waste time at the event trying to change spikes!</li>\
-          </ul>\
-          <li>Available for $5 per set at the event (bring your own spike wrench)</li>\
         </ul>\
         <span>Awards/Results/Sanctioning</span>\
         <ul>\
-          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>\
+          <li>Medals will be awarded in all flights for male and female competitors, 1st through 3rd places</li>\
           <li>Athletes who take gold at all 3 DC Vault summer events will earn the limited-edition DC Vault white medal</li>\
-          <li>Scored Divisions</li>\
+          <li>Scored Flights</li>\
           <ul>\
-            <li>Elementary (ages 5-10)</li>\
-            <li>Middle School (ages 11-13)</li>\
-            <li>High School (ages 14-18)</li>\
-            <li>Collegiate/Open (ages 19+)</li>\
+            <li>Fly-Kids (ages 5-10)</li>\
+            <li>Flight 1 (ages 11 and up - PR 0 – 9’11”)</li>\
+            <li>Flight 2 (ages 11 and up - PR 10’-13’11”)</li>\
+            <li>Flight 3 (ages 11 and up - PR 14’+)</li>\
           </ul>\
           <li>USATF Sanctioned</li>\
           <li>Results/Performance marks will be published at <a href="https://milesplit.com">Milesplit.com</a> and at <a href="https://dcvault.com/events">DCVault.com/events</a></li>\
         </ul>\
-        <span>Schedule</span>\
+        <span>Spectator Info</span>\
         <ul>\
-        <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>\
-          <li>Gates Open</li>\
-          <ul>\
-            <li>10:00 am</li>\
-          </ul>\
-          <li>Elementary + Middle School</li>\
-          <ul>\
-            <li>10:00-11:00 warmups</li>\
-            <li>11:00-12:00 competition</li>\
-          </ul>\
-          <li>High School</li>\
-          <ul>\
-            <li>12:00-1:00 warmups</li>\
-            <li>1:00-3:00 competition</li>\
-          </ul>\
-          <li>Collegiate/Open</li>\
-          <ul>\
-            <li>3:00-4:00 warmups</li>\
-            <li>4:00-6:00 competition</li>\
-          </ul>\
-        </ul>\
-        <span>Event Features</span>\
-        <ul>\
-          <li>Free Grilled hotdogs and veggie dogs for competitors and spectators!</li>\
-          <li>Bring something special for yourself if you’d like to grill it up!</li>\
-        </ul>\
-        <span>Pets</span>\
-        <ul>\
-          <li>Dog friendly venue!</li>\
-          <li>Bring a leash and water for your critter</li>\
+          <li>Individual seats can be set up around the event</li>\
+          <li>Tents are NOT allowed</li>\
+          <li>Some on site seating will be available </li>\
+          <li>Bathroom Facilities and water fountains are located inside the Eastern Market building, located on 7th street</li>\
         </ul>\
         <p>If you have other questions let us know - <a href="mailto:events@dcvault.org">Events@DCVault.org</a></p>',
         attachments: [
             {
-                filename: 'DC Vault Parking Pass.pdf',
-                path: path.join(__dirname, '/../files/parking-pass.pdf')
-            },
-            {
-              filename: 'areastostay.pdf',
-              path: path.join(__dirname, '/../files/staysafe.pdf')
+                filename: 'Eastern Market Map.pdf',
+                path: path.join(__dirname, '/../files/emarket-map.pdf')
             }
         ]
     }

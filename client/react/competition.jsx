@@ -281,7 +281,7 @@ class AthleteInfo extends React.Component {
                     <div className='form-row'>
                         <label>
                             <span className='required'>Competition</span>
-                            <input type ="checkbox" name="dates1" value="dmvchamps"/>
+                            <input type ="checkbox" name="dates1" value="nationalstreetvault"/>
                             <label for="nationalstreetvault">&nbsp;&nbsp;National Street Vault 2021</label>
                             <br></br>
                         </label>
