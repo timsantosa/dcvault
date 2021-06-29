@@ -72,7 +72,7 @@ class Events extends React.Component {
           <li>Saturday July 17th (Note: rolling schedule - arrive early in case your time slot moves up!)</li>
           <li>Flight 1 </li>
           <ul>
-            <li>8:00am - warmupss</li>
+            <li>8:00am - warmups</li>
             <li>9:00 am - competition</li>
           </ul>
           <li>Fly Kids</li>
@@ -138,7 +138,7 @@ class Events extends React.Component {
           <li>Saturday July 17th (Note: rolling schedule - arrive early in case your time slot moves up!)</li>
           <li>Flight 1 </li>
           <ul>
-            <li>8:00am - warmupss</li>
+            <li>8:00am - warmups</li>
             <li>9:00 am - competition</li>
           </ul>
           <li>Fly Kids</li>
