@@ -45,6 +45,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
           <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
+          <li>Registration Closes July 10th (or when divisions are full)</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -108,12 +109,11 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
-          <li>Registration Opens Friday July 2nd</li>
-          <li>Register Coming Soon</li>
+          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
+          <li>Registration Closes July 10th (or when divisions are full)</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
-          <li>$45 Early-Bird Registration</li>
           <li>$60 Registration</li>
         </ul>
         <span className='event-block-details-header'>Venue / Address</span>
@@ -165,7 +165,7 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'>Pole Rentals</span>
         <ul className='event-block-details'>
-          <li>$15 cash at check-in</li>
+          <li>$30 cash at check-in</li>
           <li>NOTE: You may be sharing your rental pole</li>
           <li>ID will be held until pole is returned</li>
         </ul>

@@ -351,10 +351,8 @@ class AthleteInfo extends React.Component {
                                 <span className='required'>Division</span>
                                 <select name='division'>
                                     <option value=''>Select Division</option>
-                                    <option value='Elementary'>Elementary</option>
-                                    <option value='Middle SChool'>Middle School</option>
-                                    <option value='High School'>High School</option>
-                                    <option value='Collegiate/Open'>Collegiate / Open</option>
+                                    <option value='Fly-Kids'>Fly Kids (ages 6-9)</option>
+                                    <option value='Open Flights'>Open Flights (ages 10 and up)</option>
                                 </select>
                             </label>
                         </div>
