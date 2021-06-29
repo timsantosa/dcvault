@@ -273,7 +273,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Entry is Closed
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>National Street Vault Entry is $60
                                 <br></br>
                             </p>
                     </div>
@@ -282,7 +282,7 @@ class AthleteInfo extends React.Component {
                         <label>
                             <span className='required'>Competition</span>
                             <input type ="checkbox" name="dates1" value="dmvchamps"/>
-                            <label for="dmvchamps">&nbsp;&nbsp;Entry is Closed</label>
+                            <label for="nationalstreetvault">&nbsp;&nbsp;National Street Vault 2021</label>
                             <br></br>
                         </label>
                     </div>
@@ -600,7 +600,7 @@ class Payment extends React.Component {
         super(props)
         let price = 0
         if(this.props.data.athleteInfo.dates1){
-            price+=35
+            price+=60
           }
           if(this.props.data.athleteInfo.dates2){
             price+=25
