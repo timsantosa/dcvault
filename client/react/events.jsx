@@ -44,8 +44,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
-          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
-          <li>Registration Closes July 10th (or when divisions are full)</li>
+          <li>Registration Closed</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -109,8 +108,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
-          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
-          <li>Registration Closes July 10th (or when divisions are full)</li>
+          <li>Registration Closed</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -198,6 +196,7 @@ class Events extends React.Component {
         date: new Date('August 14, 2021'),
         partial: (<div className='event-block' id='14AUG2021'>
         <p className='event-block-title'>Moon<span className='red-text'>Vault</span></p>
+        <img src = "../img/logos/moon-2021.jpg" alt="Moon Vault" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>August 14th 2021</span>
           <br></br>
@@ -225,10 +224,10 @@ class Events extends React.Component {
         </p>
         <p className='event-block-info'>
           
-        </p>        <span className='event-block-details-header'>Registration</span>
+        </p><span className='event-block-details-header'>Results</span>
         <ul className='event-block-details'>
-          <li>Advanced Registration Only</li>
-          <li>Registration Closed</li>
+          <li><a href = "https://www.milesplit.com/meets/425493-dmv-pole-vault-championships-2021/results#.YOXDF8hKg2w">Milesplit Results found here</a></li>
+          <li><a style={{color: '#C0282D'}} href='../files/dmvresults-2021.xlsx' target='_blank'>Download Final Results Here!</a> </li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -262,11 +261,10 @@ class Events extends React.Component {
           <span className='event-block-date'>Saturday, June 26th 2021</span></p>
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
-        <span className='event-block-details-header'>Registration</span>
+          <span className='event-block-details-header'>Results</span>
         <ul className='event-block-details'>
-          <li>Advanced Registration Only</li>
-          <li>Register <a href = "https://dcvault.com/compete">Here</a></li>
-          <li>Registration Closes June 20th 2021</li>
+          <li><a href = "https://www.milesplit.com/meets/425493-dmv-pole-vault-championships-2021/results#.YOXDF8hKg2w">Milesplit Results found here</a></li>
+          <li><a style={{color: '#C0282D'}} href='../files/dmvresults-2021.xlsx' target='_blank'>Download Final Results Here!</a> </li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
