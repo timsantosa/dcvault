@@ -202,13 +202,102 @@ class Events extends React.Component {
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
-        <p className='event-block-info'>
-          
-        </p>        
+        <span className='event-block-details-header'>Event Features</span>
+        <ul className='event-block-details'>
+          <li>Glowing-Vaulters in Body-Glow paint</li>
+          <li>Free glowing party favors for kids</li>
+          <li>Glow-bling for spectators</li>
+          <li>Free grilled hot-dogs and veggie dogs</li>
+          <li>Prizes for best glow-costume</li>
+          <li>Best Glow-Pet costume competition (bring your puppy dogs!)</li>
+          <li>Glowing FLY-KIDS competition (ages 6-10)</li>
+          <li>Medals awarded for 1st-3rd place finishes in Fly-Kids + all competitor flights</li>
+        </ul>     
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
-          <li>Advanced Registration Only</li>
-          <li>Registration and Event info Coming Soon</li>
+          <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>
+          <li>Registeration closes midnight August8th</li>
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$35 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>
+        </ul>
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='14AUG2021'>
+        <p className='event-block-title'>Moon<span className='red-text'>Vault</span></p>
+        <img src = "../img/logos/moon-2021.jpg" alt="Moon Vault" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>August 14th 2021</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>Event Features</span>
+        <ul className='event-block-details'>
+          <li>Glowing-Vaulters in Body-Glow paint</li>
+          <li>Free glowing party favors for kids</li>
+          <li>Glow-bling for spectators</li>
+          <li>Free grilled hot-dogs and veggie dogs</li>
+          <li>Prizes for best glow-costume</li>
+          <li>Best Glow-Pet costume competition (bring your puppy dogs!)</li>
+          <li>Glowing FLY-KIDS competition (ages 6-10)</li>
+          <li>Medals awarded for 1st-3rd place finishes in Fly-Kids + all competitor flights</li>
+        </ul>     
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>
+          <li>Registeration closes midnight August8th</li>
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$35 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>
+        </ul>
+        <span className='event-block-details-header'>Facility</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>
+          <li>Address:
+              <ul>
+                <li>2200 East Capitol street NE Washington DC</li>
+                <li>Do not enter "North" Capitol or "NW" into your GPS!</li>
+                <li>Manually enter the address above or "DC Vault"</li>
+              </ul>
+          </li>
+        </ul>
+        <span className='event-block-details-header'>SPIKES</span>
+        <ul className='event-block-details'>
+          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
+          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
+          <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>
+          <ul>
+            <li>Recommended so you don’t waste time at the event trying to change spikes!</li>
+          </ul>
+          <li>Available for $5 per set at the event (bring your own spike wrench)</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Drop-off/Pick-up</span>
+        <ul className='event-block-details'>
+          <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>
+          <li>Arrangements must be made 24 HOURS PRIOR TO THE EVENT or more</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li>$15 cash at check-in</li>
+          <li>You may be sharing your rental pole</li>
+          <li>ID will be held until pole is returned</li>
+        </ul>
+        
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>7:45pm (gates open)</li>
+          <li>8:00pm-9:00pm (All Ages/Open + Fly-Kids warmup</li>
+          <li>8:15pm-8:45pm (Fly-Kids competition)</li>
+          <li>9pm-11pm (All ages competition)</li>
         </ul>
         </div>)
       },

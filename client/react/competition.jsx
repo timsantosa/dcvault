@@ -93,7 +93,7 @@ class Competition extends React.Component {
                     <div className='container'>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
-                                <p className='section-header'><span className='red-text'>DC Vault</span> Independence Day Pole Vault Championships Registration</p>
+                                <p className='section-header'><span className='red-text'>DC Vault</span> Moon Vault Registration</p>
                                 <p className='content-text intro-text' style={{textAlign: 'right'}}>- DC <span className='red-text'>Vault</span></p>
                             </div>
                         </div>
@@ -273,7 +273,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>National Street Vault Entry is $60
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Moon Vault Entry is $35
                                 <br></br>
                             </p>
                     </div>
@@ -281,8 +281,8 @@ class AthleteInfo extends React.Component {
                     <div className='form-row'>
                         <label>
                             <span className='required'>Competition</span>
-                            <input type ="checkbox" name="dates1" value="nationalstreetvault"/>
-                            <label for="nationalstreetvault">&nbsp;&nbsp;National Street Vault 2021</label>
+                            <input type ="checkbox" name="dates1" value="moonvault"/>
+                            <label for="moonvault">&nbsp;&nbsp;Moon Vault 2021</label>
                             <br></br>
                         </label>
                     </div>
@@ -352,7 +352,7 @@ class AthleteInfo extends React.Component {
                                 <select name='division'>
                                     <option value=''>Select Division</option>
                                     <option value='Fly-Kids'>Fly Kids (ages 6-9)</option>
-                                    <option value='Open Flights'>Open Flights (ages 10 and up)</option>
+                                    <option value='Open Flights'>All Ages/Open</option>
                                 </select>
                             </label>
                         </div>
@@ -598,7 +598,7 @@ class Payment extends React.Component {
         super(props)
         let price = 0
         if(this.props.data.athleteInfo.dates1){
-            price+=60
+            price+=35
           }
           if(this.props.data.athleteInfo.dates2){
             price+=25
