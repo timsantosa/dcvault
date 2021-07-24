@@ -216,7 +216,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>
-          <li>Registeration closes midnight August8th</li>
+          <li>Registeration closes midnight August 8th</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -248,7 +248,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>
-          <li>Registeration closes midnight August8th</li>
+          <li>Registeration closes midnight August 8th</li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
