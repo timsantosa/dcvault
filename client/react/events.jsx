@@ -196,7 +196,7 @@ class Events extends React.Component {
         date: new Date('August 14, 2021'),
         partial: (<div className='event-block' id='14AUG2021'>
         <p className='event-block-title'>Moon<span className='red-text'>Vault</span></p>
-        <img src = "../img/logos/moon-2021.jpg" alt="Moon Vault" width = '350' class = "center"></img>
+        <img src = "../img/logos/moon-2021.png" alt="Moon Vault" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>August 14th 2021</span>
           <br></br>
@@ -228,7 +228,7 @@ class Events extends React.Component {
         </div>),
         full: (<div className='event-block' id='14AUG2021'>
         <p className='event-block-title'>Moon<span className='red-text'>Vault</span></p>
-        <img src = "../img/logos/moon-2021.jpg" alt="Moon Vault" width = '350' class = "center"></img>
+        <img src = "../img/logos/moon-2021.png" alt="Moon Vault" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>August 14th 2021</span>
           <br></br>
@@ -383,7 +383,7 @@ class Events extends React.Component {
           <li>You may be sharing your rental pole</li>
           <li>ID will be held until pole is returned</li>
         </ul>
-        <span className='event-block-details-header'>Pole Rentals</span>
+        <span className='event-block-details-header'>Spikes</span>
         <ul className='event-block-details'>
           <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
           <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
