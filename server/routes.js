@@ -439,6 +439,10 @@ module.exports = (app, db) => {
               }
             }
 
+            if (grp == 'fly-kids'){
+              purchaseInfo.selectPackage.strengthFam = 'yes'
+            }
+
             db.tables.Purchases.create({
               athleteId: athleteId,
               userId: userId,

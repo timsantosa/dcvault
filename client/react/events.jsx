@@ -39,8 +39,13 @@ class Events extends React.Component {
           <span className='event-block-date'>Eastern Market, 777 C Street SE - Washington DC</span>
         </p>
         <p className='event-block-info'>
-          
+        <span className='event-block-details-header'>Results</span>
+        <ul className='event-block-details'>
+          <li><a href = "https://photos.app.goo.gl/ogE3Yd7GupM62mw96">Street Vault Photos Found Here!</a></li>
+          <li><a style={{color: '#C0282D'}} href='../files/2021streetvaultresults.xlsx' target='_blank'>Download Final Results Here!</a> </li>
+        </ul>
         </p>        
+        
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
@@ -103,7 +108,11 @@ class Events extends React.Component {
           <span className='event-block-date'>Eastern Market, 777 C Street SE - Washington DC</span>
         </p>
         <p className='event-block-info'>
-          
+        <span className='event-block-details-header'>Results</span>
+        <ul className='event-block-details'>
+          <li><a href = "https://photos.app.goo.gl/ogE3Yd7GupM62mw96">Street Vault Photos Found Here!</a></li>
+          <li><a style={{color: '#C0282D'}} href='../files/2021streetvaultresults.xlsx' target='_blank'>Download Final Results Here!</a> </li>
+        </ul>
         </p>        
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>

@@ -400,7 +400,7 @@ class SelectPackage extends React.Component {
                     <span>Summer</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fall</span>
@@ -515,6 +515,12 @@ class SelectPackage extends React.Component {
                     <span>Champion (Full Quarter)</span>
                   </label>
                 </div>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='membership' value='elite' checked={this.state.checkedMembership === 'elite'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Elite (Full Quarter)</span>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -526,22 +532,28 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedMembership ==='basic' || this.state.checkedMembership ==='advanced')? 'block' : 'none'}}>
               <label><span>Month</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='month' value='jun' checked={this.state.checkedMonth === 'jun'} onChange={this.adjustOptions.bind(this)} />
-                    <span>June</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='month' value='jul' checked={this.state.checkedMonth === 'jul'} onChange={this.adjustOptions.bind(this)} />
-                    <span>July</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: this.state.checkedSession == 'summer'? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='month' value='aug' checked={this.state.checkedMonth === 'aug'} onChange={this.adjustOptions.bind(this)} />
                     <span>August</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedSession == 'fall'? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='month' value='sep' checked={this.state.checkedMonth === 'sep'} onChange={this.adjustOptions.bind(this)} />
+                    <span>September</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedSession == 'fall'? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='month' value='oct' checked={this.state.checkedMonth === 'oct'} onChange={this.adjustOptions.bind(this)} />
+                    <span>October</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.checkedSession == 'fall'? 'block' : 'none'}}>
+                  <label>
+                    <input type='radio' name='month' value='oct' checked={this.state.checkedMonth === 'oct'} onChange={this.adjustOptions.bind(this)} />
+                    <span>November</span>
                   </label>
                 </div>
               </div>
@@ -579,7 +591,7 @@ class SelectPackage extends React.Component {
 
 
 
-            <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedFKMembership || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' || this.state.checkedGroup === 'emerging-elite' || this.state.checkedGroup === 'elite' || this.state.checkedGroup === 'professional'? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedFKMembership || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' || this.state.checkedMembership === 'elite' || this.state.checkedGroup === 'emerging-elite' || this.state.checkedGroup === 'elite' || this.state.checkedGroup === 'professional'? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display: this.state.availableFacilities.dcv ? 'block' : 'none'}}>
@@ -603,7 +615,7 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedFacility  && ((this.state.checkedMembership === 'master')||(this.state.checkedMembership === "champion"))? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedFacility  && ((this.state.checkedMembership === 'master')||(this.state.checkedMembership === "champion") || (this.state.checkedMembership === 'elite'))? 'block' : 'none'}}>
               <label><span>Strength Training</span></label>
               <br/>
               <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the DC Vault Strength Training Program for $100? </span>
@@ -631,7 +643,7 @@ class SelectPackage extends React.Component {
 
               <label><span>Strength Facility Membership</span></label>
               <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the Family Fitness Pass for $50? <b>(See training info for details)</b></span>
+              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the Family Fitness Pass for $50? <b>(See training info for details - Select "No Thanks" if you signed up for a Fly-Kids Package)</b></span>
               <br/><br/>
 
               <div className='form-radio-buttons'>
@@ -1203,8 +1215,10 @@ class Payment extends React.Component {
         price = 450
       }else if (membership === 'master'){
         price = 575
-      }else{
+      }else if (membership === 'champion'){
         price = 650
+      }else{
+        price = 750
       }
     } else {
       price = 600
