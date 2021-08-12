@@ -641,9 +641,9 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedFacility? 'block' : 'none'}}>
 
 
-              <label><span>Strength Facility Membership</span></label>
+              <label><span>Family Group Fitness Pass</span></label>
               <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the Family Fitness Pass for $50? <b>(See training info for details - Select "No Thanks" if you signed up for a Fly-Kids Package)</b></span>
+              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the Family Group Fitness Pass for $50? <b>(Select "No Thanks" if you signed up for a Fly-Kids Package - this will be automatically added to your account)</b></span>
               <br/><br/>
 
               <div className='form-radio-buttons'>

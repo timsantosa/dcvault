@@ -85,69 +85,10 @@ module.exports.sendConfirmationEmails = (email) => {
     subject: 'Welcome to DC Vault', // Subject line
     to: email,
     html: '<p>Thank you for registering with DC Vault. Please review the content below closely and let us know if you have any questions.</p>\
-      <h3>ANNOUNCEMENT</h3>\
-      <p>As DC Vault reopens for the summer, we do so with new rules in place meant to comply with the DC reopening guidance. Please review the following information for clients carefully.</p>\
-      <h3>CLASS - DAYS and SIZE LIMITATIONS</h3>\
-      <p>\
-        <ul>\
-          <li>Beginner/Intermediate classes for All Ages and Adult Groups will be held on Monday, Thursday and Sunday</li>\
-          <li>Strength Class will be held Thursday and Sunday</li>\
-          <li>Youth Class will be held Sunday</li>\
-          <li>Private Lessons are offered Wednesdays (inquire to reserve or for other possible days)</li>\
-          <li>Class sizes are limited to 20 participants training in separate groups! </li>\
-          <ul>\
-            <li>To ensure the correct number of participants show for each class, you will receive instructions on how to activate your new <b>Zen Planner account</b></li>\
-            <li>Use your Zen Planner account to reserve your seat for the class times you wish to attend</b></li>\
-            <li><b>NOTE:</b> If using the mobile app for Zen Planner, you will not see the classes on the monthly calendar view due to the mobile app display. Swipe through the individual daily views to see which classes are open to you based on the package you registered for. The desktop calendar view has more functionality.</b></li>\
-          </ul>\
-        </ul\
-      </p>\
-      <h3>CLASS - NEW GUIDELINES </h3>\
-      <p>\
-        <ul>\
-          <li>Arrival</li>\
-            <ul>\
-              <li>Face masks must be worn at all times while at the DC Vault facility </li>\
-              <ul>\
-                <li>Ensure the mask type allows you to breathe freely!</li>\
-              </ul>\
-              <li>Spectators will NOT be permitted inside the DC Vault fence but can observe from the grassy area surrounding the facility by the skate park</li>\
-              <li>Upon arrival, wait outside the E. Capitol street gate by one of the social distancing marker flags until instructed to enter</li>\
-              <li>Gates will open at the start of your training session</li>\
-            </ul>\
-          <li>Warmups</li>\
-            <ul>\
-              <li>Weekdays: warmup on your own before your class time and before you enter the facility</li>\
-              <li>Weekends: warmups will be conducted inside the facility and directed by coaches</li>\
-            </ul>\
-          <li>Entry</li>\
-            <ul>\
-              <li>Upon entry you will be screened and asked to sterilize your hands</li>\
-              <li>Place any personal items next to one of the social distancing flags and wait there for instruction</li>\
-            </ul>\
-          <li>Equipment / Storage Shed</li>\
-            <ul>\
-              <li>Do NOT enter the storage shed at any time</li>\
-              <li>Coaches will sterilize and issue all equipment/poles</li>\
-              <li>Do NOT share any equipment - use only the pole the coaches issue to you</li>\
-              <li>At the end of practice, coaches will return your equipment to storage</li>\
-            </ul>\
-          <li>Distancing</li>\
-            <ul>\
-              <li>You will be instructed on social distancing guidelines before starting practice</li>\
-              <li>Markers will be in place for athletes to ensure correct distancing</li>\
-              <li>Athletes failing to follow these guidelines will be asked to leave the practice session</li>\
-            </ul>\
-          <li>Other</li>\
-            <ul>\
-              <li>It is now summer, be sure to bring plenty of water and sunblock</li>\
-              <li>Dogs are always welcome, just bring a leash</li>\
-            </ul>\
-        </ul>\
-      </p>\
-      <h3>!! NEW CLASS RESERVATION APP !!</h3>\
-      <p>To help you keep track of the training package you signed up for, we have implemented a new reservation app called Zenplanner. This will help you pre-select the practice times you want to attend each week, keep track of your vault package allocation, track performance metrics, and more! </p>\
-      <p>Please look out for an instructional email on how to create your athlete account before the start of our trianing quarter, as well as an email from us on how to use your new app!</p>\
+      <h3>NEW CLASS RESERVATION APP:</h3>\
+      <p>To help you keep track of the training package you signed up for, we have implemented a new reservation app called Zenplanner. This will help you pre-select the practice times you want to attend each week, keep track of your vault package allocation, track performance metrics, and more! Shortly after you register (usually within 24 hours) you will receive instructions on how to login to your free Zen Planner account. Once you have logged in, you will be able to use your Zen Planner App to reserve the specific class times that you wish to attend. </p>\
+      <p>Classes must be reserved 24 hours or more in advance as the classes are locked 24 hours prior to the scheduled start times. If you arrive without having reserved the class time slot, you will not be able to participate in that class. Classes are limited in size, so reserve all of the classes you intended to take right away. If you need to cancel or change a class time later on, you can do so as long as it is 24 hours or more prior to the start of your preferred class. If a class you wish to attend is Full, you can add yourself to the "waitlist" and if an athlete cancels their slot, you will be added IF you are next in the waiting queue.</p>\
+      <p>Note - If you do not attend a class you have reserved, it counts against your class allotment, so be sure to cancel a class if you aren’t going to attend. All classes must be reserved within the terms of your class package (1 per week, 2 per week, etc) and the Zen Planner app will limit you to these parameters.</p>\
       <h3>SCHEDULE</h3>\
       <p>Please refer to our online calendar for your training schedule. Your group dates, times and location for the upcoming training period are posted on this schedule. Any changes due to scheduling conflicts, weather or other unforeseen circumstances will be posted here as well. Please be sure to check the schedule prior to your training sessions at all times.</p> \
       <h3>WHAT TO EXPECT</h3>\
@@ -156,8 +97,24 @@ module.exports.sendConfirmationEmails = (email) => {
       <p>Dress in comfortable athletic clothing. Bring regular running shoes and some water to drink. If you are training at one of our outdoor locations (like DCV), bring sunblock as well as extra water.</p>\
       <h3>LOCATION</h3>\
       You selected a specific training location when you registered. This is your assigned group location. Address information can be found on our website in the Facilities section</p>\
-      <h3>WORKOUTS</h3>\
+      <h3>WORKOUTS (attached)</h3>\
       <p>If you want to progress as quickly as possible, conditioning is very important. We\'ve attached our general team conditioning program. It\'s a 12 week program for our athletes to follow outside of scheduled practices. We strongly encourage every athlete to complete this workout in total. If you do, your progress will accelerate significantly.</p>\
+      <h3>CANCELLATIONS / WEATHER POLICY</h3>\
+      <p>If any change is made to a scheduled class time, it is posted on the DCVault.com website calendar immediately. Any change or cancellation will be posted a minimum of 1-hour prior to the class time, but normally 2-or more-hours before the scheduled class time.</p\
+      <p>We NEVER “intend” to cancel or change a class time, and therefore cannot send a notification that we are “planning” on cancelling a class. We watch weather radar, etc. up to the moment that it becomes explicitly clear that we cannot hold class. At that time we update the website calendar and - when possible - send out an email notification as well. Any inquiries regarding scheduling changes will be referred to the website calendar.</p>\
+      <p>Note - The Zen Planner app is NOT where you check for class cancellations. Refer to the website calendar.</p>\
+      <h3>MAKEUP SESSIONS</h3>\
+      <p>Makeup sessions are only permitted for athletes who were scheduled to attend a class that was cancelled by the DC Vault staff. If an athlete is scheduled to be at class and misses a regularly scheduled class that is held, it will count against their class package allotment. Exceptions are made for injuries with appropriate doctors notice.</p>\
+      <h3>SCHEDULE</h3>\
+      <p>For specific schedule details on a current or upcoming training course, please consult the DC Vault training calendar. Look for the training group of interest and click on the time slot to view details (date, time, location, course duration, etc…). The schedule for an upcoming training quarter is typically posted one month in advance.</p>\
+      <h3>TRAINING LOCATION</h3>\
+      <p>Courses are primarily offered at the DC Vault Training Facility located at 2100 East Capitol street NE Washington, DC but may also be offered seasonally at one of one of our partner facilities (usually during Winter quarter).</p>\
+      <p>The location for an upcoming class can always be viewed in the training calendar at DCVault.com by clicking on any scheduled session in order to see the class details.</p>\
+      <h3>EQUIPMENT</h3>\
+      <p>DC Vault provides all needed equipment, poles, etc. during scheduled training sessions.</p>\
+      <h3>SPIKES</h3>\
+      <p>Spikes are not used during practice sessions unless it is raining and the coaching staff allows it for traction. Absolutely no spikes longer than 1/8” are permitted at the DC Vault Home Training Facility located at 2100 East Capitol street NE, DC!</p>\
+      <h3>CONTACT</h3>\
       <p>If you have any questions that have not been answered, please email our administrative assistant, Lauren, at <a href="mailto:lrose@dcvault.org">LRose@DCVault.org</a>\
       <p>Again, thank you for joining us, and we look forward to seeing you soon.</p>',
     attachments: [

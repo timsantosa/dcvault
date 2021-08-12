@@ -224,8 +224,8 @@ class Events extends React.Component {
         </ul>     
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
-          <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>
-          <li>Registeration closes midnight August 8th</li>
+          <li>Registration closed</li>
+          <li><a style={{color: '#C0282D'}} href='../files/moon_start.pdf' target='_blank'>Download Heat Sheets Here!</a> </li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -256,8 +256,8 @@ class Events extends React.Component {
         </ul>     
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
-          <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>
-          <li>Registeration closes midnight August 8th</li>
+          <li>Registration closed</li>
+          <li><a style={{color: '#C0282D'}} href='../files/moon_start.pdf' target='_blank'>Download Heat Sheets Here!</a> </li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -303,10 +303,13 @@ class Events extends React.Component {
         
         <span className='event-block-details-header'>Schedule</span>
         <ul className='event-block-details'>
-          <li>7:45pm (gates open)</li>
-          <li>8:00pm-9:00pm (All Ages/Open + Fly-Kids warmup</li>
-          <li>8:15pm-8:45pm (Fly-Kids competition)</li>
-          <li>9pm-11pm (All ages competition)</li>
+          <li>7:45pm Gates Open</li>
+          <li>7:45-8:00pm Warmups - Fly Kids (Red Pit)</li>
+          <li>8:00-8:15pm Competition - Fly Kids (Red Pit / Opening Height 4'1")</li>
+          <li>8:15-9:00pm Warmups - Flight 1 (Red Pit)</li>
+          <li>8:15-9:00pm Warmups - Flight 2 (Black Pit)</li>
+          <li>9:00-11:00pm Competition - Flight 1 (Red Pit / Opening Height 5')</li>
+          <li>9:00-11:00pm Competition - Flight 2 (Black Pit / Opening Height 6'6")</li>
         </ul>
         </div>)
       },

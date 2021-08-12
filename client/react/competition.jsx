@@ -273,7 +273,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Moon Vault Entry is $35
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Moon Vault Registration is Closed!
                                 <br></br>
                             </p>
                     </div>
@@ -282,7 +282,7 @@ class AthleteInfo extends React.Component {
                         <label>
                             <span className='required'>Competition</span>
                             <input type ="checkbox" name="dates1" value="moonvault"/>
-                            <label for="moonvault">&nbsp;&nbsp;Moon Vault 2021</label>
+                            <label for="regclosed">&nbsp;&nbsp;REGISTRATION CLOSED</label>
                             <br></br>
                         </label>
                     </div>
