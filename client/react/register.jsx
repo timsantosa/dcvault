@@ -935,7 +935,7 @@ class AthleteInfo extends React.Component {
                   </div>
                 </div>
                 <p className='info-text' style={{display: this.state.showUSATFinfo ? 'block' : 'none'}}>
-                        We are sanctioned by USATF. As such, our participants need a current USATF membership ($30 for 1-year). If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} target='_blank' href='https://www.usatf.org/membership/help/number.asp'>here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} target='_blank' href='http://www.usatf.org/Products---Services/Individual-Memberships.aspx'>here</a>.
+                        We are sanctioned by USATF. As such, our participants need a current USATF membership ($30 for 1-year). If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} target='_blank' href='https://www.usatf.org/membership/help/number.asp'>here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} target='_blank' href='https://www.usatf.org/home/top-utility-nav-content/membership-1'>here</a>.
                       </p>
                 <input type='text' name='usatf' onChange={this.formatUSATF.bind(this)} />
               </label>
