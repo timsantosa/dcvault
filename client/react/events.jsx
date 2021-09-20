@@ -139,7 +139,8 @@ class Events extends React.Component {
                   <li>7:00-10:00pm Competition - Flight 2 (Black Pit)</li>
                 </ul>
                 <center><span className='red-text'>Click Arrow for More Info</span></center>
-                </div>),
+                </div>)},
+                {
                 full: (<div className='event-block' id='26JUN2021'>
         <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
         <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
@@ -267,6 +268,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Registration closed</li>
           <li><a style={{color: '#C0282D'}} href='../files/moon_start.pdf' target='_blank'>Download Heat Sheets Here!</a> </li>
+          <li><a style={{color: '#C0282D'}} href='../files/moonvaultresults-21.xlsx' target='_blank'>Download Final Results Here!</a> </li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
@@ -299,6 +301,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Registration closed</li>
           <li><a style={{color: '#C0282D'}} href='../files/moon_start.pdf' target='_blank'>Download Heat Sheets Here!</a> </li>
+          <li><a style={{color: '#C0282D'}} href='../files/moonvaultresults-21.xlsx' target='_blank'>Download Final Results Here!</a> </li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
