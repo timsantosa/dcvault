@@ -143,9 +143,9 @@ class Events extends React.Component {
                 
       },
       {
-        date: new Date('June 26, 2021'),
+        date: new Date('July 16, 2021'),
         partial:(
-        <div className='event-block' id='26JUN2021'>
+        <div className='event-block' id='16JUL2021'>
         <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
         <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
         <p className='event-block-info'>
