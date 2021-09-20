@@ -93,7 +93,7 @@ class Competition extends React.Component {
                     <div className='container'>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
-                                <p className='section-header'><span className='red-text'>DC Vault</span> Moon Vault Registration</p>
+                                <p className='section-header'><span className='red-text'>DC Vault</span> Halloween Vault Registration</p>
                                 <p className='content-text intro-text' style={{textAlign: 'right'}}>- DC <span className='red-text'>Vault</span></p>
                             </div>
                         </div>
@@ -273,7 +273,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Moon Vault Registration is Closed!
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>Halloween Vault Registration is Open!
                                 <br></br>
                             </p>
                     </div>
@@ -281,8 +281,8 @@ class AthleteInfo extends React.Component {
                     <div className='form-row'>
                         <label>
                             <span className='required'>Competition</span>
-                            <input type ="checkbox" name="dates1" value="moonvault"/>
-                            <label for="regclosed">&nbsp;&nbsp;REGISTRATION CLOSED</label>
+                            <input type ="checkbox" name="dates1" value="halloweenvault21"/>
+                            <label for="regclosed">&nbsp;&nbsp;Halloween Vault ($35)</label>
                             <br></br>
                         </label>
                     </div>

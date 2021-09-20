@@ -29,76 +29,117 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
-        date: new Date('July 17, 2021'),
-        partial: (<div className='event-block' id='17JUL2021'>
-        <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
-        <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
+        date: new Date('October 30, 2021'),
+        partial: (<div className='event-block' id='30OCT2021'>
+        <p className='event-block-title'>Halloween<span className='red-text'> Vault</span> 2021</p>
+        <img src = "../img/logos/halloweenvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
         <p className='event-block-info'>
-          <span className='event-block-date'>July 16th-17th 2021</span>
+          <span className='event-block-date'>October 30th, 2021</span>
           <br></br>
-          <span className='event-block-date'>Eastern Market, 777 C Street SE - Washington DC</span>
+          <span className='event-block-date'>DC Vault - 2200 East Capitol street NE, Washington DC </span>
         </p>
         <p className='event-block-info'>
-        <span className='event-block-details-header'>Results</span>
+        <span className='event-block-details-header'>Event Features</span>
         <ul className='event-block-details'>
-          <li><a href = "https://photos.app.goo.gl/ogE3Yd7GupM62mw96">Street Vault Photos Found Here!</a></li>
-          <li><a style={{color: '#C0282D'}} href='../files/2021streetvaultresults.xlsx' target='_blank'>Download Final Results Here!</a> </li>
+          <li>Haunted Vault Site (featuring our favorite 13' skeleton Sergio!)</li>
+          <li>Costumed Vaulters</li>
+          <li>Pet costume competition (bring you spooky puppy dogs!)</li>
+          <li>Free Candy for kids and competitors</li>
+          <li>Free grilled hot-dogs and veggie dogs</li>
+          <li>Spooky FLY-KIDS competition (ages 6-10)</li>
+          <li>Medals awarded for 1st-3rd place finishes in Fly-Kids + all competitor flights</li>
         </ul>
         </p>        
         
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Advanced Registration Only</li>
-          <li>Registration Closed</li>
+          <li>Registration Closes at midnight on October 22nd</li>
+          <li><a href="https://dcvault.com/compete/">REGISTER HERE!</a></li>
         </ul>
         <span className='event-block-details-header'>Entry Fee</span>
         <ul className='event-block-details'>
-          <li>$60 Registration</li>
-        </ul>
-        <span className='event-block-details-header'>Venue / Address</span>
-        <ul className='event-block-details'>
-          <li>Eastern Market, 777 C street SE, Washington DC</li>
-          <li>Event Setup on C street SE (between 7th street SE and 8th street SE)</li>
-        </ul>
-        <span className='event-block-details-header'>Arrival / Parking</span>
-        <ul className='event-block-details'>
-          <li>Parking is available on site at 777 C street SE in the trader Joes Parking Garage <a style={{color: '#C0282D'}} href='../files/emarket-map.pdf' target='_blank'>(see map here)</a></li>
-          <li><u>NOTE:</u> Unload Poles BEFORE turning onto C street if parking in the garage</li>
-          <li><u>Additional Parking Garage located 1 block away at 600 Pennsylvania Ave NE (Colonial Parking)</u></li>
-          <li>Metered On-Street Parking is available on 8th street and Pennsylvania avenue</li>
-          <li>Free On-Street Parking is available in the surrounding neighborhood (easier to find near East Capitol street)</li>
-        </ul>
-        <span className='event-block-details-header'>Schedule</span>
-        <ul className='event-block-details'>
-          <li>Friday July 16th</li>
-          <ul>
-            <li>5:00pm - 7:00pm - Open Runway</li>
-          </ul>
-          <li>Saturday July 17th (Note: rolling schedule - arrive early in case your time slot moves up!)</li>
-          <li>Flight 1 </li>
-          <ul>
-            <li>8:00am - warmups</li>
-            <li>9:00 am - competition</li>
-          </ul>
-          <li>Fly Kids</li>
-          <ul>
-            <li>11:00am - warmups</li>
-            <li>11:30am - competition</li>
-          </ul>
-          <li>Flight 2</li>
-          <ul>
-            <li>12:30pm - warmups</li>
-            <li>1:30pm - competition</li>
-          </ul>
-          <li>Flight 3</li>
-          <ul>
-            <li>3:30pm - warmups</li>
-            <li>4:30pm - competition</li>
-          </ul>
+          <li>$35 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches are able to watch from outside the fence free of charge if they prefer</li>
         </ul>
         <center><span className='red-text'>Click Arrow for More Info</span></center>
-
         </div>),
+                full: (<div className='event-block' id='30OCT2021'>
+                <p className='event-block-title'>Halloween<span className='red-text'> Vault</span> 2021</p>
+                <img src = "../img/logos/halloweenvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
+                <p className='event-block-info'>
+                  <span className='event-block-date'>October 30th, 2021</span>
+                  <br></br>
+                  <span className='event-block-date'>DC Vault - 2200 East Capitol street NE, Washington DC </span>
+                </p>
+                <p className='event-block-info'>
+                <span className='event-block-details-header'>Event Features</span>
+                <ul className='event-block-details'>
+                  <li>Haunted Vault Site (featuring our favorite 13' skeleton Sergio!)</li>
+                  <li>Costumed Vaulters</li>
+                  <li>Pet costume competition (bring you spooky puppy dogs!)</li>
+                  <li>Free Candy for kids and competitors</li>
+                  <li>Free grilled hot-dogs and veggie dogs</li>
+                  <li>Spooky FLY-KIDS competition (ages 6-10)</li>
+                  <li>Medals awarded for 1st-3rd place finishes in Fly-Kids + all competitor flights</li>
+                </ul>
+                </p>        
+                
+                <span className='event-block-details-header'>Registration</span>
+                <ul className='event-block-details'>
+                  <li>Advanced Registration Only</li>
+                  <li>Registration Closes at midnight on October 22nd</li>
+                  <li><a href="https://dcvault.com/compete/">REGISTER HERE!</a></li>
+                </ul>
+                <span className='event-block-details-header'>Entry Fee</span>
+                <ul className='event-block-details'>
+                  <li>$35 for competitors</li>
+                  <li>$5 for all non-competitors entering the facility (cash)</li>
+                  <li>Spectators and coaches are able to watch from outside the fence free of charge if they prefer</li>
+                </ul>
+                <span className='event-block-details-header'>Facility</span>
+                <ul className='event-block-details'>
+                  <li>DC Vault Pole Vault Center</li>
+                  <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+                  <li>Parking On-Site (Lot #3)</li>
+                  <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>
+                  <li>Address:
+                      <ul>
+                        <li>2200 East Capitol street NE Washington DC</li>
+                        <li>Do not enter "North" Capitol or "NW" into your GPS!</li>
+                        <li>Manually enter the address above or "DC Vault"</li>
+                      </ul>
+                  </li>
+                </ul>
+                <span className='event-block-details-header'>SPIKES</span>
+                <ul className='event-block-details'>
+                  <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
+                  <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
+                  <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>
+                  <ul>
+                    <li>Recommended so you don’t waste time at the event trying to change spikes!</li>
+                  </ul>
+                  <li>Available for $5 per set at the event (bring your own spike wrench)</li>
+                </ul>
+                <span className='event-block-details-header'>Pole Rentals</span>
+                <ul className='event-block-details'>
+                  <li>$15 cash at check-in</li>
+                  <li>NOTE: You may be sharing your rental pole</li>
+                  <li>ID will be held until pole is returned</li>
+                </ul>
+                <span className='event-block-details-header'>Schedule (tentative - final schedule will be emailed to competitors the week of the event)</span>
+                <ul className='event-block-details'>
+                  <li>5:00pm Gates Open</li>
+                  <li>5:00-5:30pm Warmups - Fly Kids (Red Pit)</li>
+                  <li>5:30-6:00pm Competition - Fly Kids (Red Pit)</li>
+                  <li>6:00-7:00pm Warmups - Flight 1 (Red Pit)</li>
+                  <li>6:00-7:00pm Warmups - Flight 2 (Black Pit)</li>
+                  <li>7:00-10:00pm Competition - Flight 1 (Red Pit)</li>
+                  <li>7:00-10:00pm Competition - Flight 2 (Black Pit)</li>
+                </ul>
+                <center><span className='red-text'>Click Arrow for More Info</span></center>
+                </div>),
                 full: (<div className='event-block' id='26JUN2021'>
         <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
         <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
