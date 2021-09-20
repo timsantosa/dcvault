@@ -142,24 +142,10 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
         subject: 'Moon Vault 2021', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the 2021 MOON VAULT!</p>\
-        <p>Please note: Final event information will be sent to you after August 8th when registration closes. </p>\
-        <p>Moon Vault</p>\
-        <h3>Event Features</h3>\
-        <ul>\
-          <li>Glowing-Vaulters in Body-Glow paint</li>\
-          <li>Free glowing party favors for kids</li>\
-          <li>Glow-bling for spectators</li>\
-          <li>Free grilled hot-dogs and veggie dogs</li>\
-          <li>Prizes for best glow-costume</li>\
-          <li>Best Glow-Pet costume competition (bring your puppy dogs!)</li>\
-          <li>Glowing FLY-KIDS competition (ages 6-10)</li>\
-          <li>Medals awarded for 1st-3rd place finishes in Fly-Kids + all competitor flights</li>\
-        </ul>\
+        html: '<p>Thank you for registering for the 2021 HALLOWEEN VAULT!</p>\
         <h3>Registration</h3>\
         <ul>\
           <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>\
-          <li>Registeration closes midnight August8th</li\
         </ul>\
         <h3>Entry Fee</h3>\
         <ul>\
@@ -201,13 +187,6 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
           <li>$15 cash at check-in</li>\
           <li>You may be sharing your rental pole</li>\
           <li>ID will be held until pole is returned</li>\
-        </ul>\
-        <h3>Schedule</h3>\
-        <ul>\
-          <li>7:45pm (gates open)</li>\
-          <li>8:00pm-9:00pm (All Ages/Open + Fly-Kids warmup</li>\
-          <li>8:15pm-8:45pm (Fly-Kids competition)</li>\
-          <li>9pm-11pm (All ages competition)</li>\
         </ul>'
     }
   
