@@ -139,10 +139,13 @@ class Events extends React.Component {
                   <li>7:00-10:00pm Competition - Flight 2 (Black Pit)</li>
                 </ul>
                 <center><span className='red-text'>Click Arrow for More Info</span></center>
-                </div>)},
-                {
-                partial:(
-                  <div className='event-block' id='26JUN2021'>
+                </div>)
+                
+      },
+      {
+        date: new Date('June 26, 2021'),
+        partial:(
+        <div className='event-block' id='26JUN2021'>
         <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
         <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
         <p className='event-block-info'>
@@ -263,7 +266,6 @@ class Events extends React.Component {
           <li>Some on site seating will be available </li>
           <li>Bathroom Facilities and water fountains are located inside the Eastern Market building, located on 7th street</li>
         </ul>
-
       </div>)
       },
       {
