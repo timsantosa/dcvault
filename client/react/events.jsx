@@ -141,6 +141,29 @@ class Events extends React.Component {
                 <center><span className='red-text'>Click Arrow for More Info</span></center>
                 </div>)},
                 {
+                partial:(
+                  <div className='event-block' id='26JUN2021'>
+        <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
+        <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>July 16th-17th 2021</span>
+          <br></br>
+          <span className='event-block-date'>Eastern Market, 777 C Street SE - Washington DC</span>
+        </p>
+        <p className='event-block-info'>
+        <span className='event-block-details-header'>Results</span>
+        <ul className='event-block-details'>
+          <li><a href = "https://photos.app.goo.gl/ogE3Yd7GupM62mw96">Street Vault Photos Found Here!</a></li>
+          <li><a style={{color: '#C0282D'}} href='../files/2021streetvaultresults.xlsx' target='_blank'>Download Final Results Here!</a> </li>
+        </ul>
+        </p>        
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Advanced Registration Only</li>
+          <li>Registration Closed</li>
+        </ul>
+        </div>
+                ),
                 full: (<div className='event-block' id='26JUN2021'>
         <p className='event-block-title'>National<span className='red-text'>Street Vault</span> 2021</p>
         <img src = "../img/logos/streetvault21.jpg" alt="Street Vault" width = '350' class = "center"></img>
