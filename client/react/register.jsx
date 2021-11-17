@@ -538,13 +538,13 @@ class SelectPackage extends React.Component {
                     <span>December</span>
                   </label>
                 </div>
-                <div style={{display: this.state.checkedSession == 'winter'? 'block' : 'none'}}>
+                <div style={{display:'none'}}>
                   <label>
                     <input type='radio' name='month' value='jan' checked={this.state.checkedMonth === 'jan'} onChange={this.adjustOptions.bind(this)} />
                     <span>January</span>
                   </label>
                 </div>
-                <div style={{display: this.state.checkedSession == 'winter'? 'block' : 'none'}}>
+                <div style={{display:'none'}}>
                   <label>
                     <input type='radio' name='month' value='feb' checked={this.state.checkedMonth === 'feb'} onChange={this.adjustOptions.bind(this)} />
                     <span>February</span>
