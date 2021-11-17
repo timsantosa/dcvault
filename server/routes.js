@@ -297,8 +297,12 @@ module.exports = (app, db) => {
 
   app.post('/registration/confirm', (req, res) => {
     let email = req.body.email
+
+    let emailData = JSON.stringify(req.body)
+      emailData = emailData.replace(/,/g, "<br>")
+      console.log(emailData)
     if (email) {
-      helpers.sendConfirmationEmails(email)
+      helpers.sendConfirmationEmails(email,emailData)
       res.send({ok: true, message: 'email sent'})
     } else {
       res.status(400).send({ok: false, message: 'no or bad email'})
@@ -428,10 +432,8 @@ module.exports = (app, db) => {
             if (!mem){
               mem = 'none'
             }
-            console.log("yesApparel" + noapp)
-            console.log("app" + app)
+
             if (noapp === 'none'){
-              console.log("No Apparel!")
               app = 'none'
             }else{
               if (app === ''){
@@ -473,7 +475,6 @@ module.exports = (app, db) => {
   })
 
     app.post('/event/finalize', (req, res) => {
-      console.log("Start Request")
         if (!req.body.purchaseInfo) {
             res.status(400).send({ok: false, message: 'missing purchase details'})
         } else {

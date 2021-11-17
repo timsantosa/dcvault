@@ -251,8 +251,8 @@ apiHelpers.resendVerification = (email) => {
   })
 }
 
-apiHelpers.sendConfirmationEmail = (email) => {
-  return axios.post('/registration/confirm', {email: email})
+apiHelpers.sendConfirmationEmail = (email, purchaseInfo) => {
+  return axios.post('/registration/confirm', {email: email, purchaseInfo: purchaseInfo})
 }
 apiHelpers.sendEventConfirmationEmail = (email, purchaseInfo) => {
     return axios.post('/event/confirm', {email: email, purchaseInfo: purchaseInfo})

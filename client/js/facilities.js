@@ -20,13 +20,12 @@ var textValues = {
 <p class="content-text" style="font-weight: bold">What</p>\
 <p class="content-text smaller-text">Indoor training site, primarily used for Level-V training.</p>',
 
-  VA: '<p class="minor-heading">Dulles Sportsplex</p>\
+  KIDS: '<p class="minor-heading">Physicality (KIDS)</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
-<p class="content-text smaller-text">Dulles Sportsplex</p>\
-<p class="content-text smaller-text">21610 Atlantic Blvd, Sterling, VA 20166</p>\
+<p class="content-text smaller-text">Physicality</p>\
+<p class="content-text smaller-text">1371 H St NE, Washington, DC</p>\
 <p class="content-text" style="font-weight: bold">What</p>\
-<p class="content-text smaller-text">Winter quarter indoor training site, primarily used for All Ages Beginner-Intermediate development training.</p>\
-<p class="content-text smaller-text">Our New Winter Facility Info can be found at https://dullessportsplex.com</p>',
+<p class="content-text smaller-text">Indoor training site use for Fly-Kids classes, primarily during Winter. </p>',
 
   DCV: '<p class="minor-heading">DC <span class="red-text">VAULT</span> (DCV)</p>\
 <p class="content-text" style="font-weight: bold">Where</p>\
@@ -45,14 +44,14 @@ Parking is available in Lot 3 and metro access is available across the street at
 var locations = {
   PREP: {lat: 39.032617, lng: -77.108889},
   PG: {lat: 38.911269, lng: -76.866919},
-  VA: {lat: 39.016517, lng: -77.425610},
+  KIDS: {lat: 38.8999288, lng: -76.9881189},
   DCV: {lat: 38.890134, lng: -76.976392},
 }
 
 var tooltips = {
   PREP: 'Georgetown Preparatory School',
   PG: 'Prince George\'s County Sportsplex',
-  VA: 'Dulles Sportsplex',
+  KIDS: 'Physicality',
   DCV: 'DC VAULT',
 }
 
@@ -124,7 +123,7 @@ window.initMap = function () {
   markers = {
     PREP: new window.google.maps.Marker({position: locations.PREP, map: map, title: tooltips.PREP}),
     PG: new window.google.maps.Marker({position: locations.PG, map: map, title: tooltips.PG}),
-    VA: new window.google.maps.Marker({position: locations.VA, map: map, title: tooltips.VA}),
+    KIDS: new window.google.maps.Marker({position: locations.KIDS, map: map, title: tooltips.KIDS}),
     DCV: new window.google.maps.Marker({position: locations.DCV, map: map, title: tooltips.DCV}),
   }
 }

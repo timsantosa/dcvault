@@ -79,13 +79,13 @@ module.exports.resetPass = (password, email) => {
   })
 }
 
-module.exports.sendConfirmationEmails = (email) => {
+module.exports.sendConfirmationEmails = (email,athleteInfo) => {
   let mailOptions = {
     from: '"DC Vault" <' + config.email.username + '>', // sender address
     subject: 'Welcome to DC Vault', // Subject line
     to: email,
     html: '<p>Thank you for registering with DC Vault. Please review the content below closely and let us know if you have any questions.</p>\
-      <h3>NEW CLASS RESERVATION APP:</h3>\
+      <h3>CLASS RESERVATION APP:</h3>\
       <p>To help you keep track of the training package you signed up for, we have implemented a new reservation app called Zenplanner. This will help you pre-select the practice times you want to attend each week, keep track of your vault package allocation, track performance metrics, and more! Shortly after you register (usually within 24 hours) you will receive instructions on how to login to your free Zen Planner account. Once you have logged in, you will be able to use your Zen Planner App to reserve the specific class times that you wish to attend. </p>\
       <p>Classes must be reserved 24 hours or more in advance as the classes are locked 24 hours prior to the scheduled start times. If you arrive without having reserved the class time slot, you will not be able to participate in that class. Classes are limited in size, so reserve all of the classes you intended to take right away. If you need to cancel or change a class time later on, you can do so as long as it is 24 hours or more prior to the start of your preferred class. If a class you wish to attend is Full, you can add yourself to the "waitlist" and if an athlete cancels their slot, you will be added IF you are next in the waiting queue.</p>\
       <p>Note - If you do not attend a class you have reserved, it counts against your class allotment, so be sure to cancel a class if you aren’t going to attend. All classes must be reserved within the terms of your class package (1 per week, 2 per week, etc) and the Zen Planner app will limit you to these parameters.</p>\
@@ -108,8 +108,7 @@ module.exports.sendConfirmationEmails = (email) => {
       <h3>SCHEDULE</h3>\
       <p>For specific schedule details on a current or upcoming training course, please consult the DC Vault training calendar. Look for the training group of interest and click on the time slot to view details (date, time, location, course duration, etc…). The schedule for an upcoming training quarter is typically posted one month in advance.</p>\
       <h3>TRAINING LOCATION</h3>\
-      <p>Courses are primarily offered at the DC Vault Training Facility located at 2100 East Capitol street NE Washington, DC but may also be offered seasonally at one of one of our partner facilities (usually during Winter quarter).</p>\
-      <p>The location for an upcoming class can always be viewed in the training calendar at DCVault.com by clicking on any scheduled session in order to see the class details.</p>\
+      <p>See Website Schedule.</p>\
       <h3>EQUIPMENT</h3>\
       <p>DC Vault provides all needed equipment, poles, etc. during scheduled training sessions.</p>\
       <h3>SPIKES</h3>\
@@ -129,6 +128,11 @@ module.exports.sendConfirmationEmails = (email) => {
     ]
   }
 
+  /*
+        <p>Courses are primarily offered at the DC Vault Training Facility located at 2100 East Capitol street NE Washington, DC but may also be offered seasonally at one of one of our partner facilities (usually during Winter quarter).</p>\
+      <p>The location for an upcoming class can always be viewed in the training calendar at DCVault.com by clicking on any scheduled session in order to see the class details.</p>\
+  */
+
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
@@ -136,6 +140,21 @@ module.exports.sendConfirmationEmails = (email) => {
     }
     console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
   })
+
+  let mailOptions2 = {
+    from: '"DC Vault" <' + config.email.username + '>', // sender address
+    subject: 'New Training Registrant', // Subject line
+    to: "lrose@dcvault.org",
+    html:  '<p>Details</p>' +athleteInfo,
+    attachments: [
+    ]
+}
+transporter.sendMail(mailOptions2, (error, info) => {
+    if (error) {
+        return console.log(error)
+    }
+    console.log('Message %s sent to %s response: %s', info.messageId, "events@dcvault.org", info.response)
+})
 }
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {

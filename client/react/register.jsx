@@ -400,13 +400,13 @@ class SelectPackage extends React.Component {
                     <span>Summer</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fall</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
                     <span>Winter</span>
@@ -430,7 +430,7 @@ class SelectPackage extends React.Component {
                     <span>Fly-Kids (6-10)</span>
                   </label>
                 </div>
-                <div style={{display:'block'}} >
+                <div style={{display:'none'}} >
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
                     <span>Adult (21+)</span>
@@ -491,31 +491,31 @@ class SelectPackage extends React.Component {
                     <span>Basic (One Month)</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='membership' value='advanced' checked={this.state.checkedMembership === 'advanced'} onChange={this.adjustOptions.bind(this)} />
                     <span>Advanced (One Month)</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='membership' value='apprentice' checked={this.state.checkedMembership === 'apprentice'} onChange={this.adjustOptions.bind(this)} />
                     <span>Apprentice (Full Quarter)</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='membership' value='master' checked={this.state.checkedMembership === 'master'} onChange={this.adjustOptions.bind(this)} />
                     <span>Master (Full Quarter)</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='membership' value='champion' checked={this.state.checkedMembership === 'champion'} onChange={this.adjustOptions.bind(this)} />
                     <span>Champion (Full Quarter)</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='membership' value='elite' checked={this.state.checkedMembership === 'elite'} onChange={this.adjustOptions.bind(this)} />
                     <span>Elite (Full Quarter)</span>
@@ -532,22 +532,22 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedMembership ==='basic' || this.state.checkedMembership ==='advanced')? 'block' : 'none'}}>
               <label><span>Month</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: this.state.checkedSession == 'fall'? 'block' : 'none'}}>
+                <div style={{display: this.state.checkedSession == 'winter'? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='month' value='sep' checked={this.state.checkedMonth === 'sep'} onChange={this.adjustOptions.bind(this)} />
-                    <span>September</span>
+                    <input type='radio' name='month' value='dec' checked={this.state.checkedMonth === 'dec'} onChange={this.adjustOptions.bind(this)} />
+                    <span>December</span>
                   </label>
                 </div>
-                <div style={{display: this.state.checkedSession == 'fall'? 'block' : 'none'}}>
+                <div style={{display: this.state.checkedSession == 'winter'? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='month' value='oct' checked={this.state.checkedMonth === 'oct'} onChange={this.adjustOptions.bind(this)} />
-                    <span>October</span>
+                    <input type='radio' name='month' value='jan' checked={this.state.checkedMonth === 'jan'} onChange={this.adjustOptions.bind(this)} />
+                    <span>January</span>
                   </label>
                 </div>
-                <div style={{display: this.state.checkedSession == 'fall'? 'block' : 'none'}}>
+                <div style={{display: this.state.checkedSession == 'winter'? 'block' : 'none'}}>
                   <label>
-                    <input type='radio' name='month' value='oct' checked={this.state.checkedMonth === 'oct'} onChange={this.adjustOptions.bind(this)} />
-                    <span>November</span>
+                    <input type='radio' name='month' value='feb' checked={this.state.checkedMonth === 'feb'} onChange={this.adjustOptions.bind(this)} />
+                    <span>February</span>
                   </label>
                 </div>
               </div>
@@ -559,22 +559,22 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='5classes' checked={this.state.checkedFKMembership === '5classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>5 Classes ($150)</span>
+                    <span>5 Classes ($200)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='fkmembership' value='10classes' checked={this.state.checkedFKMembership === '10classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>10 Classes ($275)</span>
+                    <input type='radio' name='fkmembership' value='15classes' checked={this.state.checkedFKMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
+                    <span>15 Classes ($500)</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='20classes' checked={this.state.checkedFKMembership === '20classes'} onChange={this.adjustOptions.bind(this)} />
                     <span>20 Classes ($475)</span>
                   </label>
                 </div>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='25classes' checked={this.state.checkedFKMembership === '25classes'} onChange={this.adjustOptions.bind(this)} />
                     <span>25 Classes ($550)</span>
@@ -588,75 +588,15 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedFKMembership || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' || this.state.checkedMembership === 'elite' || this.state.checkedGroup === 'emerging-elite' || this.state.checkedGroup === 'elite' || this.state.checkedGroup === 'professional'? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: this.state.availableFacilities.dcv ? 'block' : 'none'}}>
+                <div style={{display:'block'}}>
                   <label>
-                    <input type='radio' name='facility' value='dcv' checked={this.state.checkedFacility === 'dcv'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>Washington, DC (DCV)</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.availableFacilities.va ? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='facility' value='va' checked={this.state.checkedFacility === 'va'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>Virginia (VA)</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.availableFacilities.prep ? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='facility' value='prep' checked={this.state.checkedFacility === 'prep'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>North Bethesda, MD (PREP)</span>
+                    <input type='radio' name='facility' value='wtr' checked={this.state.checkedFacility === 'wtr'} onChange={this.adjustOptions.bind(this)}/>
+                    <span>Winter Facility (Check Schedule)</span>
                   </label>
                 </div>
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedFacility  && ((this.state.checkedMembership === 'master')||(this.state.checkedMembership === "champion") || (this.state.checkedMembership === 'elite'))? 'block' : 'none'}}>
-              <label><span>Strength Training</span></label>
-              <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the DC Vault Strength Training Program for $100? </span>
-              <br/><br/>
-
-              <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='strength' value='none' checked={this.state.checkedStrength === 'none'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>No Thanks</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='strength' value='yes' checked={this.state.checkedStrength === 'yes'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>Yes!</span>
-                  </label>
-                </div>
-              </div>
-
-
-            </div>
-            <div className='form-row' style={{display: this.state.checkedFacility? 'block' : 'none'}}>
-
-
-              <label><span>Family Group Fitness Pass</span></label>
-              <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like to sign up for the Family Group Fitness Pass for $50? <b>(Select "No Thanks" if you signed up for a Fly-Kids Package - this will be automatically added to your account)</b></span>
-              <br/><br/>
-
-              <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='strengthFam' value='none' checked={this.state.checkedStrengthFam === 'none'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>No Thanks</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='strengthFam' value='yes' checked={this.state.checkedStrengthFam === 'yes'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>Yes!</span>
-                  </label>
-                </div>
-              </div>
-
-
-            </div>
 
 
             <div className='form-row' style={{display: this.state.checkedFacility? 'block' : 'none'}}>
@@ -1184,10 +1124,10 @@ class Payment extends React.Component {
     // Then assign it to the props data for membership so it will reflect under "membership in the database"
     if(group === 'fly-kids'){
       if(fkmembership === '5classes'){
-        price = 150
+        price = 200
         this.props.data.selectPackage.membership = fkmembership
-      }else if(fkmembership === '10classes') {
-        price = 275
+      }else if(fkmembership === '15classes') {
+        price = 500
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === '20classes') {
         price = 475
@@ -1265,13 +1205,7 @@ class Payment extends React.Component {
     }else{
       price += 20
     }
-    if(str === 'none' || group ==='fly-kids'){
-    }else{
-      price += 100
-    }
-    if(strFam === 'yes'){
-      price += 50
-    }
+  
     price = price * 1.03
 
     this.renderButton(price)
@@ -1389,20 +1323,8 @@ class Payment extends React.Component {
     let strFam = this.props.data.selectPackage.strengthFam
     let group = this.props.data.selectPackage.group
     let currentProcessingFee = 0
-    if (apparelRes === 'yes' && str ==='none' && strFam === 'none') {
+    if (apparelRes === 'yes') {
       currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 20) * 0.03).toFixed(2)
-    }else if (apparelRes === 'none' && str ==='yes' && strFam === 'yes'){
-      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 150) * 0.03).toFixed(2)
-    }else if (apparelRes === 'none' && str ==='no' && strFam === 'yes'){
-      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 50) * 0.03).toFixed(2)
-    }else if (apparelRes === 'none' && str ==='yes' && strFam === 'no'){
-      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 100) * 0.03).toFixed(2)
-    }else if (apparelRes === 'yes' && str ==='yes' && strFam === 'yes'){
-      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 170) * 0.03).toFixed(2)
-    }else if (apparelRes === 'yes' && str ==='yes' && strFam === 'no'){
-      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 120) * 0.03).toFixed(2)
-    }else if (apparelRes === 'yes' && str ==='no' && strFam === 'yes'){
-      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 70) * 0.03).toFixed(2)
     }else{
       currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
     }
@@ -1427,8 +1349,6 @@ class Payment extends React.Component {
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                   <p className='price-text'>Registration Fee: <span className='red-text'>${currentPrice}</span></p>
                   {apparelRes !== 'none' ? (<p className='price-text'>Apparel Fee: <span className='red-text'>${20}</span></p>) : ''}
-                  {(str !== 'none') ? (<p className='price-text'>Strength Training Fees: <span className='red-text'>${100}</span></p>) : ''}
-                  {(strFam !== 'none') ? (<p className='price-text'>Strength Facility Fees: <span className='red-text'>${50}</span></p>) : ''}
                   <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                 </div>
               </div>
@@ -1489,10 +1409,10 @@ class Confirmation extends React.Component {
         .then((response) => {
           if (response.data.ok) {
             if (response.data.user.email && apiHelpers.validateEmail(response.data.user.email)) {
-              apiHelpers.sendConfirmationEmail(response.data.user.email)
+              apiHelpers.sendConfirmationEmail(response.data.user.email, this.props.data)
 
               if (response.data.user.email !== athleteEmail) {
-                apiHelpers.sendConfirmationEmail(athleteEmail)
+                apiHelpers.sendConfirmationEmail(athleteEmail, this.props.data)
               }
             }
           }
