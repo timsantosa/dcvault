@@ -497,10 +497,10 @@ class SelectPackage extends React.Component {
                     <span>Advanced (One Month)</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='apprentice' checked={this.state.checkedMembership === 'apprentice'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Apprentice (Full Quarter)</span>
+                    <span>January + February (Full Quarter)</span>
                   </label>
                 </div>
                 <div style={{display: 'none'}}>
@@ -532,19 +532,19 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedMembership ==='basic' || this.state.checkedMembership ==='advanced')? 'block' : 'none'}}>
               <label><span>Month</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: this.state.checkedSession == 'winter'? 'block' : 'none'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='month' value='dec' checked={this.state.checkedMonth === 'dec'} onChange={this.adjustOptions.bind(this)} />
                     <span>December</span>
                   </label>
                 </div>
-                <div style={{display:'none'}}>
+                <div style={{display:'block'}}>
                   <label>
                     <input type='radio' name='month' value='jan' checked={this.state.checkedMonth === 'jan'} onChange={this.adjustOptions.bind(this)} />
                     <span>January</span>
                   </label>
                 </div>
-                <div style={{display:'none'}}>
+                <div style={{display:'block'}}>
                   <label>
                     <input type='radio' name='month' value='feb' checked={this.state.checkedMonth === 'feb'} onChange={this.adjustOptions.bind(this)} />
                     <span>February</span>
@@ -1146,7 +1146,7 @@ class Payment extends React.Component {
       }else if (membership === 'advanced'){
         price = 375
       }else if (membership === 'apprentice'){
-        price = 450
+        price = 375
       }else if (membership === 'master'){
         price = 575
       }else if (membership === 'champion'){

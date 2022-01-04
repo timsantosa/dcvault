@@ -894,3 +894,359 @@ Message <d870d35f-65ae-3fc7-7e0b-e90a3cdbaa3c@dcvault.com> sent to timmysantosa@
 127.0.0.1 - - [02/Aug/2021:02:33:47 +0000] "POST /users/isadmin HTTP/1.1" 200 49 "http://localhost:8080/admin/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
 127.0.0.1 - - [02/Aug/2021:02:33:47 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/admin/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
 127.0.0.1 - - [02/Aug/2021:02:33:47 +0000] "POST /users/info HTTP/1.1" 200 4234 "http://localhost:8080/admin/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+127.0.0.1 - - [02/Aug/2021:02:36:28 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+127.0.0.1 - - [02/Aug/2021:02:36:29 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting child process[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[33m[nodemon] 2.0.7[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:03:25:41 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:26:00 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:03:26:55 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:27:02 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:27:02 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:03:29:55 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:29:55 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+yesApparelnone
+appundefined
+No Apparel!
+127.0.0.1 - - [17/Nov/2021:03:30:46 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:30:46 +0000] "POST /users/info HTTP/1.1" 200 5067 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:30:46 +0000] "POST /registration/confirm HTTP/1.1" 200 34 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:30:50 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+Message <3f1b7164-75c9-492d-bddf-6e6f7b530875@dcvault.com> sent to timmysantosa@gmail.com response: 250 2.0.0 OK <3f1b7164-75c9-492d-bddf-6e6f7b530875@dcvault.com> [Hostname=DM6PR11MB4361.namprd11.prod.outlook.com]
+127.0.0.1 - - [17/Nov/2021:03:30:53 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:07 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:07 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+yesApparelnone
+appundefined
+No Apparel!
+127.0.0.1 - - [17/Nov/2021:03:31:43 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:43 +0000] "POST /users/info HTTP/1.1" 200 5890 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:43 +0000] "POST /registration/confirm HTTP/1.1" 200 34 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+Message <4106f8ec-200a-47ed-2913-bf5011026aec@dcvault.com> sent to timmysantosa@gmail.com response: 250 2.0.0 OK <4106f8ec-200a-47ed-2913-bf5011026aec@dcvault.com> [Hostname=DM6PR11MB4361.namprd11.prod.outlook.com]
+127.0.0.1 - - [17/Nov/2021:03:31:47 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:49 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:49 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:49 +0000] "POST /users/info HTTP/1.1" 200 5890 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:49 +0000] "POST /users/info HTTP/1.1" 200 5890 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:51 +0000] "POST /users/isadmin HTTP/1.1" 200 49 "http://localhost:8080/admin/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:51 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/admin/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:31:51 +0000] "POST /users/info HTTP/1.1" 200 5890 "http://localhost:8080/admin/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:32:23 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:32:23 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:32:23 +0000] "POST /users/info HTTP/1.1" 200 5890 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:32:23 +0000] "POST /users/info HTTP/1.1" 200 5890 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:32:23 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:32:59 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:03:42:58 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:43:01 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:43:03 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:43:03 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:03:46:24 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:46:24 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+yesApparelnone
+appundefined
+No Apparel!
+127.0.0.1 - - [17/Nov/2021:03:46:59 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:46:59 +0000] "POST /users/info HTTP/1.1" 200 6719 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:03:46:59 +0000] "POST /registration/confirm HTTP/1.1" 200 34 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+Message <8e6db86a-bd1f-3409-c91f-1743110d9e3f@dcvault.com> sent to events@dcvault.org response: 250 2.0.0 OK <8e6db86a-bd1f-3409-c91f-1743110d9e3f@dcvault.com> [Hostname=DM6PR11MB4361.namprd11.prod.outlook.com]
+Message <b0e644a0-81b9-c721-a3b9-7bd4210f14e6@dcvault.com> sent to timmysantosa@gmail.com response: 250 2.0.0 OK <b0e644a0-81b9-c721-a3b9-7bd4210f14e6@dcvault.com> [Hostname=DM6PR11MB4361.namprd11.prod.outlook.com]
+127.0.0.1 - - [17/Nov/2021:03:47:02 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:04:04:40 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:04:46 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:04:48 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:04:48 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+yesApparelnone
+appundefined
+No Apparel!
+127.0.0.1 - - [17/Nov/2021:04:05:35 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:05:35 +0000] "POST /users/info HTTP/1.1" 200 7553 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:05:35 +0000] "POST /registration/confirm HTTP/1.1" 500 2892 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:05:37 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[33m[nodemon] 2.0.7[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:04:14:51 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:14:54 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:14:55 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:14:55 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:15:28 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:15:28 +0000] "POST /users/info HTTP/1.1" 200 8365 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+{ email: 'timmysantosa@gmail.com' }
+127.0.0.1 - - [17/Nov/2021:04:15:28 +0000] "POST /registration/confirm HTTP/1.1" 500 2892 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:15:43 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:15:47 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:04:20:28 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:20:31 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:20:32 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:20:32 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:21:07 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:21:07 +0000] "POST /users/info HTTP/1.1" 200 9192 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+{ email: 'timmysantosa@gmail.com' }
+127.0.0.1 - - [17/Nov/2021:04:21:07 +0000] "POST /registration/confirm HTTP/1.1" 500 2892 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:21:18 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:04:23:04 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:23:08 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:23:09 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:23:09 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:23:47 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:23:47 +0000] "POST /users/info HTTP/1.1" 200 10014 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+{ email: 'timmysantosa@gmail.com' }
+127.0.0.1 - - [17/Nov/2021:04:23:47 +0000] "POST /registration/confirm HTTP/1.1" 500 2892 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:23:59 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:04:28:50 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:28:52 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:28:52 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:29:24 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:29:24 +0000] "POST /users/info HTTP/1.1" 200 10394 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+{
+  email: 'timmysantosa@gmail.com',
+  purchaseInfo: {
+    selectPackage: {
+      quarter: 'winter',
+      group: 'beginner-intermediate',
+      facility: 'wtr',
+      month: 'dec',
+      membership: 'basic',
+      yesApparel: 'none'
+    },
+    athleteInfo: {
+      fname: 'tim',
+      lname: 'tim',
+      dob: '12/31/2312',
+      email: 'timmysantosa@gmail.com',
+      lstserv: 'asdasd',
+      usatf: '1231231231',
+      'emergency-contact': 'asdasd',
+      'emergency-relation': 'asdasd',
+      'emergency-phone': '123-123-1231',
+      gender: 'male',
+      state: 'CA',
+      school: '',
+      conditions: 'asd'
+    },
+    agreement: { name: 'asd', date: '11/16/2021' },
+    payment: {
+      paymentId: 'PAYID-MGKIKGY02309237PK232724W',
+      payerId: 'HFXTU9AB5MLHN',
+      discount: ''
+    }
+  }
+}
+{"firstName":"tim"<br>"lastName":"tim"<br>"notifications":"asdasd"<br>"quarter":"winter"<br>"month":"dec"<br>"group":"beginner-intermediate"<br>"facility":"wtr"<br>"waiverSignatory":"asd"<br>"membership":"basic"}
+127.0.0.1 - - [17/Nov/2021:04:29:24 +0000] "POST /registration/confirm HTTP/1.1" 200 34 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+Message <003a090f-40e8-ea77-e029-05eb4aa7225e@dcvault.com> sent to events@dcvault.org response: 250 2.0.0 OK <003a090f-40e8-ea77-e029-05eb4aa7225e@dcvault.com> [Hostname=DM6PR11MB4361.namprd11.prod.outlook.com]
+Message <1458e8a7-93d9-fd27-8f0c-71b13deb55f3@dcvault.com> sent to timmysantosa@gmail.com response: 250 2.0.0 OK <1458e8a7-93d9-fd27-8f0c-71b13deb55f3@dcvault.com> [Hostname=DM6PR11MB4361.namprd11.prod.outlook.com]
+127.0.0.1 - - [17/Nov/2021:04:29:28 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/Nov/2021:04:31:27 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:31:30 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:31:31 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:31:31 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:32:05 +0000] "POST /registration/finalize HTTP/1.1" 200 45 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+127.0.0.1 - - [17/Nov/2021:04:32:05 +0000] "POST /users/info HTTP/1.1" 200 10768 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+{"email":"timmysantosa@gmail.com"<br>"purchaseInfo":{"selectPackage":{"quarter":"winter"<br>"group":"fly-kids"<br>"facility":"wtr"<br>"membership":"5classes"<br>"fkmembership":"5classes"<br>"yesApparel":"none"}<br>"athleteInfo":{"fname":"tim"<br>"lname":"tim"<br>"dob":"12/31/2312"<br>"email":"timmysantosa@gmail.com"<br>"lstserv":"asdsad"<br>"usatf":"1231231231"<br>"emergency-contact":"asdasd"<br>"emergency-relation":"asd"<br>"emergency-phone":"123-123-1231"<br>"gender":"male"<br>"state":"AR"<br>"school":""<br>"conditions":"asd"}<br>"agreement":{"name":"asd"<br>"date":"11/16/2021"}<br>"payment":{"paymentId":"PAYID-MGKILPI3AC091680H9845702"<br>"payerId":"HFXTU9AB5MLHN"<br>"discount":""}}}
+127.0.0.1 - - [17/Nov/2021:04:32:05 +0000] "POST /registration/confirm HTTP/1.1" 200 34 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+Message <13c27a4a-bb4f-feb6-22a3-37911b039e79@dcvault.com> sent to events@dcvault.org response: 250 2.0.0 OK <13c27a4a-bb4f-feb6-22a3-37911b039e79@dcvault.com> [Hostname=DM6PR11MB4361.namprd11.prod.outlook.com]
+Message <ac516341-f297-b5fd-0c66-333c52d9c1ac@dcvault.com> sent to timmysantosa@gmail.com response: 250 2.0.0 OK <ac516341-f297-b5fd-0c66-333c52d9c1ac@dcvault.com> [Hostname=DM6PR11MB4361.namprd11.prod.outlook.com]
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting child process[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[33m[nodemon] 2.0.7[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [04/Jan/2022:00:05:59 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+127.0.0.1 - - [04/Jan/2022:00:08:00 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+127.0.0.1 - - [04/Jan/2022:00:08:12 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+127.0.0.1 - - [04/Jan/2022:00:08:12 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting child process[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
