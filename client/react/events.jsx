@@ -30,10 +30,11 @@ class Events extends React.Component {
     let contents = [
       {
         date: new Date('December 30, 2022'),
-        full: (<div className='event-block' id='30DEC2022'>
+        partial: (<div className='event-block' id='30DEC2022'>
             <p className='event-block-title'><span className='red-text'>FREE</span> POLE VAULT <span className='red-text'>CLINIC</span></p>
             <p className='event-block-info'><span className='event-block-date'>Recurring</span>
                 <span className='event-block-location'>2200 East Capitol Street NE - Washington, DC</span></p>
+
             <span className='event-block-details-header'>Event Info</span>
             <ul className='event-block-details'>
                 <li>Did you receive a DC Vault FREE POLE VAULT CLINIC invitation card? If so, you're entitled to a Free Drop-In session during a regularly scheduled DC Vault class!</li>
@@ -41,6 +42,8 @@ class Events extends React.Component {
                 <li>Be sure to bring your invitation card with you to your Drop In class (REQUIRED for participation).</li>
                 <li>Note: Invitation cards are only given out in person, at special events, as special awards, or for individual recognition. If you receive one, don't lose it! </li>
             </ul>
+            <img src = "../img/events/freeclinic.jpg" alt="clinic" width = '350' class = "center"></img>
+
         </div>)
         },
       {
