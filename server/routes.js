@@ -763,8 +763,15 @@ module.exports = (app, db) => {
                     for (let i = 0; i < purchases.length; i++) {
                       let purchaseYear = new Date(purchases[i].createdAt).getFullYear()
 
-                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1 && purchaseYear === year) {
+                      if (purchases[i].athleteId === athlete.id && purchases[i].quarter.indexOf(quarter) !== -1) {
+
+                        if (quarter === "winter" && ((purchaseYear === year) || purchaseYear+1 === year)){
                           currentlyRegistered = true
+                          break
+                        }else if(purchaseYear === year){
+                          currentlyRegistered = true
+                          break
+                        }
 
                       }
                     }
