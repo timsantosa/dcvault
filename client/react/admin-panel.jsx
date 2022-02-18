@@ -141,8 +141,8 @@ class AdminPanel extends React.Component {
     let level = this.refs.levelInput.value
     let description = this.refs.inviteDescInput.value
 
-    if (!(level <= 5 && level >= 3)) {
-      window.alert('Level must be 3, 4, or 5')
+    if (!(level <= 5 && level >= 1)) {
+      window.alert('Level must be 1,2,3, 4, or 5')
     } else {
       if (!!level && !!description) {
         apiHelpers.createInvite(description, level)
@@ -274,7 +274,7 @@ class AdminPanel extends React.Component {
                     <div className='col-xs-12 col-md-6'>
                       <div className='form-row'>
                         <label>
-                          <span className='required'>Level (3-5)</span>
+                          <span className='required'>Level (1:Drop in, 2:Private Lesson), Levels (3-5:Elite Groups)</span>
                           <input type='text' name='amount' ref='levelInput' style={{width: '100%'}} />
                         </label>
                       </div>

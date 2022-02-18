@@ -155,6 +155,8 @@ class SelectPackage extends React.Component {
       checkedStrength: 'none',
       checkedStrengthFam: 'none',
       showInvite: false,
+      showDropIn: false,
+      showPrivateLesson:false,
       showEmergingElite: false,
       showElite: false,
       showProfessional: false,
@@ -338,8 +340,17 @@ class SelectPackage extends React.Component {
           this.setState({
             inviteCode: code
           })
-
-          if (level === 3) {
+          if (level === 1){
+            this.setState({
+              showDropIn: true
+            })
+          }
+          else if(level === 2){
+            this.setState({
+              showPrivateLesson: true
+            })
+          }
+          else if (level === 3) {
             this.setState({
               showEmergingElite: true
             })
@@ -430,7 +441,7 @@ class SelectPackage extends React.Component {
                     <span>Fly-Kids (6-10)</span>
                   </label>
                 </div>
-                <div style={{display:'block'}} >
+                <div style={{display: this.state.showDropIn ? 'block' : 'none'}} >
                   <label>
                     <input type='radio' name='group' value='dropin' checked={this.state.checkedGroup === 'dropin'} onChange={this.adjustOptions.bind(this)} />
                     <span>Drop-In</span>
@@ -440,6 +451,12 @@ class SelectPackage extends React.Component {
                   <label>
                     <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
                     <span>Adult (21+)</span>
+                  </label>
+                </div>
+                <div style={{display: this.state.showPrivateLesson ? 'block' : 'none'}} >
+                  <label>
+                    <input type='radio' name='group' value='plesson' checked={this.state.checkedGroup === 'plesson'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Private Lesson</span>
                   </label>
                 </div>
                 <div>
@@ -591,7 +608,7 @@ class SelectPackage extends React.Component {
 
 
 
-            <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedFKMembership || this.state.checkedGroup == "dropin" || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' || this.state.checkedMembership === 'elite' || this.state.checkedGroup === 'emerging-elite' || this.state.checkedGroup === 'elite' || this.state.checkedGroup === 'professional'? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedFKMembership || this.state.checkedGroup == "plesson" || this.state.checkedGroup == "dropin" || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' || this.state.checkedMembership === 'elite' || this.state.checkedGroup === 'emerging-elite' || this.state.checkedGroup === 'elite' || this.state.checkedGroup === 'professional'? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display:'block'}}>
@@ -1144,6 +1161,8 @@ class Payment extends React.Component {
       }
     }else if (group === 'dropin'){
       price = 50
+    }else if(group === 'plesson'){
+      price = 200
     }else if (group === 'adult') {
       price = 300
     } else if (group === 'elite' || group === 'professional') {
