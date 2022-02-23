@@ -34,6 +34,8 @@ class ContactModal extends React.Component {
         subject = 'Technical Issue'
       } else if (subject === 'discount') {
         subject = 'Discount Code Inquiry'
+      }else if (subject === 'dropin'){
+        subject = 'Drop-In Class request'
       } else if (subject === 'private') {
         subject = 'Private Lesson Request'
       } else if (subject === 'invite') {
@@ -115,6 +117,7 @@ class ContactModal extends React.Component {
                   <option value='technical'>Technical Issue</option>
                   <option value='discount'>Discount Code</option>
                   <option value='invite'>Training Group Invitation</option>
+                  <option value='dropin'>Drop-In Class Request</option>
                   <option value='private'>Private Lesson Request</option>
                   <option value='general'>General Inquiry</option>
                 </select>
