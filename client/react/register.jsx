@@ -1161,7 +1161,7 @@ class Payment extends React.Component {
         this.props.data.selectPackage.membership = fkmembership
       }
     }else if (group === 'dropin'){
-      price = 50
+      price = 60
     }else if(group === 'plesson'){
       price = 200
     }else if (group === 'adult') {
@@ -1170,7 +1170,7 @@ class Payment extends React.Component {
       price = 0
     } else if (group === 'beginner' || group === 'intermediate' || group === 'beginner-intermediate') {
       if(membership === 'basic'){
-        price = 225
+        price = 200
       }else if (membership === 'advanced'){
         price = 375
       }else if (membership === 'apprentice'){
@@ -1375,7 +1375,7 @@ class Payment extends React.Component {
             <div className='form-row'>
               <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
-                  <p className='price-text'>Registration Fee: <span className='red-text'>${currentPrice}</span></p>
+                  <p className='price-text'>Training Package: <span className='red-text'>${currentPrice}</span></p>
                   {apparelRes !== 'none' ? (<p className='price-text'>Apparel Fee: <span className='red-text'>${20}</span></p>) : ''}
                   <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                 </div>
