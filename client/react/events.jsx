@@ -87,7 +87,7 @@ class Events extends React.Component {
               <ul className='event-block-details'>
                   <li>Free to Participate!</li>
                   <li>Pre-registration required</li>
-                  <li>To register, click here: https://www.signupgenius.com/go/10C054DADAC2EA4F49-flykids</li>
+                  <li>To register, click here: <a href="https://www.signupgenius.com/go/10C054DADAC2EA4F49-flykids">https://www.signupgenius.com/go/10C054DADAC2EA4F49-flykids</a></li>
               </ul>
   
           </div>)
