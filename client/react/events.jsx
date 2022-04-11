@@ -49,6 +49,49 @@ class Events extends React.Component {
 
         </div>)
         },
+        {
+          date: new Date('April 15, 2022'),
+          partial: (<div className='event-block' id='15APR2022'>
+              <p className='event-block-title'><span className='red-text'>FLY-KIDS</span> at <span className='red-text'>Eastern Market</span></p>
+              <img src = "../img/events/flykids_em.jpeg" alt="fly" width = '350' class = "center"></img>
+  
+              <p className='event-block-info'>
+                <span className='event-block-date'>Friday, April 15, 2022</span>
+                <br></br>
+                <span className='event-block-date'>Eastern Market - Corner of 7th and C St SE</span></p>
+  
+              <span className='event-block-details-header'>Event Info</span>
+              <ul className='event-block-details'>
+                  <li>Four 30-minute FLY-KIDS intro classes</li>
+                  <li>Limited to 6 participants per class</li>
+                  <li>Beginners welcome!</li>
+                  <li>Ages 6-9</li>
+                  <li>Kids will be shown very basic fundamentals of pole vaulting</li>
+                  <li>Participants will have the chance to go over a (soft) bar into the FLY-KIDS landing mat</li>
+                  <li>Location - corner of 7th and C St. SE in Washington, DC</li>
+                  <li>Check-in 10 minutes prior to your group start time.</li>
+                  <li>Must arrive on time to participate!</li>
+                  <li>New Member Discounts provided at the event!</li>
+              </ul>
+
+              <span className='event-block-details-header'>Schedule</span>
+              <ul className='event-block-details'>
+                  <li>5:00pm - 5:30pm - Group 1</li>
+                  <li>5:30pm - 6:00pm - Group 2</li>
+                  <li>6:00pm - 6:30pm DC Vault FLY-KIDS Exhibition</li>
+                  <li>6:30pm - 7:00pm- Group 3</li>
+                  <li>7:00pm - 7:30pm - Group 4</li>
+              </ul>
+
+              <span className='event-block-details-header'>Registration</span>
+              <ul className='event-block-details'>
+                  <li>Free to Participate!</li>
+                  <li>Pre-registration required</li>
+                  <li>To register, click here: https://www.signupgenius.com/go/10C054DADAC2EA4F49-flykids</li>
+              </ul>
+  
+          </div>)
+          },
       {
         date: new Date('October 30, 2021'),
         partial: (<div className='event-block' id='30OCT2021'>
