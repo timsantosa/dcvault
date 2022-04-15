@@ -29,26 +29,49 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
-        date: new Date('December 30, 2022'),
-        partial: (<div className='event-block' id='30DEC2022'>
+        date: new Date('April 24, 2022'),
+        partial: (<div className='event-block' id='24APR2022'>
             <p className='event-block-title'><span className='red-text'>FREE</span> POLE VAULT <span className='red-text'>CLINIC</span></p>
-            <img src = "../img/events/freeclinic.jpg" alt="clinic" width = '350' class = "center"></img>
 
             <p className='event-block-info'>
-              <span className='event-block-date'>Recurring</span>
+              <span className='event-block-date'>April 24, 2022</span>
               <br></br>
-              <span className='event-block-date'>2200 East Capitol Street NE - Washington, DC</span></p>
+              <span className='event-block-date'>10900 Rockville Pike - North Bethesda, MD</span></p>
 
             <span className='event-block-details-header'>Event Info</span>
             <ul className='event-block-details'>
-                <li>Did you receive a DC Vault FREE POLE VAULT CLINIC invitation card? If so, you're entitled to a Free Drop-In session during a regularly scheduled DC Vault class!</li>
-                <li>Just <a onclick="document.getElementById('contact-button').click()">contact us</a> to confirm your drop-in class date and to receive your special discount code. Then use your personal code to register at the <a href="/register">DC Vault course sign up page</a> for your free Drop In class!</li>
-                <li>Be sure to bring your invitation card with you to your Drop In class (REQUIRED for participation).</li>
-                <li>Note: Invitation cards are only given out in person, at special events, as special awards, or for individual recognition. If you receive one, don't lose it! </li>
+                <li>Hosted by <span className='red-text'>DC Vault</span></li>
+                <li>Limited Space: Open to <b>Montgomery County Students only</b> until April 17th. Beginning April 18th ,additional applicants will be accepted if space is available.</li>
+                <li>Ages: 8-17</li>
+                <li>Equipment: Poles and Equipment provided</li>
+                <li>Facility: Georgetown Prep Outdoor Track</li>
+                <li>Schedule: 5:00pm – warmups / 5:30pm – drills / 6:00pm – groundwork / 7:00pm – jumps</li>
+                <li>Register:Email DCVault@DCVault.org</li>
             </ul>
 
         </div>)
         },
+        {
+          date: new Date('December 30, 2022'),
+          partial: (<div className='event-block' id='30DEC2022'>
+              <p className='event-block-title'><span className='red-text'>FREE</span> POLE VAULT <span className='red-text'>CLINIC</span></p>
+              <img src = "../img/events/freeclinic.jpg" alt="clinic" width = '350' class = "center"></img>
+  
+              <p className='event-block-info'>
+                <span className='event-block-date'>Recurring</span>
+                <br></br>
+                <span className='event-block-date'>2200 East Capitol Street NE - Washington, DC</span></p>
+  
+              <span className='event-block-details-header'>Event Info</span>
+              <ul className='event-block-details'>
+                  <li>Did you receive a DC Vault FREE POLE VAULT CLINIC invitation card? If so, you're entitled to a Free Drop-In session during a regularly scheduled DC Vault class!</li>
+                  <li>Just <a onclick="document.getElementById('contact-button').click()">contact us</a> to confirm your drop-in class date and to receive your special discount code. Then use your personal code to register at the <a href="/register">DC Vault course sign up page</a> for your free Drop In class!</li>
+                  <li>Be sure to bring your invitation card with you to your Drop In class (REQUIRED for participation).</li>
+                  <li>Note: Invitation cards are only given out in person, at special events, as special awards, or for individual recognition. If you receive one, don't lose it! </li>
+              </ul>
+  
+          </div>)
+          },
         {
           date: new Date('April 15, 2022'),
           partial: (<div className='event-block' id='15APR2022'>
