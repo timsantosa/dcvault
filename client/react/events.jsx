@@ -31,7 +31,8 @@ class Events extends React.Component {
       {
         date: new Date('April 24, 2022'),
         partial: (<div className='event-block' id='24APR2022'>
-            <p className='event-block-title'><span className='red-text'>FREE</span> POLE VAULT <span className='red-text'>CLINIC</span></p>
+            <p className='event-block-title'><span className='red-text'>FREE</span> POLE VAULT <span className='red-text'>CLINIC</span> at Georgetown Prep</p>
+            <img src = "../img/events/PREP.jpg" alt="prep" width = '350' class = "center"></img>
 
             <p className='event-block-info'>
               <span className='event-block-date'>April 24, 2022</span>
