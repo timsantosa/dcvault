@@ -29,6 +29,160 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('July 7, 2022'),
+        partial: (<div className='event-block' id='07JUL2022'>
+        <p className='event-block-title'>2022 DMV <span className='red-text'>Pole Vault</span> Championships</p>
+        <img src = "../img/events/dmvchamps.png" alt="DMV Champs" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Saturday, July 7th 2022</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'><span className='red-text'>$5,000 in Prize Money</span> (Elite Division)</span>
+        <ul className='event-block-details'>
+          <li>Elite Men (4.9m/16' entry standard - must be verified)</li>
+          <ul>
+            <li>Award $ w/clearance of 5.5m (18') or more as follows:</li>
+            <ul>
+              <li>1st place = $1,250</li>
+              <li>2nd place = $750</li>
+              <li>3rd place = $500</li>
+            </ul>
+          </ul>
+          <li>Elite Women (3.97m/13' entry standard - must be verified)</li>
+          <ul>
+            <li>Award $ w/clearance of 4.40m (14'5") or more as follows…</li>
+            <ul>
+              <li>1st place = $1,250</li>
+              <li>2nd place = $750</li>
+              <li>3rd place = $500</li>
+            </ul>
+          </ul>
+          <li><i><u>NOTE:</u> Collegiate/High School athletes 'wishing to' maintain NCAA eligibility may not be awarded $ in accordance with NCAA requirements and will forfeit prize money.</i></li>
+          <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
+        </ul>
+        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 4/20/2022)</span>
+        <ul className='event-block-details'>
+          <li>Austin Miller - 5.66m (18'6.75)</li>
+          <ul>
+            <li>Olympic Trials Finalist / DMV Native!</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Awards/Results/Sanctioning</span>
+        <ul className='event-block-details'>
+          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>
+          <li>USATF Sanctioned</li>
+          <li>Results/Performance marks will be published at <a href = "https://www.worldathletics.org">WorldAthletics.org</a> (elite division only), Milesplit.com and DCVault.com/events.</li>
+        </ul>
+        <span className='event-block-details-header'>Entry + Fees</span>
+        <ul className='event-block-details'>
+          <li>$35 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>
+        </ul>
+        <span className='event-block-details-header'>Venue</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>
+        </ul>
+        <span className='event-block-details-header'>Facility Address</span>
+        <ul className='event-block-details'>
+          <li>2200 East Capitol street NE Washington DC </li>
+          <li><u>NOTE:</u> Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>
+          <li><a style={{color: '#C0282D'}} href='../files/dmvstartlist.xlsx' target='_blank'>See Start List and Event Schedule here!</a> </li>
+        </ul>
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='26JUN2021'>
+        <p className='event-block-title'>2021 DMV <span className='red-text'>Pole Vault</span> Championships</p>
+        <img src = "../img/logos/ucsdmv.JPG" alt="DMV Champs" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Saturday, June 26th 2021</span></p>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+          <span className='event-block-details-header'>Results</span>
+        <ul className='event-block-details'>
+          <li><a href = "https://www.milesplit.com/meets/425493-dmv-pole-vault-championships-2021/results#.YOXDF8hKg2w">Milesplit Results found here</a></li>
+          <li><a style={{color: '#C0282D'}} href='../files/dmvresults-2021.xlsx' target='_blank'>Download Final Results Here!</a> </li>
+        </ul>
+        <span className='event-block-details-header'>Entry Fee</span>
+        <ul className='event-block-details'>
+          <li>$35 for competitors</li>
+          <li>$5 for all non-competitors entering the facility (cash)</li>
+          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>
+        </ul>
+        <span className='event-block-details-header'>Venue</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>
+        </ul>
+        <span className='event-block-details-header'>Facility Address</span>
+        <ul className='event-block-details'>
+          <li>2200 East Capitol street NE Washington DC </li>
+          <li><u>NOTE:</u> Do not enter "North" Capitol street or "NW" into your gps! Manually enter the address above or "DC Vault"!</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Drop-off/Pick-up</span>
+        <ul className='event-block-details'>
+          <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>
+        </ul>
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li>$15 cash at check-in</li>
+          <li>You may be sharing your rental pole</li>
+          <li>ID will be held until pole is returned</li>
+        </ul>
+        <span className='event-block-details-header'>Spikes</span>
+        <ul className='event-block-details'>
+          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
+          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
+          <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>
+          <ul>
+            <li>Recommended so you don’t waste time at the event trying to change spikes!</li>
+          </ul>
+          <li>Available for $5 per set at the event (bring your own spike wrench)</li>
+          
+        </ul>
+        <span className='event-block-details-header'>Awards/Results/Sanctioning</span>
+        <ul className='event-block-details'>
+          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>
+          <li>Athletes who take gold at all 3 DC Vault summer events will earn the limited-edition DC Vault white medal</li>
+          <li>Scored Divisions</li>
+          <ul>
+            <li>Elementary (ages 5-10)</li>
+            <li>Middle School (ages 11-13)</li>
+            <li>High School (ages 14-18)</li>
+            <li>Collegiate/Open (ages 19+)</li>
+          </ul>
+          <li>USATF Sanctioned</li>
+          <li>Results/Performance marks will be published at <a href="https://milesplit.com">Milesplit.com</a> and at <a href="https://dcvault.com/events">DCVault.com/events</a></li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+        <li>Note: Rolling Schedule - arrive early in case your time slot moves up!</li>
+        <li><a style={{color: '#C0282D'}} href='../files/dmvstartlist.xlsx' target='_blank'>See Start List and Event Schedule here!</a> </li>
+        </ul>
+        <span className='event-block-details-header'>Event Features</span>
+        <ul className='event-block-details'>
+          <li>Free Grilled hotdogs and veggie dogs for competitors and spectators!</li>
+          <li>Bring something special for yourself if you’d like to grill it up!</li>
+        </ul>
+        <span className='event-block-details-header'>Pets</span>
+        <ul className='event-block-details'>
+          <li>Dog friendly venue!</li>
+          <li>Bring a leash and water for your critter</li>
+        </ul>
+
+      </div>)
+      },
+      {
         date: new Date('April 24, 2022'),
         partial: (<div className='event-block' id='24APR2022'>
             <p className='event-block-title'><span className='red-text'>FREE</span> POLE VAULT <span className='red-text'>CLINIC</span> at Georgetown Prep</p>
