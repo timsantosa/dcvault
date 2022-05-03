@@ -29,12 +29,12 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
-        date: new Date('July 7, 2022'),
-        partial: (<div className='event-block' id='07JUL2022'>
+        date: new Date('July 2, 2022'),
+        partial: (<div className='event-block' id='02JUL2022'>
         <p className='event-block-title'>2022 DMV <span className='red-text'>Pole Vault</span> Championships</p>
         <img src = "../img/events/dmvchamps.png" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
-          <span className='event-block-date'>Saturday, July 7th 2022</span>
+          <span className='event-block-date'>Saturday, July 2nd 2022</span>
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
@@ -138,11 +138,11 @@ class Events extends React.Component {
         </ul>
         <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
-        full: (<div className='event-block' id='07JUL2022'>
+        full: (<div className='event-block' id='02JUL2022'>
         <p className='event-block-title'>2022 DMV <span className='red-text'>Pole Vault</span> Championships</p>
         <img src = "../img/events/dmvchamps.png" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
-          <span className='event-block-date'>Saturday, July 7th 2022</span>
+          <span className='event-block-date'>Saturday, July 2nd 2022</span>
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
