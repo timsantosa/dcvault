@@ -281,8 +281,8 @@ class AthleteInfo extends React.Component {
                     <div className='form-row'>
                         <label>
                             <span className='required'>Competition</span>
-                            <input type ="checkbox" name="dates1" value="halloweenvault21"/>
-                            <label for="regclosed">&nbsp;&nbsp;Halloween Vault ($35)</label>
+                            <input type ="checkbox" name="dates1" value="dmvchamps22"/>
+                            <label for="regclosed">&nbsp;&nbsp;DMV Pole Vault Championships ($35)</label>
                             <br></br>
                         </label>
                     </div>
@@ -351,8 +351,13 @@ class AthleteInfo extends React.Component {
                                 <span className='required'>Division</span>
                                 <select name='division'>
                                     <option value=''>Select Division</option>
-                                    <option value='Fly-Kids'>Fly Kids (ages 6-9)</option>
-                                    <option value='Open Flights'>All Ages/Open</option>
+                                    <option value='Fly-Kids'>Fly Kids (ages 7-10)</option>
+                                    <option value='6-10ft5 Female'>6'-10'5" Female</option>
+                                    <option value='8-13ft5 Male'>8'-13'5" Male</option>
+                                    <option value='10ft6-12ft11 Female'>10'6"-12'11" Female</option>
+                                    <option value='13ft6-15ft11 Male'>13'6"-15'11" Male</option>
+                                    <option value='Elite Women'>Elite Women</option>
+                                    <option value='Elite Men'>Elite Men</option>
                                 </select>
                             </label>
                         </div>

@@ -159,12 +159,13 @@ transporter.sendMail(mailOptions2, (error, info) => {
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: 'Moon Vault 2021', // Subject line
+        subject: 'DMV Championships 2022', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the 2021 HALLOWEEN VAULT!</p>\
+        html: '<p>Thank you for registering for the 2022 DMV Championships!</p>\
         <h3>Registration</h3>\
         <ul>\
           <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>\
+          <li>Event Information - <a href="https://dcvault.com/events">HERE</a></li>\
         </ul>\
         <h3>Entry Fee</h3>\
         <ul>\

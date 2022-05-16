@@ -79,7 +79,7 @@ class Events extends React.Component {
           <li>$35 for competitors</li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
-          <li><span className='red-text'>Enter Here! (coming soon)</span></li>
+          <li><span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
         </ul>
         <span className='event-block-details-header'>Venue</span>
         <ul className='event-block-details'>
@@ -187,7 +187,7 @@ class Events extends React.Component {
           <li>$35 for competitors</li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
-          <li><span className='red-text'>Enter Here! (coming soon)</span></li>
+          <li><span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
         </ul>
         <span className='event-block-details-header'>Venue</span>
         <ul className='event-block-details'>
