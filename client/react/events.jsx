@@ -38,6 +38,13 @@ class Events extends React.Component {
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
+        <span className='event-block-details-header'>Awards/Sanctioning</span>
+        <ul className='event-block-details'>
+          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>
+          <li>Special Limited-Edition Medals Awarded to the #1 High School Male and Female Competitors from the DMV (DC, MD, VA) region</li>
+          <li>USATF Sanctioned</li>
+          <li>Results/Performance marks will be published at <a href = "https://www.worldathletics.org">WorldAthletics.org</a> (elite division only), <a href = "https://www.milesplit.com">Milesplit.com</a> and <a href="https://dcvault.com/events">DCVault.com/events</a>.</li>
+        </ul>
         <span className='event-block-details-header'><span className='red-text'>$5,000 in Prize Money</span> (Elite Division)</span>
         <ul className='event-block-details'>
           <li>Elite Men (4.9m/16' entry standard - must be verified)</li>
@@ -68,18 +75,15 @@ class Events extends React.Component {
             <li>Olympic Trials Finalist / DMV Native!</li>
           </ul>
         </ul>
-        <span className='event-block-details-header'>Awards/Results/Sanctioning</span>
+        
+        <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
-          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>
-          <li>USATF Sanctioned</li>
-          <li>Results/Performance marks will be published at <a href = "https://www.worldathletics.org">WorldAthletics.org</a> (elite division only), <a href = "https://www.milesplit.com">Milesplit.com</a> and <a href="https://dcvault.com/events">DCVault.com/events</a>.</li>
-        </ul>
-        <span className='event-block-details-header'>Entry + Fees</span>
-        <ul className='event-block-details'>
-          <li>$35 for competitors</li>
+          <li>The 2022 Pole Vault Championships are open to all athletes ages 7 and up</li>
+          <li>Advanced Registration Only</li>
+          <li>Registration Closes June 25th</li>
+          <li>$35 for competitors - <span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
-          <li><span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
         </ul>
         <span className='event-block-details-header'>Venue</span>
         <ul className='event-block-details'>
@@ -139,13 +143,20 @@ class Events extends React.Component {
         <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
         full: (<div className='event-block' id='02JUL2022'>
-        <p className='event-block-title'>2022 DMV <span className='red-text'>Pole Vault</span> Championships</p>
+                <p className='event-block-title'>2022 DMV <span className='red-text'>Pole Vault</span> Championships</p>
         <img src = "../img/events/dmvchamps.png" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>Saturday, July 2nd 2022</span>
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
+        <span className='event-block-details-header'>Awards/Sanctioning</span>
+        <ul className='event-block-details'>
+          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>
+          <li>Special Limited-Edition Medals Awarded to the #1 High School Male and Female Competitors from the DMV (DC, MD, VA) region</li>
+          <li>USATF Sanctioned</li>
+          <li>Results/Performance marks will be published at <a href = "https://www.worldathletics.org">WorldAthletics.org</a> (elite division only), <a href = "https://www.milesplit.com">Milesplit.com</a> and <a href="https://dcvault.com/events">DCVault.com/events</a>.</li>
+        </ul>
         <span className='event-block-details-header'><span className='red-text'>$5,000 in Prize Money</span> (Elite Division)</span>
         <ul className='event-block-details'>
           <li>Elite Men (4.9m/16' entry standard - must be verified)</li>
@@ -176,18 +187,15 @@ class Events extends React.Component {
             <li>Olympic Trials Finalist / DMV Native!</li>
           </ul>
         </ul>
-        <span className='event-block-details-header'>Awards/Results/Sanctioning</span>
+        
+        <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
-          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>
-          <li>USATF Sanctioned</li>
-          <li>Results/Performance marks will be published at <a href = "https://www.worldathletics.org">WorldAthletics.org</a> (elite division only), <a href = "https://www.milesplit.com">Milesplit.com</a> and <a href="https://dcvault.com/events">DCVault.com/events</a>.</li>
-        </ul>
-        <span className='event-block-details-header'>Entry + Fees</span>
-        <ul className='event-block-details'>
-          <li>$35 for competitors</li>
+          <li>The 2022 Pole Vault Championships are open to all athletes ages 7 and up</li>
+          <li>Advanced Registration Only</li>
+          <li>Registration Closes June 25th</li>
+          <li>$35 for competitors - <span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
-          <li><span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
         </ul>
         <span className='event-block-details-header'>Venue</span>
         <ul className='event-block-details'>
@@ -244,13 +252,19 @@ class Events extends React.Component {
             </ul>
           </ul>
         </ul>
+        <span className='event-block-details-header'>Start List/Results</span>
+        <ul className='event-block-details'>
+          <li>Download Start List <span class="red-text">Here!</span> (available June 30th )</li>
+          <li>Download Final Results <span class="red-text">Here!</span></li>
+        </ul>
         <span className='event-block-details-header'>Pole Storage</span>
         <ul className='event-block-details'>
           <li>Overnight pole storage can be arranged. For drop-off and pick-up, email <span className='red-text'>Events@dcvault.org</span></li>
         </ul>
         <span className='event-block-details-header'>Pole Rentals</span>
         <ul className='event-block-details'>
-          <li>$15 cash at check-in</li>
+          <li>10'8" - 15'1" UCS Spirit Poles Available for Rent</li>
+          <li>$25 cash at check-in</li>
           <li>You may be sharing your rental pole</li>
           <li>ID will be held until pole is returned</li>
         </ul>
@@ -277,6 +291,10 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Dog friendly venue!</li>
           <li>Bring a leash and water for your critter</li>
+        </ul>
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>For additional information, email <span className='red-text'>Events@dcvault.org</span></li>
         </ul>
 
       </div>)

@@ -1591,3 +1591,67 @@ DB Initialized
 127.0.0.1 - - [17/May/2022:01:24:02 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
 127.0.0.1 - - [17/May/2022:01:24:41 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
 127.0.0.1 - - [17/May/2022:01:24:42 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:42:43 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:42:44 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:42:46 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:42:46 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:42:56 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:04:56:05 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:04:57:21 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:04:57:21 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:04:57:21 +0000] "POST /users/info HTTP/1.1" 200 11725 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:04:57:21 +0000] "POST /users/info HTTP/1.1" 200 11725 "http://localhost:8080/account/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:04:57:48 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:04:57:50 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/events/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
