@@ -1565,3 +1565,29 @@ DB Initialized
 127.0.0.1 - - [16/May/2022:04:56:29 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
 127.0.0.1 - - [16/May/2022:04:56:30 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
 127.0.0.1 - - [16/May/2022:05:05:27 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting child process[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[33m[nodemon] 2.0.7[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node ./server/app.js`[39m
+Server running on port  8080
+DB Initialized
+127.0.0.1 - - [17/May/2022:01:02:17 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:02:21 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:08:03 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:08:08 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:08:10 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:15:59 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:18:28 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:24:02 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:24:41 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
+127.0.0.1 - - [17/May/2022:01:24:42 +0000] "POST /users/token HTTP/1.1" 200 522 "http://localhost:8080/register/info/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36"
