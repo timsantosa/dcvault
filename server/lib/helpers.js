@@ -159,18 +159,12 @@ transporter.sendMail(mailOptions2, (error, info) => {
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: 'DMV Championships 2022', // Subject line
+        subject: '2022 Pole Vault Championships', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the 2022 DMV Championships!</p>\
-        <h3>Registration</h3>\
+        html: '<p>Thank you for registering for the 2022 DMV Championships! Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org. For additional information including schedule, results, etc, please see our online event info <a href="https://dcvault.com/events">HERE</a>.</p>\
+        <h3>Entry Fee - Spectators/Coaches</h3>\
         <ul>\
-          <li>Advanced Registration Only - REGISTER <a href="https://dcvault.com/compete">HERE</a></li>\
-          <li>Event Information - <a href="https://dcvault.com/events">HERE</a></li>\
-        </ul>\
-        <h3>Entry Fee</h3>\
-        <ul>\
-          <li>$35 for competitors</li>\
-          <li>$5 for all non-competitors entering the facility (cash)</li>\
+          <li>$5 for all non-competitors entering the facility (cash only)</li>\
           <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>\
         </ul>\
         <h3>Facility</h3>\
@@ -181,9 +175,8 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
           <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>\
           <li>Address:\
               <ul>\
-                <li>2200 East Capitol street NE Washington DC</li>\
-                <li>Do not enter "North" Capitol or "NW" into your GPS!</li>\
-                <li>Manually enter the address above or "DC Vault"</li>\
+                <li>2200 <b>East</b> Capitol street <b>NE</b> Washington DC</li>\
+                <li>Enter the address above or just enter "DC Vault" into your navigation system</li>\
               </ul>\
           </li>\
         </ul>\
@@ -200,11 +193,11 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         <h3>Pole Drop-off/Pick-up</h3>\
         <ul>\
           <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>\
-          <li>Arrangements must be made 24 HOURS PRIOR TO THE EVENT or more</li>\
+          <li>Arrangements must be made MORE THAN 24 HOURS IN ADVANCE OF THE EVENT</li>\
         </ul>\
         <h3>Pole Rentals</h3>\
         <ul>\
-          <li>$15 cash at check-in</li>\
+          <li>$25 cash at check-in</li>\
           <li>You may be sharing your rental pole</li>\
           <li>ID will be held until pole is returned</li>\
         </ul>'
