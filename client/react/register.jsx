@@ -580,6 +580,12 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedGroup === 'fly-kids')? 'block' : 'none'}}>
               <label><span>Fly-Kids Options</span></label>
               <div className='form-radio-buttons'>
+              <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='fkmembership' value='summercamp' checked={this.state.checkedFKMembership === 'summercamp'} onChange={this.adjustOptions.bind(this)} />
+                    <span>FLY-KIDS SUMMER CAMP 6/11-6/15</span>
+                  </label>
+                </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='5classes' checked={this.state.checkedFKMembership === '5classes'} onChange={this.adjustOptions.bind(this)} />
@@ -612,19 +618,19 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedMonth || this.state.checkedFKMembership || this.state.checkedGroup == "plesson" || this.state.checkedGroup == "dropin" || this.state.checkedGroup === 'adult' || this.state.checkedMembership ==='apprentice' || this.state.checkedMembership === 'master' || this.state.checkedMembership === 'champion' || this.state.checkedMembership === 'elite' || this.state.checkedGroup === 'emerging-elite' || this.state.checkedGroup === 'elite' || this.state.checkedGroup === 'professional'? 'block' : 'none'}}>
               <label><span className='required'>Training Facility</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display:'block'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='facility' value='dcv' checked={this.state.checkedFacility === 'dcv'} onChange={this.adjustOptions.bind(this)}/>
                     <span>DCV</span>
                   </label>
                 </div>
-                <div style={{display:'block'}}>
+                <div style={{display: this.state.checkedFKMembership !== 'summercamp'? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='facility' value='prep' checked={this.state.checkedFacility === 'prep'} onChange={this.adjustOptions.bind(this)}/>
                     <span>PREP</span>
                   </label>
                 </div>
-                <div style={{display:'block'}}>
+                <div style={{display: this.state.checkedFKMembership !== 'summercamp'? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='facility' value='dcvprep' checked={this.state.checkedFacility === 'dcvprep'} onChange={this.adjustOptions.bind(this)}/>
                     <span>BOTH (DCV + PREP)</span>
@@ -639,7 +645,7 @@ class SelectPackage extends React.Component {
 
               <label><span className='required'>Apparel</span></label>
               <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like team apparel? DC Vault T-shirts can be purchased for an additional $20. </span>
+              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like team apparel? DC Vault T-shirts can be purchased for an additional $20 (INCLUDED IN FLY-KIDS CAMP PLEASE SELECT "YES!" AND SIZE). </span>
               <br/><br/>
               <img className='apparel-img' src='../img/forms/apparel.jpg' width='100%' height='auto'/>
               <br/><br/><br/>
@@ -1168,6 +1174,9 @@ class Payment extends React.Component {
       }else if(fkmembership === '20classes') {
         price = 475
         this.props.data.selectPackage.membership = fkmembership
+      }else if(fkmembership === 'summercamp') {
+        price = 350
+        this.props.data.selectPackage.membership = fkmembership
       }else{
         price = 550
         this.props.data.selectPackage.membership = fkmembership
@@ -1239,9 +1248,11 @@ class Payment extends React.Component {
     let apparelRes= this.props.data.selectPackage.yesApparel
     let str = this.props.data.selectPackage.strength
     let strFam = this.props.data.selectPackage.strengthFam
+    let fkmembership = this.props.data.selectPackage.membership
+
     
 
-    if (apparelRes === 'none'){
+    if (apparelRes === 'none' || fkmembership === 'summercamp'){
     }else{
       price += 20
     }
@@ -1362,9 +1373,16 @@ class Payment extends React.Component {
     let str = this.props.data.selectPackage.strength
     let strFam = this.props.data.selectPackage.strengthFam
     let group = this.props.data.selectPackage.group
+    let fkmembership = this.props.data.selectPackage.membership
+
     let currentProcessingFee = 0
     if (apparelRes === 'yes') {
-      currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 20) * 0.03).toFixed(2)
+      if (fkmembership === 'summercamp'){
+        currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
+      }else{
+        currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 20) * 0.03).toFixed(2)
+
+      }
     }else{
       currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
     }
@@ -1388,7 +1406,7 @@ class Payment extends React.Component {
               <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                   <p className='price-text'>Training Package: <span className='red-text'>${currentPrice}</span></p>
-                  {apparelRes !== 'none' ? (<p className='price-text'>Apparel Fee: <span className='red-text'>${20}</span></p>) : ''}
+                  {apparelRes !== 'none' && fkmembership !== 'summercamp'? (<p className='price-text'>Apparel Fee: <span className='red-text'>${20}</span></p>) : ''}
                   <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                 </div>
               </div>

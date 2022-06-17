@@ -29,6 +29,234 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('August 25, 2022'),
+        partial: (<div className='event-block' id='25AUG2022'>
+        <p className='event-block-title'>THURSDAY  <span className='red-text'>NIGHT  </span> FLIGHTS!</p>
+        <img src = "../img/events/tnflights.JPG" alt="TNF" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Bi-Weekly, Thursdays, Summer 2022</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>Dates:</span>
+        <ul className='event-block-details'>
+          <li>Jul 14 </li>
+          <li>Jul 28 </li>
+          <li>Aug 11 </li>
+          <li>Aug 25</li>
+        </ul>
+
+        <span className='event-block-details-header'>Schedule: </span>
+        <ul className='event-block-details'>
+          <li>6pm · Gates, Registration and Runways Open  </li>
+          <li>7pm · Competition Begins</li>
+          <li>REGISTRATION CLOSES AT 6:45pm</li>
+        </ul>
+        <span className='event-block-details-header'>Registration/Entry: </span>
+        <ul className='event-block-details'>
+          <li>No pre-registration needed </li>
+          <li>Register at the event</li>
+          <li>$5 cash entry for competitors </li>
+          <li>$5 cash entry for spectators</li>
+        </ul>
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='25AUG2022'>
+        <p className='event-block-title'>THURSDAY  <span className='red-text'>NIGHT  </span> FLIGHTS!</p>
+        <img src = "../img/events/tnflights.JPG" alt="TNF" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Bi-Weekly, Thursdays, Summer 2022</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>Dates:</span>
+        <ul className='event-block-details'>
+          <li>Jul 14 </li>
+          <li>Jul 28 </li>
+          <li>Aug 11 </li>
+          <li>Aug 25</li>
+        </ul>
+
+        <span className='event-block-details-header'>Schedule: </span>
+        <ul className='event-block-details'>
+          <li>6pm · Gates, Registration and Runways Open  </li>
+          <li>7pm · Competition Begins</li>
+          <li>REGISTRATION CLOSES AT 6:45pm</li>
+        </ul>
+        <span className='event-block-details-header'>Registration/Entry: </span>
+        <ul className='event-block-details'>
+          <li>No pre-registration needed </li>
+          <li>Register at the event</li>
+          <li>$5 cash entry for competitors </li>
+          <li>$5 cash entry for spectators</li>
+        </ul>
+        <span className='event-block-details-header'><span class="red-text">Spikes</span></span>
+        <ul className='event-block-details'>
+          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
+          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
+          <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>
+          <li>Available for $5 per set at the event (bring your own spike wrench)</li> 
+        </ul>
+        <span className='event-block-details-header'>Location:</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center</li>
+          <li>2200 East Capitol Street NE · Washington DC</li>
+        </ul>
+        <span className='event-block-details-header'>Ages:</span>
+        <ul className='event-block-details'>
+          <li>7 years old and up</li>
+          <li>Athletes are expected to be capable of executing safe vaults · athletes exhibiting an inability to vault safely will not be allowed to compete</li>
+        </ul>
+        <span className='event-block-details-header'>Opening Heights </span>
+        <ul className='event-block-details'>
+          <li>4’ or higher as needed</li>
+        </ul>
+        <span className='event-block-details-header'>Additional Information </span>
+        <ul className='event-block-details'>
+          <li>Open Runway on 2nd practice pit available for use during and after your competition!</li>
+          <li>Results/Performance marks will be published at <a href = "https://www.milesplit.com">Milesplit.com</a> and <a href="https://dcvault.com/events">DCVault.com/events</a>.</li>
+          <li>Pets Welcome (bring leash and water)</li>
+          <li>Dogs on the grill while they last · bring your own food to grill if you like!</li>
+          <li>Additional Questions: Events@DCVault.org</li>
+        </ul>
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>)
+      },
+      {
+        date: new Date('July 11, 2022'),
+        partial: (<div className='event-block' id='11JUL2022'>
+        <p className='event-block-title'>FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
+        <img src = "../img/events/kidscamp.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Monday-Friday, July 11th-15th 2022</span>
+          <br></br>
+          <span className='event-block-date'>DC Vault - 2200 East Capitol Street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>Ages 7-10</li>
+          <li>Beginners through Advanced</li>
+          <li>Monday thru Friday 8:45am - 4pm</li>
+          <li>Dropoff window 8:45am-9am</li>
+          <li>Pickup window 3:30-4pm</li>
+          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more </li>
+          <br></br>
+          <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
+          <li>On Tuesday & Thursday a trip to Moorenko's Ice Cream at Eastern Market will be included during lunch</li>
+        </ul>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Deadline to register is July 8th </li>
+          <li>$350 - Register Here  </li>
+        </ul>
+        <span className='event-block-details-header'>Included</span>
+        <ul className='event-block-details'>
+          <li>All equipment is provided</li>
+          <li>Moorenko’s Ice Cream included</li>
+          <li>Healthy Snacks provided</li>
+          <li>Water provided</li>
+        </ul>
+        
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='11JUL2022'>
+        <p className='event-block-title'>FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
+        <img src = "../img/events/kidscamp.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Monday-Friday, July 11th-15th 2022</span>
+          <br></br>
+          <span className='event-block-date'>DC Vault - 2200 East Capitol Street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>Ages 7-10</li>
+          <li>Beginners through Advanced</li>
+          <li>Monday thru Friday 8:45am - 4pm</li>
+          <li>Dropoff window 8:45am-9am</li>
+          <li>Pickup window 3:30-4pm</li>
+          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more </li>
+          <br></br>
+          <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
+          <li>On Tuesday & Thursday a trip to Moorenko's Ice Cream at Eastern Market will be included during lunch</li>
+        </ul>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>Deadline to register is July 8th </li>
+          <li>$350 - Register Here  </li>
+        </ul>
+        <span className='event-block-details-header'>Included</span>
+        <ul className='event-block-details'>
+          <li>All equipment is provided</li>
+          <li>Moorenko’s Ice Cream included</li>
+          <li>Healthy Snacks provided</li>
+          <li>Water provided</li>
+        </ul>
+        <span className='event-block-details-header'>Daily Schedule</span>
+        <ul className='event-block-details'>
+          <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
+          <li>8:45-9:00am </li>
+          <ul>
+            <li>drop-off window + games</li>
+          </ul>
+          <li>9:00-9:30am </li>
+          <ul>
+            <li>warm-ups + strength</li>
+          </ul>
+          <li>9:30-10:30am  </li>
+          <ul>
+            <li>break + snacks + games</li>
+          </ul>
+          <li>11-12pm </li>
+          <ul>
+            <li>vault</li>
+          </ul>
+          <li>12-12:30pm  </li>
+          <ul>
+            <li>walk to Lincoln Park</li>
+          </ul>
+          <li>12:30-1pm  </li>
+          <ul>
+            <li>lunch @ Lincoln Park (+ Ice Cream @ E. Market on Tue & Thu)</li>
+          </ul>
+          <li>1-2pm </li>
+          <ul>
+            <li>drills @ Lincoln Park</li>
+          </ul>
+          <li>2-2:30 </li>
+          <ul>
+            <li>walk to DCV</li>
+          </ul>
+          <li>2:30-3:30pm </li>
+          <ul>
+            <li>vault</li>
+          </ul>
+          <li>3:30-4pm </li>
+          <ul>
+            <li>Pickup window + games</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Daily Technical Focus</span>
+        <ul className='event-block-details'>
+          <li>M - run / takeoff</li>
+          <li>T - swing (+ Ice Cream Day!)</li>
+          <li>W - extension </li>
+          <li>R - turn (+ Ice Cream Day!)</li>
+          <li>F - height / competition </li>
+        </ul>
+        <span className='event-block-details-header'>What to Bring</span>
+        <ul className='event-block-details'>
+          <li>Water Bottle</li>
+          <li>Sunblock</li>
+          <li>Bug Spray</li>
+          <li>Bag Lunch (ice chest available at DCV)</li>
+          <li>Running shoes</li>
+          <li>Athletic active wear clothing</li>
+        </ul>
+        
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>)
+      },
+      {
         date: new Date('July 2, 2022'),
         partial: (<div className='event-block' id='02JUL2022'>
         <p className='event-block-title'>2022 <span className='red-text'>Pole Vault</span> Championships</p>

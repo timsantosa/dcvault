@@ -85,6 +85,11 @@ module.exports.sendConfirmationEmails = (email,athleteInfo) => {
     subject: 'Welcome to DC Vault', // Subject line
     to: email,
     html: '<p>Thank you for registering with DC Vault. Please review the content below closely and let us know if you have any questions.</p>\
+      <h3>!! ATTENTION FLY-KIDS SUMMER CAMP!!</h3>\
+      <p>Please ignore all sections other than this</p>\
+      <p>Thank you for registering for the Fly-Kids Summer Camp!</p>\
+      <p>Please note - our lead camp counselor is Marley Oar. We will provide her contact phone # the first day of camp for emergencies.</p>\
+      <p>Please be sure to review the camp event information at DCVault.com/events and do not hesitate to contact us at Events@dcvault.org if you have any questions about the upcoming camp!</p>\
       <h3>CLASS RESERVATION APP:</h3>\
       <p>To help you keep track of the training package you signed up for, we have implemented a new reservation app called Zenplanner. This will help you pre-select the practice times you want to attend each week, keep track of your vault package allocation, track performance metrics, and more! Shortly after you register (usually within 24 hours) you will receive instructions on how to login to your free Zen Planner account. Once you have logged in, you will be able to use your Zen Planner App to reserve the specific class times that you wish to attend. </p>\
       <p>Classes must be reserved 24 hours or more in advance as the classes are locked 24 hours prior to the scheduled start times. If you arrive without having reserved the class time slot, you will not be able to participate in that class. Classes are limited in size, so reserve all of the classes you intended to take right away. If you need to cancel or change a class time later on, you can do so as long as it is 24 hours or more prior to the start of your preferred class. If a class you wish to attend is Full, you can add yourself to the "waitlist" and if an athlete cancels their slot, you will be added IF you are next in the waiting queue.</p>\
