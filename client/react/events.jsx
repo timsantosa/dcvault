@@ -296,11 +296,20 @@ class Events extends React.Component {
           <li><i><u>NOTE:</u> Collegiate/High School athletes 'wishing to' maintain NCAA eligibility may not be awarded $ in accordance with NCAA requirements and will forfeit prize money.</i></li>
           <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
         </ul>
-        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 4/20/2022)</span>
+        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 6/21/2022)</span>
         <ul className='event-block-details'>
+        <li>Tray Oates - 5.74m (18' 9.9")</li>
+          <ul>
+            <li>Arizona Pole Vault Academy / Midwest Meats</li>
+            <li>Olympic Trials 4th Place / USA National Championships 4th Place / 5 time All-American</li>
+            <li>instagram.com/olen_iii_oates</li>
+            <li>Arizona</li>
+          </ul>
           <li>Austin Miller - 5.66m (18'6.75)</li>
           <ul>
+            <li>Vault House / Tean Pacer</li>
             <li>Olympic Trials Finalist / DMV Native!</li>
+            <li>instagram.com/a_milli29</li>
           </ul>
         </ul>
         
