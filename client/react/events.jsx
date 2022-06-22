@@ -31,7 +31,7 @@ class Events extends React.Component {
       {
         date: new Date('August 25, 2022'),
         partial: (<div className='event-block' id='25AUG2022'>
-        <p className='event-block-title'>THURSDAY  <span className='red-text'>NIGHT  </span> FLIGHTS!</p>
+        <p className='event-block-title'><span class="red-text">THURSDAY</span> NIGHT <span class="red-text">F</span>L<span class="red-text">IGHTS</span>!</p>
         <img src = "../img/events/tnflights.JPG" alt="TNF" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>Bi-Weekly, Thursdays, Summer 2022</span>
@@ -97,6 +97,13 @@ class Events extends React.Component {
           <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>
           <li>Available for $5 per set at the event (bring your own spike wrench)</li> 
         </ul>
+        <span className='event-block-details-header'><span class="red-text">Pole Rentals</span></span>
+        <ul className='event-block-details'>
+          <li>10&#39;8&quot; - 15&#39;1&quot; UCS Spirit Poles Available for Rent</li>
+          <li>$5 cash at check-in</li>
+          <li>You may be sharing your rental pole</li>
+          <li>ID will be held until pole is returned</li> 
+        </ul>
         <span className='event-block-details-header'>Location:</span>
         <ul className='event-block-details'>
           <li>DC Vault Pole Vault Center</li>
@@ -140,19 +147,19 @@ class Events extends React.Component {
           <li>Dropoff window 8:45am-9am</li>
           <li>Pickup window 3:30-4pm</li>
           <li>Kids will participate in daily pole vaulting, drills, strength training, games and more </li>
-          <br></br>
           <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
           <li>On Tuesday & Thursday a trip to Moorenko's Ice Cream at Eastern Market will be included during lunch</li>
         </ul>
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Deadline to register is July 8th </li>
-          <li>$350 - Register Here  </li>
+          <li>$350 - <a href = "http://dcvault.com/register/">Register Here</a>  </li>
         </ul>
         <span className='event-block-details-header'>Included</span>
         <ul className='event-block-details'>
           <li>All equipment is provided</li>
           <li>Moorenko’s Ice Cream included</li>
+          <li>DC Vault t-shirt included (youth sizes only)</li>
           <li>Healthy Snacks provided</li>
           <li>Water provided</li>
         </ul>
@@ -175,25 +182,24 @@ class Events extends React.Component {
           <li>Dropoff window 8:45am-9am</li>
           <li>Pickup window 3:30-4pm</li>
           <li>Kids will participate in daily pole vaulting, drills, strength training, games and more </li>
-          <br></br>
           <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
           <li>On Tuesday & Thursday a trip to Moorenko's Ice Cream at Eastern Market will be included during lunch</li>
         </ul>
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Deadline to register is July 8th </li>
-          <li>$350 - Register Here  </li>
+          <li>$350 - <a href = "http://dcvault.com/register/">Register Here</a>  </li>
         </ul>
         <span className='event-block-details-header'>Included</span>
         <ul className='event-block-details'>
           <li>All equipment is provided</li>
           <li>Moorenko’s Ice Cream included</li>
+          <li>DC Vault t-shirt included (youth sizes only)</li>
           <li>Healthy Snacks provided</li>
           <li>Water provided</li>
         </ul>
         <span className='event-block-details-header'>Daily Schedule</span>
         <ul className='event-block-details'>
-          <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
           <li>8:45-9:00am </li>
           <ul>
             <li>drop-off window + games</li>
@@ -203,6 +209,10 @@ class Events extends React.Component {
             <li>warm-ups + strength</li>
           </ul>
           <li>9:30-10:30am  </li>
+          <ul>
+            <li>drills</li>
+          </ul>
+          <li>10:30am-11am  </li>
           <ul>
             <li>break + snacks + games</li>
           </ul>
@@ -297,21 +307,62 @@ class Events extends React.Component {
           <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
         </ul>
         <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 6/21/2022)</span>
+        <span className='event-block-details-header'><br></br>MEN</span>
         <ul className='event-block-details'>
         <li>Tray Oates - 5.74m (18' 9.9")</li>
           <ul>
             <li>Arizona Pole Vault Academy / Midwest Meats</li>
             <li>Olympic Trials 4th Place / USA National Championships 4th Place / 5 time All-American</li>
-            <li>instagram.com/olen_iii_oates</li>
+            <li><a href = "https://instagram.com/olen_iii_oates">instagram.com/olen_iii_oates</a></li>
             <li>Arizona</li>
           </ul>
           <li>Austin Miller - 5.66m (18'6.75)</li>
           <ul>
             <li>Vault House / Tean Pacer</li>
             <li>Olympic Trials Finalist / DMV Native!</li>
-            <li>instagram.com/a_milli29</li>
+            <li><a href = "https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
+            <li>North Carolina</li>
+          </ul>
+          <li>Zach Ferrara - 5.45m (17' 10.5")</li>
+          <ul>
+            <li>Talons Up Vault Club</li>
+            <li>NCAA Division III National Champion / 3 time All-American / USATF Indoor Championships Qualifier</li>
+            <li><a href = "https://instagram.com/Fly1n4marshmallow">instagram.com/Fly1n4marshmallow</a></li>
+            <li>New York</li>
+          </ul>
+          <li>Matthew Keim 5.34m (17' 6.25")</li>
+          <ul>
+            <li>Industrial Vault Club</li>
+            <li>2x NCAA All American</li>
+            <li><a href = "https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
+            <li>Ohio</li>
+          </ul>
+          <li>Christian Di Nicolantonio 4.91m (16' 1.25")</li>
+          <ul>
+            <li>DC Vault / Catholic University of America</li>
+            <li>NCAA National Championships Qualifier / CUA Record Holder</li>
+            <li><a href = "https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
+            <li>District of Columbia</li>
+          </ul>
+          <li>Brandon Shin - 4.9m (16' 0.75")</li>
+          <ul>
+            <li>DC Vault / The University of Chicago</li>
+            <li>NCAA National Championships Qualifier</li>
+            <li><a href = "https://instagram.com/brndnshn">instagram.com/brndnshn</a></li>
+            <li>Ohio</li>
           </ul>
         </ul>
+        <span className='event-block-details-header'><br></br>WOMEN</span>
+        <ul className='event-block-details'>
+          <li>Kortney Oates - 4.63m (15' 2.2")</li>
+          <ul>
+            <li>Risen Performance / Team Pacer</li>
+            <li>7x USA nationals Qualifier</li>
+            <li><a href = "https://instagram.com/kortneyoates">instagram.com/kortneyoates</a></li>
+            <li>Arizona</li>
+          </ul>
+        </ul>
+
         
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
@@ -417,11 +468,60 @@ class Events extends React.Component {
           <li><i><u>NOTE:</u> Collegiate/High School athletes 'wishing to' maintain NCAA eligibility may not be awarded $ in accordance with NCAA requirements and will forfeit prize money.</i></li>
           <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
         </ul>
-        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 4/20/2022)</span>
+        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 6/21/2022)</span>
+        <span className='event-block-details-header'><br></br>MEN</span>
         <ul className='event-block-details'>
+        <li>Tray Oates - 5.74m (18' 9.9")</li>
+          <ul>
+            <li>Arizona Pole Vault Academy / Midwest Meats</li>
+            <li>Olympic Trials 4th Place / USA National Championships 4th Place / 5 time All-American</li>
+            <li><a href = "https://instagram.com/olen_iii_oates">instagram.com/olen_iii_oates</a></li>
+            <li>Arizona</li>
+          </ul>
           <li>Austin Miller - 5.66m (18'6.75)</li>
           <ul>
+            <li>Vault House / Tean Pacer</li>
             <li>Olympic Trials Finalist / DMV Native!</li>
+            <li><a href = "https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
+            <li>North Carolina</li>
+          </ul>
+          <li>Zach Ferrara - 5.45m (17' 10.5")</li>
+          <ul>
+            <li>Talons Up Vault Club</li>
+            <li>NCAA Division III National Champion / 3 time All-American / USATF Indoor Championships Qualifier</li>
+            <li><a href = "https://instagram.com/Fly1n4marshmallow">instagram.com/Fly1n4marshmallow</a></li>
+            <li>New York</li>
+          </ul>
+          <li>Matthew Keim 5.34m (17' 6.25")</li>
+          <ul>
+            <li>Industrial Vault Club</li>
+            <li>2x NCAA All American</li>
+            <li><a href = "https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
+            <li>Ohio</li>
+          </ul>
+          <li>Christian Di Nicolantonio 4.91m (16' 1.25")</li>
+          <ul>
+            <li>DC Vault / Catholic University of America</li>
+            <li>NCAA National Championships Qualifier / CUA Record Holder</li>
+            <li><a href = "https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
+            <li>District of Columbia</li>
+          </ul>
+          <li>Brandon Shin - 4.9m (16' 0.75")</li>
+          <ul>
+            <li>DC Vault / The University of Chicago</li>
+            <li>NCAA National Championships Qualifier</li>
+            <li><a href = "https://instagram.com/brndnshn">instagram.com/brndnshn</a></li>
+            <li>Ohio</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'><br></br>WOMEN</span>
+        <ul className='event-block-details'>
+          <li>Kortney Oates - 4.63m (15' 2.2")</li>
+          <ul>
+            <li>Risen Performance / Team Pacer</li>
+            <li>7x USA nationals Qualifier</li>
+            <li><a href = "https://instagram.com/kortneyoates">instagram.com/kortneyoates</a></li>
+            <li>Arizona</li>
           </ul>
         </ul>
         

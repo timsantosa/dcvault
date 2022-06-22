@@ -438,7 +438,7 @@ class SelectPackage extends React.Component {
                 <div style={{display:'block'}}>
                   <label>
                     <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Fly-Kids (6-10)</span>
+                    <span>Fly-Kids (7-10) + Camps</span>
                   </label>
                 </div>
                 <div style={{display: this.state.showDropIn ? 'block' : 'none'}} >
