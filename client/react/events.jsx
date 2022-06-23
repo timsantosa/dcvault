@@ -368,7 +368,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>The 2022 Pole Vault Championships are open to all athletes ages 7 and up</li>
           <li>Advanced Registration Only</li>
-          <li>Registration Closes June 25th</li>
+          <li>Registration Closes June 28th</li>
           <li>$35 for competitors - <span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
@@ -529,7 +529,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>The 2022 Pole Vault Championships are open to all athletes ages 7 and up</li>
           <li>Advanced Registration Only</li>
-          <li>Registration Closes June 25th</li>
+          <li>Registration Closes June 28th</li>
           <li>$35 for competitors - <span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
