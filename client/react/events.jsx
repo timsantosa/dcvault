@@ -309,42 +309,49 @@ class Events extends React.Component {
         <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 6/21/2022)</span>
         <span className='event-block-details-header'><br></br>MEN</span>
         <ul className='event-block-details'>
-        <li>Tray Oates - 5.74m (18' 9.9")</li>
+          <li>Nate Richardtz  - 5.75m (<span className='red-text'>18' 10.25"</span>)</li>
+          <ul>
+            <li><b>RISEN Performance / Tracksmith</b></li>
+            <li>Olympic Trials Qualifier</li>
+            <li><a href = "https://instagram.com/nate_richartz">instagram.com/nate_richartz</a></li>
+            <li>Arizona</li>
+          </ul>
+          <li>Tray Oates - 5.74m (<span className='red-text'>18' 9.9"</span>)</li>
           <ul>
             <li>Arizona Pole Vault Academy / Midwest Meats</li>
             <li>Olympic Trials 4th Place / USA National Championships 4th Place / 5 time All-American</li>
             <li><a href = "https://instagram.com/olen_iii_oates">instagram.com/olen_iii_oates</a></li>
             <li>Arizona</li>
           </ul>
-          <li>Austin Miller - 5.66m (18'6.75)</li>
+          <li>Austin Miller - 5.73m (<span className='red-text'>18' 9.5"</span>)</li>
           <ul>
             <li>Vault House / Tean Pacer</li>
             <li>Olympic Trials Finalist / DMV Native!</li>
             <li><a href = "https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
             <li>North Carolina</li>
           </ul>
-          <li>Zach Ferrara - 5.45m (17' 10.5")</li>
+          <li>Zach Ferrara - 5.45m (<span className='red-text'>17' 10.5"</span>)</li>
           <ul>
             <li>Talons Up Vault Club</li>
             <li>NCAA Division III National Champion / 3 time All-American / USATF Indoor Championships Qualifier</li>
             <li><a href = "https://instagram.com/Fly1n4marshmallow">instagram.com/Fly1n4marshmallow</a></li>
             <li>New York</li>
           </ul>
-          <li>Matthew Keim 5.34m (17' 6.25")</li>
+          <li>Matthew Keim 5.34m (<span className='red-text'>17' 6.25"</span>)</li>
           <ul>
             <li>Industrial Vault Club</li>
             <li>2x NCAA All American</li>
             <li><a href = "https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
             <li>Ohio</li>
           </ul>
-          <li>Christian Di Nicolantonio 4.91m (16' 1.25")</li>
+          <li>Christian Di Nicolantonio 4.91m (<span className='red-text'>16' 1.25"</span>)</li>
           <ul>
             <li>DC Vault / Catholic University of America</li>
             <li>NCAA National Championships Qualifier / CUA Record Holder</li>
             <li><a href = "https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
             <li>District of Columbia</li>
           </ul>
-          <li>Brandon Shin - 4.9m (16' 0.75")</li>
+          <li>Brandon Shin - 4.9m (<span className='red-text'>16' 0.75"</span>)</li>
           <ul>
             <li>DC Vault / The University of Chicago</li>
             <li>NCAA National Championships Qualifier</li>
@@ -354,7 +361,7 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'><br></br>WOMEN</span>
         <ul className='event-block-details'>
-          <li>Kortney Oates - 4.63m (15' 2.2")</li>
+          <li>Kortney Oates - 4.63m (<span className='red-text'>15' 2.2"</span>)</li>
           <ul>
             <li>Risen Performance / Team Pacer</li>
             <li>7x USA nationals Qualifier</li>
@@ -471,42 +478,49 @@ class Events extends React.Component {
         <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 6/21/2022)</span>
         <span className='event-block-details-header'><br></br>MEN</span>
         <ul className='event-block-details'>
-        <li>Tray Oates - 5.74m (18' 9.9")</li>
+          <li>Nate Richardtz  - 5.75m (<span className='red-text'>18' 10.25"</span>)</li>
+          <ul>
+            <li><b>RISEN Performance / Tracksmith</b></li>
+            <li>Olympic Trials Qualifier</li>
+            <li><a href = "https://instagram.com/nate_richartz">instagram.com/nate_richartz</a></li>
+            <li>Arizona</li>
+          </ul>
+          <li>Tray Oates - 5.74m (<span className='red-text'>18' 9.9"</span>)</li>
           <ul>
             <li>Arizona Pole Vault Academy / Midwest Meats</li>
             <li>Olympic Trials 4th Place / USA National Championships 4th Place / 5 time All-American</li>
             <li><a href = "https://instagram.com/olen_iii_oates">instagram.com/olen_iii_oates</a></li>
             <li>Arizona</li>
           </ul>
-          <li>Austin Miller - 5.66m (18'6.75)</li>
+          <li>Austin Miller - 5.73m (<span className='red-text'>18' 9.5"</span>)</li>
           <ul>
             <li>Vault House / Tean Pacer</li>
             <li>Olympic Trials Finalist / DMV Native!</li>
             <li><a href = "https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
             <li>North Carolina</li>
           </ul>
-          <li>Zach Ferrara - 5.45m (17' 10.5")</li>
+          <li>Zach Ferrara - 5.45m (<span className='red-text'>17' 10.5"</span>)</li>
           <ul>
             <li>Talons Up Vault Club</li>
             <li>NCAA Division III National Champion / 3 time All-American / USATF Indoor Championships Qualifier</li>
             <li><a href = "https://instagram.com/Fly1n4marshmallow">instagram.com/Fly1n4marshmallow</a></li>
             <li>New York</li>
           </ul>
-          <li>Matthew Keim 5.34m (17' 6.25")</li>
+          <li>Matthew Keim 5.34m (<span className='red-text'>17' 6.25"</span>)</li>
           <ul>
             <li>Industrial Vault Club</li>
             <li>2x NCAA All American</li>
             <li><a href = "https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
             <li>Ohio</li>
           </ul>
-          <li>Christian Di Nicolantonio 4.91m (16' 1.25")</li>
+          <li>Christian Di Nicolantonio 4.91m (<span className='red-text'>16' 1.25"</span>)</li>
           <ul>
             <li>DC Vault / Catholic University of America</li>
             <li>NCAA National Championships Qualifier / CUA Record Holder</li>
             <li><a href = "https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
             <li>District of Columbia</li>
           </ul>
-          <li>Brandon Shin - 4.9m (16' 0.75")</li>
+          <li>Brandon Shin - 4.9m (<span className='red-text'>16' 0.75"</span>)</li>
           <ul>
             <li>DC Vault / The University of Chicago</li>
             <li>NCAA National Championships Qualifier</li>
@@ -516,7 +530,7 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'><br></br>WOMEN</span>
         <ul className='event-block-details'>
-          <li>Kortney Oates - 4.63m (15' 2.2")</li>
+          <li>Kortney Oates - 4.63m (<span className='red-text'>15' 2.2"</span>)</li>
           <ul>
             <li>Risen Performance / Team Pacer</li>
             <li>7x USA nationals Qualifier</li>
