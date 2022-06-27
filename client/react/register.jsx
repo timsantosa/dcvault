@@ -583,7 +583,7 @@ class SelectPackage extends React.Component {
               <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='summercamp' checked={this.state.checkedFKMembership === 'summercamp'} onChange={this.adjustOptions.bind(this)} />
-                    <span>FLY-KIDS SUMMER CAMP 6/11-6/15</span>
+                    <span>FLY-KIDS SUMMER CAMP 7/11-7/15</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
