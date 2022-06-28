@@ -361,6 +361,13 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'><br></br>WOMEN</span>
         <ul className='event-block-details'>
+          <li>Kristen Brown 4.70m (<span className='red-text'>15' 5"</span>)</li>
+          <ul>
+            <li>Risen Performance / Team Pacer</li>
+            <li>Two time Olympic trials finalist and has been ranked top 10 in the world!</li>
+            <li><a href = "https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
+            <li>Atlanta, GA</li>
+          </ul>
           <li>Kortney Oates - 4.63m (<span className='red-text'>15' 2.2"</span>)</li>
           <ul>
             <li>Risen Performance / Team Pacer</li>
@@ -376,7 +383,7 @@ class Events extends React.Component {
           <li>The 2022 Pole Vault Championships are open to all athletes ages 7 and up</li>
           <li>Advanced Registration Only</li>
           <li>Registration Closes June 28th</li>
-          <li>$35 for competitors - <span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
+          <li>$35 for competitors - <span className='red-text'>Registration Closed</span></li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
         </ul>
@@ -530,6 +537,13 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'><br></br>WOMEN</span>
         <ul className='event-block-details'>
+          <li>Kristen Brown 4.70m (<span className='red-text'>15' 5"</span>)</li>
+          <ul>
+            <li>Risen Performance / Team Pacer</li>
+            <li>Two time Olympic trials finalist and has been ranked top 10 in the world!</li>
+            <li><a href = "https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
+            <li>Atlanta, GA</li>
+          </ul>
           <li>Kortney Oates - 4.63m (<span className='red-text'>15' 2.2"</span>)</li>
           <ul>
             <li>Risen Performance / Team Pacer</li>
@@ -544,7 +558,7 @@ class Events extends React.Component {
           <li>The 2022 Pole Vault Championships are open to all athletes ages 7 and up</li>
           <li>Advanced Registration Only</li>
           <li>Registration Closes June 28th</li>
-          <li>$35 for competitors - <span className='red-text'><a href = "https://www.dcvault.com/compete">Register Here</a></span></li>
+          <li>$35 for competitors - <span className='red-text'>Registration Closed</span></li>
           <li>$5 for all non-competitors entering the facility (cash)</li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
         </ul>
