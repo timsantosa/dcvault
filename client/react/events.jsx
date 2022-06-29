@@ -309,9 +309,9 @@ class Events extends React.Component {
         <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 6/21/2022)</span>
         <span className='event-block-details-header'><br></br>MEN</span>
         <ul className='event-block-details'>
-          <li>Nate Richardtz  - 5.75m (<span className='red-text'>18' 10.25"</span>)</li>
+          <li>Nate Richartz  - 5.75m (<span className='red-text'>18' 10.25"</span>)</li>
           <ul>
-            <li><b>RISEN Performance / Tracksmith</b></li>
+            <li>RISEN Performance / Tracksmith</li>
             <li>Olympic Trials Qualifier</li>
             <li><a href = "https://instagram.com/nate_richartz">instagram.com/nate_richartz</a></li>
             <li>Arizona</li>
@@ -363,7 +363,6 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Kristen Brown 4.70m (<span className='red-text'>15' 5"</span>)</li>
           <ul>
-            <li>Risen Performance / Team Pacer</li>
             <li>Two time Olympic trials finalist and has been ranked top 10 in the world!</li>
             <li><a href = "https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
             <li>Atlanta, GA</li>
@@ -397,48 +396,42 @@ class Events extends React.Component {
           <li>Parking On-Site (Lot #3)</li>
           <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>
         </ul>
-        <span className='event-block-details-header'>Schedule</span>
+        <span className='event-block-details-header'>Final Schedule</span>
         <ul className='event-block-details'>
           <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
-          <li>Tentative Schedule:</li>
+          <li>15cm progressions</li>
+          <li><a style={{color: '#C0282D'}} href='../files/pvchamps22.pdf' target='_blank'>See Start List here!</a> </li>
+          <li>Flight Times:</li>
           <ul>
-            <li>10:00am (gates open / warmups)</li>
+            <li>08:30am (staff arrive)</li>
+            <li><span className = 'red-text'>09:45am (gates open)</span></li>
+            <li>10:00am (warmups)</li>
               <ul>
-                <li>6'-10'5" Female</li>
-                <li>8'-13'5" Male</li>
+                <li>6&#39;-11&#39;6&quot; Combined (red pit)</li>
+                <li>11’7”-15’11” Men (black pit)</li>
               </ul>
             <li>11:00 am (competition)</li>
               <ul>
-                <li>0-10'5" Female (1.85m opening height)</li>
-                <li>0-13'5" Male (2.45m opening height)</li>
+                <li><span className = 'red-text'>6&#39;-11&#39;6&quot; Combined (1.85m start)</span></li>
+                <li><span className = 'red-text'>11’7”-15’11” Men (3.40m start)</span></li>
               </ul>
             <li>1:00pm (warmups)</li>
             <ul>
-              <li>10'6"-12'11" Female</li>
-              <li>13'6"-15'11" Male</li>
+              <li>Fly-Kids (red pit)</li>
+              <li>12’+ Elite Women (black pit)</li>
             </ul>
-            <li>2:00pm (competition)</li>
+            <li><span className = 'red-text'>2:00pm (competition)</span></li>
             <ul>
-              <li>10'6"-12'11" Female (2.9m opening height)</li>
-              <li>13'6"-15'11" Male (3.85m opening height)</li>
+              <li><span className = 'red-text'>Fly-Kids (1.25m start)</span></li>
+              <li><span className = 'red-text'>12’+ Elite Women (3.40m start)</span></li>
             </ul>
             <li>4:00pm (warmups)</li>
             <ul>
-              <li>Fly-Kids 7-10-year-old Female + Male</li>
-              <li>Elite Women</li>
+              <li>Elite Men (black pit)</li>
             </ul>
-            <li>5:00pm (competition)</li>
+            <li><span className = 'red-text'>5:00pm (competition)</span></li>
             <ul>
-              <li>Fly-Kids 7-10-year-old Female + Male (1.25m opening height)</li>
-              <li><b>Elite Women</b> (3.75m opening height - may increase)</li>
-            </ul>
-            <li>6:00pm (warmups)</li>
-            <ul>
-              <li>Elite Men</li>
-            </ul>
-            <li>7:00pm (competition)</li>
-            <ul>
-              <li><b>Elite Men</b> (4.65m opening height - may increase)</li>
+              <li><span className = 'red-text'>16’+ Elite Men (4.6m opening height)</span></li>
             </ul>
           </ul>
         </ul>
@@ -485,9 +478,9 @@ class Events extends React.Component {
         <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 6/21/2022)</span>
         <span className='event-block-details-header'><br></br>MEN</span>
         <ul className='event-block-details'>
-          <li>Nate Richardtz  - 5.75m (<span className='red-text'>18' 10.25"</span>)</li>
+          <li>Nate Richartz  - 5.75m (<span className='red-text'>18' 10.25"</span>)</li>
           <ul>
-            <li><b>RISEN Performance / Tracksmith</b></li>
+            <li>RISEN Performance / Tracksmith</li>
             <li>Olympic Trials Qualifier</li>
             <li><a href = "https://instagram.com/nate_richartz">instagram.com/nate_richartz</a></li>
             <li>Arizona</li>
@@ -539,7 +532,6 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Kristen Brown 4.70m (<span className='red-text'>15' 5"</span>)</li>
           <ul>
-            <li>Risen Performance / Team Pacer</li>
             <li>Two time Olympic trials finalist and has been ranked top 10 in the world!</li>
             <li><a href = "https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
             <li>Atlanta, GA</li>
@@ -572,48 +564,42 @@ class Events extends React.Component {
           <li>Parking On-Site (Lot #3)</li>
           <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>
         </ul>
-        <span className='event-block-details-header'>Schedule</span>
+        <span className='event-block-details-header'>Final Schedule</span>
         <ul className='event-block-details'>
           <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
-          <li>Tentative Schedule:</li>
+          <li>15cm progressions</li>
+          <li><a style={{color: '#C0282D'}} href='../files/pvchamps22.pdf' target='_blank'>See Start List here!</a> </li>
+          <li>Flight Times:</li>
           <ul>
-            <li>10:00am (gates open / warmups)</li>
+            <li>08:30am (staff arrive)</li>
+            <li><span className = 'red-text'>09:45am (gates open)</span></li>
+            <li>10:00am (warmups)</li>
               <ul>
-                <li>6'-10'5" Female</li>
-                <li>8'-13'5" Male</li>
+                <li>6&#39;-11&#39;6&quot; Combined (red pit)</li>
+                <li>11’7”-15’11” Men (black pit)</li>
               </ul>
             <li>11:00 am (competition)</li>
               <ul>
-                <li>0-10'5" Female (1.85m opening height)</li>
-                <li>0-13'5" Male (2.45m opening height)</li>
+                <li><span className = 'red-text'>6&#39;-11&#39;6&quot; Combined (1.85m start)</span></li>
+                <li><span className = 'red-text'>11’7”-15’11” Men (3.40m start)</span></li>
               </ul>
             <li>1:00pm (warmups)</li>
             <ul>
-              <li>10'6"-12'11" Female</li>
-              <li>13'6"-15'11" Male</li>
+              <li>Fly-Kids (red pit)</li>
+              <li>12’+ Elite Women (black pit)</li>
             </ul>
-            <li>2:00pm (competition)</li>
+            <li><span className = 'red-text'>2:00pm (competition)</span></li>
             <ul>
-              <li>10'6"-12'11" Female (2.9m opening height)</li>
-              <li>13'6"-15'11" Male (3.85m opening height)</li>
+              <li><span className = 'red-text'>Fly-Kids (1.25m start)</span></li>
+              <li><span className = 'red-text'>12’+ Elite Women (3.40m start)</span></li>
             </ul>
             <li>4:00pm (warmups)</li>
             <ul>
-              <li>Fly-Kids 7-10-year-old Female + Male</li>
-              <li>Elite Women</li>
+              <li>Elite Men (black pit)</li>
             </ul>
-            <li>5:00pm (competition)</li>
+            <li><span className = 'red-text'>5:00pm (competition)</span></li>
             <ul>
-              <li>Fly-Kids 7-10-year-old Female + Male (1.25m opening height)</li>
-              <li><b>Elite Women</b> (3.75m opening height - may increase)</li>
-            </ul>
-            <li>6:00pm (warmups)</li>
-            <ul>
-              <li>Elite Men</li>
-            </ul>
-            <li>7:00pm (competition)</li>
-            <ul>
-              <li><b>Elite Men</b> (4.65m opening height - may increase)</li>
+              <li><span className = 'red-text'>16’+ Elite Men (4.6m opening height)</span></li>
             </ul>
           </ul>
         </ul>
