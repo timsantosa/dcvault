@@ -400,7 +400,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
           <li>15cm progressions</li>
-          <li><a style={{color: '#C0282D'}} href='../files/pvchamps22.pdf' target='_blank'>See Start List here!</a> </li>
+          <li><a style={{color: '#C0282D'}} href='../files/pvchampsSL.docx' target='_blank'>See Start List here!</a> </li>
           <li>Flight Times:</li>
           <ul>
             <li>08:30am (staff arrive)</li>
@@ -568,7 +568,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
           <li>15cm progressions</li>
-          <li><a style={{color: '#C0282D'}} href='../files/pvchamps22.pdf' target='_blank'>See Start List here!</a> </li>
+          <li><a style={{color: '#C0282D'}} href='../files/pvchampsSL.docx' target='_blank'>See Start List here!</a> </li>
           <li>Flight Times:</li>
           <ul>
             <li>08:30am (staff arrive)</li>
