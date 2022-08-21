@@ -486,7 +486,7 @@ class SelectPackage extends React.Component {
               </div>
               <div>
                 <span><a style={{color: '#C0282D'}} onClick={this.toggleInvite.bind(this)}>CLICK HERE</a> and enter your <a style={{color: '#C0282D'}}>Invite Code</a> to register for a <a style={{color: '#C0282D'}}>Private Lesson</a> or <a style={{color: '#C0282D'}}>Drop-In Class</a> <br></br><br></br></span>
-                <span>Still need an <a style={{color: '#C0282D'}}>Invite Code? <a onClick={() => { document.getElementById('contact-button').click() }}>CLICK HERE</a></a></span>
+                <span>Don't have an <a style={{color: '#C0282D'}}>Invite Code? <a onClick={() => { document.getElementById('contact-button').click() }}>CLICK HERE</a></a></span>
                 <div className='form-row' style={{display: this.state.showInvite ? 'block' : 'none'}}>
                   <div className='row'>
                     <div className='col-xs-8'>
