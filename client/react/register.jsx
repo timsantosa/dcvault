@@ -405,13 +405,13 @@ class SelectPackage extends React.Component {
             <div className='form-row'>
               <label><span className='required'>Training Session</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
+                <div style={{display: 'none'}}>
                   <label>
                     <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
                     <span>Summer</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
                     <span>Fall</span>
@@ -558,20 +558,20 @@ class SelectPackage extends React.Component {
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='month' value='jun' checked={this.state.checkedMonth === 'jun'} onChange={this.adjustOptions.bind(this)} />
-                    <span>June</span>
+                    <input type='radio' name='month' value='sept' checked={this.state.checkedMonth === 'sept'} onChange={this.adjustOptions.bind(this)} />
+                    <span>September</span>
                   </label>
                 </div>
                 <div style={{display:'block'}}>
                   <label>
-                    <input type='radio' name='month' value='jul' checked={this.state.checkedMonth === 'jul'} onChange={this.adjustOptions.bind(this)} />
-                    <span>July</span>
+                    <input type='radio' name='month' value='oct' checked={this.state.checkedMonth === 'oct'} onChange={this.adjustOptions.bind(this)} />
+                    <span>October</span>
                   </label>
                 </div>
                 <div style={{display:'block'}}>
                   <label>
-                    <input type='radio' name='month' value='aug' checked={this.state.checkedMonth === 'aug'} onChange={this.adjustOptions.bind(this)} />
-                    <span>August</span>
+                    <input type='radio' name='month' value='nov' checked={this.state.checkedMonth === 'nov'} onChange={this.adjustOptions.bind(this)} />
+                    <span>November</span>
                   </label>
                 </div>
               </div>
@@ -579,13 +579,10 @@ class SelectPackage extends React.Component {
 
             <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedGroup === 'fly-kids')? 'block' : 'none'}}>
               <label><span>Fly-Kids Options</span></label>
+              <div>
+                <span>Check back next Summer 2023 for Fly-Kids Summer Camp!</span>
+              </div>
               <div className='form-radio-buttons'>
-              <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='fkmembership' value='summercamp' checked={this.state.checkedFKMembership === 'summercamp'} onChange={this.adjustOptions.bind(this)} />
-                    <span>FLY-KIDS SUMMER CAMP 8/1-8/5</span>
-                  </label>
-                </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='5classes' checked={this.state.checkedFKMembership === '5classes'} onChange={this.adjustOptions.bind(this)} />
@@ -1182,7 +1179,7 @@ class Payment extends React.Component {
         this.props.data.selectPackage.membership = fkmembership
       }
     }else if (group === 'dropin'){
-      price = 60
+      price = 75
     }else if(group === 'plesson'){
       price = 200
     }else if (group === 'adult') {
