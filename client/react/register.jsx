@@ -434,7 +434,7 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedSession == "Spring" ? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedSession == "spring" ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display:'block'}}>
