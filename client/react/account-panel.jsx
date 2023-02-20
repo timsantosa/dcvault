@@ -247,8 +247,7 @@ class PoleRental extends React.Component {
       athletes: [],
       errorText: '',
       rentalOptions: [
-        {name: 'oneTime', displayName: 'One Week', displayPrice: '$75'},
-        {name: 'quarterly', displayName: 'Quarterly', displayPrice: '$200'}
+        {name: 'oneTime', displayName: '48 Hours', displayPrice: '$50'},
       ],
       quarters: [
         {name: 'winter', displayName: 'Winter'},
@@ -414,8 +413,8 @@ class PoleRentalPurchase extends React.Component {
       }
     } else if (this.props.period === 'oneTime') {
       this.state = {
-        price: 75.00,
-        periodDisplay: 'One Week',
+        price: 50.00,
+        periodDisplay: '48 Hours',
         successfulPayment: false,
         failedPayment: false,
         statusText: ''
@@ -495,7 +494,7 @@ class PoleRentalPurchase extends React.Component {
         <div style={{textAlign: 'center'}}>
           <p>
             {this.props.period === 'oneTime'
-          ? 'A one-time rental is good for one week. You are expected to return the pole at practice one week from the date the pole is issued'
+          ? 'A one-time rental is good for 48 hours. You are expected to return the pole at practice 48 hours from the date the pole is issued'
           : 'A quarterly rental is good for the duration of the training quarter. You are expected to return the pole at practice before the start of the following quarter'}</p>
           <p><span className='red-text'>{this.state.periodDisplay} rental:</span> ${this.state.price.toFixed(2)}</p>
           <p><span className='red-text'>Online Transaction Fee:</span> ${(this.state.price * 0.03).toFixed(2)}</p>

@@ -405,34 +405,36 @@ class SelectPackage extends React.Component {
             <div className='form-row'>
               <label><span className='required'>Training Session</span></label>
               <div className='form-radio-buttons'>
-                <div style={{display: 'none'}}>
+
+                <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Summer</span>
+                    <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Spring (Mar-May)</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
+                <div style={{display: 'block'}}>
+                  <label>
+                    <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
+                    <span>Summer (Jun-Aug)</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Fall</span>
+                    <span>Fall (Sep-Nov)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Winter</span>
+                    <span>Winter (Dec-Feb)</span>
                   </label>
                 </div>
-                <div style={{display: 'none'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Spring</span>
-                  </label>
-                </div>
+
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedSession == "Spring" ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display:'block'}}>
@@ -604,7 +606,7 @@ class SelectPackage extends React.Component {
                 <div style={{display: this.state.checkedFKMembership !== 'summercamp'? 'block' : 'none'}}>
                   <label>
                     <input type='radio' name='facility' value='dcvprep' checked={this.state.checkedFacility === 'dcvprep'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>BOTH (DCV + PREP)</span>
+                    <span>FLEXIBLE (I may train at more than one site)</span>
                   </label>
                 </div>
               </div>
