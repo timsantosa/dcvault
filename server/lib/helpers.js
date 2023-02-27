@@ -145,7 +145,7 @@ module.exports.sendConfirmationEmails = (email,athleteInfo) => {
     }
     console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
   })
-
+/*
   let mailOptions2 = {
     from: '"DC Vault" <' + config.email.username + '>', // sender address
     subject: 'New Training Registrant', // Subject line
@@ -159,7 +159,8 @@ transporter.sendMail(mailOptions2, (error, info) => {
         return console.log(error)
     }
     console.log('Message %s sent to %s response: %s', info.messageId, "events@dcvault.org", info.response)
-})
+}
+*/
 }
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
