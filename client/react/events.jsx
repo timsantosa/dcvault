@@ -29,71 +29,122 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
-        date: new Date('August 1, 2022'),
-        partial: (<div className='event-block' id='01AUG2022'>
-        <p className='event-block-title'>FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
-        <img src = "../img/events/kidscamp.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        date: new Date('June 24, 2023'),
+        partial: (<div className='event-block' id='24JUN2023'>
+        <p className='event-block-title'><span class="red-text">2023</span> POLE <span class="red-text">VAULT</span> CHAMPIONSHIPS</p>
         <p className='event-block-info'>
-          <span className='event-block-date'>Monday-Friday, August 1st-5th 2022</span>
+          <span className='event-block-date'>Saturday, Jun 24th 2023</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>ELITE LINEUP</span>
+        <ul className='event-block-details'>
+          <li>Anicka Newell</li>
+          <li>Kristen Brown</li>
+          <li>Austin Miller</li>
+          <li>Nate Richartz</li>
+        </ul>
+
+        <span className='event-block-details-header'>MORE INFO COMING SOON!</span>
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='24JUN2023'>
+        <p className='event-block-title'><span class="red-text">2023</span> POLE <span class="red-text">VAULT</span> CHAMPIONSHIPS</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Saturday, Jun 24th 2023</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>ELITE LINEUP</span>
+        <ul className='event-block-details'>
+          <li>Anicka Newell</li>
+          <li>Kristen Brown</li>
+          <li>Austin Miller</li>
+          <li>Nate Richartz</li>
+        </ul>
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>)
+      },
+      {
+        date: new Date('July 14, 2023'),
+        partial: (<div className='event-block' id='14JUL2023'>
+        <p className='event-block-title'>2023 FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
+        <img src = "../img/events/kidscamp23.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>5 WEEKS of Pole Vaulting and Games!</span>
+          <br></br>
+          <span className='event-block-date'>July 10th through August 11th</span>
           <br></br>
           <span className='event-block-date'>DC Vault - 2200 East Capitol Street NE, Washington DC</span>
         </p>
+        <span className='event-block-details-header'>Dates</span>
+        <ul className='event-block-details'>
+          <li>Jul 10th - Jul 14th</li>
+          <li>Jul 17th - Jul 21st</li>
+          <li>Jul 24th - Jul 28th</li>
+          <li>Jul 31st - Aug 4th</li>
+          <li>Aug 7th - Aug 11th</li>
+        </ul>
         <span className='event-block-details-header'>General Info</span>
         <ul className='event-block-details'>
-          <li>Ages 7-10</li>
-          <li>Beginners through Advanced</li>
-          <li>Monday thru Friday 8:45am - 4pm</li>
-          <li>Dropoff window 8:45am-9am</li>
-          <li>Pickup window 3:30-4pm</li>
-          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more </li>
+          <li>Ages 7-11</li>
+          <li>Beginners through Advanced Pole Vaulters</li>
+          <li>5 weeks to choose from</li>
+          <li>Monday thru Friday 8:45am – 3:15pm</li>
+          <li>Dropoff window 8:45am-9:00am</li>
+          <li>Pickup window 3:00-3:15pm</li>
+          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more</li>
           <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
-          <li>On Tuesday & Thursday a trip to Moorenko's Ice Cream at Eastern Market will be included during lunch</li>
+          <li>Tuesday &amp; Thursday includes a trip to Moorenko&#39;s Ice Cream at Eastern Market during lunch break</li>
         </ul>
-        <span className='event-block-details-header'>Registration</span>
+        
+        <span className='event-block-details-header'>Included with Registration</span>
         <ul className='event-block-details'>
-          <li>$350 - <a href = "http://dcvault.com/register/">Register Here</a>  </li>
-        </ul>
-        <span className='event-block-details-header'>Included</span>
-        <ul className='event-block-details'>
-          <li>All equipment is provided</li>
-          <li>Moorenko’s Ice Cream included</li>
-          <li>DC Vault t-shirt included (youth sizes only)</li>
-          <li>Healthy Snacks provided</li>
-          <li>Water provided</li>
+          <li>All equipment for use during camp</li>
+          <li>Moorenko’s Ice Cream trips on Tuesday and Thursday</li>
+          <li>DC Vault t-shirt (youth sizes only)</li>
+          <li>Healthy Snacks</li>
         </ul>
         
         <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
-        full: (<div className='event-block' id='01AUG2022'>
-        <p className='event-block-title'>FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
-        <img src = "../img/events/kidscamp.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        full: (<div className='event-block' id='14JUL2023'>
+        <p className='event-block-title'>2023 FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
+        <img src = "../img/events/kidscamp23.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
         <p className='event-block-info'>
-          <span className='event-block-date'>Monday-Friday, August 1st-5th 2022</span>
+          <span className='event-block-date'>5 WEEKS of Pole Vaulting and Games!</span>
+          <br></br>
+          <span className='event-block-date'>July 10th through August 11th</span>
           <br></br>
           <span className='event-block-date'>DC Vault - 2200 East Capitol Street NE, Washington DC</span>
         </p>
+        <span className='event-block-details-header'>Dates</span>
+        <ul className='event-block-details'>
+          <li>Jul 10th - Jul 14th</li>
+          <li>Jul 17th - Jul 21st</li>
+          <li>Jul 24th - Jul 28th</li>
+          <li>Jul 31st - Aug 4th</li>
+          <li>Aug 7th - Aug 11th</li>
+        </ul>
         <span className='event-block-details-header'>General Info</span>
         <ul className='event-block-details'>
-          <li>Ages 7-10</li>
-          <li>Beginners through Advanced</li>
-          <li>Monday thru Friday 8:45am - 4pm</li>
-          <li>Dropoff window 8:45am-9am</li>
-          <li>Pickup window 3:30-4pm</li>
-          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more </li>
+          <li>Ages 7-11</li>
+          <li>Beginners through Advanced Pole Vaulters</li>
+          <li>5 weeks to choose from</li>
+          <li>Monday thru Friday 8:45am – 3:15pm</li>
+          <li>Dropoff window 8:45am-9:00am</li>
+          <li>Pickup window 3:00-3:15pm</li>
+          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more</li>
           <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
-          <li>On Tuesday & Thursday a trip to Moorenko's Ice Cream at Eastern Market will be included during lunch</li>
+          <li>Tuesday &amp; Thursday includes a trip to Moorenko&#39;s Ice Cream at Eastern Market during lunch break</li>
         </ul>
-        <span className='event-block-details-header'>Registration</span>
+        
+        <span className='event-block-details-header'>Included with Registration</span>
         <ul className='event-block-details'>
-          <li>$350 - <a href = "http://dcvault.com/register/">Register Here</a>  </li>
-        </ul>
-        <span className='event-block-details-header'>Included</span>
-        <ul className='event-block-details'>
-          <li>All equipment is provided</li>
-          <li>Moorenko’s Ice Cream included</li>
-          <li>DC Vault t-shirt included (youth sizes only)</li>
-          <li>Healthy Snacks provided</li>
-          <li>Water provided</li>
+          <li>All equipment for use during camp</li>
+          <li>Moorenko’s Ice Cream trips on Tuesday and Thursday</li>
+          <li>DC Vault t-shirt (youth sizes only)</li>
+          <li>Healthy Snacks</li>
         </ul>
         <span className='event-block-details-header'>Daily Schedule</span>
         <ul className='event-block-details'>
@@ -125,19 +176,19 @@ class Events extends React.Component {
           <ul>
             <li>lunch @ Lincoln Park (+ Ice Cream @ E. Market on Tue & Thu)</li>
           </ul>
-          <li>1-2pm </li>
+          <li>1:00-1:30pm</li>
           <ul>
             <li>drills @ Lincoln Park</li>
           </ul>
-          <li>2-2:30 </li>
+          <li>1:30-2:00pm</li>
           <ul>
             <li>walk to DCV</li>
           </ul>
-          <li>2:30-3:30pm </li>
+          <li>2:00pm-3:00pm</li>
           <ul>
             <li>vault</li>
           </ul>
-          <li>3:30-4pm </li>
+          <li>3:00-3:15pm </li>
           <ul>
             <li>Pickup window + games</li>
           </ul>
@@ -145,10 +196,34 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Daily Technical Focus</span>
         <ul className='event-block-details'>
           <li>M - run / takeoff</li>
-          <li>T - swing (+ Ice Cream Day!)</li>
+          <ul>
+            <li>learn to carry and run with the pole and how to take-off</li>
+          </ul>
+          <li>T - swing</li>
+          <ul>
+            <li>learn to begin to swing upside down on the pole with rings, ropes and hanging drills</li>
+          </ul>
           <li>W - extension </li>
-          <li>R - turn (+ Ice Cream Day!)</li>
+          <ul>
+            <li>learn how to pull yourself up the pole towards the bar with ropes, platforms and partner drills</li>
+          </ul>
+          <li>R - turn</li>
+          <ul>
+            <li>learn to turn over the bar with rings, ropes, platforms and ground drills</li>
+          </ul>
           <li>F - height / competition </li>
+          <ul>
+            <li>Putting all of the technical work together, campers will have a competition to go over heights!</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Games</span>
+        <ul className='event-block-details'>
+          <li>Water Balloon Fight</li>
+          <li>Face Painting</li>
+          <li>Sumo Ball Wrestling Match</li>
+          <li>Nerf Games</li>
+          <li>Relay Races</li>
+          <li>and more!</li>
         </ul>
         <span className='event-block-details-header'>What to Bring</span>
         <ul className='event-block-details'>
@@ -159,8 +234,14 @@ class Events extends React.Component {
           <li>Running shoes</li>
           <li>Athletic active wear clothing</li>
         </ul>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>$350/week</li>
+          <li>10% Discount when registering for 4 or 5 weeks (Discount applied at checkout)</li>
+          <li><a href = "http://dcvault.com/compete/">Register Here</a>  </li>
+        </ul>
         
-        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        <center><span className='red-text'>Click Arrow to Collapse Info</span></center>
         </div>)
       },
       {

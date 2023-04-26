@@ -162,6 +162,7 @@ transporter.sendMail(mailOptions2, (error, info) => {
 }
 */
 }
+/*
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
@@ -230,7 +231,38 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
       console.log('Message %s sent to %s response: %s', info.messageId, "events@dcvault.org", info.response)
   })
 }
+*/
+module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
+  let mailOptions = {
+      from: '"DC Vault" <' + config.email.username + '>', // sender address
+      subject: '2023 Fly-Kids Summer Camp', // Subject line
+      to: email,
+      html: '<p>Thank you for registering for the Fly-Kids Summer Camp!</p>\
+        <p>Please note - our lead camp counselors are Marley Oar and Edith Bosshart. We will provide the designated counselor contact phone # the first day of camp for emergencies.</p>\
+        <p>Please be sure to review the camp event information at DCVault.com/events and do not hesitate to contact us at Events@dcvault.org if you have any questions about the upcoming camp!</p>'
+  }
 
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          return console.log(error)
+      }
+      console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+  })
+  let mailOptions2 = {
+    from: '"DC Vault" <' + config.email.username + '>', // sender address
+    subject: 'New Summer Camp Registrant', // Subject line
+    to: "events@dcvault.org",
+    html:  '<p>Details</p>' +athleteInfo,
+    attachments: [
+    ]
+}
+transporter.sendMail(mailOptions2, (error, info) => {
+    if (error) {
+        return console.log(error)
+    }
+    console.log('Message %s sent to %s response: %s', info.messageId, "events@dcvault.org", info.response)
+})
+}
 module.exports.randString = (len) => {
   len = len || 16
   let retVal = ''

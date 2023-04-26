@@ -81,7 +81,7 @@ class Competition extends React.Component {
                         {progressBar}
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
-                                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><a onClick="document.getElementById('contact-button').click()">Contact us</a></p>
+                                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><a onclick="document.getElementById('contact-button').click()">Contact us</a></p>
                             </div>
                         </div>
                     </div>
@@ -166,7 +166,7 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state']
+        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
@@ -272,26 +272,17 @@ class AthleteInfo extends React.Component {
                     <form id='event-athlete-info' className='form-labels-on-top'>
 
                     <div className='form-title-row'>
-                            <h1>2023 Fly-Kids Summer Camp Registration</h1>
+                            <h1>Meet Registration</h1>
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2022 Pole Vault Championships Registration is Open!
+                                <br></br>
+                            </p>
                     </div>
 
                     <div className='form-row'>
                         <label>
-                            <span className='required'>Weeks</span>
-                            <input type ="checkbox" name="dates1" value="jul10-14"/>
-                            <label for="jul10-14">&nbsp;&nbsp;Jul 10th - Jul 14th</label>
-                            <br></br>
-                            <input type ="checkbox" name="dates2" value="jul17-21"/>
-                            <label for="jul17-21">&nbsp;&nbsp;Jul 17th - Jul 21st</label>
-                            <br></br>
-                            <input type ="checkbox" name="dates3" value="jul24-28"/>
-                            <label for="jul24-28">&nbsp;&nbsp;Jul 24th - Jul 28th</label>
-                            <br></br>
-                            <input type ="checkbox" name="dates4" value="jul31-aug4"/>
-                            <label for="jul31-aug4">&nbsp;&nbsp;Jul 31st - Aug 4th</label>
-                            <br></br>
-                            <input type ="checkbox" name="dates5" value="aug7-11"/>
-                            <label for="aug7-11">&nbsp;&nbsp;Aug 7th - Aug 11th</label>
+                            <span className='required'>Competition</span>
+                            <input type ="checkbox" name="dates1" value="dmvchamps22"/>
+                            <label for="regclosed">&nbsp;&nbsp;2022 Pole Vault Championships ($35)</label>
                             <br></br>
                         </label>
                     </div>
@@ -341,6 +332,36 @@ class AthleteInfo extends React.Component {
                                 <input type='text' name='email' />
                             </label>
                         </div>
+
+                        <div className ='form-row'>
+                            <label>
+                                <span className = 'required'>Personal Record (in meters)</span>
+                                <input type = 'number' name = 'pr' step = '.01'/>
+                            </label>
+                        </div>
+
+                        <div className = 'form-row'>
+                            <label>
+                                <span className = 'required'>Club/School Team Name (N/A if unattached)</span>
+                                <input type = 'text' name = 'team'/>
+                            </label>
+                        </div>
+                        <div className='form-row'>
+                            <label>
+                                <span className='required'>Division</span>
+                                <select name='division'>
+                                    <option value=''>Select Division</option>
+                                    <option value='Fly-Kids'>Fly Kids (ages 7-10)</option>
+                                    <option value='6-10ft5 Female'>6'-10'5" Female</option>
+                                    <option value='8-13ft5 Male'>8'-13'5" Male</option>
+                                    <option value='10ft6-12ft11 Female'>10'6"-12'11" Female</option>
+                                    <option value='13ft6-15ft11 Male'>13'6"-15'11" Male</option>
+                                    <option value='Elite Women'>Elite Women</option>
+                                    <option value='Elite Men'>Elite Men</option>
+                                </select>
+                            </label>
+                        </div>
+
                         
 
                         <div className='form-row'>
@@ -437,6 +458,12 @@ class AthleteInfo extends React.Component {
                         </div>
 
 
+                        <div className='form-row'>
+                            <label>
+                                <span>Accomplishments (Optional)</span>
+                                <textarea rows='6' cols='40' name='accomplishments' />
+                            </label>
+                        </div>
 
                         {errorContainer}
 
@@ -523,10 +550,20 @@ class Agreement extends React.Component {
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                     <form id='event-agreement' className='form-labels-on-top'>
                         <div className='form-title-row'>
-                            <h1>Agreement</h1>
+                            <h1>Waiver Agreement</h1>
                         </div>
 
-                        <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree to notify us if you or anyone in your family has tested positive for COVID-19. You will also notify us if you have any of the following <a style={{color: '#C0282D'}} target='_blank' href='https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html'>symptoms</a> the week of the camp.</p>
+
+                        <img className='waiver-image' src='../img/forms/adult-comp-1.png' />
+                        <img className='waiver-image' src='../img/forms/adult-comp-2.png' />
+                        <img className='waiver-image' src='../img/forms/adult-comp-3.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-1.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-2.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-3.png' />
+
+                        <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's legal guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/DC Vault Waiver - Competition.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
+                        <br></br>
+                        <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you also agree to notify us if you or anyone in your family has tested positive for COVID-19. You will also notify us if you have any of the following <a style={{color: '#C0282D'}} target='_blank' href='https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html'>symptoms</a> the week of the event.</p>
 
                         <div className='row'>
                             <div className='col-xs-12 col-md-6'>
@@ -565,24 +602,18 @@ class Payment extends React.Component {
     constructor (props) {
         super(props)
         let price = 0
-        let numWeeks = 0
         if(this.props.data.athleteInfo.dates1){
-            price+=350
-            numWeeks+=1
+            price+=35
           }
           if(this.props.data.athleteInfo.dates2){
-            price+=350
-            numWeeks+=1
+            price+=25
           }
           if(this.props.data.athleteInfo.dates3){
-            price+=350
-            numWeeks+=1          }
+            price+=25          }
           if(this.props.data.athleteInfo.dates4){
-            price+=350
-            numWeeks+=1          }
+            price+=25          }
           if(this.props.data.athleteInfo.dates5){
-            price+=350
-            numWeeks+=1          }
+            price+=25          }
           if(this.props.data.athleteInfo.dates6){
             price+=25          }
           if(this.props.data.athleteInfo.dates7){
@@ -593,14 +624,9 @@ class Payment extends React.Component {
             price+=25          }
           if(this.props.data.athleteInfo.dates10){
             price+=25          }
-        let disc = 0
-        if(numWeeks >= 4){
-            disc = price * .10
-            price = price - disc
-        }
+
         this.state = {
             price: price,
-            discount: disc,
             errorText: '',
         }
     }
@@ -653,7 +679,7 @@ class Payment extends React.Component {
             dateLst += this.props.data.athleteInfo.dates10 + ", "
         }
         this.props.data.athleteInfo.dates1 = dateLst
-        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Weeks: ' + dateLst
+        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\n State:' + this.props.data.athleteInfo.state + '\n Division: ' + this.props.data.athleteInfo.division +  '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competitions: ' + dateLst
 
 
         paypal.Button.render({ // eslint-disable-line
@@ -719,7 +745,6 @@ class Payment extends React.Component {
         }
 
         let currentPrice = (this.state.price)
-        let currentDiscount = (this.state.discount)
         let currentProcessingFee = ((this.state.price) * 0.03).toFixed(2)
 
         return (
@@ -734,9 +759,7 @@ class Payment extends React.Component {
                             <div className='row'>
                                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                                     <p className='price-text'>Registration Fee: <span className='red-text'>${currentPrice}</span></p>
-                                    <p className='price-text'>4+ Week Signup Discount: <span className='red-text'>-${currentDiscount}</span></p>
                                     <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
-                        
                                 </div>
                             </div>
                             {errorContainer}
