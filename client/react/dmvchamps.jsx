@@ -4,7 +4,7 @@ const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
 
-class Competition extends React.Component {
+class Dmvchamps extends React.Component {
     constructor (props) {
         super(props)
 
@@ -70,7 +70,7 @@ class Competition extends React.Component {
         let progressBar = this.state.showBar ? (<ProgressBar pageNum={this.state.pageNum} />) : ''
         if (this.state.registrationOpen) {
             return (
-                <section id='competition'>
+                <section id='dmvchamps'>
                     <div className='container'>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
@@ -273,7 +273,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2022 Pole Vault Championships Registration is Open!
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2023 Pole Vault Championships Registration is Open!
                                 <br></br>
                             </p>
                     </div>
@@ -282,7 +282,7 @@ class AthleteInfo extends React.Component {
                         <label>
                             <span className='required'>Competition</span>
                             <input type ="checkbox" name="dates1" value="dmvchamps22"/>
-                            <label for="regclosed">&nbsp;&nbsp;2022 Pole Vault Championships ($35)</label>
+                            <label for="regclosed">&nbsp;&nbsp;2023 Pole Vault Championships ($45)</label>
                             <br></br>
                         </label>
                     </div>
@@ -352,10 +352,10 @@ class AthleteInfo extends React.Component {
                                 <select name='division'>
                                     <option value=''>Select Division</option>
                                     <option value='Fly-Kids'>Fly Kids (ages 7-10)</option>
-                                    <option value='6-10ft5 Female'>6'-10'5" Female</option>
-                                    <option value='8-13ft5 Male'>8'-13'5" Male</option>
-                                    <option value='10ft6-12ft11 Female'>10'6"-12'11" Female</option>
-                                    <option value='13ft6-15ft11 Male'>13'6"-15'11" Male</option>
+                                    <option value='Male Red Division'>PR Under 3.96m - 13' Male</option>
+                                    <option value='Female Red Division'>PR Under 3.96m - 13' Female</option>
+                                    <option value='Male Black Division'>10'6"-12'11" Female</option>
+                                    <option value='Female Black Division'>13'6"-15'11" Male</option>
                                     <option value='Elite Women'>Elite Women</option>
                                     <option value='Elite Men'>Elite Men</option>
                                 </select>
@@ -860,4 +860,4 @@ class ProgressBar extends React.Component {
     }
 }
 
-export default Competition
+export default Dmvchamps

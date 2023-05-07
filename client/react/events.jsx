@@ -31,39 +31,412 @@ class Events extends React.Component {
       {
         date: new Date('June 24, 2023'),
         partial: (<div className='event-block' id='24JUN2023'>
-        <p className='event-block-title'><span class="red-text">2023</span> POLE <span class="red-text">VAULT</span> CHAMPIONSHIPS</p>
+       <p className='event-block-title'>2023 <span className='red-text'>Pole Vault</span> Championships</p>
+        <img src = "../img/events/dmvchamps23.png" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
-          <span className='event-block-date'>Saturday, Jun 24th 2023</span>
+          <span className='event-block-date'>Saturday, June 24th 2023</span>
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
-        <span className='event-block-details-header'>ELITE LINEUP</span>
+        <p className='event-block-title'><span className='red-text'>ELITE INVITE </span> DIVISION INFORMATION</p>
+        <span className='event-block-details-header'>Entry Standards</span>
         <ul className='event-block-details'>
-          <li>Anicka Newell</li>
-          <li>Kristen Brown</li>
-          <li>Austin Miller</li>
-          <li>Nate Richartz</li>
+          <li>Elite Men</li>
+          <ul>
+            <li>5.0m (A) standard - automatic</li>
+            <li>4.9m (B) standard - waitlist (10 entries max in elite division)</li>
+            <li>4.81m starting height</li>
+          </ul>
+          <li>Elite Women</li>
+          <ul>
+            <li>4.0m (A) standard - automatic</li>
+            <li>3.8m (B) standard - waitlist (10 entries max in elite division)</li>
+            <li>3.71m starting height</li>
+          </ul>
+          <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
         </ul>
+        <span className='event-block-details-header'><span className='red-text'>$5,000 in Prize Money</span> (Elite Division)</span>
+        <ul className='event-block-details'>
+          <li>Elite Men: Awarded $$$ w/clearance of 5.56m (18’3&quot;) or more as follows:</li>
+          <ul>
+            <li>1st place = $1,250</li>
+            <li>2nd place = $750</li>
+            <li>3rd place = $500</li>
+          </ul>
+          <li>Elite Women: Awarded $$$ w/clearance of 4.46m (14&#39;8&quot;) or more as follows:</li>
+          <ul>
+            <li>1st place = $1,250</li>
+            <li>2nd place = $750</li>
+            <li>3rd place = $500</li>
+          </ul>
+          <li><i><u>NOTE:</u> Collegiate/High School athletes 'wishing to' maintain NCAA eligibility may not be awarded $ in accordance with NCAA requirements and will forfeit prize money.</i></li>
+          <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
+        </ul>
+        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 05/01/2023)</span>
+        <span className='event-block-details-header'><br></br>ELITE MEN</span>
+        <ul className='event-block-details'>
+          <li>Austin Miller - 5.81 (<span className='red-text'>19&#39; 0.75&quot;</span>)</li>
+          <ul>
+            <li>Defending 2022 Event Champion</li>
+            <li><span className='red-text'>DC Vault Facility Record Holder</span> (5.63m - 18&#39;6&quot;)</li>
+            <li>Vault House / Tean Pacer</li>
+            <li>Olympic Trials Finalist</li>
+            <li><a href = "https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
+            <li>DMV Native!</li>
+          </ul>
+          <li>Jorge Luna-Estes - 5.62m (<span className='red-text'>18&#39; 5.25&quot;</span>)</li>
+          <ul>
+            <li>RISEN Performance</li>
+            <li>Olympic Trials Qualifier</li>
+            <li><a href = "https://instagram.com/iamlunaestes">instagram.com/iamlunaestes</a></li>
+            <li>Mexico</li>
+          </ul>
+          <li>Matthew Keim 5.35m (<span className='red-text'>17' 6.5"</span>)</li>
+          <ul>
+            <li>Industrial Vault Club</li>
+            <li>2x NCAA All American</li>
+            <li><a href = "https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
+            <li>Ohio</li>
+          </ul>
+          <li>Joshuah Alcon 5.2m (<span className='red-text'>17’ 1”</span>)</li>
+          <ul>
+            <li>DC Vault</li>
+            <li>Dominican Republic National Record Holder</li>
+            <li>NACAC U23 Bronze Medalist</li>
+            <li><a href = "https://instagram.com/joshuahalcon">instagram.com/joshuahalcon</a></li>
+            <li>District of Columbia</li>
+          </ul>
+          <li>Christian Di Nicolantonio 5.12m (<span className='red-text'>16' 9.5"</span>)</li>
+          <ul>
+            <li>DC Vault / Catholic University of America</li>
+            <li>NCAA National Championships Qualifier / CUA Record Holder</li>
+            <li><a href = "https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
+            <li>District of Columbia</li>
+          </ul>
 
-        <span className='event-block-details-header'>MORE INFO COMING SOON!</span>
+        </ul>
+        <span className='event-block-details-header'><br></br>ELITE WOMEN</span>
+        <ul className='event-block-details'>
+          <li>Anicka Newell 4.70m (<span className='red-text'>15’5”</span>)</li>
+          <ul>
+            <li>2021 Event Champion</li>
+            <li><span className='red-text'>DC Vault Facility Record Holder</span> (4.65m – 15’3”)</li>
+            <li>Two Time Olympian</li>
+            <li><a href = "https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
+            <li>Texas</li>
+          </ul>
+          <li>Kristen Brown 4.70m (<span className='red-text'>15' 5"</span>)</li>
+          <ul>
+            <li>VaultHouse Track Club</li>
+            <li>Two-time Olympic trials finalist</li>
+            <li><a href = "https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
+            <li>DMV Native!</li>
+          </ul>
+          <li>Sydney Horn 4.50m (<span className='red-text'>14&#39; 9&quot;</span>)</li>
+          <ul>
+            <li>VaultWorx</li>
+            <li>High Point University</li>
+            <li>2022 NCAA Silver Medalist</li>
+            <li>4x NCAA All American</li>
+            <li><a href = "https://instagram.com/sydney_horn_">instagram.com/sydney_horn_</a></li>
+            <li>Pennsylvania</li>
+          </ul>
+        </ul>
         <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
         full: (<div className='event-block' id='24JUN2023'>
-        <p className='event-block-title'><span class="red-text">2023</span> POLE <span class="red-text">VAULT</span> CHAMPIONSHIPS</p>
+                <p className='event-block-title'>2023 <span className='red-text'>Pole Vault</span> Championships</p>
+        <img src = "../img/events/dmvchamps23.png" alt="DMV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
-          <span className='event-block-date'>Saturday, Jun 24th 2023</span>
+          <span className='event-block-date'>Saturday, June 24th 2023</span>
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
-        <span className='event-block-details-header'>ELITE LINEUP</span>
+        <p className='event-block-title'><span className='red-text'>ELITE INVITE </span> DIVISION INFORMATION</p>
+        <span className='event-block-details-header'>Entry Standards</span>
         <ul className='event-block-details'>
-          <li>Anicka Newell</li>
-          <li>Kristen Brown</li>
-          <li>Austin Miller</li>
-          <li>Nate Richartz</li>
+          <li>Elite Men</li>
+          <ul>
+            <li>5.0m (A) standard - automatic</li>
+            <li>4.9m (B) standard - waitlist (10 entries max in elite division)</li>
+            <li>4.81m starting height</li>
+          </ul>
+          <li>Elite Women</li>
+          <ul>
+            <li>4.0m (A) standard - automatic</li>
+            <li>3.8m (B) standard - waitlist (10 entries max in elite division)</li>
+            <li>3.71m starting height</li>
+          </ul>
+          <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
         </ul>
-        <center><span className='red-text'>Click Arrow for More Info</span></center>
-        </div>)
+        <span className='event-block-details-header'><span className='red-text'>$5,000 in Prize Money</span> (Elite Division)</span>
+        <ul className='event-block-details'>
+          <li>Elite Men: Awarded $$$ w/clearance of 5.56m (18’3&quot;) or more as follows:</li>
+          <ul>
+            <li>1st place = $1,250</li>
+            <li>2nd place = $750</li>
+            <li>3rd place = $500</li>
+          </ul>
+          <li>Elite Women: Awarded $$$ w/clearance of 4.46m (14&#39;8&quot;) or more as follows:</li>
+          <ul>
+            <li>1st place = $1,250</li>
+            <li>2nd place = $750</li>
+            <li>3rd place = $500</li>
+          </ul>
+          <li><i><u>NOTE:</u> Collegiate/High School athletes 'wishing to' maintain NCAA eligibility may not be awarded $ in accordance with NCAA requirements and will forfeit prize money.</i></li>
+          <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
+        </ul>
+        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 05/01/2023)</span>
+        <span className='event-block-details-header'><br></br>ELITE MEN</span>
+        <ul className='event-block-details'>
+          <li>Austin Miller - 5.81 (<span className='red-text'>19&#39; 0.75&quot;</span>)</li>
+          <ul>
+            <li>Defending 2022 Event Champion</li>
+            <li><span className='red-text'>DC Vault Facility Record Holder</span> (5.63m - 18&#39;6&quot;)</li>
+            <li>Vault House / Tean Pacer</li>
+            <li>Olympic Trials Finalist</li>
+            <li><a href = "https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
+            <li>DMV Native!</li>
+          </ul>
+          <li>Jorge Luna-Estes - 5.62m (<span className='red-text'>18&#39; 5.25&quot;</span>)</li>
+          <ul>
+            <li>RISEN Performance</li>
+            <li>Olympic Trials Qualifier</li>
+            <li><a href = "https://instagram.com/iamlunaestes">instagram.com/iamlunaestes</a></li>
+            <li>Mexico</li>
+          </ul>
+          <li>Matthew Keim 5.35m (<span className='red-text'>17' 6.5"</span>)</li>
+          <ul>
+            <li>Industrial Vault Club</li>
+            <li>2x NCAA All American</li>
+            <li><a href = "https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
+            <li>Ohio</li>
+          </ul>
+          <li>Joshuah Alcon 5.2m (<span className='red-text'>17’ 1”</span>)</li>
+          <ul>
+            <li>DC Vault</li>
+            <li>Dominican Republic National Record Holder</li>
+            <li>NACAC U23 Bronze Medalist</li>
+            <li><a href = "https://instagram.com/joshuahalcon">instagram.com/joshuahalcon</a></li>
+            <li>District of Columbia</li>
+          </ul>
+          <li>Christian Di Nicolantonio 5.12m (<span className='red-text'>16' 9.5"</span>)</li>
+          <ul>
+            <li>DC Vault / Catholic University of America</li>
+            <li>NCAA National Championships Qualifier / CUA Record Holder</li>
+            <li><a href = "https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
+            <li>District of Columbia</li>
+          </ul>
+
+        </ul>
+        <span className='event-block-details-header'><br></br>ELITE WOMEN</span>
+        <ul className='event-block-details'>
+          <li>Anicka Newell 4.70m (<span className='red-text'>15’5”</span>)</li>
+          <ul>
+            <li>2021 Event Champion</li>
+            <li><span className='red-text'>DC Vault Facility Record Holder</span> (4.65m – 15’3”)</li>
+            <li>Two Time Olympian</li>
+            <li><a href = "https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
+            <li>Texas</li>
+          </ul>
+          <li>Kristen Brown 4.70m (<span className='red-text'>15' 5"</span>)</li>
+          <ul>
+            <li>VaultHouse Track Club</li>
+            <li>Two-time Olympic trials finalist</li>
+            <li><a href = "https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
+            <li>DMV Native!</li>
+          </ul>
+          <li>Sydney Horn 4.50m (<span className='red-text'>14&#39; 9&quot;</span>)</li>
+          <ul>
+            <li>VaultWorx</li>
+            <li>High Point University</li>
+            <li>2022 NCAA Silver Medalist</li>
+            <li>4x NCAA All American</li>
+            <li><a href = "https://instagram.com/sydney_horn_">instagram.com/sydney_horn_</a></li>
+            <li>Pennsylvania</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Bar Progressions</span>
+        <ul className='event-block-details'>
+          <li>Elite Men</li>
+          <ul>
+            <li>4.81 - 15&#39;9&quot;</li>
+            <li>4.96 - 16&#39;3&quot;</li>
+            <li>5.11 - 16&#39;9&quot;</li>
+            <li>5.26 - 17&#39;3&quot;</li>
+            <li>5.41 - 17&#39;9&quot;</li>
+            <li>5.56 - 18&#39;3&quot; ($$$ CASH BAR)</li>
+            <li>5.71 - 18&#39;9&quot;</li>
+            <li>5.81 - 19&#39;1&quot; (WORLD CHAMPIONSHIPS QUALIFIER BAR)</li>
+            <li>5.91 - 19&#39;5&quot;</li>
+          </ul>
+          <li>Elite Women</li>
+          <ul>
+            <li>3.71 - 12’2”</li>
+            <li>3.86 - 12’8”</li>
+            <li>4.01 - 13’2”</li>
+            <li>4.16 - 13’8”</li>
+            <li>4.31 - 14&#39;2&quot;</li>
+            <li>4.46 - 14’8” ($$$ CASH BAR)</li>
+            <li>4.61 - 15’1”</li>
+            <li>4.71 - 15’5” (WORLD CHAMPIONSHIPS QUALIFIER BAR)</li>
+            <li>4.81 - 15’9”</li>
+            <li>4.91 - 16’1”</li>
+            <li>5.01 - 16’5”</li>
+          </ul>
+        </ul>
+        <p className='event-block-title'><span className='red-text'>OPEN</span> DIVISIONS / GENERAL EVENT INFORMATION</p>
+
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>The 2023 Pole Vault Championships are open to all athletes ages 7 and up</li>
+          <li>Advanced Registration Only</li>
+          <li>Registration Closes June 11th</li>
+          <li>$40 for competitors - <span className='red-text'>Register Here!</span></li>
+          <li><b>$10 for all non-competitors entering the facility (cash)</b></li>
+          <li>Spectators and coaches may also watch from outside the fence free of charge</li>
+        </ul>
+        <span className='event-block-details-header'>Awards/Sanctioning</span>
+        <ul className='event-block-details'>
+          <li>Medals will be awarded in all divisions, 1st through 3rd places</li>
+          <li>Special Limited-Edition Medals Awarded to the #1 High School Male and Female Competitors from the DMV (DC, MD, VA) region and for facility + event records</li>
+          <li>USATF Sanctioned</li>
+          <li>Results/Performance marks will be published at <a href = "https://www.worldathletics.org">WorldAthletics.org</a> (elite division only), <a href = "https://www.milesplit.com">Milesplit.com</a> and <a href="https://dcvault.com/events">DCVault.com/events</a>.</li>
+        </ul>
+        <span className='event-block-details-header'>Venue</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center - 2200 East Capitol street NE Washington DC</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3)</li>
+          <li>Athletes and Spectators enter the facility from the E. Capitol Street sidewalk gate. Park in Lot #3, exit the lot onto the sidewalk and had to the double gate facing the street next to the DC VAULT storage shed</li>
+        </ul>
+        <span className='event-block-details-header'>Open Divisons</span>
+        <ul className='event-block-details'>
+          <li>Fly-Kids Division</li>
+          <ul>
+            <li>Any athlete age 7-10</li>
+            <li>1.25m starting height (4’1”)</li>
+          </ul>
+          <li>Male Red Division</li>
+          <ul>
+            <li>Male athletes with a PR under 3.96m (less than 13’)</li>
+            <li>2.3m starting height (7’6”)</li>
+          </ul>
+          <li>Female Black Division</li>
+          <ul>
+            <li>Female athletes with a PR of 3.05m+ (10’ and up)</li>
+            <li>2.6m starting height (8’6”)</li>
+          </ul>
+          <li>Female Red Division</li>
+          <ul>
+            <li>Female athletes with a PR under 3.05m+ (10’ and under)</li>
+            <li>1.7m starting height (5’6”)</li>
+          </ul>
+          <li>Male Black Division</li>
+          <ul>
+            <li>Male athletes with a PR of 3.96m+ (13’ and up)</li>
+            <li>3.5m starting height (11’6”)</li>
+          </ul>
+          <li><i>NOTE: Male and female competitors are scored separately in Fly-Kids combined Divisions. 15cm progressions will be used for Open Divisions.</i></li>
+        </ul>
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
+          <ul>
+            <li>07:30am (staff arrive)</li>
+            <li>08:30am (gates open / warmups)</li>
+            <ul>
+              <li>Fly-Kids (red pit)</li>
+            </ul>
+            <li>09:00am <span className='red-text'>(competition)</span></li>
+            <ul>
+              <li>Fly-Kids (1.25m start)</li>
+            </ul>
+            <li>10:00am (warmups)</li>
+            <ul>
+              <li>Male Red Division (red pit)</li>
+              <li>Female Black Division (black pit)</li>
+            </ul>
+            <li>11:00am <span className='red-text'>(competition)</span></li>
+            <ul>
+              <li>Male Red Division (2.3m start)</li>
+              <li>Female Black Division (2.6m start)</li>
+            </ul>
+            <li>12:30pm (warmups)</li>
+            <ul>
+              <li>Elite Men (black pit)</li>
+            </ul>
+            <li>1:30pm <span className='red-text'>(competition)</span></li>
+            <ul>
+              <li>Elite Men (4.81m start)</li>
+            </ul>
+            <li>2:30pm (warmups)</li>
+            <ul>
+              <li>Elite Women (black pit)</li>
+            </ul>
+            <li>3:30pm <span className='red-text'>(competition)</span></li>
+            <ul>
+              <li>Elite Women (3.71m start)</li>
+            </ul>
+            <li>4:30pm (warmups)</li>
+            <ul>
+              <li>Female Red Division (red pit)</li>
+              <li>Male Black Division (black pit)</li>
+            </ul>
+            <li>5:30pm <span className='red-text'>(competition)</span></li>
+            <ul>
+              <li>Female Red Division (1.7m start)</li>
+              <li>Male Black Division (3.5m start)</li>
+            </ul>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Start List/Results</span>
+        <ul className='event-block-details'>
+          <li>Download Start List <span class="red-text">Here!</span> (available June 15th )</li>
+          <li>Download Final Results <span class="red-text">Here!</span> (available after competition)</li>
+        </ul>
+        <span className='event-block-details-header'>Spikes</span>
+        <ul className='event-block-details'>
+          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>
+          <ul>
+            <li>ELITE DIVISION athletes may wear 1/4" spikes</li>
+          </ul>
+          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>
+          <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>
+          <ul>
+            <li>Recommended so you don't waste time at the event trying to change spikes!</li>
+          </ul>
+          <li>Available for $5 per set at the event (bring your own spike wrench)</li>
+          
+        </ul>
+        <span className='event-block-details-header'>Pole Storage</span>
+        <ul className='event-block-details'>
+          <li>Overnight pole storage can be arranged. For drop-off and pick-up, email <span className='red-text'>Events@dcvault.org</span></li>
+        </ul>
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li>UCS Spirit Poles Available for Rent (inquire)</li>
+          <li>$30 cash at check-in</li>
+          <li>You may be sharing your rental pole</li>
+          <li>ID will be held until pole is returned</li>
+        </ul>
+
+        <span className='event-block-details-header'>Event Features / Food</span>
+        <ul className='event-block-details'>
+          <li>Free Grilled hotdogs and veggie dogs for competitors and spectators!</li>
+          <li>Bring something special for yourself if you’d like to grill it up!</li>
+        </ul>
+        <span className='event-block-details-header'>Pets</span>
+        <ul className='event-block-details'>
+          <li>Dog friendly venue!</li>
+          <li>Bring a leash and water for your critter</li>
+        </ul>
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>For additional information, email <span className='red-text'>Events@dcvault.org</span></li>
+        </ul>
+
+      </div>)
       },
       {
         date: new Date('July 14, 2023'),
@@ -404,7 +777,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>Deadline to register is July 8th </li>
-          <li>$350 - <a href = "http://dcvault.com/register/">Register Here</a>  </li>
+          <li>Registration Closed  </li>
         </ul>
         <span className='event-block-details-header'>Included</span>
         <ul className='event-block-details'>
