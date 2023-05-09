@@ -166,7 +166,7 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division']
+        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division','member']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
@@ -281,8 +281,8 @@ class AthleteInfo extends React.Component {
                     <div className='form-row'>
                         <label>
                             <span className='required'>Competition</span>
-                            <input type ="checkbox" name="dates1" value="dmvchamps22"/>
-                            <label for="regclosed">&nbsp;&nbsp;2023 Pole Vault Championships ($45)</label>
+                            <input type ="checkbox" name="dates1" value="dmvchamps23"/>
+                            <label for="dmvchamps23">&nbsp;&nbsp;2023 Pole Vault Championships ($40)</label>
                             <br></br>
                         </label>
                     </div>
@@ -291,7 +291,16 @@ class AthleteInfo extends React.Component {
                         <div className='form-title-row'>
                             <h1>Athlete Information</h1>
                         </div>
-
+                        <div className='form-row'>
+                            <label>
+                                <span className='required'>Are you a <span className = "red-text">current</span> member of DC Vault?</span>
+                                <select name='member'>
+                                    <option value=''>Select yes/no</option>
+                                    <option value='dcvault-member'>Yes</option>
+                                    <option value='not-member'>No</option>
+                                </select>
+                            </label>
+                        </div>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6'>
                                 <div className='form-row'>
@@ -353,9 +362,9 @@ class AthleteInfo extends React.Component {
                                     <option value=''>Select Division</option>
                                     <option value='Fly-Kids'>Fly Kids (ages 7-10)</option>
                                     <option value='Male Red Division'>PR Under 3.96m - 13' Male</option>
-                                    <option value='Female Red Division'>PR Under 3.96m - 13' Female</option>
-                                    <option value='Male Black Division'>10'6"-12'11" Female</option>
-                                    <option value='Female Black Division'>13'6"-15'11" Male</option>
+                                    <option value='Female Red Division'>PR Under 3.05m - 10' Female</option>
+                                    <option value='Male Black Division'>PR Over 3.96m - 13' Male</option>
+                                    <option value='Female Black Division'>PR Over 3.05m - 10' Female</option>
                                     <option value='Elite Women'>Elite Women</option>
                                     <option value='Elite Men'>Elite Men</option>
                                 </select>
@@ -603,7 +612,11 @@ class Payment extends React.Component {
         super(props)
         let price = 0
         if(this.props.data.athleteInfo.dates1){
-            price+=35
+            if(this.props.data.athleteInfo.member == "dcvault-member"){
+                price = 1
+            }else{
+                price+=40
+            }
           }
           if(this.props.data.athleteInfo.dates2){
             price+=25
@@ -804,7 +817,7 @@ class Confirmation extends React.Component {
 
                     //Send the athlete a confirmation email
                     if (apiHelpers.validateEmail(athleteEmail)) {
-                        apiHelpers.sendEventConfirmationEmail(athleteEmail, this.props.data)
+                        apiHelpers.sendDMVEventConfirmationEmail(athleteEmail, this.props.data)
                     }
                 }
             })

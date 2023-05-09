@@ -162,16 +162,16 @@ transporter.sendMail(mailOptions2, (error, info) => {
 }
 */
 }
-/*
-module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
+
+module.exports.sendDMVEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: '2022 Pole Vault Championships', // Subject line
+        subject: '2023 Pole Vault Championships', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the 2022 DMV Championships! Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org. For additional information including schedule, results, etc, please see our online event info <a href="https://dcvault.com/events">HERE</a>.</p>\
+        html: '<p>Thank you for registering for the 2023 DMV Championships! Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org. For additional information including schedule, results, etc, please see our online event info <a href="https://dcvault.com/events">HERE</a>.</p>\
         <h3>Entry Fee - Spectators/Coaches</h3>\
         <ul>\
-          <li>$5 for all non-competitors entering the facility (cash only)</li>\
+          <li>$10 for all non-competitors entering the facility (cash only)</li>\
           <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>\
         </ul>\
         <h3>Facility</h3>\
@@ -204,7 +204,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
         </ul>\
         <h3>Pole Rentals</h3>\
         <ul>\
-          <li>$25 cash at check-in</li>\
+          <li>$30 cash at check-in</li>\
           <li>You may be sharing your rental pole</li>\
           <li>ID will be held until pole is returned</li>\
         </ul>'
@@ -231,7 +231,7 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
       console.log('Message %s sent to %s response: %s', info.messageId, "events@dcvault.org", info.response)
   })
 }
-*/
+
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
   let mailOptions = {
       from: '"DC Vault" <' + config.email.username + '>', // sender address

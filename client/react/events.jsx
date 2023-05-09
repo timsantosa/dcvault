@@ -292,7 +292,7 @@ class Events extends React.Component {
           <li>The 2023 Pole Vault Championships are open to all athletes ages 7 and up</li>
           <li>Advanced Registration Only</li>
           <li>Registration Closes June 11th</li>
-          <li>$40 for competitors - <span className='red-text'>Register Here!</span></li>
+          <li>$40 (Early Bird Special) / $50 (If you Register after June 1st) for competitors - <span className='red-text'>Registration Opening Soon</span></li>
           <li><b>$10 for all non-competitors entering the facility (cash)</b></li>
           <li>Spectators and coaches may also watch from outside the fence free of charge</li>
         </ul>
