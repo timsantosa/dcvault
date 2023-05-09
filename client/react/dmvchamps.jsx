@@ -293,7 +293,7 @@ class AthleteInfo extends React.Component {
                         </div>
                         <div className='form-row'>
                             <label>
-                                <span className='required'>Are you a <span className = "red-text">current</span> member of DC Vault?</span>
+                                <span className='required'>Are you a CURRENT member of DC Vault?</span>
                                 <select name='member'>
                                     <option value=''>Select yes/no</option>
                                     <option value='dcvault-member'>Yes</option>
