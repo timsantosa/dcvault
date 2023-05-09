@@ -365,8 +365,8 @@ class AthleteInfo extends React.Component {
                                     <option value='Female Red Division'>PR Under 3.05m - 10' Female</option>
                                     <option value='Male Black Division'>PR Over 3.96m - 13' Male</option>
                                     <option value='Female Black Division'>PR Over 3.05m - 10' Female</option>
-                                    <option value='Elite Women'>Elite Women</option>
-                                    <option value='Elite Men'>Elite Men</option>
+                                    <option value='Elite Women'>Elite Women (4.0m+)</option>
+                                    <option value='Elite Men'>Elite Men (5.0m+)</option>
                                 </select>
                             </label>
                         </div>
