@@ -257,6 +257,9 @@ apiHelpers.sendConfirmationEmail = (email, purchaseInfo) => {
 apiHelpers.sendEventConfirmationEmail = (email, purchaseInfo) => {
     return axios.post('/event/confirm', {email: email, purchaseInfo: purchaseInfo})
 }
+apiHelpers.sendDMVEventConfirmationEmail = (email, purchaseInfo) => {
+  return axios.post('/event/confirmdmv', {email: email, purchaseInfo: purchaseInfo})
+}
 
 apiHelpers.getDiscountAmount = (code) => {
   return axios.post('/registration/discount', {code: code})
