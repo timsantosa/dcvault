@@ -613,7 +613,7 @@ class Payment extends React.Component {
         let price = 0
         if(this.props.data.athleteInfo.dates1){
             if(this.props.data.athleteInfo.member == "dcvault-member"){
-                price = 1
+                price = 5
             }else{
                 price+=40
             }
