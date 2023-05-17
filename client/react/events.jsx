@@ -306,7 +306,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Fly-Kids Division</li>
           <ul>
-            <li>Any athlete age 7-10</li>
+            <li>Any athlete age 7-11</li>
             <li>1.25m starting height (4’1”)</li>
           </ul>
           <li>Male Red Division</li>

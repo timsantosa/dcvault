@@ -434,7 +434,7 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedSession == "spring" ? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedSession == "summer" ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display:'block'}}>
@@ -514,7 +514,7 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='5classes' checked={this.state.checkedMembership === '5classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>5 Classes ($250)</span>
+                    <span>5 Classes ($300)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
@@ -1168,7 +1168,7 @@ class Payment extends React.Component {
       price = 0
     } else if (group === 'allages') {
       if(membership === '5classes'){
-        price = 250
+        price = 300
       }else if (membership === '10classes'){
         price = 475
       }else if (membership === '20classes'){
