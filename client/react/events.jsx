@@ -43,14 +43,14 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Elite Men</li>
           <ul>
-            <li>5.0m (A) standard - automatic</li>
-            <li>4.9m (B) standard - waitlist (10 entries max in elite division)</li>
+            <li>5.35m (A) standard - automatic</li>
+            <li>5.00m (B) standard</li>
             <li>4.81m starting height</li>
           </ul>
           <li>Elite Women</li>
           <ul>
-            <li>4.0m (A) standard - automatic</li>
-            <li>3.8m (B) standard - waitlist (10 entries max in elite division)</li>
+            <li>4.3m (A) standard - automatic</li>
+            <li>4.0m (B) standard</li>
             <li>3.71m starting height</li>
           </ul>
           <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
@@ -157,14 +157,14 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Elite Men</li>
           <ul>
-            <li>5.0m (A) standard - automatic</li>
-            <li>4.9m (B) standard - waitlist (10 entries max in elite division)</li>
+            <li>5.35m (A) standard - automatic</li>
+            <li>5.00m (B) standard</li>
             <li>4.81m starting height</li>
           </ul>
           <li>Elite Women</li>
           <ul>
-            <li>4.0m (A) standard - automatic</li>
-            <li>3.8m (B) standard - waitlist (10 entries max in elite division)</li>
+            <li>4.3m (A) standard - automatic</li>
+            <li>4.0m (B) standard</li>
             <li>3.71m starting height</li>
           </ul>
           <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>

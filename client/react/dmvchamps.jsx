@@ -282,7 +282,7 @@ class AthleteInfo extends React.Component {
                         <label>
                             <span className='required'>Competition</span>
                             <input type ="checkbox" name="dates1" value="dmvchamps23"/>
-                            <label for="dmvchamps23">&nbsp;&nbsp;2023 Pole Vault Championships ($40)</label>
+                            <label for="dmvchamps23">&nbsp;&nbsp;2023 Pole Vault Championships ($50)</label>
                             <br></br>
                         </label>
                     </div>
@@ -615,7 +615,7 @@ class Payment extends React.Component {
             if(this.props.data.athleteInfo.member == "dcvault-member"){
                 price = 5
             }else{
-                price+=40
+                price+=50
             }
           }
           if(this.props.data.athleteInfo.dates2){
