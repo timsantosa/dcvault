@@ -359,14 +359,11 @@ class AthleteInfo extends React.Component {
                             <label>
                                 <span className='required'>Division</span>
                                 <select name='division'>
-                                    <option value=''>Select Division</option>
+                                    <option value=''>Select Division (All Men's divisions have reached max capacity)</option>
                                     <option value='Fly-Kids'>Fly Kids (ages 7-10)</option>
-                                    <option value='Male Red Division'>PR Under 3.96m - 13' Male</option>
                                     <option value='Female Red Division'>PR Under 3.05m - 10' Female</option>
-                                    <option value='Male Black Division'>PR Over 3.96m - 13' Male</option>
                                     <option value='Female Black Division'>PR Over 3.05m - 10' Female</option>
                                     <option value='Elite Women'>Elite Women (4.0m+)</option>
-                                    <option value='Elite Men'>Elite Men (5.0m+)</option>
                                 </select>
                             </label>
                         </div>
