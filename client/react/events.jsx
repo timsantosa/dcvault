@@ -72,75 +72,203 @@ class Events extends React.Component {
           <li><i><u>NOTE:</u> Collegiate/High School athletes 'wishing to' maintain NCAA eligibility may not be awarded $ in accordance with NCAA requirements and will forfeit prize money.</i></li>
           <li>ELITE ENTRIES: Contact <span className='red-text'>Events@DCVault.org</span></li>
         </ul>
-        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 05/01/2023)</span>
+        <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 06/09/2023)</span>
         <span className='event-block-details-header'><br></br>ELITE MEN</span>
         <ul className='event-block-details'>
-          <li>Austin Miller - 5.81 (<span className='red-text'>19&#39; 0.75&quot;</span>)</li>
+          <li>Scott Houston – 5.83m (19’ 1.5”)</li>
           <ul>
-            <li>Defending 2022 Event Champion</li>
-            <li><span className='red-text'>DC Vault Facility Record Holder</span> (5.63m - 18&#39;6&quot;)</li>
-            <li>Vault House / Tean Pacer</li>
-            <li>Olympic Trials Finalist</li>
-            <li><a href = "https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
-            <li>DMV Native!</li>
+            <li>Vaulthouse</li>
+            <li>2018 USA National Champion / 2018 NACAC Champion</li>
+            <li><a href="https://instagram.com/scottyhous">instagram.com/scottyhous</a></li>
+            <li>North Carolina</li>
           </ul>
-          <li>Jorge Luna-Estes - 5.62m (<span className='red-text'>18&#39; 5.25&quot;</span>)</li>
+
+          <li>Cole Walsh - 5.83m (19' 1.5")</li>
           <ul>
             <li>RISEN Performance</li>
-            <li>Olympic Trials Qualifier</li>
-            <li><a href = "https://instagram.com/iamlunaestes">instagram.com/iamlunaestes</a></li>
+            <li>2019 World Championships Finalist / 2014 USA Junior National Champion</li>
+            <li><a href="https://instagram.com/cole.vault">instagram.com/cole.vault</a></li>
+            <li>Arizona</li>
+          </ul>
+
+          <li>Austin Miller - 5.81m (19' 0.75")</li>
+          <ul>
+            <li>Defending 2022 Event Champion</li>
+            <li><span className='red-text'>DC Vault Facility Record Holder</span> (5.63m - 18'6")</li>
+            <li>Vaulthouse / Team Pacer</li>
+            <li>Olympic Trials Finalist</li>
+            <li><a href="https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
+            <li>DMV Native!</li>
+            <li>North Carolina</li>
+          </ul>
+
+          <li>Tray Oates - 5.74m (18’ 10”)</li>
+          <ul>
+            <li>Arizona Pole Vault Academy</li>
+            <li>Olympic Trials 4th Place / USA National Championships 4th Place</li>
+            <li><a href="https://instagram.com/olen_iii_oates">instagram.com/olen_iii_oates</a></li>
+            <li>Arizona</li>
+          </ul>
+
+          <li>Hunter Garretson - 5.71m (18' 9")</li>
+          <ul>
+            <li>Unattached / University of Akron</li>
+            <li>1st Team All American / 4 time NCAA National Championships Qualifier</li>
+            <li><a href="https://instagram.com/polevaulthunter">instagram.com/polevaulthunter</a></li>
+            <li>Ohio</li>
+          </ul>
+
+          <li>Jorge Luna-Estes - 5.62m (18' 5.25")</li>
+          <ul>
+            <li>RISEN Performance</li>
+            <li>Mexican National Champion</li>
+            <li><a href="https://instagram.com/iamlunaestes">instagram.com/iamlunaestes</a></li>
             <li>Mexico</li>
           </ul>
-          <li>Matthew Keim 5.35m (<span className='red-text'>17' 6.5"</span>)</li>
+
+          <li>Keon Howe - 5.59m (18’ 4.5")</li>
+          <ul>
+            <li>Team Pacer</li>
+            <li>2 time UNC Charlotte MVP</li>
+            <li><a href="https://instagram.com/kreeceman">instagram.com/kreeceman</a></li>
+            <li>North Carolina</li>
+          </ul>
+
+          <li>Elijah Cole - 5.41m (17’ 9”)</li>
+          <ul>
+            <li>San Jose Track Club</li>
+            <li>2023 Philippines National Champion / 2X NCAA Finals Qualifier</li>
+            <li><a href="https://instagram.com/fly_with_eli">instagram.com/fly_with_eli</a></li>
+            <li>Philippines</li>
+          </ul>
+
+          <li>Nate Hiett - 5.37m (17' 7.5")</li>
+          <ul>
+            <li>Arizona Pole Vault Academy</li>
+            <li>3 time American East Champ</li>
+            <li><a href="https://instagram.com/hiettskyvaulter">instagram.com/hiettskyvaulter</a></li>
+            <li>Arizona</li>
+          </ul>
+
+          <li>Matthew Keim - 5.35m (17' 6.5")</li>
           <ul>
             <li>Industrial Vault Club</li>
             <li>2x NCAA All American</li>
-            <li><a href = "https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
+            <li><a href="https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
             <li>Ohio</li>
           </ul>
-          <li>Joshuah Alcon 5.2m (<span className='red-text'>17’ 1”</span>)</li>
+
+          <li>Jacob Davis - 5.27 (17' 3.5")</li>
           <ul>
-            <li>DC Vault</li>
+            <li>NCPVC</li>
+            <li>6 time CUSA Team Champion</li>
+            <li><a href="https://instagram.com/jacobtriestofly">instagram.com/jacobtriestofly</a></li>
+            <li>North Carolina</li>
+          </ul>
+
+          <li>Joshuah Alcon - 5.2m (17’ 1”)</li>
+          <ul>
+            <li>DC Vault / Dominican Republic</li>
             <li>Dominican Republic National Record Holder</li>
             <li>NACAC U23 Bronze Medalist</li>
-            <li><a href = "https://instagram.com/joshuahalcon">instagram.com/joshuahalcon</a></li>
+            <li><a href="https://instagram.com/joshuahalcon">instagram.com/joshuahalcon</a></li>
             <li>District of Columbia</li>
           </ul>
-          <li>Christian Di Nicolantonio 5.12m (<span className='red-text'>16' 9.5"</span>)</li>
+
+          <li>Christian Di Nicolantonio - 5.12m (16' 9.5”)</li>
           <ul>
             <li>DC Vault / Catholic University of America</li>
             <li>NCAA National Championships Qualifier / CUA Record Holder</li>
-            <li><a href = "https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
+            <li><a href="https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
             <li>District of Columbia</li>
           </ul>
+
+          <li>Nico Morales - 5.12m (16 '9.5")</li>
+          <ul>
+            <li>Vault Factory / Rutgers</li>
+            <li>2023 Penn Relays Silver Medalist</li>
+            <li><a href="https://instagram.com/nico.f.morales">instagram.com/nico.f.morales</a></li>
+            <li>New Jersey</li>
+          </ul>
+
 
         </ul>
         <span className='event-block-details-header'><br></br>ELITE WOMEN</span>
         <ul className='event-block-details'>
-          <li>Anicka Newell 4.70m (<span className='red-text'>15’5”</span>)</li>
+          <li>Anicka Newell - 4.70m (15’5”)</li>
           <ul>
             <li>2021 Event Champion</li>
-            <li><span className='red-text'>DC Vault Facility Record Holder</span> (4.65m – 15’3”)</li>
+            <li><span className='red-text'>DC Vault Facility Record Holder</span> (4.65m - 15'3")</li>
             <li>Two Time Olympian</li>
-            <li><a href = "https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
+            <li><a href="https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
             <li>Texas</li>
           </ul>
-          <li>Kristen Brown 4.70m (<span className='red-text'>15' 5"</span>)</li>
+
+          <li>Kristen Brown - 4.70m (15' 5")</li>
           <ul>
-            <li>VaultHouse Track Club</li>
-            <li>Two-time Olympic trials finalist</li>
-            <li><a href = "https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
+            <li>Vaulthouse / Team Pacer</li>
+            <li>Two time Olympic trials finalist</li>
+            <li><a href="https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
             <li>DMV Native!</li>
           </ul>
-          <li>Sydney Horn 4.50m (<span className='red-text'>14&#39; 9&quot;</span>)</li>
+
+          <li>Kristen Leland - 4.65m (15' 3")</li>
           <ul>
-            <li>VaultWorx</li>
-            <li>High Point University</li>
+            <li>Unattached</li>
+            <li>2x Olympic trials qualifier / NCAA Division II National Record Holder</li>
+            <li><a href="https://instagram.com/kristen_lelandpv">instagram.com/kristen_lelandpv</a></li>
+            <li>Michigan</li>
+          </ul>
+
+          <li>Kortney Oates - 4.63m (15' 2")</li>
+          <ul>
+            <li>Risen Performance / Team Pacer</li>
+            <li>7 time USA nationals Qualifier</li>
+            <li><a href="https://instagram.com/kortneyoates">instagram.com/kortneyoates</a></li>
+            <li>Arizona</li>
+          </ul>
+
+          <li>Gabriela Leon - 4.61m (15' 1.5')</li>
+          <ul>
+            <li>Puma / Team USA</li>
+            <li>2022 World Championships Finalist / NCAA Division I National Champion</li>
+            <li><a href="https://instagram.com/gabiileonn_">instagram.com/gabiileonn_</a></li>
+            <li>Michigan</li>
+          </ul>
+
+          <li>Sydney Horn - 4.50m (14' 9")</li>
+          <ul>
+            <li>VaultWorx / High Point University</li>
             <li>2022 NCAA Silver Medalist</li>
-            <li>4x NCAA All American</li>
-            <li><a href = "https://instagram.com/sydney_horn_">instagram.com/sydney_horn_</a></li>
+            <li>4 time NCAA All American</li>
+            <li><a href="https://instagram.com/sydney_horn_">instagram.com/sydney_horn_</a></li>
             <li>Pennsylvania</li>
           </ul>
+
+          <li>Riley Felts - 4.42m (14' 6")</li>
+          <ul>
+            <li>Unattached / UNC Charlotte</li>
+            <li>5 time C-USA Champion / 2023 NCAA National Qualifier</li>
+            <li><a href="https://instagram.com/riley.felts">instagram.com/riley.felts</a></li>
+            <li>North Carolina</li>
+          </ul>
+
+          <li>Megan Houston - 4.41m (14' 5.5")</li>
+          <ul>
+            <li>Vaulthouse</li>
+            <li>7th @ 2019 USA Indoor Championships / NCAA All American</li>
+            <li><a href="https://instagram.com/zim">instagram.com/zim</a></li>
+            <li>Kentucky</li>
+          </ul>
+
+          <li>Karlee Fowler - 4.25m (14')</li>
+          <ul>
+            <li>AZPVA</li>
+            <li>Atlantic 10 conference record holder</li>
+            <li><a href="https://instagram.com/kauli_flower">instagram.com/kauli_flower</a></li>
+            <li>Arizona</li>
+          </ul>
+
         </ul>
         <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
@@ -189,72 +317,200 @@ class Events extends React.Component {
         <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 05/01/2023)</span>
         <span className='event-block-details-header'><br></br>ELITE MEN</span>
         <ul className='event-block-details'>
-          <li>Austin Miller - 5.81 (<span className='red-text'>19&#39; 0.75&quot;</span>)</li>
+          <li>Scott Houston – 5.83m (19’ 1.5”)</li>
           <ul>
-            <li>Defending 2022 Event Champion</li>
-            <li><span className='red-text'>DC Vault Facility Record Holder</span> (5.63m - 18&#39;6&quot;)</li>
-            <li>Vault House / Tean Pacer</li>
-            <li>Olympic Trials Finalist</li>
-            <li><a href = "https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
-            <li>DMV Native!</li>
+            <li>Vaulthouse</li>
+            <li>2018 USA National Champion / 2018 NACAC Champion</li>
+            <li><a href="https://instagram.com/scottyhous">instagram.com/scottyhous</a></li>
+            <li>North Carolina</li>
           </ul>
-          <li>Jorge Luna-Estes - 5.62m (<span className='red-text'>18&#39; 5.25&quot;</span>)</li>
+
+          <li>Cole Walsh - 5.83m (19' 1.5")</li>
           <ul>
             <li>RISEN Performance</li>
-            <li>Olympic Trials Qualifier</li>
-            <li><a href = "https://instagram.com/iamlunaestes">instagram.com/iamlunaestes</a></li>
+            <li>2019 World Championships Finalist / 2014 USA Junior National Champion</li>
+            <li><a href="https://instagram.com/cole.vault">instagram.com/cole.vault</a></li>
+            <li>Arizona</li>
+          </ul>
+
+          <li>Austin Miller - 5.81m (19' 0.75")</li>
+          <ul>
+            <li>Defending 2022 Event Champion</li>
+            <li><span className='red-text'>DC Vault Facility Record Holder</span> (5.63m - 18'6")</li>
+            <li>Vaulthouse / Team Pacer</li>
+            <li>Olympic Trials Finalist</li>
+            <li><a href="https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
+            <li>DMV Native!</li>
+            <li>North Carolina</li>
+          </ul>
+
+          <li>Tray Oates - 5.74m (18’ 10”)</li>
+          <ul>
+            <li>Arizona Pole Vault Academy</li>
+            <li>Olympic Trials 4th Place / USA National Championships 4th Place</li>
+            <li><a href="https://instagram.com/olen_iii_oates">instagram.com/olen_iii_oates</a></li>
+            <li>Arizona</li>
+          </ul>
+
+          <li>Hunter Garretson - 5.71m (18' 9")</li>
+          <ul>
+            <li>Unattached / University of Akron</li>
+            <li>1st Team All American / 4 time NCAA National Championships Qualifier</li>
+            <li><a href="https://instagram.com/polevaulthunter">instagram.com/polevaulthunter</a></li>
+            <li>Ohio</li>
+          </ul>
+
+          <li>Jorge Luna-Estes - 5.62m (18' 5.25")</li>
+          <ul>
+            <li>RISEN Performance</li>
+            <li>Mexican National Champion</li>
+            <li><a href="https://instagram.com/iamlunaestes">instagram.com/iamlunaestes</a></li>
             <li>Mexico</li>
           </ul>
-          <li>Matthew Keim 5.35m (<span className='red-text'>17' 6.5"</span>)</li>
+
+          <li>Keon Howe - 5.59m (18’ 4.5")</li>
+          <ul>
+            <li>Team Pacer</li>
+            <li>2 time UNC Charlotte MVP</li>
+            <li><a href="https://instagram.com/kreeceman">instagram.com/kreeceman</a></li>
+            <li>North Carolina</li>
+          </ul>
+
+          <li>Elijah Cole - 5.41m (17’ 9”)</li>
+          <ul>
+            <li>San Jose Track Club</li>
+            <li>2023 Philippines National Champion / 2X NCAA Finals Qualifier</li>
+            <li><a href="https://instagram.com/fly_with_eli">instagram.com/fly_with_eli</a></li>
+            <li>Philippines</li>
+          </ul>
+
+          <li>Nate Hiett - 5.37m (17' 7.5")</li>
+          <ul>
+            <li>Arizona Pole Vault Academy</li>
+            <li>3 time American East Champ</li>
+            <li><a href="https://instagram.com/hiettskyvaulter">instagram.com/hiettskyvaulter</a></li>
+            <li>Arizona</li>
+          </ul>
+
+          <li>Matthew Keim - 5.35m (17' 6.5")</li>
           <ul>
             <li>Industrial Vault Club</li>
             <li>2x NCAA All American</li>
-            <li><a href = "https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
+            <li><a href="https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
             <li>Ohio</li>
           </ul>
-          <li>Joshuah Alcon 5.2m (<span className='red-text'>17’ 1”</span>)</li>
+
+          <li>Jacob Davis - 5.27 (17' 3.5")</li>
           <ul>
-            <li>DC Vault</li>
+            <li>NCPVC</li>
+            <li>6 time CUSA Team Champion</li>
+            <li><a href="https://instagram.com/jacobtriestofly">instagram.com/jacobtriestofly</a></li>
+            <li>North Carolina</li>
+          </ul>
+
+          <li>Joshuah Alcon - 5.2m (17’ 1”)</li>
+          <ul>
+            <li>DC Vault / Dominican Republic</li>
             <li>Dominican Republic National Record Holder</li>
             <li>NACAC U23 Bronze Medalist</li>
-            <li><a href = "https://instagram.com/joshuahalcon">instagram.com/joshuahalcon</a></li>
+            <li><a href="https://instagram.com/joshuahalcon">instagram.com/joshuahalcon</a></li>
             <li>District of Columbia</li>
           </ul>
-          <li>Christian Di Nicolantonio 5.12m (<span className='red-text'>16' 9.5"</span>)</li>
+
+          <li>Christian Di Nicolantonio - 5.12m (16' 9.5”)</li>
           <ul>
             <li>DC Vault / Catholic University of America</li>
             <li>NCAA National Championships Qualifier / CUA Record Holder</li>
-            <li><a href = "https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
+            <li><a href="https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
             <li>District of Columbia</li>
           </ul>
+
+          <li>Nico Morales - 5.12m (16 '9.5")</li>
+          <ul>
+            <li>Vault Factory / Rutgers</li>
+            <li>2023 Penn Relays Silver Medalist</li>
+            <li><a href="https://instagram.com/nico.f.morales">instagram.com/nico.f.morales</a></li>
+            <li>New Jersey</li>
+          </ul>
+
 
         </ul>
         <span className='event-block-details-header'><br></br>ELITE WOMEN</span>
         <ul className='event-block-details'>
-          <li>Anicka Newell 4.70m (<span className='red-text'>15’5”</span>)</li>
+          <li>Anicka Newell - 4.70m (15’5”)</li>
           <ul>
             <li>2021 Event Champion</li>
-            <li><span className='red-text'>DC Vault Facility Record Holder</span> (4.65m – 15’3”)</li>
+            <li><span className='red-text'>DC Vault Facility Record Holder</span> (4.65m - 15'3")</li>
             <li>Two Time Olympian</li>
-            <li><a href = "https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
+            <li><a href="https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
             <li>Texas</li>
           </ul>
-          <li>Kristen Brown 4.70m (<span className='red-text'>15' 5"</span>)</li>
+
+          <li>Kristen Brown - 4.70m (15' 5")</li>
           <ul>
-            <li>VaultHouse Track Club</li>
-            <li>Two-time Olympic trials finalist</li>
-            <li><a href = "https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
+            <li>Vaulthouse / Team Pacer</li>
+            <li>Two time Olympic trials finalist</li>
+            <li><a href="https://instagram.com/kayybeebby">instagram.com/kayybeebby</a></li>
             <li>DMV Native!</li>
           </ul>
-          <li>Sydney Horn 4.50m (<span className='red-text'>14&#39; 9&quot;</span>)</li>
+
+          <li>Kristen Leland - 4.65m (15' 3")</li>
           <ul>
-            <li>VaultWorx</li>
-            <li>High Point University</li>
+            <li>Unattached</li>
+            <li>2x Olympic trials qualifier / NCAA Division II National Record Holder</li>
+            <li><a href="https://instagram.com/kristen_lelandpv">instagram.com/kristen_lelandpv</a></li>
+            <li>Michigan</li>
+          </ul>
+
+          <li>Kortney Oates - 4.63m (15' 2")</li>
+          <ul>
+            <li>Risen Performance / Team Pacer</li>
+            <li>7 time USA nationals Qualifier</li>
+            <li><a href="https://instagram.com/kortneyoates">instagram.com/kortneyoates</a></li>
+            <li>Arizona</li>
+          </ul>
+
+          <li>Gabriela Leon - 4.61m (15' 1.5')</li>
+          <ul>
+            <li>Puma / Team USA</li>
+            <li>2022 World Championships Finalist / NCAA Division I National Champion</li>
+            <li><a href="https://instagram.com/gabiileonn_">instagram.com/gabiileonn_</a></li>
+            <li>Michigan</li>
+          </ul>
+
+          <li>Sydney Horn - 4.50m (14' 9")</li>
+          <ul>
+            <li>VaultWorx / High Point University</li>
             <li>2022 NCAA Silver Medalist</li>
-            <li>4x NCAA All American</li>
-            <li><a href = "https://instagram.com/sydney_horn_">instagram.com/sydney_horn_</a></li>
+            <li>4 time NCAA All American</li>
+            <li><a href="https://instagram.com/sydney_horn_">instagram.com/sydney_horn_</a></li>
             <li>Pennsylvania</li>
           </ul>
+
+          <li>Riley Felts - 4.42m (14' 6")</li>
+          <ul>
+            <li>Unattached / UNC Charlotte</li>
+            <li>5 time C-USA Champion / 2023 NCAA National Qualifier</li>
+            <li><a href="https://instagram.com/riley.felts">instagram.com/riley.felts</a></li>
+            <li>North Carolina</li>
+          </ul>
+
+          <li>Megan Houston - 4.41m (14' 5.5")</li>
+          <ul>
+            <li>Vaulthouse</li>
+            <li>7th @ 2019 USA Indoor Championships / NCAA All American</li>
+            <li><a href="https://instagram.com/zim">instagram.com/zim</a></li>
+            <li>Kentucky</li>
+          </ul>
+
+          <li>Karlee Fowler - 4.25m (14')</li>
+          <ul>
+            <li>AZPVA</li>
+            <li>Atlantic 10 conference record holder</li>
+            <li><a href="https://instagram.com/kauli_flower">instagram.com/kauli_flower</a></li>
+            <li>Arizona</li>
+          </ul>
+
         </ul>
         <span className='event-block-details-header'>Bar Progressions</span>
         <ul className='event-block-details'>
