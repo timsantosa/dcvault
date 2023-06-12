@@ -79,9 +79,7 @@ if (currentPage.indexOf('account') !== -1) {
     render(<Events />, document.getElementById('events-container'))
 } else if(currentPage.indexOf('compete') !== -1){
     render(<Competition />, document.getElementById('competition-page'))
-}else if(currentPage.indexOf('dmvchamps') !== -1){
-  render(<Dmvchamps />, document.getElementById('dmv-champs'))
-} else{
+}else{
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))
   render(<Training />, document.getElementById('training'))
@@ -92,3 +90,6 @@ if (currentPage.indexOf('account') !== -1) {
     loginDiv.style.visibility = 'visible'
   }
 }
+//else if(currentPage.indexOf('dmvchamps') !== -1){
+//  render(<Dmvchamps />, document.getElementById('dmv-champs'))
+//} 

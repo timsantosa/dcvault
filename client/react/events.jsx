@@ -38,6 +38,7 @@ class Events extends React.Component {
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
+        <li><a style={{color: '#C0282D'}} href='../files/2023 POLE VAULT CHAMPIONSHIPS - START LIST.pdf' target='_blank'>See Start List here!</a> </li>
         <p className='event-block-title'><span className='red-text'>ELITE INVITE </span> DIVISION INFORMATION</p>
         <span className='event-block-details-header'>Entry Standards</span>
         <ul className='event-block-details'>
