@@ -76,14 +76,23 @@ class Events extends React.Component {
         <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 06/09/2023)</span>
         <span className='event-block-details-header'><br></br>ELITE MEN</span>
         <ul className='event-block-details'>
-          <li>Scott Houston – 5.83m (19’ 1.5”)</li>
+        <ul>
+          <li>Zachery Bradford - 5.91 (19' 4.5")</li>
+          <ul>
+            <li>Unattached / Texas Tech</li>
+            <li>U20 World Championships Silver Medalist / 5-time Big 12 Champion / NCAA D-I Silver Medalist</li>
+            <li><a href="https://instagram.com/bradfordpv">instagram.com/bradfordpv</a></li>
+            <li>Texas</li>
+          </ul>
+          
+          <li>Scott Houston - 5.83m (19’ 1.5”)</li>
           <ul>
             <li>Vaulthouse</li>
             <li>2018 USA National Champion / 2018 NACAC Champion</li>
             <li><a href="https://instagram.com/scottyhous">instagram.com/scottyhous</a></li>
             <li>North Carolina</li>
           </ul>
-
+          
           <li>Cole Walsh - 5.83m (19' 1.5")</li>
           <ul>
             <li>RISEN Performance</li>
@@ -91,18 +100,18 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/cole.vault">instagram.com/cole.vault</a></li>
             <li>Arizona</li>
           </ul>
-
+          
           <li>Austin Miller - 5.81m (19' 0.75")</li>
           <ul>
             <li>Defending 2022 Event Champion</li>
-            <li><span className='red-text'>DC Vault Facility Record Holder</span> (5.63m - 18'6")</li>
+            <li><span class="red-text">DC Vault Facility Record Holder</span> (5.63m - 18'6")</li>
             <li>Vaulthouse / Team Pacer</li>
             <li>Olympic Trials Finalist</li>
             <li><a href="https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
             <li>DMV Native!</li>
             <li>North Carolina</li>
           </ul>
-
+          
           <li>Tray Oates - 5.74m (18’ 10”)</li>
           <ul>
             <li>Arizona Pole Vault Academy</li>
@@ -110,7 +119,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/olen_iii_oates">instagram.com/olen_iii_oates</a></li>
             <li>Arizona</li>
           </ul>
-
+          
           <li>Hunter Garretson - 5.71m (18' 9")</li>
           <ul>
             <li>Unattached / University of Akron</li>
@@ -118,7 +127,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/polevaulthunter">instagram.com/polevaulthunter</a></li>
             <li>Ohio</li>
           </ul>
-
+          
           <li>Jorge Luna-Estes - 5.62m (18' 5.25")</li>
           <ul>
             <li>RISEN Performance</li>
@@ -126,7 +135,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/iamlunaestes">instagram.com/iamlunaestes</a></li>
             <li>Mexico</li>
           </ul>
-
+          
           <li>Keon Howe - 5.59m (18’ 4.5")</li>
           <ul>
             <li>Team Pacer</li>
@@ -134,7 +143,15 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/kreeceman">instagram.com/kreeceman</a></li>
             <li>North Carolina</li>
           </ul>
-
+          
+          <li>Reagan Ulrich - 5.51m (18'1")</li>
+          <ul>
+            <li>Unattached / University of Central Missouri</li>
+            <li>5 time NCAA D-II All American</li>
+            <li><a href="https://instagram.com/reaganulrichpv">instagram.com/reaganulrichpv</a></li>
+            <li>Missouri</li>
+          </ul>
+          
           <li>Elijah Cole - 5.41m (17’ 9”)</li>
           <ul>
             <li>San Jose Track Club</li>
@@ -142,7 +159,15 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/fly_with_eli">instagram.com/fly_with_eli</a></li>
             <li>Philippines</li>
           </ul>
-
+          
+          <li>Sam Young - 5.38m (17' 7.75")</li>
+          <ul>
+            <li>Philadelphia Jumps Club</li>
+            <li>UVA University Record Holder / NCAA D-I National Championships Finalist</li>
+            <li><a href="https://instagram.com/sam.phillyjumps">instagram.com/sam.phillyjumps</a></li>
+            <li>Delaware</li>
+          </ul>
+          
           <li>Nate Hiett - 5.37m (17' 7.5")</li>
           <ul>
             <li>Arizona Pole Vault Academy</li>
@@ -150,7 +175,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/hiettskyvaulter">instagram.com/hiettskyvaulter</a></li>
             <li>Arizona</li>
           </ul>
-
+          
           <li>Matthew Keim - 5.35m (17' 6.5")</li>
           <ul>
             <li>Industrial Vault Club</li>
@@ -158,7 +183,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
             <li>Ohio</li>
           </ul>
-
+          
           <li>Jacob Davis - 5.27 (17' 3.5")</li>
           <ul>
             <li>NCPVC</li>
@@ -166,7 +191,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/jacobtriestofly">instagram.com/jacobtriestofly</a></li>
             <li>North Carolina</li>
           </ul>
-
+          
           <li>Joshuah Alcon - 5.2m (17’ 1”)</li>
           <ul>
             <li>DC Vault / Dominican Republic</li>
@@ -175,7 +200,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/joshuahalcon">instagram.com/joshuahalcon</a></li>
             <li>District of Columbia</li>
           </ul>
-
+          
           <li>Christian Di Nicolantonio - 5.12m (16' 9.5”)</li>
           <ul>
             <li>DC Vault / Catholic University of America</li>
@@ -183,7 +208,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
             <li>District of Columbia</li>
           </ul>
-
+          
           <li>Nico Morales - 5.12m (16 '9.5")</li>
           <ul>
             <li>Vault Factory / Rutgers</li>
@@ -191,6 +216,8 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/nico.f.morales">instagram.com/nico.f.morales</a></li>
             <li>New Jersey</li>
           </ul>
+        </ul>
+
 
 
         </ul>
@@ -236,6 +263,19 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/gabiileonn_">instagram.com/gabiileonn_</a></li>
             <li>Michigan</li>
           </ul>
+
+          <ul>
+            <li>
+              Chloe Timberg - 4.53m (14' 10.25")
+              <ul>
+                <li>Unattached</li>
+                <li>3 time Big Ten Conference Champion / 3 time NCAA D-I National Championships Finalist</li>
+                <li><a href="https://instagram.com/chloe.timberg">instagram.com/chloe.timberg</a></li>
+                <li>Pennsylvania</li>
+              </ul>
+            </li>
+          </ul>
+
 
           <li>Sydney Horn - 4.50m (14' 9")</li>
           <ul>
@@ -320,14 +360,23 @@ class Events extends React.Component {
         <span className='event-block-details-header'><span className='red-text'>Elite Entries</span> (as of 05/01/2023)</span>
         <span className='event-block-details-header'><br></br>ELITE MEN</span>
         <ul className='event-block-details'>
-          <li>Scott Houston – 5.83m (19’ 1.5”)</li>
+        <ul>
+          <li>Zachery Bradford - 5.91 (19' 4.5")</li>
+          <ul>
+            <li>Unattached / Texas Tech</li>
+            <li>U20 World Championships Silver Medalist / 5-time Big 12 Champion / NCAA D-I Silver Medalist</li>
+            <li><a href="https://instagram.com/bradfordpv">instagram.com/bradfordpv</a></li>
+            <li>Texas</li>
+          </ul>
+          
+          <li>Scott Houston - 5.83m (19’ 1.5”)</li>
           <ul>
             <li>Vaulthouse</li>
             <li>2018 USA National Champion / 2018 NACAC Champion</li>
             <li><a href="https://instagram.com/scottyhous">instagram.com/scottyhous</a></li>
             <li>North Carolina</li>
           </ul>
-
+          
           <li>Cole Walsh - 5.83m (19' 1.5")</li>
           <ul>
             <li>RISEN Performance</li>
@@ -335,18 +384,18 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/cole.vault">instagram.com/cole.vault</a></li>
             <li>Arizona</li>
           </ul>
-
+          
           <li>Austin Miller - 5.81m (19' 0.75")</li>
           <ul>
             <li>Defending 2022 Event Champion</li>
-            <li><span className='red-text'>DC Vault Facility Record Holder</span> (5.63m - 18'6")</li>
+            <li><span class="red-text">DC Vault Facility Record Holder</span> (5.63m - 18'6")</li>
             <li>Vaulthouse / Team Pacer</li>
             <li>Olympic Trials Finalist</li>
             <li><a href="https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
             <li>DMV Native!</li>
             <li>North Carolina</li>
           </ul>
-
+          
           <li>Tray Oates - 5.74m (18’ 10”)</li>
           <ul>
             <li>Arizona Pole Vault Academy</li>
@@ -354,7 +403,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/olen_iii_oates">instagram.com/olen_iii_oates</a></li>
             <li>Arizona</li>
           </ul>
-
+          
           <li>Hunter Garretson - 5.71m (18' 9")</li>
           <ul>
             <li>Unattached / University of Akron</li>
@@ -362,7 +411,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/polevaulthunter">instagram.com/polevaulthunter</a></li>
             <li>Ohio</li>
           </ul>
-
+          
           <li>Jorge Luna-Estes - 5.62m (18' 5.25")</li>
           <ul>
             <li>RISEN Performance</li>
@@ -370,7 +419,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/iamlunaestes">instagram.com/iamlunaestes</a></li>
             <li>Mexico</li>
           </ul>
-
+          
           <li>Keon Howe - 5.59m (18’ 4.5")</li>
           <ul>
             <li>Team Pacer</li>
@@ -378,7 +427,15 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/kreeceman">instagram.com/kreeceman</a></li>
             <li>North Carolina</li>
           </ul>
-
+          
+          <li>Reagan Ulrich - 5.51m (18'1")</li>
+          <ul>
+            <li>Unattached / University of Central Missouri</li>
+            <li>5 time NCAA D-II All American</li>
+            <li><a href="https://instagram.com/reaganulrichpv">instagram.com/reaganulrichpv</a></li>
+            <li>Missouri</li>
+          </ul>
+          
           <li>Elijah Cole - 5.41m (17’ 9”)</li>
           <ul>
             <li>San Jose Track Club</li>
@@ -386,7 +443,15 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/fly_with_eli">instagram.com/fly_with_eli</a></li>
             <li>Philippines</li>
           </ul>
-
+          
+          <li>Sam Young - 5.38m (17' 7.75")</li>
+          <ul>
+            <li>Philadelphia Jumps Club</li>
+            <li>UVA University Record Holder / NCAA D-I National Championships Finalist</li>
+            <li><a href="https://instagram.com/sam.phillyjumps">instagram.com/sam.phillyjumps</a></li>
+            <li>Delaware</li>
+          </ul>
+          
           <li>Nate Hiett - 5.37m (17' 7.5")</li>
           <ul>
             <li>Arizona Pole Vault Academy</li>
@@ -394,7 +459,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/hiettskyvaulter">instagram.com/hiettskyvaulter</a></li>
             <li>Arizona</li>
           </ul>
-
+          
           <li>Matthew Keim - 5.35m (17' 6.5")</li>
           <ul>
             <li>Industrial Vault Club</li>
@@ -402,7 +467,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
             <li>Ohio</li>
           </ul>
-
+          
           <li>Jacob Davis - 5.27 (17' 3.5")</li>
           <ul>
             <li>NCPVC</li>
@@ -410,7 +475,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/jacobtriestofly">instagram.com/jacobtriestofly</a></li>
             <li>North Carolina</li>
           </ul>
-
+          
           <li>Joshuah Alcon - 5.2m (17’ 1”)</li>
           <ul>
             <li>DC Vault / Dominican Republic</li>
@@ -419,7 +484,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/joshuahalcon">instagram.com/joshuahalcon</a></li>
             <li>District of Columbia</li>
           </ul>
-
+          
           <li>Christian Di Nicolantonio - 5.12m (16' 9.5”)</li>
           <ul>
             <li>DC Vault / Catholic University of America</li>
@@ -427,7 +492,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
             <li>District of Columbia</li>
           </ul>
-
+          
           <li>Nico Morales - 5.12m (16 '9.5")</li>
           <ul>
             <li>Vault Factory / Rutgers</li>
@@ -435,6 +500,7 @@ class Events extends React.Component {
             <li><a href="https://instagram.com/nico.f.morales">instagram.com/nico.f.morales</a></li>
             <li>New Jersey</li>
           </ul>
+        </ul>
 
 
         </ul>
@@ -479,6 +545,18 @@ class Events extends React.Component {
             <li>2022 World Championships Finalist / NCAA Division I National Champion</li>
             <li><a href="https://instagram.com/gabiileonn_">instagram.com/gabiileonn_</a></li>
             <li>Michigan</li>
+          </ul>
+
+          <ul>
+            <li>
+              Chloe Timberg - 4.53m (14' 10.25")
+              <ul>
+                <li>Unattached</li>
+                <li>3 time Big Ten Conference Champion / 3 time NCAA D-I National Championships Finalist</li>
+                <li><a href="https://instagram.com/chloe.timberg">instagram.com/chloe.timberg</a></li>
+                <li>Pennsylvania</li>
+              </ul>
+            </li>
           </ul>
 
           <li>Sydney Horn - 4.50m (14' 9")</li>
@@ -563,53 +641,50 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'>Open Divisons</span>
         <ul className='event-block-details'>
-        <li>Fly-Kids Open Division</li>
         <ul>
-          <li>Any athlete age 7-11</li>
-          <li>1.55m starting height (5’1”)</li>
+          <li>Fly-Kids Open Division</li>
+          <ul>
+            <li>Any athlete age 7-11</li>
+            <li>1.55m starting height (5’1”)</li>
+          </ul>
+          <li>Masters Open Division</li>
+          <ul>
+            <li>Any athlete age 50+</li>
+            <li>1.75m starting height (5’9”)</li>
+          </ul>
+          <li>Women Open Division (formerly red + black divisions)</li>
+          <ul>
+            <li>Female athletes with a PR under 4.10m (less than 13’5’)</li>
+            <li>1.75m starting height (5’9”)</li>
+          </ul>
+          <li>Men ELITE I Division</li>
+          <ul>
+            <li>Male athletes with a PR of 4.6m to 5.35m (15’1”-17’6’’)</li>
+            <li>4.25m starting height (13’11”)</li>
+          </ul>
+          <li>Women ELITE II Division</li>
+          <ul>
+            <li>Female athletes with a PR of 4.10m+ (13’5” and up)</li>
+            <li>3.71m starting height (12’2”)</li>
+          </ul>
+          <li>Men ELITE III Division</li>
+          <ul>
+            <li>Male athletes with a PR of 5.36m+ (17’7” and up)</li>
+            <li>4.96m starting height (16’3”)</li>
+          </ul>
+          <li>Men Open I Division</li>
+          <ul>
+            <li>Male athletes with a PR under 3.95m (less than 13’)</li>
+            <li>2.8m starting height (9’3”)</li>
+          </ul>
+          <li>Men Open II Division</li>
+          <ul>
+            <li>Male athletes with a PR of 3.95m-4.59 (13’-15’)</li>
+            <li>3.5m starting height (11’6”)</li>
+          </ul>
         </ul>
+        <p><strong>NOTE:</strong> Male and female competitors are scored separately in Fly-Kids and Masters combined Divisions. 15cm progressions will be used for Open Divisions.</p>
 
-        <li>Masters Open Division</li>
-        <ul>
-          <li>Any athlete age 50+</li>
-          <li>1.75m starting height (5’9”)</li>
-        </ul>
-
-        <li>Women Open Division (formerly red + black divisions)</li>
-        <ul>
-          <li>Female athletes with a PR under 4.10m (less than 13’5’’)</li>
-          <li>1.75m starting height (5’9”)</li>
-        </ul>
-
-        <li>Men ELITE I Division</li>
-        <ul>
-          <li>Male athletes with a PR of 4.6m to 5.35m (15’1”-17’6’’)</li>
-          <li>4.25m starting height (13’11”)</li>
-        </ul>
-
-        <li>Women ELITE II Division</li>
-        <ul>
-          <li>Female athletes with a PR of 4.10m+ (13’5” and up)</li>
-          <li>3.71m starting height (12’2”)</li>
-        </ul>
-
-        <li>Men ELITE III Division</li>
-        <ul>
-          <li>Male athletes with a PR of 5.36m+ (17’7” and up)</li>
-          <li>4.96m starting height (16’3”)</li>
-        </ul>
-
-        <li>Men Open I Division</li>
-        <ul>
-          <li>Male athletes with a PR under 3.95m (less than 13’)</li>
-          <li>2.8m starting height (9’3”)</li>
-        </ul>
-
-        <li>Men Open II Division</li>
-        <ul>
-          <li>Male athletes with a PR of 3.95m-4.59 (13’-15’)</li>
-          <li>3.5m starting height (11’6”)</li>
-        </ul>
 
         <li><i>NOTE: Male and female competitors are scored separately in Fly-Kids and Masters combined Divisions. 15cm progressions will be used for Open Divisions.</i></li>
 
@@ -618,60 +693,54 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
           <ul>
-            <li>07:00am (<span className="red-text">staff arrive</span>)</li>
-            <li>08:00am (<span className="red-text">gates open / warmups</span>)</li>
+            <li>Fly-Kids Open Division</li>
             <ul>
-              <li>Fly-Kids (red pit)</li>
+              <li>Any athlete age 7-11</li>
+              <li><span className="red-text">1.55m starting height (5’1”)</span></li>
             </ul>
-            <li>08:30am (<span className="red-text">competition</span>)</li>
+            <li>Masters Open Division</li>
             <ul>
-              <li>Fly-Kids (1.5m start)</li>
+              <li>Any athlete age 50+</li>
+              <li><span className="red-text">1.75m starting height (5’9”)</span></li>
             </ul>
-            <li>09:00am (<span className="red-text">warmups</span>)</li>
+            <li>Women Open Division (formerly red + black divisions)</li>
             <ul>
-              <li>Masters Open (red pit)</li>
-              <li>Women Open (red pit)</li>
-              <li>Men ELITE I (black pit)</li>
+              <li>Female athletes with a PR under 4.10m (less than 13’5’)</li>
+              <li><span className="red-text">1.75m starting height (5’9”)</span></li>
             </ul>
-            <li>10:00am (<span className="red-text">competition</span>)</li>
+            <li>Men ELITE I Division</li>
             <ul>
-              <li>Women Open (1.75m start)</li>
-              <li>Masters Open (1.75m start)</li>
-              <li>Men ELITE I (4.25m start)</li>
+              <li>Male athletes with a PR of 4.6m to 5.35m (15’1”-17’6’’)</li>
+              <li><span className="red-text">4.25m starting height (13’11”)</span></li>
             </ul>
-            <li>12:00pm (<span className="red-text">warmups</span>)</li>
+            <li>Women ELITE II Division</li>
             <ul>
-              <li>Women ELITE II (black pit)</li>
+              <li>Female athletes with a PR of 4.10m+ (13’5” and up)</li>
+              <li><span className="red-text">3.71m starting height (12’2”)</span></li>
             </ul>
-            <li>1:00pm (<span className="red-text">competition</span>)</li>
+            <li>Men ELITE III Division</li>
             <ul>
-              <li>Women ELITE II (3.71m start)</li>
+              <li>Male athletes with a PR of 5.36m+ (17’7” and up)</li>
+              <li><span className="red-text">4.96m starting height (16’3”)</span></li>
             </ul>
-            <li>2:30pm (<span className="red-text">warmups</span>)</li>
+            <li>Men Open I Division</li>
             <ul>
-              <li>Men ELITE III (black pit)</li>
+              <li>Male athletes with a PR under 3.95m (less than 13’)</li>
+              <li><span className="red-text">2.8m starting height (9’3”)</span></li>
             </ul>
-            <li>3:30pm (<span className="red-text">competition</span>)</li>
+            <li>Men Open II Division</li>
             <ul>
-              <li>Men ELITE IIII (4.81m start)</li>
+              <li>Male athletes with a PR of 3.95m-4.59 (13’-15’)</li>
+              <li><span className="red-text">3.5m starting height (11’6”)</span></li>
             </ul>
-            <li>5:00pm (<span className="red-text">warmups</span>)</li>
-            <ul>
-              <li>Men Open I (red pit)</li>
-              <li>Men Open II (black pit)</li>
-            </ul>
-            <li>6:00pm (<span className="red-text">competition</span>)</li>
-            <ul>
-              <li>Men Open I (2.8m start)</li>
-              <li>Men Open II (3.5m start)</li>
-            </ul>
-            <li>7:00pm (<span className="red-text">closing awards</span>)</li>
+            <li><span className="red-text">NOTE: Male and female competitors are scored separately in Fly-Kids and Masters combined Divisions. 15cm progressions will be used for Open Divisions.</span></li>
           </ul>
+
 
         </ul>
         <span className='event-block-details-header'>Start List/Results</span>
         <ul className='event-block-details'>
-          <li>Download Start List <span class="red-text">Here!</span> (available June 15th )</li>
+          <li>Download Start List <a style={{color: '#C0282D'}} href='../files/2023 POLE VAULT CHAMPIONSHIPS - START LIST.pdf' target='_blank'>here!</a> (available June 15th )</li>
           <li>Download Final Results <span class="red-text">Here!</span> (available after competition)</li>
         </ul>
         <span className='event-block-details-header'>Spikes</span>
