@@ -693,48 +693,73 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
           <ul>
-            <li>Fly-Kids Open Division</li>
-            <ul>
-              <li>Any athlete age 7-11</li>
-              <li><span className="red-text">1.55m starting height (5’1”)</span></li>
-            </ul>
-            <li>Masters Open Division</li>
-            <ul>
-              <li>Any athlete age 50+</li>
-              <li><span className="red-text">1.75m starting height (5’9”)</span></li>
-            </ul>
-            <li>Women Open Division (formerly red + black divisions)</li>
-            <ul>
-              <li>Female athletes with a PR under 4.10m (less than 13’5’)</li>
-              <li><span className="red-text">1.75m starting height (5’9”)</span></li>
-            </ul>
-            <li>Men ELITE I Division</li>
-            <ul>
-              <li>Male athletes with a PR of 4.6m to 5.35m (15’1”-17’6’’)</li>
-              <li><span className="red-text">4.25m starting height (13’11”)</span></li>
-            </ul>
-            <li>Women ELITE II Division</li>
-            <ul>
-              <li>Female athletes with a PR of 4.10m+ (13’5” and up)</li>
-              <li><span className="red-text">3.71m starting height (12’2”)</span></li>
-            </ul>
-            <li>Men ELITE III Division</li>
-            <ul>
-              <li>Male athletes with a PR of 5.36m+ (17’7” and up)</li>
-              <li><span className="red-text">4.96m starting height (16’3”)</span></li>
-            </ul>
-            <li>Men Open I Division</li>
-            <ul>
-              <li>Male athletes with a PR under 3.95m (less than 13’)</li>
-              <li><span className="red-text">2.8m starting height (9’3”)</span></li>
-            </ul>
-            <li>Men Open II Division</li>
-            <ul>
-              <li>Male athletes with a PR of 3.95m-4.59 (13’-15’)</li>
-              <li><span className="red-text">3.5m starting height (11’6”)</span></li>
-            </ul>
-            <li><span className="red-text">NOTE: Male and female competitors are scored separately in Fly-Kids and Masters combined Divisions. 15cm progressions will be used for Open Divisions.</span></li>
+            <li>
+              07:00am (staff arrive)
+            </li>
+            <li>
+              08:00am (gates open / warmups)
+              <ul>
+                <li>Fly-Kids (red pit)</li>
+              </ul>
+            </li>
+            <li>
+              08:30am (competition)
+              <ul>
+                <li>Fly-Kids (1.5m start)</li>
+              </ul>
+            </li>
+            <li>
+              09:00am (warmups)
+              <ul>
+                <li>Masters Open (red pit)</li>
+                <li>Women Open (red pit)</li>
+                <li>Men ELITE I (black pit)</li>
+              </ul>
+            </li>
+            <li>
+              10:00am (competition)
+              <ul>
+                <li>Women Open (1.75m start)</li>
+                <li>Masters Open (1.75m start)</li>
+                <li>Men ELITE I (4.25m start)</li>
+              </ul>
+            </li>
+            <li>
+              12:00pm (warmups)
+              <ul>
+                <li>Women ELITE II (black pit)</li>
+              </ul>
+            </li>
+            <li>
+              1:00pm (competition)
+              <ul>
+                <li>Women ELITE II (3.71m start)</li>
+              </ul>
+            </li>
+            <li>
+              2:30pm (warmups)
+              <ul>
+                <li>Men ELITE III (black pit)</li>
+              </ul>
+            </li>
+            <li>
+              3:30pm (competition)
+              <ul>
+                <li>Men ELITE IIII (4.81m start)</li>
+              </ul>
+            </li>
+            <li>
+              5:00pm (warmups)
+              <ul>
+                <li>Men Open I (red pit)</li>
+                <li>Men Open II (black pit)</li>
+              </ul>
+            </li>
+            <li>
+              6:00pm (competition)
+            </li>
           </ul>
+
 
 
         </ul>
