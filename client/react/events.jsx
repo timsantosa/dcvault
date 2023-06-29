@@ -765,8 +765,8 @@ class Events extends React.Component {
         </ul>
         <span className='event-block-details-header'>Start List/Results</span>
         <ul className='event-block-details'>
-          <li>Download Start List <a style={{color: '#C0282D'}} href='../files/2023 POLE VAULT CHAMPIONSHIPS - START LIST.pdf' target='_blank'>here!</a> (available June 15th )</li>
-          <li>Download Final Results <span class="red-text">Here!</span> (available after competition)</li>
+          <li>Download Start List <a style={{color: '#C0282D'}} href='../files/2023 POLE VAULT CHAMPIONSHIPS - START LIST.pdf' target='_blank'>here!</a> </li>
+          <li>Download Final Results <a style={{color: '#C0282D'}} href='../files/2023 POLE VAULT CHAMPIONSHIPS - RESULTS & START LIST.xlsx' target='_blank'>here!</a></li>
         </ul>
         <span className='event-block-details-header'>Spikes</span>
         <ul className='event-block-details'>
