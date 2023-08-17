@@ -404,7 +404,8 @@ class SelectPackage extends React.Component {
 
             <div className='form-row'>
               <label><span className='required'>Training Session</span></label>
-              <label><span>(consult the training <span class = "red-text">calendar</span> for class BEFORE registering)</span></label>
+              <div><span>(consult the training <span class = "red-text">calendar</span> for class BEFORE registering)</span></div>
+              
 
               <div className='form-radio-buttons'>
 
