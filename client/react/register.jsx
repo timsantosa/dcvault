@@ -403,7 +403,7 @@ class SelectPackage extends React.Component {
 
 
             <div className='form-row'>
-              <label><span className='required'>Training Session</span></label>
+              <label><span className='required'>Training Session (consult the training <span class = "red-text">calendar</span> for class BEFORE registering)</span></label>
               <div className='form-radio-buttons'>
 
                 <div style={{display: 'block'}}>
@@ -434,13 +434,13 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedSession == "summer" ? 'block' : 'none'}}>
+            <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
               <label><span className='required'>Training Group</span></label>
               <div className='form-radio-buttons'>
                 <div style={{display:'block'}}>
                   <label>
                     <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Fly-Kids (7-10) + Camps</span>
+                    <span>Fly-Kids (7-11) + Camps</span>
                   </label>
                 </div>
                 <div style={{display: this.state.showDropIn ? 'block' : 'none'}} >
@@ -464,7 +464,7 @@ class SelectPackage extends React.Component {
                 <div>
                   <label>
                     <input type='radio' name='group' value='allages' checked={this.state.checkedGroup === 'allages'} onChange={this.adjustOptions.bind(this)} />
-                    <span>All Ages</span>
+                    <span>All Ages (12+ Beginner thru Advanced)</span>
                   </label>
                 </div>
                 <div style={{display: this.state.showEmergingElite ? 'block' : 'none'}}>
@@ -513,29 +513,24 @@ class SelectPackage extends React.Component {
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='membership' value='5classes' checked={this.state.checkedMembership === '5classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>5 Classes ($300)</span>
+                    <input type='radio' name='membership' value='4classes' checked={this.state.checkedMembership === '4classes'} onChange={this.adjustOptions.bind(this)} />
+                    <span>4 Classes ($250)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='membership' value='10classes' checked={this.state.checkedMembership === '10classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>10 Classes ($475)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='membership' value='20classes' checked={this.state.checkedMembership === '20classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>20 Classes ($650)</span>
+                    <input type='radio' name='membership' value='15classes' checked={this.state.checkedMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
+                    <span>15 Classes ($575)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='30classes' checked={this.state.checkedMembership === '30classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>30 Classes ($750)</span>
+                    <span>30 Classes ($825)</span>
                   </label>
                 </div>
               </div>
+              <label><span>(see above highlighted updates for pricing and options for each category including private lessons)</span></label>
             </div>
 
 
@@ -554,10 +549,12 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='8classes' checked={this.state.checkedMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>8 Classes ($300)</span>
+                    <span>8 Classes ($350)</span>
                   </label>
                 </div>
               </div>
+              <label><span>(see above highlighted updates for pricing and options for each category including private lessons)</span></label>
+
             </div>
 
             <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedGroup === 'fly-kids')? 'block' : 'none'}}>
@@ -574,17 +571,19 @@ class SelectPackage extends React.Component {
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='fkmembership' value='5classes' checked={this.state.checkedFKMembership === '5classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>5 Classes ($175)</span>
+                    <input type='radio' name='fkmembership' value='4classes' checked={this.state.checkedFKMembership === '4classes'} onChange={this.adjustOptions.bind(this)} />
+                    <span>4 Classes ($150)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='15classes' checked={this.state.checkedFKMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>15 Classes ($450)</span>
+                    <span>15 Classes ($475)</span>
                   </label>
                 </div>
               </div>
+              <label><span>(see above highlighted updates for pricing and options for each category including private lessons)</span></label>
+
             </div>
 
 
@@ -637,6 +636,7 @@ class SelectPackage extends React.Component {
                 </div>
               </div>
               <div className='form-radio-buttons' style={{display: this.state.checkedYesApparel === 'yes'? 'block' : 'none'}}>
+                <span style={{fontWeight:'normal'}}>Ask the coach for your shirt at your first class!</span>
                 <span style={{fontWeight:'normal'}}><i>Youth</i></span>
                 <div>
                   <label>
@@ -1138,14 +1138,14 @@ class Payment extends React.Component {
     // if the membership is fly kids then check the membership
     // Then assign it to the props data for membership so it will reflect under "membership in the database"
     if(group === 'fly-kids'){
-      if(fkmembership === '5classes'){
-        price = 175
+      if(fkmembership === '4classes'){
+        price = 150
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === '2classes') {
         price = 100
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === '15classes') {
-        price = 450
+        price = 475
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === 'summercamp') {
         price = 350
@@ -1162,21 +1162,19 @@ class Payment extends React.Component {
       if(membership === '2classes'){
         price = 100
       }else{
-        price = 300
+        price = 350
       }     
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'allages') {
-      if(membership === '5classes'){
-        price = 300
-      }else if (membership === '10classes'){
-        price = 475
-      }else if (membership === '20classes'){
-        price = 650
+      if(membership === '4classes'){
+        price = 250
+      }else if (membership === '15classes'){
+        price = 575
       }else if (membership === '30classes'){
-        price = 750
+        price = 825
       }else{
-        price = 750
+        price = 825
       }
     } else {
       price = 600
