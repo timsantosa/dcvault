@@ -403,7 +403,9 @@ class SelectPackage extends React.Component {
 
 
             <div className='form-row'>
-              <label><span className='required'>Training Session (consult the training <span class = "red-text">calendar</span> for class BEFORE registering)</span></label>
+              <label><span className='required'>Training Session</span></label>
+              <label><span>(consult the training <span class = "red-text">calendar</span> for class BEFORE registering)</span></label>
+
               <div className='form-radio-buttons'>
 
                 <div style={{display: 'block'}}>
@@ -637,6 +639,7 @@ class SelectPackage extends React.Component {
               </div>
               <div className='form-radio-buttons' style={{display: this.state.checkedYesApparel === 'yes'? 'block' : 'none'}}>
                 <span style={{fontWeight:'normal'}}>Ask the coach for your shirt at your first class!</span>
+                <br></br>
                 <span style={{fontWeight:'normal'}}><i>Youth</i></span>
                 <div>
                   <label>
