@@ -404,7 +404,7 @@ class SelectPackage extends React.Component {
 
             <div className='form-row'>
               <label><span className='required'>Training Session</span></label>
-              <div><span>(consult the training <span class = "red-text">calendar</span> for class BEFORE registering)</span></div>
+              <div><span>(consult the training <span class = "red-text">calendar</span> for class schedule BEFORE registering)</span></div>
               
 
               <div className='form-radio-buttons'>
@@ -1161,7 +1161,7 @@ class Payment extends React.Component {
     }else if (group === 'dropin'){
       price = 75
     }else if(group === 'plesson'){
-      price = 200
+      price = 300
     }else if (group === 'adult') {
       if(membership === '2classes'){
         price = 100
