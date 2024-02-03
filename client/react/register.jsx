@@ -529,7 +529,7 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='30classes' checked={this.state.checkedMembership === '30classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>30 Classes ($825)</span>
+                    <span>Unlimited Classes ($825) - 30-50 depending on training schedule</span>
                   </label>
                 </div>
               </div>
@@ -1161,7 +1161,7 @@ class Payment extends React.Component {
     }else if (group === 'dropin'){
       price = 75
     }else if(group === 'plesson'){
-      price = 300
+      price = 250
     }else if (group === 'adult') {
       if(membership === '2classes'){
         price = 100

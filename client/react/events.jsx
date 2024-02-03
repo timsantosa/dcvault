@@ -29,6 +29,62 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('June 8, 2024'),
+        partial: (<div className='event-block' id='08JUN2024'>
+       <p className='event-block-title'>2024 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>June 8th, 2024C</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+
+
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='09AUG2024'>
+        <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
+         <p className='event-block-info'>
+           <span className='event-block-date'>June 8th, 2024</span>
+           <br></br>
+           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+         </p>
+         <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+ 
+ 
+         </div>)
+      },
+      {
+        date: new Date('August 9, 2024'),
+        partial: (<div className='event-block' id='09AUG2024'>
+       <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
+        <p className='event-block-info'>
+          <span className='event-block-date'>July 29th-August 2nd, 2024</span>
+          <br></br>
+          <span className='event-block-date'>August 5th - August 9th, 2024</span>
+          <br></br>
+          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+
+
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='09AUG2024'>
+        <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
+         <p className='event-block-info'>
+           <span className='event-block-date'>July 29th-August 2nd, 2024</span>
+           <br></br>
+           <span className='event-block-date'>August 5th - August 9th, 2024</span>
+           <br></br>
+           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+         </p>
+         <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+ 
+ 
+         </div>)
+      },
+      {
         date: new Date('June 24, 2023'),
         partial: (<div className='event-block' id='24JUN2023'>
        <p className='event-block-title'>2023 <span className='red-text'>Pole Vault</span> Championships</p>
