@@ -33,7 +33,7 @@ class Events extends React.Component {
         partial: (<div className='event-block' id='08JUN2024'>
        <p className='event-block-title'>2024 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
         <p className='event-block-info'>
-          <span className='event-block-date'>June 8th, 2024C</span>
+          <span className='event-block-date'>June 8th, 2024</span>
           <br></br>
           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
         </p>
@@ -42,8 +42,8 @@ class Events extends React.Component {
 
         <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
-        full: (<div className='event-block' id='09AUG2024'>
-        <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
+        full: (<div className='event-block' id='08JUN2024'>
+        <p className='event-block-title'>2024 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
          <p className='event-block-info'>
            <span className='event-block-date'>June 8th, 2024</span>
            <br></br>
