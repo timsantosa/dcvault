@@ -30,29 +30,506 @@ class Events extends React.Component {
     let contents = [
       {
         date: new Date('June 8, 2024'),
-        partial: (<div className='event-block' id='08JUN2024'>
-       <p className='event-block-title'>2024 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
+        partial: (<div className='event-block' id='8JUN2024'>
+        <p className='event-block-title'>2024 <span className='red-text'>Pole Vault</span> Championships</p>
+        <img src = "../img/events/2024 PV Champs.jpg" alt="PV Champs" width = '350' class = "center"></img>
         <p className='event-block-info'>
-          <span className='event-block-date'>June 8th, 2024</span>
-          <br></br>
-          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
+            <span className='event-block-date'>Saturday, June 8th 2024</span><br></br>
+            <span className='event-block-date'>2200 East Capitol Street NE, Washington DC</span>
         </p>
-        <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+        <p className='event-block-title'><span className='red-text'>ELITE INVITE </span>DIVISION INFORMATION</p>
+        <span className='event-block-details-header'>Entry Standards</span>
+        <ul className='event-block-details'>
+            <li>Elite Men</li>
+            <ul>
+                <li><span className='red-text'>Event + Facility Record: 5.72m / 18’9” (Zachary Bradford - 2023)</span></li>
+                <li>5.5m (A) standard - automatic qualifying</li>
+                <li>5.2m (B) standard - waitlist</li>
+                <ul>
+                    <li>accepted B-standard entries posted by June 1st</li>
+                    <li>alternates compete in the Men’s Emerging Elite Division</li>
+                </ul>
+                <li>4.9m starting height</li>
+                <li>Progressions:</li>
+                <ul>
+                    <li>4.90+15</li>
+                    <li>5.05</li>
+                    <li>5.20</li>
+                    <li>5.35</li>
+                    <li>5.50+10</li>
+                    <li>5.60</li>
+                    <li>5.70</li>
+                    <li>5.80+5 <span className='red-text'>(New Facility Record)</span></li>
+                    <li>5.90</li>
+                    <li>6.00</li>
+                </ul>
+            </ul>
+            <li>Elite Women</li>
+            <ul>
+                <li><span className='red-text'>Event + Facility Record: 4.65m / 15’3” (Anicka Newell - 2021)</span></li>
+                <li>4.3m (A) standard - automatic qualifying</li>
+                <li>4.0m (B) standard - waitlist</li>
+                <ul>
+                    <li>accepted B-standard entries posted by June 1st</li>
+                    <li>alternates compete in the Men + Women Open Division or Girls High School division</li>
+                </ul>
+                <li>3.75m starting height</li>
+                <li>Progressions:</li>
+                <ul>
+                    <li>3.75+15</li>
+                    <li>3.90</li>
+                    <li>4.15</li>
+                    <li>4.30</li>
+                    <li>4.45+10</li>
+                    <li>4.55</li>
+                    <li>4.65</li>
+                    <li>4.75 <span className='red-text'>(New Facility Record)</span></li>
+                    <li>4.85+5</li>
+                    <li>4.90</li>
+                    <li>4.95</li>
+                    <li>5.00</li>
+                </ul>
+            </ul>
+            <li>Elite Entries: Contact <span className='red-text'>Events@DCVault.org</span></li>
+        </ul>
+        <span className='event-block-details-header'><span className='red-text'>Elite Division Awards!</span></span>
+        <ul className='event-block-details'>
+            <li>Elite Men: First Place Finisher with a New Facility Record is awarded $1,000!</li>
+            <ul>
+                <li>current event/facility record - 5.72m</li>
+            </ul>
+            <li>Elite Women: First Place Finisher with a New Facility Record is awarded $1,000!</li>
+            <ul>
+                <li>current event/facility record - 4.65m</li>
+            </ul>
+        </ul>
+        <span className='event-block-details-header'><br></br><span className='red-text'>ELITE Entries</span> (as of 04/15/2024)</span>
+        <span className='event-block-details-header'><br></br>ELITE MEN</span>
+        <ul className='event-block-details'>
+            <li>Austin Miller - 5.90m (19' 4.25")</li>
+            <ul>
+                <li>2023 Pole Vault Championships Silver Medalist (2022 Gold Medalist)</li>
+                <li>Vault House / Team Essex</li>
+                <li>Olympic Trials Finalist / USA Bronze Medalist / Millrose Games Bronze Medalist</li>
+                <li><a href="https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
+                <li>DMV Native!</li>
+            </ul>
+            <li>Matt Ludwig – 5.90m (19’ 4.25”)</li>
+            <ul>
+                <li>2023 Pan American Games Champion / 2021 Olympian / 2020 USA National Champion</li>
+                <li><a href="https://instagram.com/mattludwig_23">instagram.com/mattludwig_23</a></li>
+                <li>Ohio</li>
+            </ul>
+            <li>Zach Ferrara - 5.49m (18’ 0”)</li>
+            <ul>
+                <li>Vault Vision LLC</li>
+                <li>2013 NCAA D3 National Champion / 3x All-American</li>
+                <li><a href="https://instagram.com/fly1n4marshmallow">instagram.com/fly1n4marshmallow</a></li>
+                <li>New York</li>
+            </ul>
+        </ul>
+        <span className='event-block-details-header'><br></br>ELITE MEN -<span className='red-text'> B standard wait list</span></span>
+        <ul className='event-block-details'>
+          <li>Matthew Keim 5.34m (17' 6.25")</li>
+          <ul>
+            <li>Industrial Vault Club</li>
+            <li>2x NCAA All American</li>
+            <li><a href="https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
+            <li>Ohio</li>
+          </ul>
+          <li>Christian DiNicolantonio 5.20m (17' 0.75")</li>
+          <ul>
+            <li>DC Vault</li>
+            <li>NCAA All American / Catholic University Record Holder</li>
+            <li><a href="https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
+            <li>Washington, DC</li>
+          </ul>
+        </ul>
 
-
+        <span className='event-block-details-header'><br></br>ELITE WOMEN</span>
+        <ul className='event-block-details'>
+            <li>Bridget Williams 4.83m (15’10.25”)</li>
+            <ul>
+                <li>TeamESSX</li>
+                <li>Team USA World Championships Finalist / Pan Am Games Gold Medalist</li>
+                <li><a href="https://instagram.com/bridgieeee">instagram.com/bridgieeee</a></li>
+                <li>Virginia</li>
+            </ul>
+            <li>Anicka Newell 4.70m (15’5”)</li>
+            <ul>
+                <li>Team Canada</li>
+                <li>2x Olympian / 3x World Championships Qualifier / 1x National Champion</li>
+                <li><a href="https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
+                <li>Texas</li>
+            </ul>
+            <li>Rachel Baxter 4.62m (15’1.75”)</li>
+            <ul>
+                <li>TeamESSX</li>
+                <li>Olympic Trials Finalist / USA Championships Top 10 / NCAA National Champion</li>
+                <li><a href="https://instagram.com/_rachel_baxter_">instagram.com/_rachel_baxter_</a></li>
+                <li>Virginia</li>
+            </ul>
+        </ul>
         <center><span className='red-text'>Click Arrow for More Info</span></center>
-        </div>),
-        full: (<div className='event-block' id='08JUN2024'>
-        <p className='event-block-title'>2024 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
-         <p className='event-block-info'>
-           <span className='event-block-date'>June 8th, 2024</span>
-           <br></br>
-           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
-         </p>
-         <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
- 
- 
-         </div>)
+    </div>
+    ),
+        full: (<div className='event-block' id='8JUN2024'>
+        <p className='event-block-title'>2024 <span className='red-text'>Pole Vault</span> Championships</p>
+        <img src = "../img/events/2024 PV Champs.jpg" alt="PV Champs" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+            <span className='event-block-date'>Saturday, June 8th 2024</span><br></br>
+            <span className='event-block-date'>2200 East Capitol Street NE, Washington DC</span>
+        </p>
+        <p className='event-block-title'><span className='red-text'>ELITE INVITE </span>DIVISION INFORMATION</p>
+        <span className='event-block-details-header'>Entry Standards</span>
+        <ul className='event-block-details'>
+            <li>Elite Men</li>
+            <ul>
+                <li><span className='red-text'>Event + Facility Record: 5.72m / 18’9” (Zachary Bradford - 2023)</span></li>
+                <li>5.5m (A) standard - automatic qualifying</li>
+                <li>5.2m (B) standard - waitlist</li>
+                <ul>
+                    <li>accepted B-standard entries posted by June 1st</li>
+                    <li>alternates compete in the Men’s Emerging Elite Division</li>
+                </ul>
+                <li>4.9m starting height</li>
+                <li>Progressions:</li>
+                <ul>
+                    <li>4.90+15</li>
+                    <li>5.05</li>
+                    <li>5.20</li>
+                    <li>5.35</li>
+                    <li>5.50+10</li>
+                    <li>5.60</li>
+                    <li>5.70</li>
+                    <li>5.80+5 <span className='red-text'>(New Facility Record)</span></li>
+                    <li>5.90</li>
+                    <li>6.00</li>
+                </ul>
+            </ul>
+            <li>Elite Women</li>
+            <ul>
+                <li><span className='red-text'>Event + Facility Record: 4.65m / 15’3” (Anicka Newell - 2021)</span></li>
+                <li>4.3m (A) standard - automatic qualifying</li>
+                <li>4.0m (B) standard - waitlist</li>
+                <ul>
+                    <li>accepted B-standard entries posted by June 1st</li>
+                    <li>alternates compete in the Men + Women Open Division or Girls High School division</li>
+                </ul>
+                <li>3.75m starting height</li>
+                <li>Progressions:</li>
+                <ul>
+                    <li>3.75+15</li>
+                    <li>3.90</li>
+                    <li>4.15</li>
+                    <li>4.30</li>
+                    <li>4.45+10</li>
+                    <li>4.55</li>
+                    <li>4.65</li>
+                    <li>4.75 <span className='red-text'>(New Facility Record)</span></li>
+                    <li>4.85+5</li>
+                    <li>4.90</li>
+                    <li>4.95</li>
+                    <li>5.00</li>
+                </ul>
+            </ul>
+            <li>Elite Entries: Contact <span className='red-text'>Events@DCVault.org</span></li>
+        </ul>
+        <span className='event-block-details-header'><span className='red-text'>Elite Division Awards!</span></span>
+        <ul className='event-block-details'>
+            <li>Elite Men: First Place Finisher with a New Facility Record is awarded $1,000!</li>
+            <ul>
+                <li>current event/facility record - 5.72m</li>
+            </ul>
+            <li>Elite Women: First Place Finisher with a New Facility Record is awarded $1,000!</li>
+            <ul>
+                <li>current event/facility record - 4.65m</li>
+            </ul>
+        </ul>
+        <span className='event-block-details-header'><br></br><span className='red-text'>ELITE Entries</span> (as of 04/15/2024)</span>
+        <span className='event-block-details-header'><br></br>ELITE MEN</span>
+        <ul className='event-block-details'>
+            <li>Austin Miller - 5.90m (19' 4.25")</li>
+            <ul>
+                <li>2023 Pole Vault Championships Silver Medalist (2022 Gold Medalist)</li>
+                <li>Vault House / Team Essex</li>
+                <li>Olympic Trials Finalist / USA Bronze Medalist / Millrose Games Bronze Medalist</li>
+                <li><a href="https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
+                <li>DMV Native!</li>
+            </ul>
+            <li>Matt Ludwig – 5.90m (19’ 4.25”)</li>
+            <ul>
+                <li>2023 Pan American Games Champion / 2021 Olympian / 2020 USA National Champion</li>
+                <li><a href="https://instagram.com/mattludwig_23">instagram.com/mattludwig_23</a></li>
+                <li>Ohio</li>
+            </ul>
+            <li>Zach Ferrara - 5.49m (18’ 0”)</li>
+            <ul>
+                <li>Vault Vision LLC</li>
+                <li>2013 NCAA D3 National Champion / 3x All-American</li>
+                <li><a href="https://instagram.com/fly1n4marshmallow">instagram.com/fly1n4marshmallow</a></li>
+                <li>New York</li>
+            </ul>
+        </ul>
+        <span className='event-block-details-header'><br></br>ELITE MEN -<span className='red-text'> B standard wait list</span></span>
+        <ul className='event-block-details'>
+          <li>Matthew Keim 5.34m (17' 6.25")</li>
+          <ul>
+            <li>Industrial Vault Club</li>
+            <li>2x NCAA All American</li>
+            <li><a href="https://instagram.com/matt_keim_pv">instagram.com/matt_keim_pv</a></li>
+            <li>Ohio</li>
+          </ul>
+          <li>Christian DiNicolantonio 5.20m (17' 0.75")</li>
+          <ul>
+            <li>DC Vault</li>
+            <li>NCAA All American / Catholic University Record Holder</li>
+            <li><a href="https://instagram.com/c.dinic">instagram.com/c.dinic</a></li>
+            <li>Washington, DC</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'><br></br>ELITE WOMEN</span>
+        <ul className='event-block-details'>
+            <li>Bridget Williams 4.83m (15’10.25”)</li>
+            <ul>
+                <li>TeamESSX</li>
+                <li>Team USA World Championships Finalist / Pan Am Games Gold Medalist</li>
+                <li><a href="https://instagram.com/bridgieeee">instagram.com/bridgieeee</a></li>
+                <li>Virginia</li>
+            </ul>
+            <li>Anicka Newell 4.70m (15’5”)</li>
+            <ul>
+                <li>Team Canada</li>
+                <li>2x Olympian / 3x World Championships Qualifier / 1x National Champion</li>
+                <li><a href="https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
+                <li>Texas</li>
+            </ul>
+            <li>Rachel Baxter 4.62m (15’1.75”)</li>
+            <ul>
+                <li>TeamESSX</li>
+                <li>Olympic Trials Finalist / USA Championships Top 10 / NCAA National Champion</li>
+                <li><a href="https://instagram.com/_rachel_baxter_">instagram.com/_rachel_baxter_</a></li>
+                <li>Virginia</li>
+            </ul>
+        </ul>
+        <span className='event-block-details-header'><span className='red-text'>Open</span> Division Information</span>
+        <ul className='event-block-details'>
+          <li>ELEMENTARY + MIDDLE SCHOOL + HIGH SCHOOL + OPEN ADULT + EMERGING ELITE</li>
+          <ul>
+            <li>Elementary School Division</li>
+            <ul>
+              <li>Any athlete ages 7-11 who attended 5th grade and under during Spring of 2024</li>
+              <li>1.55m starting height (5’1”)</li>
+              <li>Combined Division (boys and girls scored separately)</li>
+            </ul>
+            <li>Middle School Division</li>
+            <ul>
+              <li>Any athlete ages 11-14 who attended grades 6-8 during Spring of 2024</li>
+              <li>1.55m starting height (5’1”)</li>
+              <li>Combined Division (boys and girls scored separately)</li>
+            </ul>
+            <li>High School Division</li>
+            <ul>
+              <li>Any athlete ages 14-18 who attended grades 9-12 in Spring of 2024</li>
+              <li>1.85m (6’1”) starting height for girls</li>
+              <li>2.45m (8’) starting height for boys Division II (PR under 12’6”)</li>
+              <li>3.35m (11’) starting height for boys Division I (PR 12’6”+)</li>
+            </ul>
+            <li>Open Adult Division (combined)</li>
+            <ul>
+              <li>Any athlete age 18 and up who graduated high school prior to 2024 with a PR less than 15’</li>
+              <li>1.85m (6’1”) starting height for women</li>
+              <li>2.45m (8’) starting height for men</li>
+              <li>Combined Division (men and women scored separately)</li>
+            </ul>
+            <li>Men’s Emerging Elite Division</li>
+            <ul>
+              <li>Any athlete with a PR of 4.57m (15’1”) or higher (verifiable)</li>
+              <li>4.30m (14’1”) starting height</li>
+            </ul>
+            <li><strong>NOTE:</strong> Male and female competitors in combined divisions are scored separately. 15cm progressions will be used for Open Divisions.</li>
+          </ul>
+        </ul>
+
+        <span className='event-block-details-header'><span className='red-text'>Spikes</span></span>
+        <ul className='event-block-details'>
+          <li><span className='red-text'>1/8" spikes ONLY</span> at this facility (not standard 1/4" spikes!)</li>
+          <ul>
+            <li>ELITE DIVISION athletes may wear 1/4" spikes</li>
+            <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition</li>
+            <li>1/8” spikes can be purchased online at Amazon.com</li>
+            <ul>
+              <li>Recommended so you don't waste time at the event trying to change spikes!</li>
+              <li>Available for $5 per set at the event (bring your own spike wrench)</li>
+            </ul>
+          </ul>
+        </ul>
+
+        <span className='event-block-details-header'>Schedule</span>
+        <ul className='event-block-details'>
+          <li>Note: <span className='red-text'>Rolling Schedule</span> - arrive early in case your time slot moves up!</li>
+          <ul>
+            <li>07:30am</li>
+            <ul>
+              <li>Staff Arrive</li>
+            </ul>
+            <li>08:30am</li>
+            <ul>
+              <li>Gates Open</li>
+              <li>Men’s Emerging Elite - warmups (black pit)</li>
+              <li>Open Adult Division - warmups (red pit)</li>
+            </ul>
+            <li>09:30am</li>
+            <ul>
+              <li>Men’s Emerging Elite - competition (black pit)</li>
+              <li>Open Adult Division - competition (red pit)</li>
+            </ul>
+            <li>11:00am</li>
+            <ul>
+              <li>Girls High School Division - warmups (red pit)</li>
+            </ul>
+            <li>12:00pm</li>
+            <ul>
+              <li>Girls High School Division - competition (red pit)</li>
+              <li>ELITE Division Women - warmups (black pit)</li>
+            </ul>
+            <li>1:00pm</li>
+            <ul>
+              <li>ELITE Division Women - competition (black pit)</li>
+            </ul>
+            <li>2:00pm</li>
+            <ul>
+              <li>Middle School Boys + Girls - warmups (red pit)</li>
+            </ul>
+            <li>2:30pm</li>
+            <ul>
+              <li>Middle School Boys + Girls - competition (red pit)</li>
+              <li>ELITE Division Men - warmups (black pit)</li>
+              <li>Fly-Kids Trial Class 1 (Fly-Kids pit)</li>
+            </ul>
+            <li>2:45pm</li>
+            <ul>
+              <li>Fly-Kids Trial Class 2 (Fly-Kids pit)</li>
+            </ul>
+            <li>3:00pm</li>
+            <ul>
+              <li>Elementary School Boys + Girls - warmups (red pit)</li>
+              <li>Fly-Kids Trial Class 3 (Fly-Kids pit)</li>
+            </ul>
+            <li>3:15pm</li>
+            <ul>
+              <li>Fly-Kids Trial Class 4 (Fly-Kids pit)</li>
+            </ul>
+            <li>3:30pm</li>
+            <ul>
+              <li>ELITE Division Men - competition (black pit)</li>
+              <li>Elementary School Boys + Girls - competition (red pit)</li>
+            </ul>
+            <li>5:00pm</li>
+            <ul>
+              <li>High School Boys Division I - warmups (black pit)</li>
+              <li>High School Boys Division II - warmups (red pit)</li>
+            </ul>
+            <li>6:00pm</li>
+            <ul>
+              <li>High School Boys Division I – competition (black pit)</li>
+              <li>High School Boys Division II - competition (red pit)</li>
+            </ul>
+          </ul>
+        </ul>
+
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>The 2024 Pole Vault Championships are open to all athletes ages 7 and up</li>
+          <li>Advanced Registration Only</li>
+          <li>Registration Closes @ Midnight on May 31st</li>
+          <li>$50 for competitors - Register <a href="www.dcvault.com/compete">HERE!</a></li>
+        </ul>
+
+        <span className='event-block-details-header'>Start List/Results</span>
+        <ul className='event-block-details'>
+          <li>Download Start List <a href="#">HERE!</a> (Available June 3rd)</li>
+          <li>Download Final Results <a href="#">HERE!</a> (Available June 9th)</li>
+        </ul>
+
+        <span className='event-block-details-header'>Awards/Sanctioning</span>
+        <ul className='event-block-details'>
+          <li>Medals will be awarded in all divisions, 1st through 3rd place</li>
+          <li>Special Limited-Edition Medals Awarded for facility records</li>
+          <li>USATF + World Athletics Sanctioned</li>
+          <li>Elite Division Results will be published to WorldAthletics.org</li>
+          <li>Open Division Results will be published to Milesplit.com and DCVault.com/events</li>
+        </ul>
+
+        <span className='event-block-details-header'>FLY-KIDS Trial Class</span>
+        <ul className='event-block-details'>
+          <li>Four 15-minute Fly-Kids Trial Classes will be offered free of charge during the event at the following times</li>
+          <ul>
+            <li>2:30pm</li>
+            <li>2:45pm</li>
+            <li>3:00pm</li>
+            <li>3:15pm</li>
+          </ul>
+          <li>6 participants per class</li>
+          <li>Ages 6-10 ONLY (strictly enforced)</li>
+          <li>Registration is first come first serve at the front gate</li>
+          <ul>
+            <li>A parent must be present to sign the participant up for a time slot</li>
+            <li>After paying admission to the facility, coordinate with the front gate staff to choose a time slot (children under age 11 enter free)</li>
+            <li>Time slots are available to reserve in listed order only. Once each class fills up, the next time slot will become available for reserving.</li>
+          </ul>
+        </ul>
+
+        <span className='event-block-details-header'>Venue/Spectators/Coaches</span>
+        <ul className='event-block-details'>
+          <li>DC Vault Pole Vault Center - 2200 East Capitol Street NE, Washington DC</li>
+          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+          <li>Parking On-Site (Lot #3), download SITE MAP <a href="../files/DCV Site Map.pdf">HERE</a> to view parking and team tent areas</li>
+          <li>Athletes, Spectators and Coaches enter the facility from the E. Capitol Street sidewalk gate. Park in Lot #3, exit the lot onto the sidewalk and head to the double gate facing the street next to the DC VAULT storage shed</li>
+          <li>$10 Admission for all non-competitors entering the facility (CASH ONLY)</li>
+          <ul>
+            <li>Children Under age 11 enter FREE</li>
+            <li>Spectators and coaches may also watch from outside the fenced area free-of-charge</li>
+          </ul>
+          <li><span className='red-text'>TENTS and CANOPIES are NOT allowed inside the venue.</span> Spectators wishing to use personal shade canopies or pop-up tent canopies may do so OUTSIDE of the fenced area and enter/exit the venue as needed after paying admission. Download SITE MAP <a href="./files/DCV Site Map.pdf">HERE</a> to view parking and team tent areas.</li>
+          <li>Coaches who have paid admission may enter the facility and assist athletes in the designated coach’s box</li>
+          <ul>
+            <li><span className='red-text'>PLEASE</span> be professional and immediately move to the back of the coaching box after your athlete jumps before talking to your athlete so that the next competitor’s coach has a clear view of the runway and pit!</li>
+          </ul>
+        </ul>
+
+        <span className='event-block-details-header'>Pole Storage</span>
+        <ul className='event-block-details'>
+          <li>Overnight pole storage can be arranged. For drop-off and pick-up, email Events@dcvault.org by June 1st</li>
+        </ul>
+
+        <span className='event-block-details-header'>Pole Rentals</span>
+        <ul className='event-block-details'>
+          <li>UCS Spirit Poles Available for Rent (inquire)</li>
+          <li>$30 cash at check-in</li>
+          <li>You may be sharing your rental pole</li>
+          <li>ID will be held until pole is returned</li>
+        </ul>
+
+        <span className='event-block-details-header'>Event Features / Food</span>
+        <ul className='event-block-details'>
+          <li>Free Grilled hotdogs and veggie dogs for competitors and spectators while they last!</li>
+          <li>Bring something special for yourself if you’d like to grill it up!</li>
+        </ul>
+
+        <span className='event-block-details-header'>Pets</span>
+        <ul className='event-block-details'>
+          <li>Dog friendly venue!</li>
+          <li>Bring a leash and water for your critter</li>
+        </ul>
+
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>For additional information, email Events@dcvault.org</li>
+        </ul>
+
+
+      </div>)
       },
       {
         date: new Date('August 9, 2024'),

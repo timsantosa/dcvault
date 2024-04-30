@@ -247,6 +247,28 @@ class AthleteInfo extends React.Component {
     // }
     // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
 
+
+    // <div className='form-row'>
+    //                     <label>
+    //                         <span className='required'>Weeks</span>
+    //                         <input type ="checkbox" name="dates1" value="jul10-14"/>
+    //                         <label for="jul10-14">&nbsp;&nbsp;Jul 10th - Jul 14th</label>
+    //                         <br></br>
+    //                         <input type ="checkbox" name="dates2" value="jul17-21"/>
+    //                         <label for="jul17-21">&nbsp;&nbsp;Jul 17th - Jul 21st</label>
+    //                         <br></br>
+    //                         <input type ="checkbox" name="dates3" value="jul24-28"/>
+    //                         <label for="jul24-28">&nbsp;&nbsp;Jul 24th - Jul 28th</label>
+    //                         <br></br>
+    //                         <input type ="checkbox" name="dates4" value="jul31-aug4"/>
+    //                         <label for="jul31-aug4">&nbsp;&nbsp;Jul 31st - Aug 4th</label>
+    //                         <br></br>
+    //                         <input type ="checkbox" name="dates5" value="aug7-11"/>
+    //                         <label for="aug7-11">&nbsp;&nbsp;Aug 7th - Aug 11th</label>
+    //                         <br></br>
+    //                     </label>
+    //                 </div>
+
     toggleUSATFinfo () {
         let current = this.state.showUSATFinfo
         this.setState({
@@ -272,26 +294,13 @@ class AthleteInfo extends React.Component {
                     <form id='event-athlete-info' className='form-labels-on-top'>
 
                     <div className='form-title-row'>
-                            <h1>2023 Fly-Kids Summer Camp Registration</h1>
+                            <h1>2024 Pole Vault Championships Registration</h1>
                     </div>
 
                     <div className='form-row'>
                         <label>
-                            <span className='required'>Weeks</span>
-                            <input type ="checkbox" name="dates1" value="jul10-14"/>
-                            <label for="jul10-14">&nbsp;&nbsp;Jul 10th - Jul 14th</label>
-                            <br></br>
-                            <input type ="checkbox" name="dates2" value="jul17-21"/>
-                            <label for="jul17-21">&nbsp;&nbsp;Jul 17th - Jul 21st</label>
-                            <br></br>
-                            <input type ="checkbox" name="dates3" value="jul24-28"/>
-                            <label for="jul24-28">&nbsp;&nbsp;Jul 24th - Jul 28th</label>
-                            <br></br>
-                            <input type ="checkbox" name="dates4" value="jul31-aug4"/>
-                            <label for="jul31-aug4">&nbsp;&nbsp;Jul 31st - Aug 4th</label>
-                            <br></br>
-                            <input type ="checkbox" name="dates5" value="aug7-11"/>
-                            <label for="aug7-11">&nbsp;&nbsp;Aug 7th - Aug 11th</label>
+                            <input type ="checkbox" name="dates1" value="24pvchamps"/>
+                            <label for="24pvchamps">&nbsp;&nbsp;2024 PV Championships</label>
                             <br></br>
                         </label>
                     </div>
@@ -525,7 +534,12 @@ class Agreement extends React.Component {
                         <div className='form-title-row'>
                             <h1>Agreement</h1>
                         </div>
-
+                        <img className='waiver-image' src='../img/forms/adult-comp-1.png' />
+                        <img className='waiver-image' src='../img/forms/adult-comp-2.png' />
+                        <img className='waiver-image' src='../img/forms/adult-comp-3.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-1.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-2.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-3.png' />
                         <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree to notify us if you or anyone in your family has tested positive for COVID-19. You will also notify us if you have any of the following <a style={{color: '#C0282D'}} target='_blank' href='https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html'>symptoms</a> the week of the camp.</p>
 
                         <div className='row'>
@@ -567,7 +581,7 @@ class Payment extends React.Component {
         let price = 0
         let numWeeks = 0
         if(this.props.data.athleteInfo.dates1){
-            price+=350
+            price+=50
             numWeeks+=1
           }
           if(this.props.data.athleteInfo.dates2){
@@ -708,6 +722,9 @@ class Payment extends React.Component {
     // }
     // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
 
+//this is for fly kids registration. It should be entered between line 747/748
+//                                    <p className='price-text'>4+ Week Signup Discount: <span className='red-text'>-${currentDiscount}</span></p>
+
     render () {
         let errorContainer
         if (!(this.state.errorText.length === 0)) {
@@ -734,7 +751,6 @@ class Payment extends React.Component {
                             <div className='row'>
                                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                                     <p className='price-text'>Registration Fee: <span className='red-text'>${currentPrice}</span></p>
-                                    <p className='price-text'>4+ Week Signup Discount: <span className='red-text'>-${currentDiscount}</span></p>
                                     <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                         
                                 </div>

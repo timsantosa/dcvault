@@ -163,12 +163,12 @@ transporter.sendMail(mailOptions2, (error, info) => {
 */
 }
 
-module.exports.sendDMVEventConfirmationEmails = (email, athleteInfo) => {
+module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: '2023 Pole Vault Championships', // Subject line
+        subject: '2024 Pole Vault Championships', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the 2023 DMV Championships! Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org. For additional information including schedule, results, etc, please see our online event info <a href="https://dcvault.com/events">HERE</a>.</p>\
+        html: '<p>Thank you for registering for the 2024 Pole Vault Championships! Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org. For additional information including schedule, results, etc, please see our online event info <a href="https://dcvault.com/events">HERE</a>.</p>\
         <h3>Entry Fee - Spectators/Coaches</h3>\
         <ul>\
           <li>$10 for all non-competitors entering the facility (cash only)</li>\
@@ -232,7 +232,7 @@ module.exports.sendDMVEventConfirmationEmails = (email, athleteInfo) => {
   })
 }
 
-module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
+module.exports.sendFlyKidsEventConfirmationEmails = (email, athleteInfo) => {
   let mailOptions = {
       from: '"DC Vault" <' + config.email.username + '>', // sender address
       subject: '2023 Fly-Kids Summer Camp', // Subject line
