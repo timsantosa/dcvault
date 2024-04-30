@@ -667,7 +667,7 @@ class Payment extends React.Component {
             dateLst += this.props.data.athleteInfo.dates10 + ", "
         }
         this.props.data.athleteInfo.dates1 = dateLst
-        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Weeks: ' + dateLst
+        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competition: ' + dateLst
 
 
         paypal.Button.render({ // eslint-disable-line

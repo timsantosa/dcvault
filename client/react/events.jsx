@@ -491,7 +491,7 @@ class Events extends React.Component {
             <li>Children Under age 11 enter FREE</li>
             <li>Spectators and coaches may also watch from outside the fenced area free-of-charge</li>
           </ul>
-          <li><span className='red-text'>TENTS and CANOPIES are NOT allowed inside the venue.</span> Spectators wishing to use personal shade canopies or pop-up tent canopies may do so OUTSIDE of the fenced area and enter/exit the venue as needed after paying admission. Download SITE MAP <a href="./files/DCV Site Map.pdf">HERE</a> to view parking and team tent areas.</li>
+          <li><span className='red-text'>TENTS and CANOPIES are NOT allowed inside the venue.</span> Spectators wishing to use personal shade canopies or pop-up tent canopies may do so OUTSIDE of the fenced area and enter/exit the venue as needed after paying admission. Download SITE MAP <a href="../files/DCV Site Map.pdf">HERE</a> to view parking and team tent areas.</li>
           <li>Coaches who have paid admission may enter the facility and assist athletes in the designated coach’s box</li>
           <ul>
             <li><span className='red-text'>PLEASE</span> be professional and immediately move to the back of the coaching box after your athlete jumps before talking to your athlete so that the next competitor’s coach has a clear view of the runway and pit!</li>
