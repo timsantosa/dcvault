@@ -166,7 +166,7 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state']
+        let required = ['fname', 'lname', 'email', 'dob', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state','pr','division']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
@@ -309,7 +309,16 @@ class AthleteInfo extends React.Component {
                         <div className='form-title-row'>
                             <h1>Athlete Information</h1>
                         </div>
-
+                        <div className='form-row'>
+                            <label>
+                                <span className='required'>Are you a CURRENT member of DC Vault?</span>
+                                <select name='member'>
+                                    <option value=''>Select yes/no</option>
+                                    <option value='dcvault-member'>Yes</option>
+                                    <option value='not-member'>No</option>
+                                </select>
+                            </label>
+                        </div>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6'>
                                 <div className='form-row'>
@@ -343,7 +352,35 @@ class AthleteInfo extends React.Component {
                                 <input type='text' name='dob' onChange={this.formatDOB.bind(this)} />
                             </label>
                         </div>
+                        <div className ='form-row'>
+                            <label>
+                                <span className = 'required'>Personal Record (in meters)</span>
+                                <input type = 'number' name = 'pr' step = '.01'/>
+                            </label>
+                        </div>
 
+                        <div className = 'form-row'>
+                            <label>
+                                <span className = 'required'>Club/School Team Name (N/A if unattached)</span>
+                                <input type = 'text' name = 'team'/>
+                            </label>
+                        </div>
+                        <div className='form-row'>
+                            <label>
+                                <span className='required'>Division</span>
+                                <select name='division'>
+                                    <option value=''>Select Division (see event info for division classifications)</option>
+                                    <option value='Elementary'>Elementary</option>
+                                    <option value='Middle School'>Middle School</option>
+                                    <option value='High School'>High School</option>
+                                    <option value='Open Adult'>Open Adult</option>
+                                    <option value='Emerging Elite'>Emerging Elite</option>
+                                    <option value='Elite'>Elite</option>
+
+
+                                </select>
+                            </label>
+                        </div>
                         <div className='form-row'>
                             <label>
                                 <span className='required'>Contact Email</span>
@@ -581,7 +618,11 @@ class Payment extends React.Component {
         let price = 0
         let numWeeks = 0
         if(this.props.data.athleteInfo.dates1){
-            price+=50
+            if(this.props.data.athleteInfo.member == "dcvault-member"){
+                price = 25
+            }else{
+                price+=50
+            }
             numWeeks+=1
           }
           if(this.props.data.athleteInfo.dates2){
@@ -667,7 +708,7 @@ class Payment extends React.Component {
             dateLst += this.props.data.athleteInfo.dates10 + ", "
         }
         this.props.data.athleteInfo.dates1 = dateLst
-        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competition: ' + dateLst
+        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\n State:' + this.props.data.athleteInfo.state + '\n Division: ' + this.props.data.athleteInfo.division +  '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competitions: ' + dateLst
 
 
         paypal.Button.render({ // eslint-disable-line
