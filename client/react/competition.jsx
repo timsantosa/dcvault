@@ -299,7 +299,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-row'>
                         <label>
-                            <input type ="checkbox" name="dates1" value="24pvchamps"/>
+                            <input type ="checkbox" name="dates1" value="24pvchamps" required/>
                             <label for="24pvchamps">&nbsp;&nbsp;2024 PV Championships</label>
                             <br></br>
                         </label>
