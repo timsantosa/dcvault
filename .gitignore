@@ -7,3 +7,4 @@ server.log
 *.log'
 'server.log'
 'server.log'
+'.DS_Store'
