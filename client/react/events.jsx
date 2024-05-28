@@ -488,7 +488,9 @@ class Events extends React.Component {
           <li>Athletes, Spectators and Coaches enter the facility from the E. Capitol Street sidewalk gate. Park in Lot #3, exit the lot onto the sidewalk and head to the double gate facing the street next to the DC VAULT storage shed</li>
           <li>$10 Admission for all non-competitors entering the facility (CASH ONLY)</li>
           <ul>
-            <li>Children Under age 11 enter FREE</li>
+            <li>FREE ENTRY for Children Under age 11</li>
+            <li>FREE ENTRY for DC Residents w/ID</li>
+            <li>FREE ENTRY for each team coach w/5 or more competitors</li>
             <li>Spectators and coaches may also watch from outside the fenced area free-of-charge</li>
           </ul>
           <li><span className='red-text'>TENTS and CANOPIES are NOT allowed inside the venue.</span> Spectators wishing to use personal shade canopies or pop-up tent canopies may do so OUTSIDE of the fenced area and enter/exit the venue as needed after paying admission. Download SITE MAP <a href="../files/DCV Site Map.pdf">HERE</a> to view parking and team tent areas.</li>
