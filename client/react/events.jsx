@@ -442,8 +442,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>The 2024 Pole Vault Championships are open to all athletes ages 7 and up</li>
           <li>Advanced Registration Only</li>
-          <li>Registration Closes @ Midnight on May 31st</li>
-          <li>$50 for competitors - Register <a href="https://www.dcvault.com/compete">HERE!</a></li>
+          <li>Registration Now Closed</li>
         </ul>
 
         <span className='event-block-details-header'>Start List/Results</span>
