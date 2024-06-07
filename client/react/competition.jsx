@@ -290,7 +290,7 @@ class AthleteInfo extends React.Component {
                             <div className='col-xs-12 col-md-6'>
                                 <div className='form-row'>
                                     <label>
-                                        <span className='required'>Enter Event Code:</span>
+                                        <span>Enter Event Code:</span>
                                         <input type='text' name='eventCode' style={{width: '100%'}} />
                                     </label>
                                 </div>
