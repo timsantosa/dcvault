@@ -29,6 +29,180 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('August 09, 2024'),
+        partial: (<div className='event-block' id='09AUG2024'>
+        <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
+        <img src = "../img/events/kidscamp23.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>2 WEEKS of Pole Vaulting and Games!</span>
+          <br></br>
+          <span className='event-block-date'>July 29th through August 9th</span>
+          <br></br>
+          <span className='event-block-date'>DC Vault - 2200 East Capitol Street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>Dates</span>
+        <ul className='event-block-details'>
+          <li>Jul 29th - Aug 2nd</li>
+          <li>Aug 5th - Aug 9th</li>
+        </ul>
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>Ages 7-11</li>
+          <li>Beginners through Advanced Pole Vaulters</li>
+          <li>5 weeks to choose from</li>
+          <li>Monday thru Friday 8:45am – 3:15pm</li>
+          <li>Dropoff window 8:45am-9:00am</li>
+          <li>Pickup window 3:00-3:15pm</li>
+          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more</li>
+          <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
+          <li>Tuesday &amp; Thursday includes an Ice Cream stop during lunch break</li>
+        </ul>
+        
+        <span className='event-block-details-header'>Included with Registration</span>
+        <ul className='event-block-details'>
+          <li>All equipment for use during camp</li>
+          <li>Ice Cream trips on Tuesday and Thursday</li>
+          <li>DC Vault t-shirt (youth sizes only)</li>
+          <li>Healthy Snacks</li>
+        </ul>
+        
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='09AUG2024'>
+        <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
+        <img src = "../img/events/kidscamp23.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>2 WEEKS of Pole Vaulting and Games!</span>
+          <br></br>
+          <span className='event-block-date'>July 29th through August 9th</span>
+          <br></br>
+          <span className='event-block-date'>DC Vault - 2200 East Capitol Street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>Dates</span>
+        <ul className='event-block-details'>
+          <li>Jul 29th - Aug 2nd</li>
+          <li>Aug 5th - Aug 9th</li>
+        </ul>
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>Ages 7-11</li>
+          <li>Beginners through Advanced Pole Vaulters</li>
+          <li>5 weeks to choose from</li>
+          <li>Monday thru Friday 8:45am – 3:15pm</li>
+          <li>Dropoff window 8:45am-9:00am</li>
+          <li>Pickup window 3:00-3:15pm</li>
+          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more</li>
+          <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
+          <li>Tuesday &amp; Thursday includes an Ice Cream stop during lunch break</li>
+        </ul>
+        
+        <span className='event-block-details-header'>Included with Registration</span>
+        <ul className='event-block-details'>
+          <li>All equipment for use during camp</li>
+          <li>Ice Cream trips on Tuesday and Thursday</li>
+          <li>DC Vault t-shirt (youth sizes only)</li>
+          <li>Healthy Snacks</li>
+        </ul>
+        <span className='event-block-details-header'>Daily Schedule</span>
+        <ul className='event-block-details'>
+          <li>8:45-9:00am </li>
+          <ul>
+            <li>drop-off window + games</li>
+          </ul>
+          <li>9:00-9:30am </li>
+          <ul>
+            <li>warm-ups + strength</li>
+          </ul>
+          <li>9:30-10:30am  </li>
+          <ul>
+            <li>drills</li>
+          </ul>
+          <li>10:30am-11am  </li>
+          <ul>
+            <li>break + snacks + games</li>
+          </ul>
+          <li>11-12pm </li>
+          <ul>
+            <li>vault</li>
+          </ul>
+          <li>12-12:30pm  </li>
+          <ul>
+            <li>walk to Lincoln Park</li>
+          </ul>
+          <li>12:30-1pm  </li>
+          <ul>
+            <li>lunch @ Lincoln Park (+ Ice Cream @ E. Market on Tue & Thu)</li>
+          </ul>
+          <li>1:00-1:30pm</li>
+          <ul>
+            <li>drills @ Lincoln Park</li>
+          </ul>
+          <li>1:30-2:00pm</li>
+          <ul>
+            <li>walk to DCV</li>
+          </ul>
+          <li>2:00pm-3:00pm</li>
+          <ul>
+            <li>vault</li>
+          </ul>
+          <li>3:00-3:15pm </li>
+          <ul>
+            <li>Pickup window + games</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Daily Technical Focus</span>
+        <ul className='event-block-details'>
+          <li>M - run / takeoff</li>
+          <ul>
+            <li>learn to carry and run with the pole and how to take-off</li>
+          </ul>
+          <li>T - swing</li>
+          <ul>
+            <li>learn to begin to swing upside down on the pole with rings, ropes and hanging drills</li>
+          </ul>
+          <li>W - extension </li>
+          <ul>
+            <li>learn how to pull yourself up the pole towards the bar with ropes, platforms and partner drills</li>
+          </ul>
+          <li>R - turn</li>
+          <ul>
+            <li>learn to turn over the bar with rings, ropes, platforms and ground drills</li>
+          </ul>
+          <li>F - height / competition </li>
+          <ul>
+            <li>Putting all of the technical work together, campers will have a competition to go over heights!</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Games</span>
+        <ul className='event-block-details'>
+          <li>Water Balloon Fight</li>
+          <li>Face Painting</li>
+          <li>Sumo Ball Wrestling Match</li>
+          <li>Nerf Games</li>
+          <li>Relay Races</li>
+          <li>and more!</li>
+        </ul>
+        <span className='event-block-details-header'>What to Bring</span>
+        <ul className='event-block-details'>
+          <li>Water Bottle</li>
+          <li>Sunblock</li>
+          <li>Bug Spray</li>
+          <li>Bag Lunch (ice chest available at DCV)</li>
+          <li>Running shoes</li>
+          <li>Athletic active wear clothing</li>
+        </ul>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>$400 - 1 week</li>
+          <li>$750 - 2 weeks</li>
+          <li>10% Discount when registering at the 2024 Pole Vault Championships on June 8th. Ask for the event discount code!</li>
+          <li><a href = "http://dcvault.com/compete/">Register Here</a>  </li>
+        </ul>
+        
+        <center><span className='red-text'>Click Arrow to Collapse Info</span></center>
+        </div>)
+      },
+      {
         date: new Date('June 8, 2024'),
         partial: (<div className='event-block' id='8JUN2024'>
         <p className='event-block-title'>2024 <span className='red-text'>Pole Vault</span> Championships</p>
@@ -49,20 +223,27 @@ class Events extends React.Component {
                     <li>accepted B-standard entries posted by June 1st</li>
                     <li>alternates compete in the Men’s Emerging Elite Division</li>
                 </ul>
-                <li>4.9m starting height</li>
+                <li>4.85m starting height</li>
                 <li>Progressions:</li>
                 <ul>
-                    <li>4.90+15</li>
-                    <li>5.05</li>
-                    <li>5.20</li>
-                    <li>5.35</li>
-                    <li>5.50+10</li>
-                    <li>5.60</li>
-                    <li>5.70</li>
-                    <li>5.80+5 <span className='red-text'>(New Facility Record)</span></li>
-                    <li>5.90</li>
-                    <li>6.00</li>
+                    <li>4.85+15 (15’11”)</li>
+                    <li>5.10 (16’9”)</li>
+                    <li>5.25 (17’3”)</li>
+                    <li>5.40+8 (17’8”) Olympic Trials B-Standard</li>
+                    <li>5.48 (18’)</li>
+                    <li>5.56 (18’3”)</li>
+                    <li>5.64 (18’6”)</li>
+                    <li>5.72 (18’9”) Olympic Trials A-Standard</li>
+                    <li>5.80+4 (19’) Facility Record <span className='red-text'>= $1,000 for 1st place finisher + $250 for 2nd place finisher</span></li>
+                    <li>5.84 (19’2”)</li>
+                    <li>5.88 (19’3.5”)</li>
+                    <li>5.92+2 (19’5”)</li>
+                    <li>5.94 (19’6”) <span className='red-text'>+$500 bonus for 1st place finisher + $250 bonus for 2nd place finisher</span></li>
+                    <li>5.96 (19’6.5”)</li>
+                    <li>5.98 (19’7”)</li>
+                    <li>6.00 (19’8”) <span className='red-text'>+$1,000 bonus for 1st place finisher + $500 bonus for 2nd place finisher</span></li>
                 </ul>
+
             </ul>
             <li>Elite Women</li>
             <ul>
@@ -76,32 +257,42 @@ class Events extends React.Component {
                 <li>3.75m starting height</li>
                 <li>Progressions:</li>
                 <ul>
-                    <li>3.75+15</li>
-                    <li>3.90</li>
-                    <li>4.15</li>
-                    <li>4.30</li>
-                    <li>4.45+10</li>
-                    <li>4.55</li>
-                    <li>4.65</li>
-                    <li>4.75 <span className='red-text'>(New Facility Record)</span></li>
-                    <li>4.85+5</li>
-                    <li>4.90</li>
-                    <li>4.95</li>
-                    <li>5.00</li>
+                    <li>3.75+15 (12’4”)</li>
+                    <li>3.90 (12’9”)</li>
+                    <li>4.05 (13’3”)</li>
+                    <li>4.20+10 (13’9”)</li>
+                    <li>4.30 (14’1”) Olympic Trials B-Standard</li>
+                    <li>4.40 (14’5”)</li>
+                    <li>4.50 (14’9”)</li>
+                    <li>4.60+5 (15’) Olympic Trials A-Standard</li>
+                    <li>4.65 (15’3”) Current Facility Record</li>
+                    <li>4.70 (15’5”) Facility Record <span className='red-text'>= $1,000 for 1st place finisher + $250 for 2nd place finisher</span></li>
+                    <li>4.75 (15’7”)</li>
+                    <li>4.80 (15’9”)</li>
+                    <li>4.85 (15’11”)</li>
+                    <li>4.90 (16’1”) <span className='red-text'>+$500 bonus for 1st place finisher + $250 bonus for 2nd place finisher</span></li>
+                    <li>4.95 (16’3”)</li>
+                    <li>5.00 (16’5”) <span className='red-text'>+$1,000 bonus for 1st place finisher + $500 bonus for 2nd place finisher</span></li>
                 </ul>
+
             </ul>
             <li>Elite Entries: Contact <span className='red-text'>Events@DCVault.org</span></li>
         </ul>
         <span className='event-block-details-header'><span className='red-text'>Elite Division Awards!</span></span>
         <ul className='event-block-details'>
-            <li>Elite Men: First Place Finisher with a New Facility Record is awarded $1,000!</li>
-            <ul>
-                <li>current event/facility record - 5.72m</li>
-            </ul>
-            <li>Elite Women: First Place Finisher with a New Facility Record is awarded $1,000!</li>
-            <ul>
-                <li>current event/facility record - 4.65m</li>
-            </ul>
+            <li>$7,000 in total prize money!</li>
+            <li>Elite Men: 
+                <ul>
+                    <li>First place finisher with a new facility record is awarded up to $2,500!</li>
+                    <li>Second place finisher with a new facility record is awarded up to $1,000!</li>
+                </ul>
+            </li>
+            <li>Elite Women: 
+                <ul>
+                    <li>First place finisher with a new facility record is awarded $2,500!</li>
+                    <li>Second place finisher with a new facility record is awarded up to $1,000!</li>
+                </ul>
+            </li>
         </ul>
         <span className='event-block-details-header'><br></br><span className='red-text'>ELITE Entries</span> (as of 04/15/2024)</span>
         <span className='event-block-details-header'><br></br>ELITE MEN</span>
@@ -114,12 +305,21 @@ class Events extends React.Component {
                 <li><a href="https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
                 <li>DMV Native!</li>
             </ul>
-            <li>Matt Ludwig – 5.90m (19’ 4.25”)</li>
-            <ul>
-                <li>2023 Pan American Games Champion / 2021 Olympian / 2020 USA National Champion</li>
-                <li><a href="https://instagram.com/mattludwig_23">instagram.com/mattludwig_23</a></li>
-                <li>Ohio</li>
-            </ul>
+            <li>Matt Ludwig – 5.90m (19’ 4.25”)
+                <ul>
+                    <li>2023 Pan American Games Champion / 2021 Olympian / 2020 USA National Champion</li>
+                    <li><a href="https://instagram.com/mattludwig_23">instagram.com/mattludwig_23</a></li>
+                    <li>Ohio</li>
+                </ul>
+            </li>
+            <li>Scott Houston – PR 5.83m (19’ 1.5”) / 2024: 5.65 (18’6.5”)
+                <ul>
+                    <li>Vaulthouse</li>
+                    <li>2018 USA National Champion / 2018 NACAC Champion</li>
+                    <li><a href="https://instagram.com/scottyhous">instagram.com/scottyhous</a></li>
+                    <li>North Carolina</li>
+                </ul>
+            </li>
             <li>Zach Ferrara - 5.49m (18’ 0”)</li>
             <ul>
                 <li>Vault Vision LLC</li>
@@ -148,27 +348,58 @@ class Events extends React.Component {
 
         <span className='event-block-details-header'><br></br>ELITE WOMEN</span>
         <ul className='event-block-details'>
-            <li>Bridget Williams 4.83m (15’10.25”)</li>
+        <li>Bridget Williams 4.83m (15’10.25”)
             <ul>
                 <li>TeamESSX</li>
                 <li>Team USA World Championships Finalist / Pan Am Games Gold Medalist</li>
                 <li><a href="https://instagram.com/bridgieeee">instagram.com/bridgieeee</a></li>
                 <li>Virginia</li>
             </ul>
-            <li>Anicka Newell 4.70m (15’5”)</li>
+        </li>
+        <li>Anicka Newell 4.70m (15’5”)
             <ul>
                 <li>Team Canada</li>
                 <li>2x Olympian / 3x World Championships Qualifier / 1x National Champion</li>
                 <li><a href="https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
                 <li>Texas</li>
             </ul>
-            <li>Rachel Baxter 4.62m (15’1.75”)</li>
+        </li>
+        <li>Rachel Baxter 4.62m (15’1.75”)
             <ul>
                 <li>TeamESSX</li>
                 <li>Olympic Trials Finalist / USA Championships Top 10 / NCAA National Champion</li>
                 <li><a href="https://instagram.com/_rachel_baxter_">instagram.com/_rachel_baxter_</a></li>
                 <li>Virginia</li>
             </ul>
+        </li>
+        <li>Sydney Horn 4.51m (14’ 9.5”)
+            <ul>
+                <li>High Point University</li>
+                <li>7x NCAA All-American / Team USA / NACAC U23 record holder</li>
+                <li><a href="https://instagram.com/sydney_horn_">instagram.com/sydney_horn_</a></li>
+                <li>Pennsylvania</li>
+            </ul>
+        </li>
+        <li>Kaitlyn Dermen 4.27m (14’ 0”)
+            <ul>
+                <li>Philly Jumps Club</li>
+                <li>NCAA DIII All American, 4x NJAC Conference champion</li>
+                <li><a href="https://instagram.com/kaitlynders_">instagram.com/kaitlynders_</a></li>
+                <li>New Jersey</li>
+            </ul>
+        </li>
+
+        </ul>
+        <span className='event-block-details-header'><br></br>ELITE WOMEN -<span className='red-text'> B standard wait list</span></span>
+        <ul className='event-block-details'>
+        <li>Madeline OConnell – 4.10m (13’5.5")
+            <ul>
+                <li>Industrial Vault Club</li>
+                <li>NCAA D-III National Champion / 8x All American</li>
+                <li><a href="https://instagram.com/madeline.track.adventures">instagram.com/madeline.track.adventures</a></li>
+                <li>Ohio</li>
+            </ul>
+        </li>
         </ul>
         <center><span className='red-text'>Click Arrow for More Info</span></center>
     </div>
@@ -192,20 +423,27 @@ class Events extends React.Component {
                     <li>accepted B-standard entries posted by June 1st</li>
                     <li>alternates compete in the Men’s Emerging Elite Division</li>
                 </ul>
-                <li>4.9m starting height</li>
+                <li>4.85m starting height</li>
                 <li>Progressions:</li>
                 <ul>
-                    <li>4.90+15</li>
-                    <li>5.05</li>
-                    <li>5.20</li>
-                    <li>5.35</li>
-                    <li>5.50+10</li>
-                    <li>5.60</li>
-                    <li>5.70</li>
-                    <li>5.80+5 <span className='red-text'>(New Facility Record)</span></li>
-                    <li>5.90</li>
-                    <li>6.00</li>
+                    <li>4.85+15 (15’11”)</li>
+                    <li>5.10 (16’9”)</li>
+                    <li>5.25 (17’3”)</li>
+                    <li>5.40+8 (17’8”) Olympic Trials B-Standard</li>
+                    <li>5.48 (18’)</li>
+                    <li>5.56 (18’3”)</li>
+                    <li>5.64 (18’6”)</li>
+                    <li>5.72 (18’9”) Olympic Trials A-Standard</li>
+                    <li>5.80+4 (19’) Facility Record <span className='red-text'>= $1,000 for 1st place finisher + $250 for 2nd place finisher</span></li>
+                    <li>5.84 (19’2”)</li>
+                    <li>5.88 (19’3.5”)</li>
+                    <li>5.92+2 (19’5”)</li>
+                    <li>5.94 (19’6”) <span className='red-text'>+$500 bonus for 1st place finisher + $250 bonus for 2nd place finisher</span></li>
+                    <li>5.96 (19’6.5”)</li>
+                    <li>5.98 (19’7”)</li>
+                    <li>6.00 (19’8”) <span className='red-text'>+$1,000 bonus for 1st place finisher + $500 bonus for 2nd place finisher</span></li>
                 </ul>
+
             </ul>
             <li>Elite Women</li>
             <ul>
@@ -219,32 +457,42 @@ class Events extends React.Component {
                 <li>3.75m starting height</li>
                 <li>Progressions:</li>
                 <ul>
-                    <li>3.75+15</li>
-                    <li>3.90</li>
-                    <li>4.15</li>
-                    <li>4.30</li>
-                    <li>4.45+10</li>
-                    <li>4.55</li>
-                    <li>4.65</li>
-                    <li>4.75 <span className='red-text'>(New Facility Record)</span></li>
-                    <li>4.85+5</li>
-                    <li>4.90</li>
-                    <li>4.95</li>
-                    <li>5.00</li>
+                    <li>3.75+15 (12’4”)</li>
+                    <li>3.90 (12’9”)</li>
+                    <li>4.05 (13’3”)</li>
+                    <li>4.20+10 (13’9”)</li>
+                    <li>4.30 (14’1”) Olympic Trials B-Standard</li>
+                    <li>4.40 (14’5”)</li>
+                    <li>4.50 (14’9”)</li>
+                    <li>4.60+5 (15’) Olympic Trials A-Standard</li>
+                    <li>4.65 (15’3”) Current Facility Record</li>
+                    <li>4.70 (15’5”) Facility Record <span className='red-text'>= $1,000 for 1st place finisher + $250 for 2nd place finisher</span></li>
+                    <li>4.75 (15’7”)</li>
+                    <li>4.80 (15’9”)</li>
+                    <li>4.85 (15’11”)</li>
+                    <li>4.90 (16’1”) <span className='red-text'>+$500 bonus for 1st place finisher + $250 bonus for 2nd place finisher</span></li>
+                    <li>4.95 (16’3”)</li>
+                    <li>5.00 (16’5”) <span className='red-text'>+$1,000 bonus for 1st place finisher + $500 bonus for 2nd place finisher</span></li>
                 </ul>
+
             </ul>
             <li>Elite Entries: Contact <span className='red-text'>Events@DCVault.org</span></li>
         </ul>
         <span className='event-block-details-header'><span className='red-text'>Elite Division Awards!</span></span>
         <ul className='event-block-details'>
-            <li>Elite Men: First Place Finisher with a New Facility Record is awarded $1,000!</li>
-            <ul>
-                <li>current event/facility record - 5.72m</li>
-            </ul>
-            <li>Elite Women: First Place Finisher with a New Facility Record is awarded $1,000!</li>
-            <ul>
-                <li>current event/facility record - 4.65m</li>
-            </ul>
+            <li>$7,000 in total prize money!</li>
+            <li>Elite Men: 
+                <ul>
+                    <li>First place finisher with a new facility record is awarded up to $2,500!</li>
+                    <li>Second place finisher with a new facility record is awarded up to $1,000!</li>
+                </ul>
+            </li>
+            <li>Elite Women: 
+                <ul>
+                    <li>First place finisher with a new facility record is awarded $2,500!</li>
+                    <li>Second place finisher with a new facility record is awarded up to $1,000!</li>
+                </ul>
+            </li>
         </ul>
         <span className='event-block-details-header'><br></br><span className='red-text'>ELITE Entries</span> (as of 04/15/2024)</span>
         <span className='event-block-details-header'><br></br>ELITE MEN</span>
@@ -257,12 +505,21 @@ class Events extends React.Component {
                 <li><a href="https://instagram.com/a_milli29">instagram.com/a_milli29</a></li>
                 <li>DMV Native!</li>
             </ul>
-            <li>Matt Ludwig – 5.90m (19’ 4.25”)</li>
-            <ul>
-                <li>2023 Pan American Games Champion / 2021 Olympian / 2020 USA National Champion</li>
-                <li><a href="https://instagram.com/mattludwig_23">instagram.com/mattludwig_23</a></li>
-                <li>Ohio</li>
-            </ul>
+            <li>Matt Ludwig – 5.90m (19’ 4.25”)
+                <ul>
+                    <li>2023 Pan American Games Champion / 2021 Olympian / 2020 USA National Champion</li>
+                    <li><a href="https://instagram.com/mattludwig_23">instagram.com/mattludwig_23</a></li>
+                    <li>Ohio</li>
+                </ul>
+            </li>
+            <li>Scott Houston – PR 5.83m (19’ 1.5”) / 2024: 5.65 (18’6.5”)
+                <ul>
+                    <li>Vaulthouse</li>
+                    <li>2018 USA National Champion / 2018 NACAC Champion</li>
+                    <li><a href="https://instagram.com/scottyhous">instagram.com/scottyhous</a></li>
+                    <li>North Carolina</li>
+                </ul>
+            </li>
             <li>Zach Ferrara - 5.49m (18’ 0”)</li>
             <ul>
                 <li>Vault Vision LLC</li>
@@ -288,29 +545,61 @@ class Events extends React.Component {
             <li>Washington, DC</li>
           </ul>
         </ul>
+
         <span className='event-block-details-header'><br></br>ELITE WOMEN</span>
         <ul className='event-block-details'>
-            <li>Bridget Williams 4.83m (15’10.25”)</li>
+        <li>Bridget Williams 4.83m (15’10.25”)
             <ul>
                 <li>TeamESSX</li>
                 <li>Team USA World Championships Finalist / Pan Am Games Gold Medalist</li>
                 <li><a href="https://instagram.com/bridgieeee">instagram.com/bridgieeee</a></li>
                 <li>Virginia</li>
             </ul>
-            <li>Anicka Newell 4.70m (15’5”)</li>
+        </li>
+        <li>Anicka Newell 4.70m (15’5”)
             <ul>
                 <li>Team Canada</li>
                 <li>2x Olympian / 3x World Championships Qualifier / 1x National Champion</li>
                 <li><a href="https://instagram.com/flygirl93">instagram.com/flygirl93</a></li>
                 <li>Texas</li>
             </ul>
-            <li>Rachel Baxter 4.62m (15’1.75”)</li>
+        </li>
+        <li>Rachel Baxter 4.62m (15’1.75”)
             <ul>
                 <li>TeamESSX</li>
                 <li>Olympic Trials Finalist / USA Championships Top 10 / NCAA National Champion</li>
                 <li><a href="https://instagram.com/_rachel_baxter_">instagram.com/_rachel_baxter_</a></li>
                 <li>Virginia</li>
             </ul>
+        </li>
+        <li>Sydney Horn 4.51m (14’ 9.5”)
+            <ul>
+                <li>High Point University</li>
+                <li>7x NCAA All-American / Team USA / NACAC U23 record holder</li>
+                <li><a href="https://instagram.com/sydney_horn_">instagram.com/sydney_horn_</a></li>
+                <li>Pennsylvania</li>
+            </ul>
+        </li>
+        <li>Kaitlyn Dermen 4.27m (14’ 0”)
+            <ul>
+                <li>Philly Jumps Club</li>
+                <li>NCAA DIII All American, 4x NJAC Conference champion</li>
+                <li><a href="https://instagram.com/kaitlynders_">instagram.com/kaitlynders_</a></li>
+                <li>New Jersey</li>
+            </ul>
+        </li>
+
+        </ul>
+        <span className='event-block-details-header'><br></br>ELITE WOMEN -<span className='red-text'> B standard wait list</span></span>
+        <ul className='event-block-details'>
+        <li>Madeline OConnell – 4.10m (13’5.5")
+            <ul>
+                <li>Industrial Vault Club</li>
+                <li>NCAA D-III National Champion / 8x All American</li>
+                <li><a href="https://instagram.com/madeline.track.adventures">instagram.com/madeline.track.adventures</a></li>
+                <li>Ohio</li>
+            </ul>
+        </li>
         </ul>
         <span className='event-block-details-header'><span className='red-text'>Open</span> Division Information</span>
         <ul className='event-block-details'>
