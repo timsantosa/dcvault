@@ -163,7 +163,7 @@ transporter.sendMail(mailOptions2, (error, info) => {
 */
 }
 
-module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
+module.exports.sendEventConfirmationEmailsTemp = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
         subject: '2024 Pole Vault Championships', // Subject line
@@ -232,10 +232,10 @@ module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
   })
 }
 
-module.exports.sendFlyKidsEventConfirmationEmails = (email, athleteInfo) => {
+module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
   let mailOptions = {
       from: '"DC Vault" <' + config.email.username + '>', // sender address
-      subject: '2023 Fly-Kids Summer Camp', // Subject line
+      subject: '2024 Fly-Kids Summer Camp', // Subject line
       to: email,
       html: '<p>Thank you for registering for the Fly-Kids Summer Camp!</p>\
         <p>Please note - our lead camp counselors are Marley Oar and Edith Bosshart. We will provide the designated counselor contact phone # the first day of camp for emergencies.</p>\
