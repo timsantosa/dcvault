@@ -737,7 +737,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Start List/Results</span>
         <ul className='event-block-details'>
           <li>Download Start List <a style={{color: '#C0282D'}} href='../files/pvchamps24-start.pdf' target='_blank'>here!</a> </li>
-          <li>Download Final Results <a href="#">HERE!</a> (Available June 9th)</li>
+          <li>Download Final Results <a style={{color: '#C0282D'}} href='../files/pvchamps24_results.pdf' target='_blank'>here!</a></li>
         </ul>
 
         <span className='event-block-details-header'>Awards/Sanctioning</span>
