@@ -286,16 +286,6 @@ class AthleteInfo extends React.Component {
                                 <br></br>
                             </label>
                         </div>
-                        <div className='row'>
-                            <div className='col-xs-12 col-md-6'>
-                                <div className='form-row'>
-                                    <label>
-                                        <span>Enter Event Code:</span>
-                                        <input type='text' name='eventCode' style={{width: '100%'}} />
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <div className='form-title-row'>
@@ -598,13 +588,6 @@ class Payment extends React.Component {
         if(numWeeks >= 2){
             price = 750
         }
-
-        if(this.props.data.athleteInfo.eventCode){
-            if(this.props.data.athleteInfo.eventCode == "FLYKIDS2024"){
-                disc = price * .10
-                price = price - disc
-            }
-        }
         this.state = {
             price: price,
             discount: disc,
@@ -741,7 +724,6 @@ class Payment extends React.Component {
                             <div className='row'>
                                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                                     <p className='price-text'>Registration Fee: <span className='red-text'>${currentPrice}</span></p>
-                                    <p className='price-text'>Event Signup Discount: <span className='red-text'>-${currentDiscount}</span></p>
                                     <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                         
                                 </div>
