@@ -32,7 +32,7 @@ class Events extends React.Component {
         date: new Date('August 09, 2024'),
         partial: (<div className='event-block' id='09AUG2024'>
         <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
-        <img src = "../img/events/kidscamp23.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        <img src = "../img/events/fly-kids24.png" alt="FLY-KIDS" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>2 WEEKS of Pole Vaulting and Games!</span>
           <br></br>
@@ -49,7 +49,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Ages 7-11</li>
           <li>Beginners through Advanced Pole Vaulters</li>
-          <li>5 weeks to choose from</li>
+          <li>2 weeks to choose from</li>
           <li>Monday thru Friday 8:45am – 3:15pm</li>
           <li>Dropoff window 8:45am-9:00am</li>
           <li>Pickup window 3:00-3:15pm</li>
@@ -70,7 +70,7 @@ class Events extends React.Component {
         </div>),
         full: (<div className='event-block' id='09AUG2024'>
         <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
-        <img src = "../img/events/kidscamp23.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        <img src = "../img/events/fly-kids24.png" alt="FLY-KIDS" width = '350' class = "center"></img>
         <p className='event-block-info'>
           <span className='event-block-date'>2 WEEKS of Pole Vaulting and Games!</span>
           <br></br>
@@ -87,7 +87,7 @@ class Events extends React.Component {
         <ul className='event-block-details'>
           <li>Ages 7-11</li>
           <li>Beginners through Advanced Pole Vaulters</li>
-          <li>5 weeks to choose from</li>
+          <li>2 weeks to choose from</li>
           <li>Monday thru Friday 8:45am – 3:15pm</li>
           <li>Dropoff window 8:45am-9:00am</li>
           <li>Pickup window 3:00-3:15pm</li>
