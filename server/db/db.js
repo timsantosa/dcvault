@@ -145,6 +145,16 @@ columns.addresses = {
   country: Sequelize.STRING
 }
 
+columns.athleteProfiles = {
+  nationality: {type: Sequelize.STRING, defaultValue: 'US'},
+  profileImage: Sequelize.STRING,
+  backgroundImage: Sequelize.STRING,
+  height: Sequelize.INTEGER, // Inches
+  weight: Sequelize.INTEGER, // Pounds
+  // User FK
+
+}
+
 const syncTables = (schema, force) => {
   force = !!force
 
@@ -161,6 +171,7 @@ const syncTables = (schema, force) => {
   tables.TrainingOptions = schema.define('trainingOptions', columns.trainingOptions)
   tables.EventAthletes = schema.define('eventAthlete', columns.eventAthletes)
   tables.EventPurchases = schema.define('eventPurchase', columns.eventPurchases)
+  tables.AthleteProfiles = schema.define('athleteProfiles', columns.athleteProfiles)
 
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
@@ -177,6 +188,8 @@ const syncTables = (schema, force) => {
   tables.Discounts.belongsTo(tables.Users, {as: 'user'})
   tables.Discounts.belongsTo(tables.Packages, {as: 'package'})
   tables.Discounts.belongsTo(tables.Rentals, {as: 'rental'})
+
+  tables.AthleteProfiles.belongsTo(tables.Users, {as: 'user'})
 
   return schema.sync({force: force})
 }

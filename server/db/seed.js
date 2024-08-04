@@ -81,9 +81,53 @@ const getGroup = (dob) => {
 const fillDb = (numEntries) => {
   let alex = {email: 'moores.alexd@gmail.com', name: 'Alex Moores', password: bcrypt.hashSync(config.testAccounts.testPass[0]), isAdmin: 1, verified: 1, verificationCode: '3SxowfTEgCaNn3t7'}
   let eddie = {email: 'dcvault@gmail.com', name: 'Eddie Luthy', password: bcrypt.hashSync(config.testAccounts.testPass[1]), isAdmin: 1, verified: 1, verificationCode: '3SxowfTEgCaNB3t7'}
+  let tester = {email: 'tester@gmail.com', name: 'Test Mcghee', password: bcrypt.hashSync(config.testAccounts.testPass[2]), isAdmin: 0, verified: 1, verificationCode: '3SxowfTEgCaNB3t7'}
 
   db.tables.Users.create(alex)
   db.tables.Users.create(eddie)
+  db.tables.Users.create(tester).then((newUser) => {
+    let athlete = {}
+    athlete.userId = newUser.id
+    athlete.gender = 'male'
+    athlete.firstName = "Christian"
+    athlete.lastName = "Dinicodkvoejrks"
+    athlete.email = 'tester@gmail.com'
+    athlete.emergencyContactName = newUser.name
+    athlete.emergencyContactMDN = getRandNumLen(3) + '-' + getRandNumLen(3) + '-' + getRandNumLen(4)
+    athlete.emergencyContactRelation = getRandElement(['guardian', 'father', 'mother', 'parent'])
+    athlete.usatf = getRandNumLen(10)
+    athlete.dob = getRandDob()
+    athlete.state = getRandElement(states).abbreviation
+    athlete.medConditions = 'none'
+    db.tables.Athletes.create(athlete)
+    .then((newAthlete) => {
+      let purchase = {}
+      purchase.userId = newAthlete.userId
+      purchase.athleteId = newAthlete.id
+      purchase.group = getGroup(athlete.dob)
+      purchase.quarter = (purchase.group === 'youth' || purchase.group === 'adult') ? 'fall' : getRandElement(quarters)
+      purchase.facility = getRandElement(facilities)
+      purchase.waiverSignatory = newUser.name
+      purchase.waiverDate = getDate()
+      purchase.paymentId = helpers.randString()
+      purchase.payerId = helpers.randString()
+      db.tables.Purchases.create(purchase).then((newPurchase) => {
+        if (newPurchase.id === numEntries) {
+          console.log('done')
+          schema.close()
+          // process.exit();
+        }
+      })
+
+      let athleteProfile = {};
+      athleteProfile.nationality = 'IT';
+      athleteProfile.userId = newUser.id;
+      athleteProfile.height = 73;
+      athleteProfile.weight = 168;
+      db.tables.AthleteProfiles.create(athleteProfile);
+    })
+  });
+
   let users = []
   for (let i = 0; i < numEntries; i++) {
     let user = {}
@@ -131,6 +175,11 @@ const fillDb = (numEntries) => {
             // process.exit();
           }
         })
+
+        let athleteProfile = {};
+        athleteProfile.nationality = getRandElement([null, 'US', 'IT', 'GB', 'FR']);
+        athleteProfile.userId = newUser.id;
+        db.tables.AthleteProfiles.create(athleteProfile);
       })
     })
   }
