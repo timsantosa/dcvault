@@ -120,10 +120,13 @@ const fillDb = (numEntries) => {
       })
 
       let athleteProfile = {};
+      athleteProfile.firstName = "Christian";
+      athleteProfile.lastName = "Long Last Name";
       athleteProfile.nationality = 'IT';
       athleteProfile.userId = newUser.id;
       athleteProfile.height = 73;
       athleteProfile.weight = 168;
+      athleteProfile.dob = newAthlete.dob;
       db.tables.AthleteProfiles.create(athleteProfile);
     })
   });
@@ -179,6 +182,11 @@ const fillDb = (numEntries) => {
         let athleteProfile = {};
         athleteProfile.nationality = getRandElement([null, 'US', 'IT', 'GB', 'FR']);
         athleteProfile.userId = newUser.id;
+        athleteProfile.firstName = athlete.firstName;
+        athleteProfile.lastName = athlete.lastName;
+        athleteProfile.weight = getRandNum(80, 200);
+        athleteProfile.height = getRandNum(48, 76);
+        athleteProfile.dob = athlete.dob;
         db.tables.AthleteProfiles.create(athleteProfile);
       })
     })

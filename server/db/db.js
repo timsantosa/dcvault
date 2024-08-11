@@ -146,11 +146,14 @@ columns.addresses = {
 }
 
 columns.athleteProfiles = {
+  firstName: Sequelize.STRING,
+  lastName: Sequelize.STRING,
   nationality: {type: Sequelize.STRING, defaultValue: 'US'},
   profileImage: Sequelize.STRING,
   backgroundImage: Sequelize.STRING,
   height: Sequelize.INTEGER, // Inches
   weight: Sequelize.INTEGER, // Pounds
+  dob: Sequelize.STRING,
   // User FK
 
 }
