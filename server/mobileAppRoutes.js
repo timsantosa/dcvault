@@ -120,17 +120,17 @@ module.exports = function addMobileAppRoutes(app, db) {
   });
 
   // TODO: Consider converting to use user id as a path parameter
-  app.post('/mobileapp/user/athleteprofiles/create', (req, res) => {
+  app.post('/mobileapp/user/athleteprofile/create', (req, res) => {
     findUser(db, req, res, (userSendingRequest) => {
-      let associatedUserIdForAthleteProfile = req.userId;
-      let newProfile = req.athleteProfile;
+      let associatedUserIdForAthleteProfile = req.body.userId;
+      let newProfile = req.body.athleteProfile;
       // Check for required fields
-      if (!newProfile || !newProfile.firstName || !newProfile.lastName || !newProfile.dob) {
+      if (!newProfile || !newProfile.firstName || !newProfile.lastName || !newProfile.dob || !associatedUserIdForAthleteProfile) {
         res.status(403).send(JSON.stringify({ok: false, message: 'Missing required fields'}));
         return;
       }
       
-      db.tables.AthleteProfiles.findOne({where: {userId: userId}}).then((profileFoundForUser) => {
+      db.tables.AthleteProfiles.findOne({where: {userId: associatedUserIdForAthleteProfile}}).then((profileFoundForUser) => {
         // For now, only one athlete profile per user.
         if (profileFoundForUser) {
           res.status(403).send(JSON.stringify({ok: false, message: 'Athlete profile already exists for that user.'}));
@@ -150,7 +150,14 @@ module.exports = function addMobileAppRoutes(app, db) {
         if (userSendingRequest.isAdmin) {
           // Admin can make a profile for any user, or no user
           
-          return db.tables.AthleteProfiles.create(athleteProfileData);
+          db.tables.AthleteProfiles.create(athleteProfileData).then(newProfile => {
+            if (!newProfile) {
+              res.status(403).send(JSON.stringify({ok: false, message: 'Failed to create athlete profile.'}));
+              return 
+            }
+            res.status(200).send(JSON.stringify({ok: true, message: "Profile Created", athleteProfileId: newProfile.id}));
+          });
+          return;
         }
 
         // If user sending request is not admin, then the user ids must match
@@ -161,10 +168,37 @@ module.exports = function addMobileAppRoutes(app, db) {
           return;
         }
         // Otherwise, create new athlete profile.
-        return db.tables.AthleteProfiles.create(athleteProfileData);
+        db.tables.AthleteProfiles.create(athleteProfileData).then(newAthlete => {
+          if (!newAthlete) {
+            res.status(403).send(JSON.stringify({ok: false, message: 'Failed to create athlete profile.'}));
+            return 
+          }
+          console.log(`Profile create successfully with id ${newAthlete.id}`);
+          res.status(200).send(JSON.stringify({ok: true, message: "Profile Created", athleteProfileId: profile.id}));
+        });
       });
     });
   });
+
+  app.get('/mobileapp/user/latestAthlete', (req, res) => {
+    findUser(db, req, res, (user) => {
+      // If no user id is specified, default to the user sending the request.
+      let userId = req.query.userId ?? user.id;
+      if (!userId) {
+        res.status(403).send(JSON.stringify({ok: false, message: 'Invalid user.'}));
+        return
+      }
+
+      db.tables.Athletes.findOne({where: {userId: userId}}).then((athlete) => {
+        if (!athlete) {
+          res.status(200).send(JSON.stringify({ok: true, message: 'No athlete found associated with user'}));
+          return;
+        }
+        res.status(200).send({ok: true, message: 'found athlete profile', athleteProfileId});
+      });
+    });
+  });
+
 }
 
 /*
