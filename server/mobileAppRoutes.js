@@ -16,8 +16,8 @@ module.exports = function addMobileAppRoutes(app, db) {
         
         // For now, return fake user data
         let permissions = {
-          isAdmin: true,
-          isCoach: true,
+          isAdmin: user.isAdmin,
+          isCoach: false,
         }
         let userInfo = {
           id: user.id,

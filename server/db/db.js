@@ -154,6 +154,7 @@ columns.athleteProfiles = {
   height: Sequelize.INTEGER, // Inches
   weight: Sequelize.INTEGER, // Pounds
   dob: Sequelize.STRING,
+  gender: Sequelize.STRING,
   // User FK
 
 }
