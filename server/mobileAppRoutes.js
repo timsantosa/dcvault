@@ -145,6 +145,7 @@ module.exports = function addMobileAppRoutes(app, db) {
           height: newProfile.height,
           weight: newProfile.weight,
           userId: associatedUserIdForAthleteProfile,
+          gender: newProfile.gender,
         };
 
         if (userSendingRequest.isAdmin) {
