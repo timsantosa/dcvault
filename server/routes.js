@@ -8,6 +8,7 @@ const helpers = require('./lib/helpers')
 const config = require('./config/config')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const addMobileAppRoutes = require('./mobileAppRoutes');
 
 module.exports = (app, db) => {
   // External Middleware
@@ -893,6 +894,9 @@ module.exports = (app, db) => {
     }
   })
   // End Users Section
+
+  // Add Mobile App Endpoints from a separate file
+  addMobileAppRoutes(app, db);
 
   // Admin Endpoints
 
