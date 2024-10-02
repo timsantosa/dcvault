@@ -35,7 +35,7 @@ module.exports = function addMobileAppRoutes(app, db) {
       // Get profile id
       let id = req.query.athleteId
       console.log(`Getting athlete profile for id: ${id}`);
-      if (!id) {
+      if (helpers.isValidId(id)) {
         res.status(403).send(JSON.stringify({ok: false, message: 'no athlete profile id specified.'}));
         return
       }
@@ -56,7 +56,7 @@ module.exports = function addMobileAppRoutes(app, db) {
           stats: {
             height: profileData.height,
             weight: profileData.weight,
-            age: 21, // TODO: Calculate based on DOB
+            age: helpers.calculateAge(profileData.dob),
             rank: 12, // TODO: Calculate based on jumps
             pr: 4.5, // TODO: Calculate based on jumps
             largestPole: '', // TODO: Calculate based on jumps
@@ -79,7 +79,7 @@ module.exports = function addMobileAppRoutes(app, db) {
           if (user.isAdmin) {
             console.log('User is admin');
           }
-          athleteProfile.contactInfo = foundAthlete.contactInfo, // TODO: only if admin
+          athleteProfile.contactInfo = foundAthlete.contactInfo; // TODO: only if admin
             // emrgencyContactInfo: '', // TODO: only if admin
 
           res.status(200).send({ok: true, message: 'found athlete profile', athleteProfile});
@@ -139,7 +139,7 @@ module.exports = function addMobileAppRoutes(app, db) {
         let athleteProfileData = {
           firstName: newProfile.firstName,
           lastName: newProfile.lastName,
-          dob: newProfile.lastName,
+          dob: newProfile.dob,
           nationality: newProfile.nationality ?? 'US',
           height: newProfile.height,
           weight: newProfile.weight,
@@ -156,7 +156,9 @@ module.exports = function addMobileAppRoutes(app, db) {
               return 
             }
             res.status(200).send(JSON.stringify({ok: true, message: "Profile Created", athleteProfileId: newProfile.id}));
-          });
+          }).catch(err => {
+            res.status(500).send({ok: false, message: 'Server error', error: err.message});
+          });;
           return;
         }
 
@@ -173,8 +175,10 @@ module.exports = function addMobileAppRoutes(app, db) {
             res.status(403).send(JSON.stringify({ok: false, message: 'Failed to create athlete profile.'}));
             return 
           }
-          console.log(`Profile create successfully with id ${newAthlete.id}`);
+          console.log(`Profile created successfully with id ${newAthlete.id}`);
           res.status(200).send(JSON.stringify({ok: true, message: "Profile Created", athleteProfileId: profile.id}));
+        }).catch(err => {
+          res.status(500).send({ok: false, message: 'Server error', error: err.message});
         });
       });
     });
@@ -201,7 +205,7 @@ module.exports = function addMobileAppRoutes(app, db) {
         let athleteProfileData = {
           firstName: newProfileData.firstName,
           lastName: newProfileData.lastName,
-          dob: newProfileData.lastName,
+          dob: newProfileData.dob,
           nationality: newProfileData.nationality,
           height: newProfileData.height,
           weight: newProfileData.weight,
@@ -211,7 +215,7 @@ module.exports = function addMobileAppRoutes(app, db) {
         if (userSendingRequest.isAdmin) {
 
           // Admin can update anyone's profile
-          db.tables.AthleteProfiles.update(profileFound).then(updatedProfile => {
+          profileFound.update(athleteProfileData).then(updatedProfile => {
             if (!updatedProfile) {
               res.status(500).send(JSON.stringify({ok: false, message: 'Failed to update athlete profile.'}));
               return 
@@ -219,6 +223,7 @@ module.exports = function addMobileAppRoutes(app, db) {
             console.log(`Profile updated successfully with id ${updatedProfile.id}`);
             res.status(200).send(JSON.stringify({ok: true, message: "Profile updated."}));
           }).catch(error => {
+            console.log('Error while tryin to update profile:', error);
             res.status(500).send(JSON.stringify({ok: false, message: 'Failed to update athlete profile.'}));
           });
           return;
@@ -232,14 +237,15 @@ module.exports = function addMobileAppRoutes(app, db) {
           return;
         }
         // Otherwise, update athlete profile.
-        db.tables.AthleteProfiles.update(athleteProfileData).then(updatedProfile => {
+        profileFound.update(athleteProfileData).then(updatedProfile => {
           if (!updatedProfile) {
             res.status(500).send(JSON.stringify({ok: false, message: 'Failed to update athlete profile.'}));
             return 
           }
           console.log(`Profile updated successfully with id ${updatedProfile.id}`);
-          res.status(200).send(JSON.stringify({ok: true, message: "Profile updated.", athleteProfileId: profile.id}));
+          res.status(200).send(JSON.stringify({ok: true, message: "Profile updated."}));
         }).catch(error => {
+          console.log('Error while tryin to update profile:', error);
           res.status(500).send(JSON.stringify({ok: false, message: 'Failed to update athlete profile.'}));
         });
       });
@@ -261,6 +267,8 @@ module.exports = function addMobileAppRoutes(app, db) {
           return;
         }
         res.status(200).send({ok: true, message: 'found athlete', athlete});
+      }).catch(err => {
+        res.status(500).send({ok: false, message: 'Server error', error: err.message});
       });
     });
   });
@@ -313,6 +321,8 @@ function findUser(db, req, res, successHandler) {
         return;
       }
       successHandler(foundUser);
+    }).catch(err => {
+      res.status(500).send({ok: false, message: 'Server error', error: err.message});
     });
   });
 }
