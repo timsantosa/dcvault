@@ -284,3 +284,42 @@ module.exports.sendWithReplyTo = (name, from, to, subject, text) => {
 
   return transporter.sendMail(mailOptions)
 }
+
+module.exports.calculateAge = (dobString) => {
+  // Check if dobString is defined and not empty
+  if (!dobString) {
+    return undefined;
+  }
+
+  // Regular expression to match MM/DD/YYYY format
+  const dobFormat = /^([0]?[1-9]|1[0-2])\/([0]?[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+
+  // Validate dobString format
+  if (!dobFormat.test(dobString)) {
+    return undefined;
+  }
+
+  // Parse the date of birth string (MM/DD/YYYY)
+  const dob = new Date(dobString);
+
+  // Get today's date
+  const today = new Date();
+
+  // Calculate the difference in years
+  let age = today.getFullYear() - dob.getFullYear();
+
+  // Adjust if the birthday hasn't occurred yet this year
+  const monthDiff = today.getMonth() - dob.getMonth();
+  const dayDiff = today.getDate() - dob.getDate();
+
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+
+  return age;
+}
+
+module.exports.isValidId = (id) => {
+  return typeof id === 'number' && Number.isInteger(id) && isFinite(id);
+}
+
