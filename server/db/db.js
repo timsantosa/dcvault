@@ -145,6 +145,8 @@ columns.addresses = {
   country: Sequelize.STRING
 }
 
+
+// Mobile app related tables
 columns.athleteProfiles = {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
@@ -156,8 +158,50 @@ columns.athleteProfiles = {
   dob: Sequelize.STRING,
   gender: Sequelize.STRING,
   // User FK
-
 }
+
+columns.jumps = {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles, // Assumes `AthleteProfiles` table is already defined
+      key: 'id',
+    },
+  },
+  date: {
+    type: Sequelize.DATE,
+    allowNull: false,
+  },
+  // Flattened Hard Metrics
+  stepNum: Sequelize.INTEGER,
+  distanceInches: Sequelize.INTEGER,
+  midMarkInches: Sequelize.INTEGER,
+  targetTakeOffInches: Sequelize.INTEGER,
+  actualTakeOffInches: Sequelize.INTEGER,
+  poleLengthInches: Sequelize.INTEGER,
+  poleWeight: Sequelize.INTEGER,
+  poleBrand: Sequelize.ENUM('UCS', 'Altius', 'Dynasty', 'ESSX', 'Nordic', 'Pacer', 'Sky Pole', 'Other'),
+  poleFlex: Sequelize.FLOAT,
+  poleGripInches: Sequelize.INTEGER,
+  heightIsBar: Sequelize.BOOLEAN,
+  heightInches: Sequelize.INTEGER,
+  standardsInches: Sequelize.INTEGER,
+  heightResult: Sequelize.STRING,
+  athleteHeightInches: Sequelize.INTEGER,
+  athleteWeightPounds: Sequelize.INTEGER,
+  // Other fields
+  meetInfo: Sequelize.JSON, // Stores the MeetInfo object as JSON since we probably don't need to query on these values
+  softMetrics: Sequelize.JSON, // Stores the SoftMetrics object as JSON
+  notes: Sequelize.TEXT,
+  videoLink: Sequelize.STRING,
+};
+
 
 const syncTables = (schema, force) => {
   force = !!force
@@ -176,6 +220,7 @@ const syncTables = (schema, force) => {
   tables.EventAthletes = schema.define('eventAthlete', columns.eventAthletes)
   tables.EventPurchases = schema.define('eventPurchase', columns.eventPurchases)
   tables.AthleteProfiles = schema.define('athleteProfiles', columns.athleteProfiles)
+  tables.Jumps = schema.define('jump', columns.jumps);
 
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
@@ -194,6 +239,9 @@ const syncTables = (schema, force) => {
   tables.Discounts.belongsTo(tables.Rentals, {as: 'rental'})
 
   tables.AthleteProfiles.belongsTo(tables.Users, {as: 'user'})
+  // Association: Link Jumps to AthleteProfiles
+  tables.Jumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile' });
+  tables.Athletes.hasMany(tables.Jumps, { as: 'jumps', foreignKey: 'athleteId' });
 
   return schema.sync({force: force})
 }
