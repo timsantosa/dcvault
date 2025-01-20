@@ -822,34 +822,61 @@ class Events extends React.Component {
       </div>)
       },
       {
-        date: new Date('August 9, 2024'),
-        partial: (<div className='event-block' id='09AUG2024'>
-       <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
-        <p className='event-block-info'>
-          <span className='event-block-date'>July 29th-August 2nd, 2024</span>
-          <br></br>
-          <span className='event-block-date'>August 5th - August 9th, 2024</span>
-          <br></br>
-          <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
-        </p>
-        <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
-
-
-        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        date: new Date('August 8, 2025'),
+        partial: (<div className='event-block' id='08AUG2025'>
+          <p className='event-block-title'>2025 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
+          <img src = "../img/events/kidscamp25_1.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+          <p className='event-block-info'>
+            <span className='event-block-date'>July 21st - July 25th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>July 28th - August 1st, 2025</span>
+            <br></br>
+            <span className='event-block-date'>August 4th - August 8th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+      
+          <center><span className='red-text'>Click Arrow for More Info</span></center>
         </div>),
-        full: (<div className='event-block' id='09AUG2024'>
-        <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
-         <p className='event-block-info'>
-           <span className='event-block-date'>July 29th-August 2nd, 2024</span>
-           <br></br>
-           <span className='event-block-date'>August 5th - August 9th, 2024</span>
-           <br></br>
-           <span className='event-block-date'>2200 East Capitol street NE, Washington DC</span>
-         </p>
-         <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
- 
- 
-         </div>)
+        full: (<div className='event-block' id='08AUG2025'>
+          <p className='event-block-title'>2025 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
+          <img src = "../img/events/kidscamp25_1.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+          <p className='event-block-info'>
+            <span className='event-block-date'>July 21st - July 25th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>July 28th - August 1st, 2025</span>
+            <br></br>
+            <span className='event-block-date'>August 4th - August 8th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+        </div>)
+      },      
+      {
+        date: new Date('June 28, 2025'),
+        partial: (<div className='event-block' id='28JUN2025'>
+          <p className='event-block-title'>2025 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
+          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
+          <p className='event-block-info'>
+            <span className='event-block-date'>June 27th - June 28th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+        </div>),
+        full: (<div className='event-block' id='28JUN2025'>
+          <p className='event-block-title'>2025 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
+          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
+
+          <p className='event-block-info'>
+            <span className='event-block-date'>June 27th - June 28th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+        </div>)
       },
       {
         date: new Date('June 24, 2023'),
