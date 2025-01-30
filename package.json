@@ -39,7 +39,7 @@
     "react-dom": "^15.6.2",
     "react-tooltip": "^3.5.0",
     "reactable": "^0.14.1",
-    "sequelize": "^4.44.4",
+    "sequelize": "^6.37.5",
     "transform-runtime": "0.0.0",
     "webpack": "^3.11.0"
   },
