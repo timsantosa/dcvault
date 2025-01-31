@@ -44,7 +44,7 @@ module.exports = (app, db) => {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
@@ -65,7 +65,7 @@ module.exports = (app, db) => {
         newPole = JSON.parse(req.body.newPole)
       } catch (e) {}
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else if (!newPole) {
@@ -85,7 +85,7 @@ module.exports = (app, db) => {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
@@ -106,13 +106,13 @@ module.exports = (app, db) => {
         updatedPole = JSON.parse(req.body.updatedPole)
       } catch (e) {}
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         if (!user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else if (!updatedPole) {
           res.status(400).send({ok: false, message: 'bad request'})
         } else {
-          db.tables.Poles.find({where: {id: updatedPole.id}}).then(foundPole => {
+          db.tables.Poles.findOne({where: {id: updatedPole.id}}).then(foundPole => {
             if (!foundPole) {
               res.status(400).send({ok: false, message: 'pole not found'})
             } else {
@@ -133,7 +133,7 @@ module.exports = (app, db) => {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
@@ -150,11 +150,11 @@ module.exports = (app, db) => {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         if (!user) {
           res.status(400).send({ok: false, message: 'bad user token'})
         } else {
-          db.tables.Athletes.find({where: {id: req.body.athleteId}}).then(athlete => {
+          db.tables.Athletes.findOne({where: {id: req.body.athleteId}}).then(athlete => {
             if (!athlete || (!user.isAdmin && athlete.userId !== user.id)) {
               res.status(400).send({ok: false, message: 'athlete not found'})
             } else {
@@ -194,15 +194,15 @@ module.exports = (app, db) => {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
           let rental, pole
-          let p1 = db.tables.Poles.find({where: {id: req.body.poleId}}).then(foundPole => {
+          let p1 = db.tables.Poles.findOne({where: {id: req.body.poleId}}).then(foundPole => {
             pole = foundPole
           })
-          let p2 = db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(foundRental => { rental = foundRental })
+          let p2 = db.tables.Rentals.findOne({where: {id: req.body.rentalId}}).then(foundRental => { rental = foundRental })
           Promise.all([p1, p2]).then(() => {
             if (!rental || !pole) {
               res.status(400).send({ok: false, message: 'record not found'})
@@ -224,11 +224,11 @@ module.exports = (app, db) => {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         if (!user || !user.isAdmin) {
           res.status(300).send({ok: false, message: 'unauthorized'})
         } else {
-          db.tables.Rentals.find({where: {id: req.body.rentalId}}).then(rental => {
+          db.tables.Rentals.findOne({where: {id: req.body.rentalId}}).then(rental => {
             rental.getPole().then(pole => {
               if (!rental) {
                 res.status(400).send({ok: false, message: 'record not found'})
@@ -255,7 +255,7 @@ module.exports = (app, db) => {
       res.status(400).send({ok: false, message: 'bad request'})
     } else {
       let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.find({where: {id: tokenDecoded.id}}).then(user => {
+      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
         let updatedRental = null
         try {
           updatedRental = JSON.parse(req.body.updatedRental)
@@ -265,7 +265,7 @@ module.exports = (app, db) => {
         } else if (!updatedRental) {
           res.status(400).send({ok: false, message: 'bad rental object'})
         } else {
-          db.tables.Rentals.find({where: {id: updatedRental.id}}).then(rental => {
+          db.tables.Rentals.findOne({where: {id: updatedRental.id}}).then(rental => {
             if (!rental) {
               res.status(400).send({ok: false, message: 'record not found'})
             } else {
@@ -286,7 +286,7 @@ module.exports = (app, db) => {
     if (!code) {
       res.status(400).send({ok: false, message: 'no code given'})
     } else {
-      db.tables.Invites.find({where: {code: code}}).then((invite) => {
+      db.tables.Invites.findOne({where: {code: code}}).then((invite) => {
         if (!invite) {
           res.status(400).send({ok: false, message: 'not a valid code'})
         } else {
@@ -316,7 +316,7 @@ module.exports = (app, db) => {
     if (!code) {
       res.status(400).send({ok: false, message: 'no code given'})
     } else {
-      db.tables.Discounts.find({where: {code: code}}).then((discount) => {
+      db.tables.Discounts.findOne({where: {code: code}}).then((discount) => {
         if (!discount || discount.uses === 0) {
           res.status(400).send({ok: false, message: 'not a valid code'})
         } else {
@@ -334,7 +334,7 @@ module.exports = (app, db) => {
       try {
         user = jwt.decode(req.body.token, config.auth.secret)
       } catch (e) {}
-      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((user) => {
+      db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((user) => {
         if (!user || !user.isAdmin) {
           res.status(403).send({ok: false, message: 'unauthorized'})
         } else {
@@ -360,7 +360,7 @@ module.exports = (app, db) => {
       try {
         user = jwt.decode(req.body.token, config.auth.secret)
       } catch (e) {}
-      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((user) => {
+      db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((user) => {
         if (!user || !user.isAdmin) {
           res.status(403).send({ok: false, message: 'unauthorized'})
         } else {
@@ -385,7 +385,7 @@ module.exports = (app, db) => {
       res.status(400).send({ok: false, message: 'missing purchase details'})
     } else {
       let user = jwt.decode(req.body.token, config.auth.secret)
-      db.tables.Users.find({where: {id: user.id, email: user.email}}).then((user) => {
+      db.tables.Users.findOne({where: {id: user.id, email: user.email}}).then((user) => {
         if (!user) {
           res.status(403).send({ok: false, message: 'bad user token'})
         } else {
@@ -588,7 +588,7 @@ module.exports = (app, db) => {
   })
 
   app.get('/registration/options', (req, res) => {
-    db.tables.TrainingOptions.find({where: {id: 1}}).then(options => {
+    db.tables.TrainingOptions.findOne({where: {id: 1}}).then(options => {
       if (!options) {
         res.status(400).send({ok: false, message: 'record not found'})
       } else {
@@ -600,7 +600,7 @@ module.exports = (app, db) => {
   })
 
   app.post('/registration/options', (req, res) => {
-    db.tables.TrainingOptions.find({where: {id: 1}}).then(options => {
+    db.tables.TrainingOptions.findOne({where: {id: 1}}).then(options => {
       if (!options) {
         let options = {
           fall: false,
@@ -634,7 +634,7 @@ module.exports = (app, db) => {
     if (!req.body.email || !req.body.password) {
       res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}))
     } else {
-      db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
+      db.tables.Users.findOne({where: {email: req.body.email}}).then((user) => {
         if (user) {
           res.status(400).send(JSON.stringify({ok: false, message: 'user already exists'}))
         } else {
@@ -651,7 +651,7 @@ module.exports = (app, db) => {
     if (!req.body.email) {
       res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}))
     } else {
-      db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
+      db.tables.Users.findOne({where: {email: req.body.email}}).then((user) => {
         if (!user) {
           res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}))
         } else {
@@ -668,7 +668,7 @@ module.exports = (app, db) => {
     if (!req.body.email || !req.body.password) {
       res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}))
     } else {
-      db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
+      db.tables.Users.findOne({where: {email: req.body.email}}).then((user) => {
         if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
           res.status(403).send(JSON.stringify({ok: false, message: 'username or password incorrect'}))
         } else if (!user.verified) {
@@ -693,7 +693,7 @@ module.exports = (app, db) => {
 
       }
       if (user) {
-        db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
+        db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((foundUser) => {
           if (foundUser) {
             res.send(JSON.stringify({ok: true, message: 'user authenticated', token: token}))
           } else {
@@ -716,7 +716,7 @@ module.exports = (app, db) => {
         user = jwt.decode(token, config.auth.secret)
       } catch (e) {
       }
-      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((existingUser) => {
+      db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((existingUser) => {
         if (!user) {
           res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}))
         } else {
@@ -737,7 +737,7 @@ module.exports = (app, db) => {
   app.get('/users/verify', (req, res) => {
     let code = req.query.code
     if (code) {
-      db.tables.Users.find({where: {verificationCode: code}}).then((user) => {
+      db.tables.Users.findOne({where: {verificationCode: code}}).then((user) => {
         if (!user) {
           res.status(400).redirect('/')
         } else {
@@ -758,7 +758,7 @@ module.exports = (app, db) => {
     if (!req.body.email) {
       res.status(400).send(JSON.stringify({ok: false, message: 'bad request'}))
     } else {
-      db.tables.Users.find({where: {email: req.body.email}}).then((user) => {
+      db.tables.Users.findOne({where: {email: req.body.email}}).then((user) => {
         if (!user) {
           res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}))
         } else {
@@ -783,7 +783,7 @@ module.exports = (app, db) => {
       } catch (e) {
       }
       if (user) {
-        db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
+        db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((foundUser) => {
           if (foundUser) {
             if (foundUser.isAdmin) {
               db.tables.Purchases.findAll().then((purchases) => {
@@ -883,7 +883,7 @@ module.exports = (app, db) => {
       if (!user) {
         res.status(403).send(JSON.stringify({ok: false, message: 'invalid user token'}))
       } else {
-        db.tables.Users.find({where: {id: user.id}}).then(foundUser => {
+        db.tables.Users.findOne({where: {id: user.id}}).then(foundUser => {
           if (foundUser) {
             res.send({ok: true, isAdmin: user.isAdmin, message: 'user Found'})
           } else {
@@ -910,7 +910,7 @@ module.exports = (app, db) => {
       try {
         user = jwt.decode(token, config.auth.secret)
       } catch (e) {}
-      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
+      db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((foundUser) => {
         if (foundUser.isAdmin) {
           db.tables.Discounts.destroy({where: {id: discountId}}).then((numDeleted) => {
             if (numDeleted !== 0) {
@@ -934,7 +934,7 @@ module.exports = (app, db) => {
       try {
         user = jwt.decode(token, config.auth.secret)
       } catch (e) {}
-      db.tables.Users.find({where: {email: user.email, password: user.password}}).then((foundUser) => {
+      db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((foundUser) => {
         if (foundUser.isAdmin) {
           db.tables.Invites.destroy({where: {id: inviteId}}).then((numDeleted) => {
             if (numDeleted !== 0) {
