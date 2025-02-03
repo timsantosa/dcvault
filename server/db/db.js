@@ -157,6 +157,7 @@ columns.athleteProfiles = {
   weight: Sequelize.INTEGER, // Pounds
   dob: Sequelize.STRING,
   gender: Sequelize.STRING,
+  isActiveMember: { type: Sequelize.BOOLEAN, defaultValue: true, allowNull: false, }, //ALTER TABLE athleteProfiles ADD COLUMN isActiveMember BOOLEAN NOT NULL DEFAULT TRUE;
   // User FK
 }
 
@@ -174,16 +175,16 @@ columns.jumps = {
       key: 'id',
     },
   },
-  date: {
-    type: Sequelize.DATE,
-    allowNull: false,
-  },
+  date: { type: Sequelize.DATE, allowNull: false, },
   // Flattened Hard Metrics
-  stepNum: Sequelize.INTEGER,
+  setting: { type: Sequelize.ENUM('Practice', 'Meet'), allowNull: false, defaultValue: 'Practice' },
+  focus: Sequelize.STRING,
+  stepNum: { type: Sequelize.INTEGER, allowNull: false, },
   distanceInches: Sequelize.INTEGER,
   midMarkInches: Sequelize.INTEGER,
   targetTakeOffInches: Sequelize.INTEGER,
   actualTakeOffInches: Sequelize.INTEGER,
+  poleId: Sequelize.INTEGER, // TODO: add to db, add relationship
   poleLengthInches: Sequelize.INTEGER,
   poleWeight: Sequelize.INTEGER,
   poleBrand: Sequelize.ENUM('UCS', 'Altius', 'Dynasty', 'ESSX', 'Nordic', 'Pacer', 'Sky Pole', 'Other'),
@@ -200,6 +201,28 @@ columns.jumps = {
   softMetrics: Sequelize.JSON, // Stores the SoftMetrics object as JSON
   notes: Sequelize.TEXT,
   videoLink: Sequelize.STRING,
+  verified: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false, },
+};
+
+columns.personalRecords = {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, },
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+  },
+  stepNum: { type: Sequelize.INTEGER, allowNull: false, },
+  jumpId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.jumps,
+      key: 'id',
+    },
+  },
 };
 
 
@@ -219,8 +242,9 @@ const syncTables = (schema, force) => {
   tables.TrainingOptions = schema.define('trainingOptions', columns.trainingOptions)
   tables.EventAthletes = schema.define('eventAthlete', columns.eventAthletes)
   tables.EventPurchases = schema.define('eventPurchase', columns.eventPurchases)
-  tables.AthleteProfiles = schema.define('athleteProfiles', columns.athleteProfiles)
+  tables.AthleteProfiles = schema.define('athleteProfile', columns.athleteProfiles)
   tables.Jumps = schema.define('jump', columns.jumps);
+  tables.PersonalRecords = schema.define('personalRecord', columns.personalRecords);
 
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
@@ -238,15 +262,25 @@ const syncTables = (schema, force) => {
   tables.Discounts.belongsTo(tables.Packages, {as: 'package'})
   tables.Discounts.belongsTo(tables.Rentals, {as: 'rental'})
 
-  tables.AthleteProfiles.belongsTo(tables.Users, {as: 'user'})
-  // Association: Link Jumps to AthleteProfiles
-  tables.Jumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile' });
-  tables.Athletes.hasMany(tables.Jumps, { as: 'jumps', foreignKey: 'athleteId' });
+  // Mobile app related
+  tables.AthleteProfiles.belongsTo(tables.Users, { as: 'user' }) // Puts a userId column in AthleteProfiles, each profile "belongs" to a User
+  tables.Users.hasMany(tables.AthleteProfiles, { as: 'athleteProfiles', foreignKey: 'userId' }) // Each User "has many" AthleteProfiles somewhere in the DB (only one for now though)
 
+  tables.Jumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
+  tables.AthleteProfiles.hasMany(tables.Jumps, { as: 'jumps', foreignKey: 'athleteProfileId' })
+
+  // A jump can only have one personal record, or none. A PR has to have at exactly 1 jump
+  tables.PersonalRecords.belongsTo(tables.Jumps, { as: 'jump', foreignKey: 'jumpId' })
+  tables.Jumps.hasOne(tables.PersonalRecords, { as: 'personalRecord', foreignKey: 'jumpId' }) // There may or may not a PR for a jump.
+
+  tables.PersonalRecords.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
+  tables.AthleteProfiles.hasMany(tables.PersonalRecords, { as: 'personalRecords', foreignKey: 'athleteProfileId' })
+
+  tables.schema = schema
   return schema.sync({force: force})
 }
 
 module.exports = {
   tables: tables,
-  syncTables: syncTables
+  syncTables: syncTables,
 }

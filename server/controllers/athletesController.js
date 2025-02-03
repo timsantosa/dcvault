@@ -1,4 +1,5 @@
 const helpers = require('../lib/helpers');
+const { getPersonalBest } = require('./jumpsController');
 
 // TODO: Combine update and create better
 function updateProfile(athleteProfileId, req, res, db) {
@@ -72,7 +73,7 @@ function createProfile(userId, req, res, db) {
   let associatedUserIdForAthleteProfile = userId;
   let newProfile = req.body.athleteProfile;
   // Check for required fields
-  if (!newProfile || !newProfile.firstName || !newProfile.lastName || !newProfile.dob || !associatedUserIdForAthleteProfile) {
+  if (!newProfile || !newProfile.firstName || !newProfile.lastName || !newProfile.dob || !associatedUserIdForAthleteProfile || newProfile.gender) {
     res.status(403).send(JSON.stringify({ok: false, message: 'Missing required fields'}));
     return;
   }
@@ -143,97 +144,202 @@ const addOrUpdateProfile = (req, res, db) => {
   }
 };
 
-const getProfile = (req, res, db) => {
+const getProfile = async (req, res, db) => {
   const user = req.user;
 
-  // Get profile id
-  const id = req.query.athleteId
-  console.log(`Getting athlete profile for id: ${id}`);
-  if (helpers.isValidId(id)) {
-    res.status(403).json({ok: false, message: 'no athlete profile id specified.'});
-    return
-  }
-
-  // TODO: Convert to async/await
-  db.tables.AthleteProfiles.findOne({where: {id: id}}).then((profileData) => {
-    if (!profileData) {
-      res.status(400).send(JSON.stringify({ok: false, message: 'profile not created yet!'}));
-      return;
-    } 
-    let athleteProfile = {
-      id: id,
-      firstName: profileData.firstName,
-      lastName: profileData.lastName,
-      nationality: profileData.nationality,
-      dob: profileData.dob,
-      profileImage: '',
-      backgroundImage: '',
-      stats: {
-        height: profileData.height,
-        weight: profileData.weight,
-        age: helpers.calculateAge(profileData.dob),
-        rank: 12, // TODO: Calculate based on jumps
-        pr: 4.5, // TODO: Calculate based on jumps
-        largestPole: '', // TODO: Calculate based on jumps
-      },
+  try {
+    const athleteProfileId = parseInt(req.query.athleteId);
+    if (!helpers.isValidId(athleteProfileId)) {
+      return res.status(403).json({ ok: false, message: 'Invalid athlete profile ID.' });
     }
 
-    let userId = profileData.userId;
-    if (!userId) {
-      // TODO: Indicate no associated user id
+    let attributes = ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender'];
+    const userHasFullAccess = user.isAdmin || user.athleteId == athleteProfileId;
+    if (userHasFullAccess) {
+      // attributes.push('email', ) //TODO: add any restricted columns here
+    }
+
+    // Query to fetch AthleteProfile with their best PR
+    const profileWithPR = await db.tables.AthleteProfiles.findOne({
+      where: { id: athleteProfileId },
+      attributes: attributes,
+      include: [
+        {
+          model: db.tables.PersonalRecords,
+          as: 'personalRecords',
+          attributes: ['stepNum'],
+          required: false, // Ensures athleteProfile is returned even if no personalRecords exist
+          include: [
+            {
+              model: db.tables.Jumps,
+              as: 'jump',
+              attributes: ['heightInches', 'poleLengthInches', 'poleWeight'],
+            },
+          ],
+          where: db.tables.schema.literal(
+            `(personalRecords.jumpId IS NULL OR personalRecords.jumpId = (
+              SELECT id FROM jumps 
+              WHERE jumps.id = personalRecords.jumpId 
+              ORDER BY jumps.heightInches DESC 
+              LIMIT 1
+            ))`
+          ),
+        },
+      ],
+    });
+
+
+
+    // const profileWithPRs = await db.tables.AthleteProfiles.findOne({
+    //   where: { id: athleteProfileId },
+    //   attributes: attributes,
+    //   include: [
+    //     {
+    //       model: db.tables.PersonalRecords,
+    //       as: 'personalRecords',
+    //       attributes: ['stepNum'],
+    //       include: [
+    //         {
+    //           model: db.tables.Jumps,
+    //           as: 'jump',
+    //           attributes: ['heightInches', 'poleLengthInches', 'poleWeight'], // Include the PR height and pole
+    //         },
+    //       ],
+    //     },
+    //   ],
+    //   order: [
+    //     [db.tables.schema.literal(
+    //       `(SELECT MAX(jumps.heightInches) 
+    //         FROM personalRecords AS pr 
+    //         INNER JOIN jumps ON pr.jumpId = jumps.id 
+    //         WHERE pr.athleteProfileId = AthleteProfile.id)`
+    //     ),
+    //     'DESC'],
+    //   ],
+    // });
+
+    if (!profileWithPR) {
+      return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
+    }
+
+    const athleteProfile = {
+      id: profileWithPR.id,
+      firstName: profileWithPR.firstName,
+      lastName: profileWithPR.lastName,
+      gender: profileWithPR.gender,
+      dob: profileWithPR.dob,
+      profileImage: profileWithPR.profileImage,
+      backgroundImage: profileWithPR.backgroundImage,
+      nationality: profileWithPR.nationality,
+      stats: {
+        height: profileWithPR.height,
+        weight: profileWithPR.weight,
+        age: helpers.calculateAge(profileWithPR.dob),
+        rank: profileWithPR.rank, // TODO: add rank to athlete profile?
+        pr: profileWithPR.heightInches,
+        largestPole: {
+          lengthInches: profileWithPR.poleLengthInches,
+          weight: profileWithPR.poleWeight,
+        },
+      },
+    };
+
+    // TODO: Get from athlete table
+    const foundAthlete = await db.tables.Athletes.findOne({where: {userId: user.id}});
+    if (!foundAthlete) {
+      // TODO: Indicate athlete is not currently signed up
       res.json({ok: true, message: 'found athlete profile', athleteProfile});
       return;
     }
-    db.tables.Athletes.findOne({where: {userId: userId}}).then((foundAthlete) => {
-      if (!foundAthlete) {
-        // TODO: Indicate athlete is not currently signed up
-        res.status(200).send({ok: true, message: 'found athlete profile', athleteProfile});
-        return;
-      }
-      // TODO: Check if user has permission to see athlete profile, self or is admin
-      if (user.isAdmin) {
-        console.log('User is admin');
-      }
-      athleteProfile.contactInfo = foundAthlete.email; // TODO: only if admin or user is athlete user
-        // emrgencyContactInfo: '', // TODO: only if admin
+    if (userHasFullAccess) {
+      athleteProfile.contactInfo = foundAthlete.email;
+      athleteProfile.emrgencyContactInfo = foundAthlete.emergencyContactMDN;
+    }
 
-      res.status(200).send({ok: true, message: 'found athlete profile', athleteProfile});
-    });
-  });
+    res.json({ ok: true, athleteProfile });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch athlete profile.' });
+  }
 };
 
-const deleteProfile = (req, res, db) => {
+const deleteProfile = async (req, res, db) => {
   console.log('delete profile');
   res.json({ ok: false, message: 'Not implemented' });
 };
 
-const getProfiles = (req, res, db) => {
+const getProfiles = async (req, res, db) => {
   // User should have been added to request via JWT Authentication
   const user = req.user;
-  // TODO: Filter based on request
-  db.tables.AthleteProfiles.findAll().then(athleteProfileRows => {
-    let athletes = athleteProfileRows.map(athleteProfileRow => {
-      let athleteProfile = {
-        id: athleteProfileRow.id,
-        firstName: athleteProfileRow.firstName,
-        lastName: athleteProfileRow.lastName,
-        nationality: athleteProfileRow.nationality,
-        dob: athleteProfileRow.dob,
-        profileImage: '',
-        backgroundImage: '',
-        stats: {
-          height: athleteProfileRow.height,
-          weight: athleteProfileRow.weight,
-          age: 21, // TODO: Calculate based on DOB
-          rank: 12, // TODO: Calculate based on jumps
-          pr: 4.5, // TODO: Calculate based on jumps
-          largestPole: '', // TODO: Calculate based on jumps
+
+  try {
+    const { gender, page = 1, limit } = req.query; // Optional filters and pagination
+    var offset = 0;
+    if (limit) {
+      offset = (page - 1) * limit;
+    }
+
+    // Query to fetch AthleteProfiles with their best PR
+    const profilesWithPRs = await db.tables.AthleteProfiles.findAll({
+      where: gender ? { gender } : {}, // Filter by gender if provided
+      attributes: ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'gender'],
+      include: [
+        {
+          model: db.tables.PersonalRecords,
+          as: 'personalRecords',
+          attributes: ['stepNum'],
+          include: [
+            {
+              model: db.tables.Jumps,
+              as: 'jump',
+              attributes: ['heightInches'], // Include the PR height
+            },
+          ],
         },
-      }
-      return athleteProfile;
+      ],
+      order: [
+        [db.tables.schema.literal(`
+          (SELECT MAX(jumps.heightInches)
+          FROM personalRecords AS pr 
+          INNER JOIN jumps ON pr.jumpId = jumps.id 
+          WHERE pr.athleteProfileId = AthleteProfile.id)`), 'DESC'],
+      ],
+      limit: limit ? parseInt(limit, 10) : undefined,
+      offset: parseInt(offset, 10),
     });
-    res.json({ok: true, athletes});
-  });
+
+    // Map the data into a structured response
+    const athletes = profilesWithPRs.map((profile, index) => {
+      // Find the best PR from the included personalRecords and jumps
+      const bestPR = profile.personalRecords.reduce((max, record) => {
+        const jumpHeight = record.jump ? record.jump.heightInches : 0;
+        return jumpHeight > max ? jumpHeight : max;
+      }, 0);
+
+      return {
+        id: profile.id,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        nationality: profile.nationality,
+        dob: profile.dob,
+        profileImage: profile.profileImage,
+        backgroundImage: profile.backgroundImage,
+        stats: {
+          height: profile.height,
+          weight: profile.weight,
+          age: helpers.calculateAge(profile.dob),
+          rank: offset + index + 1, // Rank within the current page
+          pr: bestPR,
+          largestPole: undefined, // TODO: Add this if needed
+        },
+      };
+    });
+
+    res.json({ ok: true, athletes, page: parseInt(page, 10), limit: parseInt(limit, 10) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: 'Failed to fetch athlete profiles' });
+  }
 };
 
 const getLatestAthlete = (req, res, db) => {

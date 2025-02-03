@@ -1,5 +1,6 @@
 const express = require('express');
-const { getJump, addOrUpdateJump, deleteJump, fetchJumps } = require('../controllers/jumpsController');
+const { getJump, addOrUpdateJump, deleteJump, fetchJumps, verifyJump } = require('../controllers/jumpsController');
+const adminCheck = require('../middlewares/admin');
 
 
 const jumpRoutes = (db) => {
@@ -18,6 +19,10 @@ const jumpRoutes = (db) => {
     .delete((req, res) => deleteJump(req, res, db));
     
   router.get('/jumps', (req, res) => fetchJumps(req, res, db));
+
+
+  // Admin routes
+  router.get('/jump/verify', adminCheck, (req, res) => verifyJump(req, res, db));
 
   return router;
 };

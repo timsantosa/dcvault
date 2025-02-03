@@ -140,7 +140,7 @@ const fillDb = (numEntries) => {
     user.isAdmin = 0
     user.name = nameObj.first + ' ' + nameObj.last
     user.verificationCode = helpers.randString()
-    let pass = helpers.randString()
+    let pass = 'password1'//helpers.randString()
     user.password = bcrypt.hashSync(pass)
     users.push({email: user.email, pass: pass})
     db.tables.Users.create(user)
@@ -187,7 +187,19 @@ const fillDb = (numEntries) => {
         athleteProfile.weight = getRandNum(80, 200);
         athleteProfile.height = getRandNum(48, 76);
         athleteProfile.dob = athlete.dob;
-        db.tables.AthleteProfiles.create(athleteProfile);
+        athleteProfile.gender = athlete.gender;
+        db.tables.AthleteProfiles.create(athleteProfile)
+        .then((newProfile) => {
+          let jump = {}
+          jump.athleteProfileId = newProfile.id;
+          jump.date = new Date();
+          jump.setting = "Meet";
+          jump.heightInches = getRandNum(84, 240);
+          jump.stepNum = getRandNum(1, 8);
+          jump.verified = true;
+
+          db.tables.Jumps.create(jump); // TODO: add it to the PRs table.
+        });
       })
     })
   }

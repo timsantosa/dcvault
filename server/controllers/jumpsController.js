@@ -1,5 +1,6 @@
 // import { Request, Response } from 'express';
 
+// Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
   try {
     const athleteProfileId = req.body.athleteProfileId;
@@ -104,6 +105,7 @@ const deleteJump = async (req, res, db) => {
       return res.status(403).json({ ok: false, message: 'You are not authorized to delete this jump.' });
     }
 
+    // TODO: Check if it is a PR, then find the next best jump to replace it.
     await jump.destroy();
 
     res.json({ ok: true, message: 'Jump deletion successful.' });
@@ -129,6 +131,18 @@ const fetchJumps = async (req, res, db) => {
       where.stepNum = stepNum;
     }
 
+    // Fetch PRs for the athlete
+    const personalRecords = await db.tables.PersonalRecords.findAll({
+      where: { athleteProfileId },
+      attributes: ['stepNum', 'jumpId'],
+    });
+
+    // Create a map of PR jump IDs for quick lookup
+    const prMap = new Map();
+    personalRecords.forEach(pr => {
+      prMap.set(pr.stepNum, pr.jumpId);
+    });
+
     let limit = null;
     let offset = null;
 
@@ -145,11 +159,14 @@ const fetchJumps = async (req, res, db) => {
       offset,
     });
 
-    console.log(jumps.map(mapDbRowToJump)[0].hardMetrics.run);
+    let returnedJumps = jumps.map(mapDbRowToJump).map((jump => ({
+      ...jump,
+      isPr: prMap.get(jump.stepNum) === jump.id
+    })));
 
     res.json({
       ok: true,
-      jumps: jumps.map(mapDbRowToJump),
+      jumps: returnedJumps,
       total: count,
       currentPage: limit ? parseInt(page, 10) : 1, // Default to page 1 if no pagination
       totalPages: limit ? Math.ceil(count / limit) : 1,
@@ -160,13 +177,163 @@ const fetchJumps = async (req, res, db) => {
   }
 };
 
+async function verifyJump(req, res, db) {
+  const { jumpId, verify } = req.params;
+
+  if (!jumpId) {
+    return res.status(400).json({ message: 'Jump ID is required.' });
+  }
+
+  try {
+    const jump = await db.tables.Jumps.findByPk(jumpId);
+
+    if (!jump) {
+      return res.status(404).json({ message: 'Jump not found.' });
+    }
+
+    // if verifying a jump, check it against the existing PRs
+    if (verify === true) {
+      // Mark jump as verified
+      jump.verified = true;
+      await jump.save();
+
+      // Check if it's a meet jump and update PR records if applicable
+      if (jump.setting === Setting.meet && jump.heightIsBar && jump.meetInfo) {
+
+        // Check if this jump beats the current PR for its stepNum
+        const currentPr = await db.tables.PrRecords.findOne({
+          where: { athleteProfileId: jump.athleteProfileId, stepNum: jump.stepNum },
+          include: {
+            model: db.tables.Jumps,
+            as: 'jump',
+          },
+        });
+
+        // TODO: In case of a tie, the earlier jump should be the PR
+        if (!currentPr || jump.heightInches > currentPr.Jump.heightInches) {
+          // Update PR
+          if (currentPr) {
+            await currentPr.destroy(); // Remove old PR record //TODO: What does this destroy, both the jump and the prRow?
+          }
+
+          await PrRecords.create({
+            athleteProfileId: jump.athleteProfileId,
+            stepNum: jump.stepNum,
+            jumpId: jump.id,
+          });
+        }
+      }
+
+      res.json({ message: 'Jump verified successfully.', jump });
+    } else {
+      jump.verified = false;
+      await jump.save();
+      populatePRsForAthlete(jump.athleteProfileId)
+
+      res.json({ message: 'Jump unverified successfully.', jump });
+    }
+  } catch (error) {
+    console.error('Error verifying jump:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+}
+
+async function populatePRsForAthlete(athleteProfileId) {
+  // TODO: Get all athlete's jumps, organize them by step, and post them in the PRs table
+}
+
+async function getPersonalBests(athleteProfileId, db) {
+  const prs = await db.tables.PrRecords.findAll({
+    where: { athleteProfileId },
+    include: [Jumps],
+  });
+
+  return prs.map(pr => ({
+    stepNum: pr.stepNum,
+    jump: mapDbRowToJump(pr.Jump).map((j) => ({
+      ...j,
+      isPr: true,
+    })),
+  }));
+}
+
+async function getPersonalBest(athleteProfileId, db) {
+  try {
+    const result = await db.tables.Jumps.findOne({
+      attributes: [[db.tables.schema.fn('MAX', db.tables.schema.col('heightInches')), 'pr']], // Calculate the max jump height
+      include: [
+        {
+          model: db.tables.PersonalRecords,
+          attributes: [],
+          where: { athleteProfileId }, // Filter by athlete profile ID
+          as: 'personalRecord'
+        },
+      ],
+      raw: true, // Return plain data instead of Sequelize model instances
+    });
+
+    return result.pr || 0; // Return the PR or 0 if no records found
+  } catch (err) {
+    console.error(`Error fetching PR for athleteId ${athleteProfileId}:`, err);
+    throw new Error('Failed to fetch PR');
+  }
+};
+
+async function getLargestPole(athleteProfileId, db) {
+  // TODO: Base on athlete's jumps
+  
+  return {
+    lengthInches: 187,
+    weight: 180,
+    brand: 'UCS',
+    flex: null,
+  };
+}
 
 
-module.exports = { addOrUpdateJump, getJump, deleteJump, fetchJumps }
+module.exports = { 
+  addOrUpdateJump,
+  getJump, 
+  deleteJump,
+  fetchJumps,
+  verifyJump,
+  // getPersonalBest,
+  // getPersonalBests,
+  // getLargestPole,
+}
 
 
 
-// helper
+// Helpers
+
+// async function getPrJumps(athleteProfileId) {
+//   const prJumps = await db.tables.PrRecords.findAll({
+//     where: { athleteProfileId },
+//     include: [
+//       {
+//         model: Jumps,
+//         as: 'jump', // Alias if needed
+//         attributes: [
+//           'id',
+//           'date',
+//           'stepNum',
+//           'heightInches',
+//           'verified',
+//           'softMetrics',
+//           'hardMetrics',
+//           'meetInfo',
+//           'notes',
+//           'videoLink',
+//         ],
+//       },
+//     ],
+//   });
+
+//   return prJumps.map(pr => ({
+//     stepNum: pr.stepNum,
+//     jump: mapDbRowToJump(pr.jump), // Convert to the Jump interface
+//   }));
+// }
 
 function mapDbRowToJump(dbRow) {
   return {
