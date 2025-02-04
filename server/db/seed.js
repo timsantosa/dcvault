@@ -3,6 +3,7 @@ const Sequelize = require('sequelize')
 const config = require('../config/config')
 const helpers = require('../lib/helpers')
 const bcrypt = require('bcrypt-nodejs')
+const jumpsController = require('../controllers/jumpsController');
 
 // Initialize database
 var schema = new Sequelize(config.db.name, config.db.user, config.db.pass, {logging: false, host: 'localhost', dialect: 'mysql', dialectOptions: {insecureAuth: true}})
@@ -198,7 +199,14 @@ const fillDb = (numEntries) => {
           jump.stepNum = getRandNum(1, 8);
           jump.verified = true;
 
-          db.tables.Jumps.create(jump); // TODO: add it to the PRs table.
+          db.tables.Jumps.create(jump)
+          .then(newJump => {
+            // let pr = {}
+            // pr.athleteProfileId = newProfile.id;
+            // pr.stepNum = newJump.stepNum;
+            // pr.jumpId = newJump.id;
+            // db.tables.PersonalRecords.create(pr); // TODO: fails.
+          })
         });
       })
     })

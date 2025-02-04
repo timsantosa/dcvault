@@ -59,7 +59,7 @@ const addOrUpdateJump = async (req, res, db) => {
   }
 };
 
-// Not really used at the moment
+// Used by admins to check other's jumps
 const getJump = async (req, res, db) => {
   try {
     const { jumpId } = req.query;
@@ -191,6 +191,8 @@ async function verifyJump(req, res, db) {
       return res.status(404).json({ message: 'Jump not found.' });
     }
 
+    var message = '';
+
     // if verifying a jump, check it against the existing PRs
     if (verify === true) {
       // Mark jump as verified
@@ -224,22 +226,89 @@ async function verifyJump(req, res, db) {
         }
       }
 
-      res.json({ message: 'Jump verified successfully.', jump });
+      message = 'Jump unverified successfully.'
     } else {
       jump.verified = false;
       await jump.save();
       populatePRsForAthlete(jump.athleteProfileId)
 
-      res.json({ message: 'Jump unverified successfully.', jump });
+      message = 'Jump verified successfully.'
     }
+
+    // TODO: Reorder rankings here
+
+
+    res.json({ message, jump });
   } catch (error) {
     console.error('Error verifying jump:', error);
     res.status(500).json({ message: 'Internal server error.' });
   }
 }
 
-async function populatePRsForAthlete(athleteProfileId) {
-  // TODO: Get all athlete's jumps, organize them by step, and post them in the PRs table
+async function populatePRsForAthlete(athleteProfileId, db) {
+  // Step 1: Get all verified "Meet" jumps for the athlete, grouped by stepNum
+  const jumps = await db.tables.Jumps.findAll({
+    where: {
+      athleteProfileId: athleteProfileId,
+      setting: 'Meet',
+      verified: true,
+    },
+    attributes: [
+      'id', 'stepNum', 'heightInches'
+    ],
+    order: [['stepNum', 'ASC'], ['heightInches', 'DESC']], // Order by stepNum, then highest height
+  });
+
+  if (!jumps.length) {
+    console.log(`No verified meet jumps found for athlete ${athleteProfileId}`);
+    return;
+  }
+
+  // Step 2: Get the best jump for each stepNum
+  const bestJumps = {};
+  jumps.forEach(jump => {
+    if (!bestJumps[jump.stepNum]) {
+      bestJumps[jump.stepNum] = jump; // First jump per stepNum will be the best
+    }
+  });
+
+  // Step 3: Upsert personal records for each stepNum
+  for (const stepNum in bestJumps) {
+    const bestJump = bestJumps[stepNum];
+
+    await db.tables.PersonalRecords.upsert({
+      athleteProfileId: athleteProfileId,
+      stepNum: bestJump.stepNum,
+      jumpId: bestJump.id,
+    }, {
+      where: {
+        athleteProfileId: athleteProfileId,
+        stepNum: bestJump.stepNum,
+      }
+    });
+  }
+
+  console.log(`Personal records updated for athlete ${athleteProfileId}`);
+}
+
+async function getUnverifiedMeetJumps(req, res, db) {
+  const jumps = await db.tables.Jumps.findAll({
+    where: {
+      setting: 'Meet',
+      verified: false,
+    },
+    attributes: [
+      'id', 'stepNum', 'heightInches', 'athleteProfileId'
+    ],
+    order: [['date', 'ASC']], // Earlier dates should be first
+  });
+  
+  let returnedJumps = jumps.map(mapDbRowToJump);
+
+  res.json({
+    ok: true,
+    unverifiedJumps: returnedJumps,
+  });
 }
 
 async function getPersonalBests(athleteProfileId, db) {
@@ -297,6 +366,8 @@ module.exports = {
   deleteJump,
   fetchJumps,
   verifyJump,
+  // populatePRsForAthlete,
+  getUnverifiedMeetJumps,
   // getPersonalBest,
   // getPersonalBests,
   // getLargestPole,
