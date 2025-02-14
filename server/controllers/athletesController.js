@@ -1,164 +1,91 @@
 const helpers = require('../lib/helpers');
+const rankingCache = require('./athleteRankingCache');
 const { getPersonalBest } = require('./jumpsController');
 
-// TODO: Combine update and create better
-function updateProfile(athleteProfileId, req, res, db) {
-  const userSendingRequest = req.user;
 
-  let newProfileData = req.body.athleteProfile;
-  // Check for required fields
-  if (!newProfileData || !athleteProfileId) {
-    res.status(403).json({ok: false, message: 'Missing required fields'});
-    return;
-  }
-  
-  db.tables.AthleteProfiles.findOne({where: {id: athleteProfileId}}).then((profileFound) => {
-    // If no profile to update, return an error
-    if (!profileFound) {
-      res.status(403).send(JSON.stringify({ok: false, message: 'Athlete profile does not exist.'}));
-      return;
+async function upsertProfile(req, res, db) {
+  try {
+    const userSendingRequest = req.user;
+    const newProfileData = req.body.athleteProfile;
+    const athleteIdToUpdate = req.body.athleteProfileId;
+    const userIdToCreateFor = req.body.userId;
+
+
+    // either an athleteProfId needs to passed in for updating, or 
+    // a userId must be used for creating new profiles
+    if (!athleteIdToUpdate && !userIdToCreateFor) {
+      return res.status(400).json({ ok: false, message: 'User or athlete not specified' });
     }
 
-    let athleteProfileData = {
+    // Check for required fields
+    if (!newProfileData || !newProfileData.firstName || !newProfileData.lastName || !newProfileData.dob || !newProfileData.gender) {
+      return res.status(400).json({ ok: false, message: 'Missing required fields' });
+    }
+
+    const query = athleteIdToUpdate
+      ? { where: { id: athleteIdToUpdate } } // Find profile by athleteProfileId (for updates)
+      : { where: { userId: userIdToCreateFor } }; // Find profile by userId (for creation)
+
+    // Maybe consider using upsert?
+    const existingProfile = await db.tables.AthleteProfiles.findOne(query);
+
+    if (existingProfile) {
+      // Update existing profile
+      await existingProfile.update({
+        firstName: newProfileData.firstName,
+        lastName: newProfileData.lastName,
+        dob: newProfileData.dob,
+        nationality: newProfileData.nationality,
+        height: newProfileData.height,
+        weight: newProfileData.weight,
+        gender: newProfileData.gender,
+      });
+
+      console.log(`Profile updated successfully with id ${existingProfile.id}`);
+      return res.status(200).json({
+        ok: true,
+        message: "Profile updated.",
+      });
+    }
+
+    // If profile does not exist, create a new one
+    const athleteProfileData = {
       firstName: newProfileData.firstName,
       lastName: newProfileData.lastName,
       dob: newProfileData.dob,
-      nationality: newProfileData.nationality,
+      nationality: newProfileData.nationality ?? 'US',
       height: newProfileData.height,
       weight: newProfileData.weight,
+      userId: userIdToCreateFor,
       gender: newProfileData.gender,
     };
 
-    if (userSendingRequest.isAdmin) {
+    const newProfile = await db.tables.AthleteProfiles.create(athleteProfileData);
+    console.log(`Profile created successfully with id ${newProfile.id}`);
+    return res.status(200).json({ ok: true, message: "Profile Created", athleteProfileId: newProfile.id });
 
-      // Admin can update anyone's profile
-      profileFound.update(athleteProfileData).then(updatedProfile => {
-        if (!updatedProfile) {
-          res.status(500).send(JSON.stringify({ok: false, message: 'Failed to update athlete profile.'}));
-          return 
-        }
-        console.log(`Profile updated successfully with id ${updatedProfile.id}`);
-        res.status(200).send(JSON.stringify({ok: true, message: "Profile updated."}));
-      }).catch(error => {
-        console.log('Error while tryin to update profile:', error);
-        res.status(500).send(JSON.stringify({ok: false, message: 'Failed to update athlete profile.'}));
-      });
-      return;
-    }
-
-    // If user sending request is not admin, then the user ids must match
-    if (userSendingRequest.id != profileFound.userId) {
-      let errorString = `User ${userSendingRequest.id} does not have permission to create an athleteProfile for user ${profileFound.userId}.`;
-      console.log("Error: " + errorString);
-      res.status(403).send(JSON.stringify({ok: false, message: errorString}));
-      return;
-    }
-    // Otherwise, update athlete profile.
-    profileFound.update(athleteProfileData).then(updatedProfile => {
-      if (!updatedProfile) {
-        res.status(500).send(JSON.stringify({ok: false, message: 'Failed to update athlete profile.'}));
-        return 
-      }
-      console.log(`Profile updated successfully with id ${updatedProfile.id}`);
-      res.status(200).send(JSON.stringify({ok: true, message: "Profile updated."}));
-    }).catch(error => {
-      console.log('Error while tryin to update profile:', error);
-      res.status(500).send(JSON.stringify({ok: false, message: 'Failed to update athlete profile.'}));
-    });
-  });
-}
-
-function createProfile(userId, req, res, db) {
-  const userSendingRequest = req.user;
-  let associatedUserIdForAthleteProfile = userId;
-  let newProfile = req.body.athleteProfile;
-  // Check for required fields
-  if (!newProfile || !newProfile.firstName || !newProfile.lastName || !newProfile.dob || !associatedUserIdForAthleteProfile || newProfile.gender) {
-    res.status(403).send(JSON.stringify({ok: false, message: 'Missing required fields'}));
-    return;
+  } catch (error) {
+    console.error('Error in upsertProfile:', error);
+    return res.status(500).json({ ok: false, message: 'Server error', error: error.message });
   }
-  
-  db.tables.AthleteProfiles.findOne({where: {userId: associatedUserIdForAthleteProfile}}).then((profileFoundForUser) => {
-    // For now, only one athlete profile per user.
-    if (profileFoundForUser) {
-      res.status(403).send(JSON.stringify({ok: false, message: 'Athlete profile already exists for that user.'}));
-      return;
-    }
-
-    let athleteProfileData = {
-      firstName: newProfile.firstName,
-      lastName: newProfile.lastName,
-      dob: newProfile.dob,
-      nationality: newProfile.nationality ?? 'US',
-      height: newProfile.height,
-      weight: newProfile.weight,
-      userId: associatedUserIdForAthleteProfile,
-      gender: newProfile.gender,
-    };
-
-    if (userSendingRequest.isAdmin) {
-      // Admin can make a profile for any user, or no user
-      
-      db.tables.AthleteProfiles.create(athleteProfileData).then(newProfile => {
-        if (!newProfile) {
-          res.status(403).send(JSON.stringify({ok: false, message: 'Failed to create athlete profile.'}));
-          return 
-        }
-        res.status(200).send(JSON.stringify({ok: true, message: "Profile Created", athleteProfileId: newProfile.id}));
-      }).catch(err => {
-        res.status(500).send({ok: false, message: 'Server error', error: err.message});
-      });;
-      return;
-    }
-
-    // If user sending request is not admin, then the user ids must match
-    if (userSendingRequest.id != associatedUserIdForAthleteProfile) {
-      let errorString = `User ${userSendingRequest.id} does not have permission to create an athleteProfile for user ${associatedUserIdForAthleteProfile}.`;
-      console.log("Error: " + errorString);
-      res.status(403).send(JSON.stringify({ok: false, message: errorString}));
-      return;
-    }
-    // Otherwise, create new athlete profile.
-    db.tables.AthleteProfiles.create(athleteProfileData).then(newAthlete => {
-      if (!newAthlete) {
-        res.status(403).send(JSON.stringify({ok: false, message: 'Failed to create athlete profile.'}));
-        return 
-      }
-      console.log(`Profile created successfully with id ${newAthlete.id}`);
-      res.status(200).send(JSON.stringify({ok: true, message: "Profile Created", athleteProfileId: profile.id}));
-    }).catch(err => {
-      res.status(500).send({ok: false, message: 'Server error', error: err.message});
-    });
-  });
 }
-
-// TODO: combine with update profile
-const addOrUpdateProfile = (req, res, db) => {
-  console.log('Add or update profile');
-  if (req.body.athleteProfileId) {
-    updateProfile(req.body.athleteProfileId, req, res, db);
-  } else if (req.body.userId) {
-    createProfile(req.body.userId, req, res,db);
-  } else {
-    res.status(403).json({ok: false, message: 'Missing required fields'});
-  }
-};
 
 const getProfile = async (req, res, db) => {
   const user = req.user;
 
   try {
-    const athleteProfileId = parseInt(req.query.athleteId);
+    const athleteProfileId = parseInt(req.query.athleteProfileId);
     if (!helpers.isValidId(athleteProfileId)) {
       return res.status(403).json({ ok: false, message: 'Invalid athlete profile ID.' });
     }
 
     let attributes = ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender'];
-    const userHasFullAccess = user.isAdmin || user.athleteId == athleteProfileId;
+    const userHasFullAccess = user.isAdmin || user.athleteProfileId == athleteProfileId;
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
     }
 
+    // TODO: Don't need all this, can use cache to retrieve the PR
     // Query to fetch AthleteProfile with their best PR
     const profileWithPR = await db.tables.AthleteProfiles.findOne({
       where: { id: athleteProfileId },
@@ -222,6 +149,13 @@ const getProfile = async (req, res, db) => {
       return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
     }
 
+    const cachedRank = await rankingCache.getRankingForAthlete(profileWithPR.id, profileWithPR.gender) || undefined;
+    
+    const largestPole = (profileWithPR.poleLengthInches && profileWithPR.poleWeight) ? {
+      lengthInches: profileWithPR.poleLengthInches,
+      weight: profileWithPR.poleWeight,
+    } : undefined
+
     const athleteProfile = {
       id: profileWithPR.id,
       firstName: profileWithPR.firstName,
@@ -235,13 +169,11 @@ const getProfile = async (req, res, db) => {
         height: profileWithPR.height,
         weight: profileWithPR.weight,
         age: helpers.calculateAge(profileWithPR.dob),
-        rank: profileWithPR.rank, // TODO: add rank to athlete profile?
+        rank: cachedRank,
         pr: profileWithPR.heightInches,
-        largestPole: {
-          lengthInches: profileWithPR.poleLengthInches,
-          weight: profileWithPR.poleWeight,
-        },
+        largestPole,
       },
+      isActiveMember: profileWithPR.isActiveMember,
     };
 
     // TODO: Get from athlete table
@@ -332,6 +264,7 @@ const getProfiles = async (req, res, db) => {
           pr: bestPR,
           largestPole: undefined, // TODO: Add this if needed
         },
+        isActiveMember: profile.isActiveMember,
       };
     });
 
@@ -362,4 +295,4 @@ const getLatestAthlete = (req, res, db) => {
   });
 };
 
-module.exports = { addOrUpdateProfile, getProfile, deleteProfile, getProfiles, getLatestAthlete }
+module.exports = { upsertProfile, getProfile, deleteProfile, getProfiles, getLatestAthlete }

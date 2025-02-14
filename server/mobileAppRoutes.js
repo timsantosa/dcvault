@@ -4,6 +4,9 @@ const jumpRoutes = require('./mobileRoutes/jumpRoutes');
 const { authenticateJWT } = require('./middlewares/mobileAuthMiddleware');
 const athleteRoutes = require('./mobileRoutes/athleteRoutes');
 const authRoutes = require('./mobileRoutes/authRoutes');
+const permissionRoutes = require('./mobileRoutes/permissionRoutes');
+const adminCheck = require('./middlewares/admin');
+const { getMobileUserInfo } = require('./controllers/authController');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -17,29 +20,75 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/log', jumpRoutes(db));
   app.use('/mobileapp/user/athlete', athleteRoutes(db));
 
+  // TODO: Make sure this hits authenticateJWT
   app.get('/mobileapp/user/info', async (req, res) => {
-    console.log("Getting user info...");
-    const user = req.user;
+    getMobileUserInfo(req, res, db);
+  });
 
-    // Find associated permissions TODO: user should already include permissions, just send them down.
 
-    // Find associated athlete profile id
-    db.tables.AthleteProfiles.findOne({attributes: ['id'], where: {userId: user.id}}).then((profileId) => {
-      
-      // For now, return fake user data
-      let permissions = {
-        isAdmin: user.isAdmin,
-        isCoach: false,
-      }
-      let userInfo = {
-        id: user.id,
-        permissions: permissions,
-        athleteId: profileId?.id,
-        verified: user.verified,
-      }
-      res.json({ok: true, message: 'found user info', userInfo});
+  app.get('/mobileapp/user/meetTypeOptions', async (req, res) => {
+    // TODO: Grab items from DB
+    res.json({
+      ok: true,
+      message: 'Successfully grabbed meet options',
+      meetTypeOptions: {
+        meetTypes: [
+          'County',
+          'Regional',
+          'State',
+          'Conference',
+          'National',
+          'International',
+          'World',
+          'Olympic',
+        ],
+        divisionTypes: [
+          'Elementary',
+          'Middle School',
+          'High School',
+          'Collegiate',
+          'Open',
+          'Elite',
+          'Masters',
+        ],
+        recordTypes: [
+          'School',
+          'Meet',
+          'Facility',
+          'State',
+          'Regional',
+          'National',
+          'Olympic',
+          'World',
+        ],
+      },
     });
   });
+  // app.get('/mobileapp/user/info', async (req, res) => {
+  //   console.log("Getting user info...");
+  //   const user = req.user;
+
+  //   // Find associated permissions TODO: user should already include permissions, just send them down.
+
+  //   // Find associated athlete profile id
+  //   db.tables.AthleteProfiles.findOne({attributes: ['id'], where: {userId: user.id}}).then((profileId) => {
+      
+  //     // For now, return fake user data
+  //     let permissions = {
+  //       isAdmin: user.isAdmin,
+  //       isCoach: false,
+  //     }
+  //     let userInfo = {
+  //       id: user.id,
+  //       permissions: permissions,
+  //       athleteId: profileId?.id,
+  //       verified: user.verified,
+  //     }
+  //     res.json({ok: true, message: 'found user info', userInfo});
+  //   });
+  // });
+
+  app.use('/mobileapp/user/permissions', adminCheck, permissionRoutes);
 }
 
 

@@ -1,14 +1,19 @@
 // import { Request, Response } from 'express';
 
+const rankingCache = require("./athleteRankingCache");
+
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
   try {
-    const athleteProfileId = req.body.athleteProfileId;
+    const athleteProfileId = req.query.athleteProfileId;
     const { id, date, hardMetrics, meetInfo, softMetrics, notes, videoLink } = req.body.jump;
 
     // Validate required fields
     if (!athleteProfileId || !date) {
       return res.status(400).json({ ok: false, message: 'Athlete ID and Date are required.' });
+    }
+    if (hardMetrics.setting === "Meet" && !hardMetrics?.height?.inches) {
+      return res.status(400).json({ ok: false, message: 'Missing height for meet jump' });
     }
 
     // New jumps come in with an id of -1
@@ -16,6 +21,7 @@ const addOrUpdateJump = async (req, res, db) => {
 
     // Flatten hardMetrics for upsert
     const flattenedHardMetrics = {
+      setting: hardMetrics?.setting,
       stepNum: hardMetrics?.run?.stepNum,
       distanceInches: hardMetrics?.run?.distanceInches,
       midMarkInches: hardMetrics?.run?.midMarkInches,
@@ -34,6 +40,17 @@ const addOrUpdateJump = async (req, res, db) => {
       athleteWeightPounds: hardMetrics?.athleteStats?.weightPounds,
     };
 
+    // Flatten some meet info
+    let flattenedMeetInfo = {}
+    if (hardMetrics?.setting === "Meet") {
+      flattenedMeetInfo.meetType = meetInfo.eventDetails.meetType;
+      flattenedMeetInfo.division = meetInfo.eventDetails.division;
+      flattenedMeetInfo.placement = meetInfo.placement;
+      flattenedMeetInfo.recordType = meetInfo.placement;
+      flattenedMeetInfo.eventDetails = meetInfo.eventDetails;
+    }
+
+
     // Upsert jump
     const [jumpRow, created] = await db.tables.Jumps.upsert({
       id: jumpId,
@@ -43,7 +60,8 @@ const addOrUpdateJump = async (req, res, db) => {
       videoLink,
       ...flattenedHardMetrics,
       softMetrics,
-      meetInfo,
+      ...flattenedMeetInfo,
+      verified: false, // TODO: Consider auto-verifying if admin made request. Need to update PRs then.
     });
 
     const jump = mapDbRowToJump(jumpRow);
@@ -100,12 +118,7 @@ const deleteJump = async (req, res, db) => {
 
     console.log('athlete id', jump.athleteProfileId);
 
-    // Check permissions
-    if (!req.user.isAdmin && req.user.athleteProfileId !== jump.athleteProfileId) { // For now, no one can delete jumps because they don't have am athleteProfileId
-      return res.status(403).json({ ok: false, message: 'You are not authorized to delete this jump.' });
-    }
-
-    // TODO: Check if it is a PR, then find the next best jump to replace it.
+    // TODO: Check if it is a PR, then find the next best jump to replace it. RELEASE BLOCKER!! unless db cascades. test this
     await jump.destroy();
 
     res.json({ ok: true, message: 'Jump deletion successful.' });
@@ -230,13 +243,14 @@ async function verifyJump(req, res, db) {
     } else {
       jump.verified = false;
       await jump.save();
+      // If a jump was unverified, we just need to find the next best one
       populatePRsForAthlete(jump.athleteProfileId)
 
       message = 'Jump verified successfully.'
     }
 
-    // TODO: Reorder rankings here
-
+    // Reorder ranks for that gender. Can probably be done asyncronusly if needed
+    await rankingCache.regenerateAllRankings();
 
     res.json({ message, jump });
   } catch (error) {
@@ -297,9 +311,9 @@ async function getUnverifiedMeetJumps(req, res, db) {
       setting: 'Meet',
       verified: false,
     },
-    attributes: [
-      'id', 'stepNum', 'heightInches', 'athleteProfileId'
-    ],
+    // attributes: [
+    //   'id', 'stepNum', 'heightInches', 'athleteProfileId'
+    // ],
     order: [['date', 'ASC']], // Earlier dates should be first
   });
   
@@ -434,14 +448,12 @@ function mapDbRowToJump(dbRow) {
         flex: dbRow.poleFlex ?? undefined,
         gripInches: dbRow.poleGripInches ?? undefined,
       },
-      height: dbRow.heightIsBar
-        ? {
-            isBar: dbRow.heightIsBar,
-            inches: dbRow.heightInches,
-            standardsInches: dbRow.standardsInches ?? undefined,
-            result: dbRow.heightResult ?? undefined,
-          }
-        : undefined,
+      height: {
+        isBar: dbRow.heightIsBar,
+        inches: dbRow.heightInches,
+        standardsInches: dbRow.standardsInches ?? undefined,
+        result: dbRow.heightResult ?? undefined,
+      },
       athleteStats: {
         heightInches: dbRow.athleteHeightInches ?? undefined,
         weightPounds: dbRow.athleteWeightPounds ?? undefined,

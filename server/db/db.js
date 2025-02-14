@@ -180,25 +180,32 @@ columns.jumps = {
   setting: { type: Sequelize.ENUM('Practice', 'Meet'), allowNull: false, defaultValue: 'Practice' },
   focus: Sequelize.STRING,
   stepNum: { type: Sequelize.INTEGER, allowNull: false, },
-  distanceInches: Sequelize.INTEGER,
-  midMarkInches: Sequelize.INTEGER,
-  targetTakeOffInches: Sequelize.INTEGER,
-  actualTakeOffInches: Sequelize.INTEGER,
+  distanceInches: Sequelize.FLOAT,
+  midMarkInches: Sequelize.FLOAT,
+  targetTakeOffInches: Sequelize.FLOAT,
+  actualTakeOffInches: Sequelize.FLOAT,
   poleId: Sequelize.INTEGER, // TODO: add to db, add relationship
-  poleLengthInches: Sequelize.INTEGER,
-  poleWeight: Sequelize.INTEGER,
+  poleLengthInches: Sequelize.FLOAT,
+  poleWeight: Sequelize.FLOAT,
   poleBrand: Sequelize.ENUM('UCS', 'Altius', 'Dynasty', 'ESSX', 'Nordic', 'Pacer', 'Sky Pole', 'Other'),
   poleFlex: Sequelize.FLOAT,
-  poleGripInches: Sequelize.INTEGER,
+  poleGripInches: Sequelize.FLOAT,
   heightIsBar: Sequelize.BOOLEAN,
-  heightInches: Sequelize.INTEGER,
-  standardsInches: Sequelize.INTEGER,
+  heightInches: Sequelize.FLOAT,
+  standardsInches: Sequelize.FLOAT,
   heightResult: Sequelize.STRING,
-  athleteHeightInches: Sequelize.INTEGER,
-  athleteWeightPounds: Sequelize.INTEGER,
+  athleteHeightInches: Sequelize.FLOAT,
+  athleteWeightPounds: Sequelize.FLOAT,
+
+  // Meet Info
+  meetType: Sequelize.STRING,
+  division: Sequelize.STRING,
+  placement: Sequelize.INTEGER,
+  recordType: Sequelize.STRING,
+  meetEventDetails: Sequelize.JSON, // Stores the rest of MeetInfo object as JSON since we probably don't need to query on these values
+
   // Other fields
-  meetInfo: Sequelize.JSON, // Stores the MeetInfo object as JSON since we probably don't need to query on these values
-  softMetrics: Sequelize.JSON, // Stores the SoftMetrics object as JSON
+  softMetrics: Sequelize.JSON, // Stores the SoftMetrics object as JSON since we probably don't need to query on these values
   notes: Sequelize.TEXT,
   videoLink: Sequelize.STRING,
   verified: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false, },
@@ -225,6 +232,34 @@ columns.personalRecords = {
   },
 };
 
+// Mobile Permissions
+columns.roles = {
+  roleName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+  },
+};
+
+columns.permissions = {
+  permissionName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  permissionKey: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  description: Sequelize.TEXT, // Explains what this permission is for
+};
+
+columns.role_permissions = {};
+
+columns.user_roles = {};
+
+columns.user_permissions = {};
+
 
 const syncTables = (schema, force) => {
   force = !!force
@@ -242,10 +277,21 @@ const syncTables = (schema, force) => {
   tables.TrainingOptions = schema.define('trainingOptions', columns.trainingOptions)
   tables.EventAthletes = schema.define('eventAthlete', columns.eventAthletes)
   tables.EventPurchases = schema.define('eventPurchase', columns.eventPurchases)
-  tables.AthleteProfiles = schema.define('athleteProfile', columns.athleteProfiles)
+
+  // Mobile app specific
+  tables.AthleteProfiles = schema.define('athleteProfile', columns.athleteProfiles);
   tables.Jumps = schema.define('jump', columns.jumps);
   tables.PersonalRecords = schema.define('personalRecord', columns.personalRecords);
 
+  // Mobile app permissions
+  tables.Roles = schema.define('role', columns.roles);
+  tables.Permissions = schema.define('permission', columns.permissions);
+  tables.Role_Permissions = schema.define('role_permission', columns.role_permissions);
+  tables.User_Roles = schema.define('user_role', columns.user_roles);
+  tables.User_Permissions = schema.define('user_permission', columns.user_permissions);
+
+
+  // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
   tables.Sites.belongsTo(tables.Sites, {as: 'address'})
@@ -275,6 +321,26 @@ const syncTables = (schema, force) => {
 
   tables.PersonalRecords.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
   tables.AthleteProfiles.hasMany(tables.PersonalRecords, { as: 'personalRecords', foreignKey: 'athleteProfileId' })
+
+  // Mobile App permissions
+  tables.Users.belongsToMany(tables.Roles, { through: tables.User_Roles, foreignKey: 'userId' });
+  tables.Roles.belongsToMany(tables.Users, { through: tables.User_Roles, foreignKey: 'roleId' });
+
+  tables.Roles.belongsToMany(tables.Permissions, { through: tables.Role_Permissions, foreignKey: 'roleId' });
+  tables.Permissions.belongsToMany(tables.Roles, { through: tables.Role_Permissions, foreignKey: 'permissionId' });
+
+  tables.Users.belongsToMany(tables.Permissions, { through: tables.User_Permissions, foreignKey: 'userId' });
+  tables.Permissions.belongsToMany(tables.Users, { through: tables.User_Permissions, foreignKey: 'permissionId' });
+
+  tables.User_Roles.belongsTo(tables.Users, { foreignKey: 'userId' });
+  tables.User_Roles.belongsTo(tables.Roles, { foreignKey: 'roleId' });
+
+  tables.Role_Permissions.belongsTo(tables.Roles, { foreignKey: 'roleId' });
+  tables.Role_Permissions.belongsTo(tables.Permissions, { foreignKey: 'permissionId' });
+
+  tables.User_Permissions.belongsTo(tables.Users, { foreignKey: 'userId' });
+  tables.User_Permissions.belongsTo(tables.Permissions, { foreignKey: 'permissionId' });
+
 
   tables.schema = schema
   return schema.sync({force: force})

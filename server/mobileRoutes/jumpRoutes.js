@@ -18,9 +18,9 @@ const jumpRoutes = (db) => {
       return next();
     }
 
-    const athleteProfileId = req.body.athleteProfileId;
+    const athleteProfileId = req.query.athleteProfileId;
     if (!athleteProfileId || !user.athleteProfileId) {
-      return res.status(400).json({ ok: false, message: 'Missing fields' });
+      return res.status(400).json({ ok: false, message: 'Unauthorized' });
     }
 
     if (athleteProfileId != user.athleteProfileId) {

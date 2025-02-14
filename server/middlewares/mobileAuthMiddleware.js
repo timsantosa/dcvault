@@ -43,4 +43,13 @@ function authenticateJWT(req, res, next) {
   }
 }
 
-module.exports = { authenticateJWT };
+const checkPermission = (requiredPermission) => {
+  return (req, res, next) => {
+    if (!req.user || !req.user.permissions.includes(requiredPermission)) {
+      return res.status(403).json({ ok: false, message: 'Forbidden: Insufficient permissions' });
+    }
+    next();
+  };
+};
+
+module.exports = { authenticateJWT, checkPermission };
