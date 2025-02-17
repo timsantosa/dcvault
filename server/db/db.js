@@ -152,7 +152,9 @@ columns.athleteProfiles = {
   lastName: Sequelize.STRING,
   nationality: {type: Sequelize.STRING, defaultValue: 'US'},
   profileImage: Sequelize.STRING,
+  profileImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column profileImageVerified bool;
   backgroundImage: Sequelize.STRING,
+  backgroundImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column backgroundImageVerified bool;
   height: Sequelize.INTEGER, // Inches
   weight: Sequelize.INTEGER, // Pounds
   dob: Sequelize.STRING,

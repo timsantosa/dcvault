@@ -18,7 +18,6 @@ const athleteRoutes = (db) => {
       return next();
     }
 
-    // TODO: add athlete profile id to jwt
     const athleteProfileId = req.body.athleteProfileId;
     const userId = req.body.userId
     if (!user.id || !user.athleteProfileId) {
@@ -44,7 +43,6 @@ const athleteRoutes = (db) => {
 
   router.get('/profiles', (req, res) => getProfiles(req, res, db));
 
-  // TODO: this fails because not self or admin, check for athlete Id
   router.get('/latestregistered', checkSelfOrAdmin, (req, res) => getLatestAthlete(req, res, db))
 
   return router;

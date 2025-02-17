@@ -7,6 +7,7 @@ const authRoutes = require('./mobileRoutes/authRoutes');
 const permissionRoutes = require('./mobileRoutes/permissionRoutes');
 const adminCheck = require('./middlewares/admin');
 const { getMobileUserInfo } = require('./controllers/authController');
+const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -19,13 +20,14 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user', authenticateJWT);
   app.use('/mobileapp/user/log', jumpRoutes(db));
   app.use('/mobileapp/user/athlete', athleteRoutes(db));
-
-  // TODO: Make sure this hits authenticateJWT
+  app.use('/mobileapp/user/profile/image', imageUploadRoutes(db));
+  
   app.get('/mobileapp/user/info', async (req, res) => {
     getMobileUserInfo(req, res, db);
   });
 
 
+  // TODO: move to controller
   app.get('/mobileapp/user/meetTypeOptions', async (req, res) => {
     // TODO: Grab items from DB
     res.json({
@@ -64,29 +66,6 @@ module.exports = function addMobileAppRoutes(app, db) {
       },
     });
   });
-  // app.get('/mobileapp/user/info', async (req, res) => {
-  //   console.log("Getting user info...");
-  //   const user = req.user;
-
-  //   // Find associated permissions TODO: user should already include permissions, just send them down.
-
-  //   // Find associated athlete profile id
-  //   db.tables.AthleteProfiles.findOne({attributes: ['id'], where: {userId: user.id}}).then((profileId) => {
-      
-  //     // For now, return fake user data
-  //     let permissions = {
-  //       isAdmin: user.isAdmin,
-  //       isCoach: false,
-  //     }
-  //     let userInfo = {
-  //       id: user.id,
-  //       permissions: permissions,
-  //       athleteId: profileId?.id,
-  //       verified: user.verified,
-  //     }
-  //     res.json({ok: true, message: 'found user info', userInfo});
-  //   });
-  // });
 
   app.use('/mobileapp/user/permissions', adminCheck, permissionRoutes);
 }

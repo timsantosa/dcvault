@@ -21,6 +21,7 @@ const addOrUpdateJump = async (req, res, db) => {
 
     // Flatten hardMetrics for upsert
     const flattenedHardMetrics = {
+      focus: hardMetrics?.focus,
       setting: hardMetrics?.setting,
       stepNum: hardMetrics?.run?.stepNum,
       distanceInches: hardMetrics?.run?.distanceInches,
@@ -423,6 +424,7 @@ module.exports = {
 function mapDbRowToJump(dbRow) {
   return {
     id: dbRow.id,
+    athleteProfileId: dbRow.athleteProfileId,
     date: dbRow.date,
     softMetrics: dbRow.softMetrics
       ? {

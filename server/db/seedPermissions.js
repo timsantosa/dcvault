@@ -19,6 +19,7 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'view_profiles', permissionName: 'View Athlete Profiles', description: 'Allows viewing of athlete profiles.' },
         { permissionKey: 'edit_others_profiles', permissionName: "Edit Other's Profiles", description: 'Allows editing of Athlete Profiles other than your own.' },
         { permissionKey: 'manage_roles', permissionName: 'Manage Roles', description: 'Allows assigning roles and permissions to users.' },
+        { permissionKey: 'verify_images', permissionName: 'Verify Images', description: "Allows user to verify other users' images" },
       ];
   
       for (const perm of permissions) {
@@ -30,7 +31,7 @@ async function seedRolesAndPermissions(db) {
   
       // Assign Permissions to Roles
       const adminPermissions = await db.tables.Permissions.findAll({
-        where: { permissionKey: ['view_profiles', 'edit_others_profiles', 'manage_roles'] }
+        where: { permissionKey: permissions.map(p => p.permissionKey) }
       });
   
       const basePermissions = await db.tables.Permissions.findAll({

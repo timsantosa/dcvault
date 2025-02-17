@@ -79,7 +79,7 @@ const getProfile = async (req, res, db) => {
       return res.status(403).json({ ok: false, message: 'Invalid athlete profile ID.' });
     }
 
-    let attributes = ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender'];
+    let attributes = ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender', 'profileImageVerified', 'backgroundImageVerified', 'isActiveMember'];
     const userHasFullAccess = user.isAdmin || user.athleteProfileId == athleteProfileId;
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
@@ -162,8 +162,8 @@ const getProfile = async (req, res, db) => {
       lastName: profileWithPR.lastName,
       gender: profileWithPR.gender,
       dob: profileWithPR.dob,
-      profileImage: profileWithPR.profileImage,
-      backgroundImage: profileWithPR.backgroundImage,
+      profileImage: profileWithPR.profileImageVerified ? profileWithPR.profileImage : undefined,
+      backgroundImage: profileWithPR.backgroundImageVerified ? profileWithPR.backgroundImage : undefined,
       nationality: profileWithPR.nationality,
       stats: {
         height: profileWithPR.height,
@@ -205,16 +205,23 @@ const getProfiles = async (req, res, db) => {
   const user = req.user;
 
   try {
-    const { gender, page = 1, limit } = req.query; // Optional filters and pagination
+    const { gender, allTime, page = 1, limit } = req.query; // Optional filters and pagination
     var offset = 0;
     if (limit) {
       offset = (page - 1) * limit;
     }
 
     // Query to fetch AthleteProfiles with their best PR
+    let whereClause = gender ? { gender: gender } : {}; // Filter by gender if provided
+    if (gender) {
+      whereClause.gender = gender;
+    }
+    if (!allTime) {
+      where.isActiveMember = true
+    }
     const profilesWithPRs = await db.tables.AthleteProfiles.findAll({
-      where: gender ? { gender } : {}, // Filter by gender if provided
-      attributes: ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'gender'],
+      where: whereClause,
+      attributes: ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender', 'profileImageVerified', 'backgroundImageVerified', 'isActiveMember'],
       include: [
         {
           model: db.tables.PersonalRecords,
@@ -254,8 +261,8 @@ const getProfiles = async (req, res, db) => {
         lastName: profile.lastName,
         nationality: profile.nationality,
         dob: profile.dob,
-        profileImage: profile.profileImage,
-        backgroundImage: profile.backgroundImage,
+        profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
+        backgroundImage: profile.backgroundImage ? profile.backgroundImage : undefined,
         stats: {
           height: profile.height,
           weight: profile.weight,

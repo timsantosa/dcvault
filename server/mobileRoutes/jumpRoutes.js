@@ -6,12 +6,6 @@ const adminCheck = require('../middlewares/admin');
 const jumpRoutes = (db) => {
   const router = express.Router();
 
-  // const checkUserPermission = (req, res, next) => {
-  //   console.log('Checking user has permission for these commands');
-  //   next();
-  // }
-  // router.use(checkUserPermission)
-
   const checkSelfOrAdmin = (req, res, next) => {
     const user = req.user;
     if(user.isAdmin) {
