@@ -292,10 +292,14 @@ module.exports.calculateAge = (dobString) => {
   }
 
   // Regular expression to match MM/DD/YYYY format
-  const dobFormat = /^([0]?[1-9]|1[0-2])\/([0]?[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+  const dateFormatUS = /^([0]?[1-9]|1[0-2])\/([0]?[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+
+
+  // Regular expression to match YYYY-MM-DD format
+  const dateFormatDB = /^\d{4}-\d{2}-\d{2}$/;
 
   // Validate dobString format
-  if (!dobFormat.test(dobString)) {
+  if (!dateFormatDB.test(dobString) && !dateFormatUS.test(dobString)) {
     return undefined;
   }
 

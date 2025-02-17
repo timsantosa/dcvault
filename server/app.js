@@ -4,11 +4,13 @@ const express = require('express')
 // const Promise = require('bluebird')
 const Sequelize = require('sequelize')
 const config = require('./config/config')
+const { seedRolesAndPermissions } = require('./db/seedPermissions')
 
 // Initialize database
 var schema = new Sequelize(config.db.name, config.db.user, config.db.pass, {logging: false, host: 'localhost', dialect: 'mysql', dialectOptions: {insecureAuth: true}})
 db.syncTables(schema).then(() => {
-  console.log('DB Initialized')
+  console.log('DB Initialized');
+  seedRolesAndPermissions(db);
 })
 
 // Initialize Server
