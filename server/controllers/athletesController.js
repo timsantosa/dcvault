@@ -151,10 +151,20 @@ const getProfile = async (req, res, db) => {
 
     const cachedRank = await rankingCache.getRankingForAthlete(profileWithPR.id, profileWithPR.gender) || undefined;
     
-    const largestPole = (profileWithPR.poleLengthInches && profileWithPR.poleWeight) ? {
-      lengthInches: profileWithPR.poleLengthInches,
-      weight: profileWithPR.poleWeight,
-    } : undefined
+    var height = undefined;
+    var largestPole = undefined;
+    if (profileWithPR.personalRecords.length > 0) {
+      const pr = profileWithPR.personalRecords[0];
+      if (pr.jump?.poleLengthInches && pr.jump?.poleWeight) {
+        largestPole = {
+          lengthInches: profileWithPR.personalRecord.jump.poleLengthInches,
+          weight: profileWithPR.personalRecord.jump.poleWeight,
+        };
+      }
+      if (pr.jump?.heightInches) {
+        height = pr.jump?.heightInches;
+      }
+    }
 
     const athleteProfile = {
       id: profileWithPR.id,
@@ -170,7 +180,7 @@ const getProfile = async (req, res, db) => {
         weight: profileWithPR.weight,
         age: helpers.calculateAge(profileWithPR.dob),
         rank: cachedRank,
-        pr: profileWithPR.heightInches,
+        pr: height,
         largestPole,
       },
       isActiveMember: profileWithPR.isActiveMember,
@@ -217,7 +227,7 @@ const getProfiles = async (req, res, db) => {
       whereClause.gender = gender;
     }
     if (!allTime) {
-      where.isActiveMember = true
+      whereClause.isActiveMember = true
     }
     const profilesWithPRs = await db.tables.AthleteProfiles.findAll({
       where: whereClause,
