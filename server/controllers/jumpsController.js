@@ -105,10 +105,10 @@ const getJump = async (req, res, db) => {
 
 const deleteJump = async (req, res, db) => {
   try {
-    const { jumpId } = req.query;
+    const { jumpId, athleteProfileId } = req.query;
 
-    if (!jumpId) {
-      return res.status(400).json({ ok: false, message: 'Jump ID is required.' });
+    if (!jumpId || !athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Missing jump ID or athlete profile id' });
     }
 
     const jump = await db.tables.Jumps.findByPk(jumpId);
@@ -119,7 +119,15 @@ const deleteJump = async (req, res, db) => {
 
     console.log('athlete id', jump.athleteProfileId);
 
-    // TODO: Check if it is a PR, then find the next best jump to replace it. RELEASE BLOCKER!! unless db cascades. test this
+    // Check if jump was a PR and destroy that record, then destroy the jump itself.
+    const personalRecord = await db.tables.PersonalRecords.findOne({
+      where: { jumpId, athleteProfileId },
+    });
+    if (personalRecord) {
+      personalRecord.destroy();
+      populatePRsForAthlete(athleteProfileId, db);
+    }
+
     await jump.destroy();
 
     res.json({ ok: true, message: 'Jump deletion successful.' });

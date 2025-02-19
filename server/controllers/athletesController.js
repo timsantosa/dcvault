@@ -186,7 +186,6 @@ const getProfile = async (req, res, db) => {
       isActiveMember: profileWithPR.isActiveMember,
     };
 
-    // TODO: Get from athlete table
     const foundAthlete = await db.tables.Athletes.findOne({where: {userId: user.id}});
     if (!foundAthlete) {
       // TODO: Indicate athlete is not currently signed up

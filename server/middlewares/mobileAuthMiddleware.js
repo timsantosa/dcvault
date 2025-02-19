@@ -1,25 +1,6 @@
 const jwt = require('jwt-simple');
 const config = require('../config/config');
 
-// TODO: This is not yet right
-// function authenticateJWT(req, res, next) {
-//   const authHeader = req.headers.authorization;
-
-//   if (authHeader) {
-//     const token = authHeader.split(' ')[1];
-
-//     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-//       if (err) {
-//         return res.sendStatus(403);
-//       }
-//       req.user = user; // Attach user to request object
-//       next();
-//     });
-//   } else {
-//     return res.sendStatus(401);
-//   }
-// }
-
 function authenticateJWT(req, res, next) {
   const authBearer = req.headers?.authorization;
   if (!authBearer) {

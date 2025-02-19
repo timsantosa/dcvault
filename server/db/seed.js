@@ -172,7 +172,7 @@ const fillDb = (numEntries) => {
                   jump.date = new Date();
                   jump.setting = "Meet";
                   jump.heightInches = getRandNum(84, 240);
-                  jump.stepNum = getRandNum(1, 8);
+                  jump.stepNum = getRandNum(2, 8);
                   jump.verified = true;
 
                   db.tables.Jumps.create(jump)
