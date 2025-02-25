@@ -462,8 +462,14 @@ module.exports = (app, db) => {
               paymentId: purchaseInfo.payment.paymentId,
               payerId: purchaseInfo.payment.payerId
             }).then(() => {
-              db.tables.Invites.destroy({where: {code: purchaseInfo.selectPackage.invite}})
-              db.tables.Discounts.destroy({where: {code: purchaseInfo.payment.discount}})
+              if (purchaseInfo.selectPackage?.invite) {
+                db.tables.Invites.destroy({where: {code: purchaseInfo.selectPackage.invite}})
+                .catch((error) => console.error("Failed to delete invite:", error));
+              }
+              if (purchaseInfo.payment?.discount) {
+                db.tables.Discounts.destroy({where: {code: purchaseInfo.payment.discount}})
+                .catch((error) => console.error("Failed to delete discount:", error));
+              }
               res.send({ok: true, message: 'purchase record saved'})
             })
           })

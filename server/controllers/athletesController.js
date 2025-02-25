@@ -221,7 +221,7 @@ const getProfiles = async (req, res, db) => {
     }
 
     // Query to fetch AthleteProfiles with their best PR
-    let whereClause = gender ? { gender: gender } : {}; // Filter by gender if provided
+    let whereClause = {}; // Filter by gender if provided
     if (gender) {
       whereClause.gender = gender;
     }
@@ -246,12 +246,15 @@ const getProfiles = async (req, res, db) => {
         },
       ],
       order: [
-        [db.tables.schema.literal(`
-          (SELECT MAX(jumps.heightInches)
-          FROM personalRecords AS pr 
-          INNER JOIN jumps ON pr.jumpId = jumps.id 
-          WHERE pr.athleteProfileId = AthleteProfile.id)`), 'DESC'],
-      ],
+        [
+          db.tables.schema.literal(`
+            (SELECT MAX(j.heightInches)
+             FROM personalRecords AS pr
+             INNER JOIN jumps AS j ON pr.jumpId = j.id
+             WHERE pr.athleteProfileId = athleteProfile.id)`),
+          'DESC',
+        ],
+      ],      
       limit: limit ? parseInt(limit, 10) : undefined,
       offset: parseInt(offset, 10),
     });
