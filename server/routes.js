@@ -465,6 +465,8 @@ module.exports = (app, db) => {
               db.tables.Invites.destroy({where: {code: purchaseInfo.selectPackage.invite}})
               db.tables.Discounts.destroy({where: {code: purchaseInfo.payment.discount}})
               res.send({ok: true, message: 'purchase record saved'})
+            }).catch((error) => {
+              res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
             })
           })
         }

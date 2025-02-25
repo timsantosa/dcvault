@@ -27,6 +27,7 @@ function authenticateJWT(req, res, next) {
 const checkPermission = (requiredPermission) => {
   return (req, res, next) => {
     if (!req.user || !req.user.permissions.includes(requiredPermission)) {
+      console.warn("User does not have required permission: ", requiredPermission);
       return res.status(403).json({ ok: false, message: 'Forbidden: Insufficient permissions' });
     }
     next();
