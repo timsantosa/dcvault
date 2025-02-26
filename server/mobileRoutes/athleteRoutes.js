@@ -20,19 +20,23 @@ const athleteRoutes = (db) => {
 
     const athleteProfileId = req.body.athleteProfileId;
     const userId = req.body.userId
-    if (!user.id || !user.athleteProfileId) {
-      return res.status(400).json({ ok: false, message: 'Unauthorized' });
-    }
-
-    // If trying to modify another athlete's profile or 
-    // create one for another user, reject it.
-    if ((athleteProfileId && (athleteProfileId !== user.athleteProfileId)) ||
-      (userId && (userId !== user.id))
+    // If the request has an athleteProfileId, and it's the same as the user's who
+    // is sending the request, then we're good.
+    if (athleteProfileId && user.athleteProfileId &&
+      athleteProfileId === user.athleteProfileId
     ) {
-      return res.status(403).json({ ok: false, message: 'Forbidden' });
+      return next();
+    } 
+    
+    // If the request has a userId, and it's the same as the user's who
+    // is sending the request, then we're good.
+    if (userId && user.id &&
+      userId === user.id
+    ) {
+      return next();
     }
-
-    next();
+      
+    return res.status(403).json({ ok: false, message: 'Forbidden' });
   }
 
   // Pass the db to the controller functions
