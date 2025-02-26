@@ -51,6 +51,15 @@ const addOrUpdateJump = async (req, res, db) => {
       flattenedMeetInfo.eventDetails = meetInfo.eventDetails;
     }
 
+    // Maybe consider auto-verifying if admin made request. Need to update PRs then.
+    var verified = false;
+    if (hardMetrics?.setting !== "Meet") { // Auto verify practice jumps
+      verified = true;
+    } else {
+      const athletesPr = getPersonalBest(athleteProfileId, db);
+      // Auto verify if the jump is not a PR and not a championship. (If meet type is null, it's not a championship)
+      verified = hardMetrics?.height?.inches <= athletesPr && hardMetrics?.meetType === null;
+    }
 
     // Upsert jump
     const [jumpRow, created] = await db.tables.Jumps.upsert({
@@ -62,7 +71,7 @@ const addOrUpdateJump = async (req, res, db) => {
       ...flattenedHardMetrics,
       softMetrics,
       ...flattenedMeetInfo,
-      verified: false, // TODO: Consider auto-verifying if admin made request. Need to update PRs then.
+      verified,
     });
 
     const jump = mapDbRowToJump(jumpRow);
@@ -325,7 +334,7 @@ async function getUnverifiedMeetJumps(req, res, db) {
     // ],
     order: [['date', 'ASC']], // Earlier dates should be first
   });
-  
+
   let returnedJumps = jumps.map(mapDbRowToJump);
 
   res.json({
@@ -335,45 +344,74 @@ async function getUnverifiedMeetJumps(req, res, db) {
 }
 
 async function getPersonalBests(athleteProfileId, db) {
-  const prs = await db.tables.PrRecords.findAll({
-    where: { athleteProfileId },
-    include: [Jumps],
-  });
+  try {
+    const prs = await db.tables.PersonalRecords.findAll({
+      where: { athleteProfileId },
+      include: [
+        {
+          model: db.tables.Jumps,
+          as: 'jump',
+        },
+      ],
+    });
 
-  return prs.map(pr => ({
-    stepNum: pr.stepNum,
-    jump: mapDbRowToJump(pr.Jump).map((j) => ({
-      ...j,
-      isPr: true,
-    })),
-  }));
+    return prs.map(pr => ({
+      stepNum: pr.stepNum,
+      jump: mapDbRowToJump(pr.jump).map((j) => ({
+        ...j,
+        isPr: true,
+      })),
+    }));
+  } catch {
+
+  }
 }
 
 async function getPersonalBest(athleteProfileId, db) {
   try {
-    const result = await db.tables.Jumps.findOne({
-      attributes: [[db.tables.schema.fn('MAX', db.tables.schema.col('heightInches')), 'pr']], // Calculate the max jump height
+    const prs = await db.tables.PersonalRecords.findAll({
+      where: { athleteProfileId },
       include: [
         {
-          model: db.tables.PersonalRecords,
-          attributes: [],
-          where: { athleteProfileId }, // Filter by athlete profile ID
-          as: 'personalRecord'
+          model: db.tables.Jumps,
+          as: 'jump',
+          attributes: ['heightInches'],
         },
       ],
-      raw: true, // Return plain data instead of Sequelize model instances
     });
 
-    return result.pr || 0; // Return the PR or 0 if no records found
+    return Math.max(...prs.map(pr => (pr.jump.heightInches ?? 0)));
   } catch (err) {
     console.error(`Error fetching PR for athleteId ${athleteProfileId}:`, err);
-    throw new Error('Failed to fetch PR');
+    return 0;
   }
-};
+}
+
+// async function getPersonalBest(athleteProfileId, db) {
+//   try {
+//     const result = await db.tables.Jumps.findOne({
+//       attributes: [[db.tables.schema.fn('MAX', db.tables.schema.col('heightInches')), 'pr']], // Calculate the max jump height
+//       include: [
+//         {
+//           model: db.tables.PersonalRecords,
+//           attributes: [],
+//           where: { athleteProfileId }, // Filter by athlete profile ID
+//           as: 'personalRecord'
+//         },
+//       ],
+//       raw: true, // Return plain data instead of Sequelize model instances
+//     });
+
+//     return result.pr || 0; // Return the PR or 0 if no records found
+//   } catch (err) {
+//     console.error(`Error fetching PR for athleteId ${athleteProfileId}:`, err);
+//     // throw new Error('Failed to fetch PR');
+//   }
+// };
 
 async function getLargestPole(athleteProfileId, db) {
   // TODO: Base on athlete's jumps
-  
+
   return {
     lengthInches: 187,
     weight: 180,
@@ -383,9 +421,9 @@ async function getLargestPole(athleteProfileId, db) {
 }
 
 
-module.exports = { 
+module.exports = {
   addOrUpdateJump,
-  getJump, 
+  getJump,
   deleteJump,
   fetchJumps,
   verifyJump,
@@ -436,10 +474,10 @@ function mapDbRowToJump(dbRow) {
     date: dbRow.date,
     softMetrics: dbRow.softMetrics
       ? {
-          mentalRating: dbRow.softMetrics.mentalRating,
-          physicalRating: dbRow.softMetrics.physicalRating,
-          weatherRating: dbRow.softMetrics.weatherRating,
-        }
+        mentalRating: dbRow.softMetrics.mentalRating,
+        physicalRating: dbRow.softMetrics.physicalRating,
+        weatherRating: dbRow.softMetrics.weatherRating,
+      }
       : undefined,
     hardMetrics: {
       setting: dbRow.setting,
@@ -471,16 +509,16 @@ function mapDbRowToJump(dbRow) {
     },
     meetInfo: dbRow.meetInfo
       ? {
-          eventDetails: {
-            meetName: dbRow.meetInfo.eventDetails.meetName,
-            facility: dbRow.meetInfo.eventDetails.facility,
-            location: dbRow.meetInfo.eventDetails.location,
-            organization: dbRow.meetInfo.eventDetails.organization,
-            isChampionship: dbRow.meetInfo.eventDetails.isChampionship,
-          },
-          placement: dbRow.meetInfo.placement ?? undefined,
-          record: dbRow.meetInfo.record ?? undefined,
-        }
+        eventDetails: {
+          meetName: dbRow.meetInfo.eventDetails.meetName,
+          facility: dbRow.meetInfo.eventDetails.facility,
+          location: dbRow.meetInfo.eventDetails.location,
+          organization: dbRow.meetInfo.eventDetails.organization,
+          isChampionship: dbRow.meetInfo.eventDetails.isChampionship,
+        },
+        placement: dbRow.meetInfo.placement ?? undefined,
+        record: dbRow.meetInfo.record ?? undefined,
+      }
       : undefined,
     notes: dbRow.notes ?? undefined,
     videoLink: dbRow.videoLink ?? undefined,
