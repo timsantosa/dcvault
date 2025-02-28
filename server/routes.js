@@ -380,106 +380,116 @@ module.exports = (app, db) => {
     }
   })
 
-  app.post('/registration/finalize', (req, res) => {
-    if (!req.body.purchaseInfo || !req.body.token) {
-      res.status(400).send({ok: false, message: 'missing purchase details'})
-    } else {
-      let user = jwt.decode(req.body.token, config.auth.secret)
-      db.tables.Users.findOne({where: {id: user.id, email: user.email}}).then((user) => {
-        if (!user) {
-          res.status(403).send({ok: false, message: 'bad user token'})
+  app.post('/registration/finalize', async (req, res) => {
+    try {
+      if (!req.body.purchaseInfo || !req.body.token) {
+        return res.status(400).send({ ok: false, message: 'missing purchase details' });
+      }
+  
+      let user = jwt.decode(req.body.token, config.auth.secret);
+      let foundUser = await db.tables.Users.findOne({ where: { id: user.id, email: user.email } });
+  
+      if (!foundUser) {
+        return res.status(403).send({ ok: false, message: 'bad user token' });
+      }
+  
+      let athlete = req.body.purchaseInfo.athleteInfo;
+      let foundAthlete = await db.tables.Athletes.findOne({
+        where: { firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob }
+      });
+  
+      let athleteData = {
+        firstName: athlete.fname,
+        lastName: athlete.lname,
+        dob: athlete.dob,
+        email: athlete.email,
+        notifications: athlete.lstserv,
+        emergencyContactName: athlete['emergency-contact'],
+        emergencyContactRelation: athlete['emergency-relation'],
+        emergencyContactMDN: athlete['emergency-phone'],
+        school: athlete.school,
+        state: athlete.state,
+        usatf: athlete.usatf,
+        gender: athlete.gender,
+        userId: user.id,
+        medConditions: athlete.conditions
+      };
+  
+      let newAthlete;
+      if (!foundAthlete) {
+        newAthlete = await db.tables.Athletes.create(athleteData);
+      } else {
+        newAthlete = await foundAthlete.update(athleteData);
+      }
+  
+      let purchaseInfo = req.body.purchaseInfo;
+      let athleteId = newAthlete.dataValues.id;
+      let userId = newAthlete.dataValues.userId;
+      let grp = purchaseInfo.selectPackage.group;
+      let mem = purchaseInfo.selectPackage.membership;
+      let mth = purchaseInfo.selectPackage.month;
+      let noapp = purchaseInfo.selectPackage.yesApparel;
+      let app = purchaseInfo.selectPackage.apparel;
+  
+      //If the group is fly-kids or basic then the membe
+      if (grp !== 'fly-kids' && mem !== 'basic') {
+        if (grp == 'adult') {
+          mem = 'adult';
         } else {
-          let athlete = req.body.purchaseInfo.athleteInfo
-          db.tables.Athletes.findOne({where: {firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob}}).then((foundAthlete) => {
-            let athleteData = {
-              firstName: athlete.fname,
-              lastName: athlete.lname,
-              dob: athlete.dob,
-              email: athlete.email,
-              notifications: athlete.lstserv,
-              emergencyContactName: athlete['emergency-contact'],
-              emergencyContactRelation: athlete['emergency-relation'],
-              emergencyContactMDN: athlete['emergency-phone'],
-              school: athlete.school,
-              state: athlete.state,
-              usatf: athlete.usatf,
-              gender: athlete.gender,
-              userId: user.id,
-              medConditions: athlete.conditions
-            }
-            if (!foundAthlete) {
-              return db.tables.Athletes.create(athleteData)
-            } else {
-              return foundAthlete.update(athleteData)
-            }
-          }).then((newAthlete) => {
-            let purchaseInfo = req.body.purchaseInfo
-            let athleteId = newAthlete.dataValues.id
-            let userId = newAthlete.dataValues.userId
-            let grp = purchaseInfo.selectPackage.group
-            let mem = purchaseInfo.selectPackage.membership
-            let mth = purchaseInfo.selectPackage.month
-            let noapp = purchaseInfo.selectPackage.yesApparel
-            let app = purchaseInfo.selectPackage.apparel
-
-            //If the group is fly-kids or basic then the membe
-            if (grp !== 'fly-kids' && mem !== 'basic'){
-              if (grp == 'adult'){
-                mem = 'adult'
-              }else{
-                mth = 'none'
-              }
-            }
-            if (!mem){
-              mem = 'none'
-            }
-
-            if (noapp === 'none'){
-              app = 'none'
-            }else{
-              if (app === ''){
-                app = 'purchased, need size'
-              }
-            }
-
-            if (grp == 'fly-kids'){
-              purchaseInfo.selectPackage.strengthFam = 'yes'
-            }
-
-            db.tables.Purchases.create({
-              athleteId: athleteId,
-              userId: userId,
-              quarter: purchaseInfo.selectPackage.quarter,
-              month: mth,
-              group: purchaseInfo.selectPackage.group,
-              facility: purchaseInfo.selectPackage.facility,
-              waiverSignatory: purchaseInfo.agreement.name,
-              size: app,
-              strength: purchaseInfo.selectPackage.strength,
-              strengthFam: purchaseInfo.selectPackage.strengthFam,
-              membership: mem,
-              waiverDate: purchaseInfo.agreement.date,
-              paymentId: purchaseInfo.payment.paymentId,
-              payerId: purchaseInfo.payment.payerId
-            }).then(() => {
-              if (purchaseInfo.selectPackage?.invite) {
-                db.tables.Invites.destroy({where: {code: purchaseInfo.selectPackage.invite}})
-                .catch((error) => console.error("Failed to delete invite:", error));
-              }
-              if (purchaseInfo.payment?.discount) {
-                db.tables.Discounts.destroy({where: {code: purchaseInfo.payment.discount}})
-                .catch((error) => console.error("Failed to delete discount:", error));
-              }
-              res.send({ok: true, message: 'purchase record saved'})
-            })
-          })
+          mth = 'none';
         }
-      })
-      .catch((error) => {
-        res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
-      })
+      }
+  
+      if (!mem) {
+        mem = 'none';
+      }
+  
+      if (noapp === 'none') {
+        app = 'none';
+      } else {
+        if (app === '') {
+          app = 'purchased, need size';
+        }
+      }
+  
+      if (grp == 'fly-kids') {
+        purchaseInfo.selectPackage.strengthFam = 'yes';
+      }
+  
+      await db.tables.Purchases.create({
+        athleteId: athleteId,
+        userId: userId,
+        quarter: purchaseInfo.selectPackage.quarter,
+        month: mth,
+        group: purchaseInfo.selectPackage.group,
+        facility: purchaseInfo.selectPackage.facility,
+        waiverSignatory: purchaseInfo.agreement.name,
+        size: app,
+        strength: purchaseInfo.selectPackage.strength,
+        strengthFam: purchaseInfo.selectPackage.strengthFam,
+        membership: mem,
+        waiverDate: purchaseInfo.agreement.date,
+        paymentId: purchaseInfo.payment.paymentId,
+        payerId: purchaseInfo.payment.payerId
+      });
+  
+      // Ensure `invite` and `discount` exist before deleting
+      if (purchaseInfo.selectPackage.invite) {
+        await db.tables.Invites.destroy({ where: { code: purchaseInfo.selectPackage.invite } });
+      }
+  
+      if (purchaseInfo.payment.discount) {
+        await db.tables.Discounts.destroy({ where: { code: purchaseInfo.payment.discount } });
+      }
+  
+      return res.send({ ok: true, message: 'purchase record saved' });
+  
+    } catch (error) {
+      console.error("Registration Finalize Error:", error);
+      return res.status(500).send({ ok: false, message: 'a db error has occurred', error: error.message });
     }
-  })
+  });
+  
 
     app.post('/event/finalize', (req, res) => {
         if (!req.body.purchaseInfo) {
