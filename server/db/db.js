@@ -200,6 +200,7 @@ columns.jumps = {
   athleteWeightPounds: Sequelize.FLOAT,
 
   // Meet Info
+  facilitySetting: Sequelize.ENUM('Indoor', 'Outdoor'), // ALTER TABLE jumps ADD COLUMN facilitySetting ENUM('Indoor', 'Outdoor');
   meetType: Sequelize.STRING,
   division: Sequelize.STRING,
   placement: Sequelize.INTEGER,
@@ -344,7 +345,7 @@ const syncTables = (schema, force) => {
   tables.User_Permissions.belongsTo(tables.Permissions, { foreignKey: 'permissionId' });
 
 
-  tables.schema = schema
+  tables.schema = schema;
   return schema.sync({force: force})
 }
 

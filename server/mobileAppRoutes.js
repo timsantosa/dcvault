@@ -1,13 +1,14 @@
 const config = require('./config/config');
 const jwt = require('jwt-simple');
 const jumpRoutes = require('./mobileRoutes/jumpRoutes');
-const { authenticateJWT } = require('./middlewares/mobileAuthMiddleware');
+const { authenticateJWT, checkPermission } = require('./middlewares/mobileAuthMiddleware');
 const athleteRoutes = require('./mobileRoutes/athleteRoutes');
 const authRoutes = require('./mobileRoutes/authRoutes');
 const permissionRoutes = require('./mobileRoutes/permissionRoutes');
 const adminCheck = require('./middlewares/admin');
 const { getMobileUserInfo } = require('./controllers/authController');
 const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
+const { verifyJump, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -26,6 +27,9 @@ module.exports = function addMobileAppRoutes(app, db) {
     getMobileUserInfo(req, res, db);
   });
 
+  // Admin routes
+  app.post('/mobileapp/user/jump/verify', checkPermission('verify_jumps'), (req, res) => verifyJump(req, res, db));
+  app.get('/mobileapp/user/jumps/unverified', checkPermission('verify_jumps'), (req, res) => getUnverifiedMeetJumps(req, res, db));
 
   // TODO: move to controller
   app.get('/mobileapp/user/meetTypeOptions', async (req, res) => {

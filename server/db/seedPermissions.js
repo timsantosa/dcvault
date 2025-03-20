@@ -18,6 +18,9 @@ async function seedRolesAndPermissions(db) {
       const permissions = [
         { permissionKey: 'view_profiles', permissionName: 'View Athlete Profiles', description: 'Allows viewing of athlete profiles.' },
         { permissionKey: 'edit_others_profiles', permissionName: "Edit Other's Profiles", description: 'Allows editing of Athlete Profiles other than your own.' },
+        { permissionKey: 'view_others_jumps', permissionName: 'View Jumps of Other Athletes', description: "Allows viewing of other athlete's jumps." },
+        { permissionKey: 'edit_others_jumps', permissionName: 'Edit Jumps of Other Athletes', description: "Allows editing of other athlete's jumps." },
+        { permissionKey: 'verify_jumps', permissionName: 'Verify Jumps', description: "Allows verifying of any athlete's jumps." },
         { permissionKey: 'manage_roles', permissionName: 'Manage Roles', description: 'Allows assigning roles and permissions to users.' },
         { permissionKey: 'verify_images', permissionName: 'Verify Images', description: "Allows user to verify other users' images" },
       ];

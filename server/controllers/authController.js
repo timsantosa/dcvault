@@ -52,8 +52,8 @@ async function generateMobileUser(user, db) {
     verified: user.verified,
     roles: roleNames,
     permissions: [...permissions], // Convert set to array
-    athleteProfileId: athleteProfileId || undefined, 
-    athleteId: athleteId || undefined,
+    athleteProfileId: athleteProfileId || undefined, // TODO: Change to an array
+    athleteId: athleteId || undefined, // TODO: Change to an array
   };
 }
 
