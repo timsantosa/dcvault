@@ -5,7 +5,8 @@ const {
   deleteBackgroundImage, 
   uploadProfileImage, 
   uploadBackgroundImage, 
-  verifyImage
+  verifyImage,
+  getAllUnverifiedImages
 } = require('../controllers/imageUploadController');
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../controllers/cloudinaryConfig");
@@ -36,6 +37,7 @@ const imageUploadRoutes = (db) => {
   router.delete('/background', (req, res) => deleteBackgroundImage(req, res, db));
 
   router.post('/verify', checkPermission('verify_images'), (req, res) => verifyImage(req, res, db));
+  router.get('/unverified', checkPermission('verify_images'), (req, res) => getAllUnverifiedImages(req, res, db));
 
   return router;
 };

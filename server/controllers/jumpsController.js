@@ -12,8 +12,10 @@ const addOrUpdateJump = async (req, res, db) => {
     if (!athleteProfileId || !date) {
       return res.status(400).json({ ok: false, message: 'Athlete ID and Date are required.' });
     }
-    if (hardMetrics.setting === "Meet" && !hardMetrics?.height?.inches) {
-      return res.status(400).json({ ok: false, message: 'Missing height for meet jump' });
+    if (hardMetrics.setting === "Meet") {
+      if (!hardMetrics?.height?.inches || !meetInfo) {
+        return res.status(400).json({ ok: false, message: 'Missing height or meet info for meet jump' });
+      }
     }
 
     // New jumps come in with an id of -1
@@ -44,11 +46,12 @@ const addOrUpdateJump = async (req, res, db) => {
     // Flatten some meet info
     let flattenedMeetInfo = {}
     if (hardMetrics?.setting === "Meet") {
-      flattenedMeetInfo.meetType = meetInfo.eventDetails.meetType;
-      flattenedMeetInfo.division = meetInfo.eventDetails.division;
+      flattenedMeetInfo.facilitySetting = meetInfo.facilitySetting;
+      flattenedMeetInfo.meetType = meetInfo.championshipType;
+      flattenedMeetInfo.division = meetInfo.division;
       flattenedMeetInfo.placement = meetInfo.placement;
-      flattenedMeetInfo.recordType = meetInfo.placement;
-      flattenedMeetInfo.eventDetails = meetInfo.eventDetails;
+      flattenedMeetInfo.recordType = meetInfo.recordType;
+      flattenedMeetInfo.meetEventDetails = meetInfo.eventDetails;
     }
 
     // Maybe consider auto-verifying if admin made request. Need to update PRs then.
@@ -56,9 +59,9 @@ const addOrUpdateJump = async (req, res, db) => {
     if (hardMetrics?.setting !== "Meet") { // Auto verify practice jumps
       verified = true;
     } else {
-      const athletesPr = getPersonalBest(athleteProfileId, db);
+      const athletesPr = await getPersonalBest(athleteProfileId, db);
       // Auto verify if the jump is not a PR and not a championship. (If meet type is null, it's not a championship)
-      verified = hardMetrics?.height?.inches <= athletesPr && hardMetrics?.meetType === null;
+      verified = hardMetrics?.height?.inches <= athletesPr && meetInfo?.championshipType === null;
     }
 
     // Upsert jump
@@ -209,7 +212,7 @@ const fetchJumps = async (req, res, db) => {
 };
 
 async function verifyJump(req, res, db) {
-  const { jumpId, verify } = req.params;
+  const { jumpId, verify } = req.body;
 
   if (!jumpId) {
     return res.status(400).json({ message: 'Jump ID is required.' });
@@ -231,10 +234,10 @@ async function verifyJump(req, res, db) {
       await jump.save();
 
       // Check if it's a meet jump and update PR records if applicable
-      if (jump.setting === Setting.meet && jump.heightIsBar && jump.meetInfo) {
+      if (jump.setting === 'Meet' && jump.heightInches) {
 
         // Check if this jump beats the current PR for its stepNum
-        const currentPr = await db.tables.PrRecords.findOne({
+        const currentPr = await db.tables.PersonalRecords.findOne({
           where: { athleteProfileId: jump.athleteProfileId, stepNum: jump.stepNum },
           include: {
             model: db.tables.Jumps,
@@ -242,14 +245,13 @@ async function verifyJump(req, res, db) {
           },
         });
 
-        // TODO: In case of a tie, the earlier jump should be the PR
         if (!currentPr || jump.heightInches > currentPr.Jump.heightInches) {
           // Update PR
           if (currentPr) {
             await currentPr.destroy(); // Remove old PR record //TODO: What does this destroy, both the jump and the prRow?
           }
 
-          await PrRecords.create({
+          await db.tables.PersonalRecords.create({
             athleteProfileId: jump.athleteProfileId,
             stepNum: jump.stepNum,
             jumpId: jump.id,
@@ -257,23 +259,23 @@ async function verifyJump(req, res, db) {
         }
       }
 
-      message = 'Jump unverified successfully.'
+      message = 'Jump verified successfully.'
     } else {
       jump.verified = false;
       await jump.save();
       // If a jump was unverified, we just need to find the next best one
       populatePRsForAthlete(jump.athleteProfileId)
 
-      message = 'Jump verified successfully.'
+      message = 'Jump unverified successfully.'
     }
 
     // Reorder ranks for that gender. Can probably be done asyncronusly if needed
     await rankingCache.regenerateAllRankings();
 
-    res.json({ message, jump });
+    res.json({ok: true, message, jump });
   } catch (error) {
     console.error('Error verifying jump:', error);
-    res.status(500).json({ message: 'Internal server error.' });
+    res.status(500).json({ ok: false, message: 'Internal server error.' });
   }
 }
 
@@ -324,23 +326,47 @@ async function populatePRsForAthlete(athleteProfileId, db) {
 }
 
 async function getUnverifiedMeetJumps(req, res, db) {
-  const jumps = await db.tables.Jumps.findAll({
-    where: {
-      setting: 'Meet',
-      verified: false,
-    },
-    // attributes: [
-    //   'id', 'stepNum', 'heightInches', 'athleteProfileId'
-    // ],
-    order: [['date', 'ASC']], // Earlier dates should be first
-  });
+  try {
+    const jumps = await db.tables.Jumps.findAll({
+      where: {
+        setting: 'Meet',
+        verified: false,
+      },
+      // attributes: [
+      //   'id', 'stepNum', 'heightInches', 'poleLengthInches', 'poleWeight', 'meetType',
+      //   'division',
+      //   'placement',
+      //   'recordType',
+      //   'meetEventDetails', 'date',
+      // ],
+      include: [
+        {
+          model: db.tables.AthleteProfiles,
+          as: 'athleteProfile',
+          attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified'],
+        },
+      ],
+      order: [['date', 'ASC']], // Earlier dates should be first
+    });
 
-  let returnedJumps = jumps.map(mapDbRowToJump);
-
-  res.json({
-    ok: true,
-    unverifiedJumps: returnedJumps,
-  });
+    let returnedJumps = jumps.map((row) => {
+      return {
+        jump: mapDbRowToJump(row),
+        athlete: {
+          id: row.athleteProfile.id,
+          name: row.athleteProfile.firstName + ' ' + row.athleteProfile.lastName,
+          profileImage: row.athleteProfile.profileImageVerified ? row.athleteProfile.profileImage : undefined,
+        },
+      }
+    });
+    res.json({
+      ok: true,
+      unverifiedJumps: returnedJumps,
+    });
+  } catch (err) {
+    console.error('Error getting unverified jumps jump:', err);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
 }
 
 async function getPersonalBests(athleteProfileId, db) {
@@ -507,20 +533,21 @@ function mapDbRowToJump(dbRow) {
         weightPounds: dbRow.athleteWeightPounds ?? undefined,
       },
     },
-    meetInfo: dbRow.meetInfo
-      ? {
-        eventDetails: {
-          meetName: dbRow.meetInfo.eventDetails.meetName,
-          facility: dbRow.meetInfo.eventDetails.facility,
-          location: dbRow.meetInfo.eventDetails.location,
-          organization: dbRow.meetInfo.eventDetails.organization,
-          isChampionship: dbRow.meetInfo.eventDetails.isChampionship,
-        },
-        placement: dbRow.meetInfo.placement ?? undefined,
-        record: dbRow.meetInfo.record ?? undefined,
-      }
-      : undefined,
+    meetInfo: {
+        facilitySetting: dbRow.facilitySetting ?? undefined,
+        eventDetails: dbRow.meetEventDetails ? { // maybe don't need to copy here?
+          meetName: dbRow.meetEventDetails.meetName,
+          facility: dbRow.meetEventDetails.facility,
+          location: dbRow.meetEventDetails.location,
+          organization: dbRow.meetEventDetails.organization,
+        } : undefined,
+        championshipType: dbRow.meetType ?? undefined,
+        division: dbRow.division ?? undefined,
+        placement: dbRow.placement ?? undefined,
+        record: dbRow.record ?? undefined,
+      },
     notes: dbRow.notes ?? undefined,
     videoLink: dbRow.videoLink ?? undefined,
+    verified: dbRow.verified,
   };
 }

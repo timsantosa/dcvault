@@ -1,4 +1,5 @@
 const cloudinary = require("./cloudinaryConfig");
+const { Op } = require('sequelize');
 
 // Configure Cloudinary
 // const cloudConfig = cloudinary.config({
@@ -40,7 +41,12 @@ async function uploadProfileImage(req, res, db) {
     athlete.profileImageVerified = req.user?.permissions?.includes('verify_images');
     await athlete.save();
 
-    res.json({ ok: true, imageUrl: newImageUrl, message: "Profile picture updated successfully." });
+    res.json({
+      ok: true,
+      imageUrl: newImageUrl,
+      imageVerified: athlete.profileImageVerified,
+      message: "Profile picture updated successfully."
+    });
   } catch (error) {
     console.error("Error updating profile picture:", error);
     res.status(500).json({ error: "Failed to update profile picture" });
@@ -49,100 +55,124 @@ async function uploadProfileImage(req, res, db) {
 
 // TODO: Identical, combine with profileImage
 async function uploadBackgroundImage(req, res, db) {
-    try {
-        const { athleteProfileId } = req.body;
-        if (!athleteProfileId) return res.status(400).json({ error: "Athlete Profile ID is required" });
-    
-        // Get the uploaded image URL from Multer
-        const newImageUrl = req.file.path;
-    
-        // Fetch the athlete profile
-        const athlete = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
-        if (!athlete) return res.status(404).json({ error: "Athlete not found" });
-    
-        // Delete old background image from Cloudinary
-        if (athlete.backgroundImage) {
-          const oldPublicId = getCloudinaryPublicId(athlete.backgroundImage);
-          if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
-        }
-    
-        // Update the database
-        athlete.backgroundImage = newImageUrl;
-        athlete.backgroundImageVerified = req.user?.permissions?.includes('verify_images');
-        await athlete.save();
-    
-        res.json({ ok: true, imageUrl: newImageUrl, message: "Background picture updated successfully." });
-      } catch (error) {
-        console.error("Error updating background picture:", error);
-        res.status(500).json({ error: "Failed to update background picture" });
-      }
+  try {
+    const { athleteProfileId } = req.body;
+    if (!athleteProfileId) return res.status(400).json({ error: "Athlete Profile ID is required" });
+
+    // Get the uploaded image URL from Multer
+    const newImageUrl = req.file.path;
+
+    // Fetch the athlete profile
+    const athlete = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
+    if (!athlete) return res.status(404).json({ error: "Athlete not found" });
+
+    // Delete old background image from Cloudinary
+    if (athlete.backgroundImage) {
+      const oldPublicId = getCloudinaryPublicId(athlete.backgroundImage);
+      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+    }
+
+    // Update the database
+    athlete.backgroundImage = newImageUrl;
+    athlete.backgroundImageVerified = req.user?.permissions?.includes('verify_images');
+    await athlete.save();
+
+    res.json({
+      ok: true,
+      imageUrl: newImageUrl,
+      imageVerified: athlete.backgroundImageVerified,
+      message: "Background picture updated successfully."
+    });
+  } catch (error) {
+    console.error("Error updating background picture:", error);
+    res.status(500).json({ error: "Failed to update background picture" });
+  }
 }
 
 async function deleteProfilePicture(req, res, db) {
-    try {
-        const { athleteProfileId } = req.body;
-        if (!athleteProfileId) return res.status(400).json({ error: "Athlete Profile ID is required" });
-    
-        const athlete = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
-        if (!athlete) return res.status(404).json({ error: "Athlete not found" });
-    
-        if (athlete.profileImage) {
-          const oldPublicId = getCloudinaryPublicId(athlete.profileImage);
-          if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
-          athlete.profileImage = null;
-          await athlete.save();
-        }
-    
-        res.json({ ok: true, message: "Profile picture deleted successfully." });
-      } catch (error) {
-        console.error("Error deleting profile picture:", error);
-        res.status(500).json({ error: "Failed to delete profile picture" });
-      }
+  try {
+    const { athleteProfileId } = req.query;
+    if (!athleteProfileId) return res.status(400).json({ error: "Athlete Profile ID is required" });
+
+    const athlete = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
+    if (!athlete) return res.status(404).json({ error: "Athlete not found" });
+
+    if (athlete.profileImage) {
+      const oldPublicId = getCloudinaryPublicId(athlete.profileImage);
+      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+      athlete.profileImage = null;
+      await athlete.save();
+    }
+
+    res.json({ ok: true, message: "Profile picture deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting profile picture:", error);
+    res.status(500).json({ error: "Failed to delete profile picture" });
+  }
 }
 
 async function deleteBackgroundImage(req, res, db) {
-    try {
-        const { athleteProfileId } = req.body;
-        if (!athleteProfileId) return res.status(400).json({ error: "Athlete Profile ID is required" });
-    
-        const athlete = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
-        if (!athlete) return res.status(404).json({ error: "Athlete not found" });
-    
-        if (athlete.backgroundImage) {
-          const oldPublicId = getCloudinaryPublicId(athlete.backgroundImage);
-          if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
-          athlete.backgroundImage = null;
-          await athlete.save();
-        }
-    
-        res.json({ ok: true, message: "Background picture deleted successfully." });
-    } catch (error) {
-        console.error("Error deleting background picture:", error);
-        res.status(500).json({ error: "Failed to delete background picture" });
+  try {
+    const { athleteProfileId } = req.query;
+    if (!athleteProfileId) return res.status(400).json({ error: "Athlete Profile ID is required" });
+
+    const athlete = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
+    if (!athlete) return res.status(404).json({ error: "Athlete not found" });
+
+    if (athlete.backgroundImage) {
+      const oldPublicId = getCloudinaryPublicId(athlete.backgroundImage);
+      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+      athlete.backgroundImage = null;
+      await athlete.save();
     }
+
+    res.json({ ok: true, message: "Background picture deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting background picture:", error);
+    res.status(500).json({ error: "Failed to delete background picture" });
+  }
 }
 
 async function verifyImage(req, res, db) {
-    try {
-        const { athleteProfileId, forProfileImage } = req.body;
-        if (!athleteProfileId) return res.status(400).json({ error: "Athlete Profile ID is required" });
-    
-        const athlete = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
-        if (!athlete) return res.status(404).json({ error: "Athlete not found" });
+  try {
+    const { athleteProfileId, forProfileImage } = req.body;
+    if (!athleteProfileId) return res.status(400).json({ error: "Athlete Profile ID is required" });
 
-        if (forProfileImage) {
-            athlete.profileImageVerified = true;
-            await athlete.save();
-        } else { // Then veriy background image
-            athlete.backgroundImageVerified = true;
-            await athlete.save();
-        }
-    
-        res.json({ ok: true, message: `${forProfileImage ? 'Profile' : 'Background'} picture verified successfully.` });
-    } catch (error) {
-        console.error("Error verifying image:", error);
-        res.status(500).json({ ok: false, error: "Failed to verify image." });
+    const athlete = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
+    if (!athlete) return res.status(404).json({ error: "Athlete not found" });
+
+    if (forProfileImage) {
+      athlete.profileImageVerified = true;
+      await athlete.save();
+    } else { // Then veriy background image
+      athlete.backgroundImageVerified = true;
+      await athlete.save();
     }
+
+    res.json({ ok: true, message: `${forProfileImage ? 'Profile' : 'Background'} picture verified successfully.` });
+  } catch (error) {
+    console.error("Error verifying image:", error);
+    res.status(500).json({ ok: false, error: "Failed to verify image." });
+  }
 }
 
-module.exports = { uploadProfileImage, uploadBackgroundImage, deleteProfilePicture, deleteBackgroundImage, verifyImage };
+async function getAllUnverifiedImages(req, res, db) {
+  try {
+    const unverifiedProfiles = await db.tables.AthleteProfiles.findAll({
+      where: {
+        [Op.or]: [
+          { profileImageVerified: false },
+          { backgroundImageVerified: false }
+        ]
+      },
+      attributes: ['id', 'firstName', 'lastName', 'profileImage', 'backgroundImage', 'profileImageVerified', 'backgroundImageVerified']
+    });
+
+    res.json({ ok: true, profiles: unverifiedProfiles });
+  } catch (error) {
+    console.error("Error fetching unverified images:", error);
+    res.status(500).json({ error: "Failed to fetch unverified images" });
+  }
+}
+
+module.exports = { uploadProfileImage, uploadBackgroundImage, deleteProfilePicture, deleteBackgroundImage, verifyImage, getAllUnverifiedImages };

@@ -1,11 +1,13 @@
 const express = require('express');
 const { getJump, addOrUpdateJump, deleteJump, fetchJumps, verifyJump, getUnverifiedMeetJumps } = require('../controllers/jumpsController');
 const adminCheck = require('../middlewares/admin');
+const { checkPermission } = require('../middlewares/mobileAuthMiddleware');
 
 
 const jumpRoutes = (db) => {
   const router = express.Router();
 
+  // TODO: Change to self or permission check
   const checkSelfOrAdmin = (req, res, next) => {
     const user = req.user;
     if(user.isAdmin) {
@@ -31,11 +33,6 @@ const jumpRoutes = (db) => {
     .delete(checkSelfOrAdmin, (req, res) => deleteJump(req, res, db));
     
   router.get('/jumps', checkSelfOrAdmin, (req, res) => fetchJumps(req, res, db));
-
-
-  // Admin routes
-  router.put('/jump/verify', adminCheck, (req, res) => verifyJump(req, res, db));
-  router.get('/jumps/unverified', adminCheck, (req, res) => getUnverifiedMeetJumps(req, res, db));
 
   return router;
 };
