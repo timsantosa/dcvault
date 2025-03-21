@@ -234,10 +234,10 @@ async function verifyJump(req, res, db) {
       await jump.save();
 
       // Check if it's a meet jump and update PR records if applicable
-      if (jump.setting === 'Meet' && jump.meetInfo) {
+      if (jump.setting === 'Meet' && jump.heightInches) {
 
         // Check if this jump beats the current PR for its stepNum
-        const currentPr = await db.tables.PrRecords.findOne({
+        const currentPr = await db.tables.PersonalRecords.findOne({
           where: { athleteProfileId: jump.athleteProfileId, stepNum: jump.stepNum },
           include: {
             model: db.tables.Jumps,
@@ -245,14 +245,13 @@ async function verifyJump(req, res, db) {
           },
         });
 
-        // TODO: In case of a tie, the earlier jump should be the PR
         if (!currentPr || jump.heightInches > currentPr.Jump.heightInches) {
           // Update PR
           if (currentPr) {
             await currentPr.destroy(); // Remove old PR record //TODO: What does this destroy, both the jump and the prRow?
           }
 
-          await PrRecords.create({
+          await db.tables.PersonalRecords.create({
             athleteProfileId: jump.athleteProfileId,
             stepNum: jump.stepNum,
             jumpId: jump.id,
