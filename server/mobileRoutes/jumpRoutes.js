@@ -7,6 +7,7 @@ const { checkPermission } = require('../middlewares/mobileAuthMiddleware');
 const jumpRoutes = (db) => {
   const router = express.Router();
 
+  // TODO: Change to self or permission check
   const checkSelfOrAdmin = (req, res, next) => {
     const user = req.user;
     if(user.isAdmin) {

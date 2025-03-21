@@ -9,6 +9,7 @@ const adminCheck = require('./middlewares/admin');
 const { getMobileUserInfo } = require('./controllers/authController');
 const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
 const { verifyJump, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
+const poleRoutes = require('./mobileRoutes/poleRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -22,6 +23,8 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/log', jumpRoutes(db));
   app.use('/mobileapp/user/athlete', athleteRoutes(db));
   app.use('/mobileapp/user/profile/image', imageUploadRoutes(db));
+
+  app.use('/mobileapp/user/poles', poleRoutes(db));
   
   app.get('/mobileapp/user/info', async (req, res) => {
     getMobileUserInfo(req, res, db);
