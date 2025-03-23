@@ -157,8 +157,8 @@ const getProfile = async (req, res, db) => {
       const pr = profileWithPR.personalRecords[0];
       if (pr.jump?.poleLengthInches && pr.jump?.poleWeight) {
         largestPole = {
-          lengthInches: profileWithPR.personalRecord.jump.poleLengthInches,
-          weight: profileWithPR.personalRecord.jump.poleWeight,
+          lengthInches: pr.jump.poleLengthInches,
+          weight: pr.jump.poleWeight,
         };
       }
       if (pr.jump?.heightInches) {
