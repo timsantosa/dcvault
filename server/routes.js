@@ -39,90 +39,115 @@ module.exports = (app, db) => {
 
   // Pole Endpoints
 
-  app.post('/poles/list', (req, res) => {
-    if (!req.body.token) {
-      res.status(400).send({ok: false, message: 'bad request'})
-    } else {
-      let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
-        if (!user || !user.isAdmin) {
-          res.status(300).send({ok: false, message: 'unauthorized'})
-        } else {
-          db.tables.Poles.findAll().then(poles => {
-            res.send({ok: true, message: 'pole list request accepted', poles})
-          })
-        }
-      })
+  app.post('/poles/list', async (req, res) => {
+    try {
+      if (!req.body.token) {
+        return res.status(400).send({ok: false, message: 'bad request'})
+      }
+
+      const tokenDecoded = helpers.decodeUser(req.body.token)
+      const user = await db.tables.Users.findOne({where: {id: tokenDecoded.id}})
+      
+      if (!user || !user.isAdmin) {
+        return res.status(300).send({ok: false, message: 'unauthorized'})
+      }
+
+      const poles = await db.tables.Poles.findAll()
+      res.send({ok: true, message: 'pole list request accepted', poles})
+
+    } catch (error) {
+      console.error('Error in /poles/list:', error)
+      res.status(500).send({ok: false, message: 'Internal server error'})
     }
   })
 
-  app.post('/poles/add', (req, res) => {
-    if (!req.body.token || !req.body.newPole) {
-      res.status(400).send({ok: false, message: 'bad request'})
-    } else {
+  app.post('/poles/add', async (req, res) => {
+    try {
+      if (!req.body.token || !req.body.newPole) {
+        return res.status(400).send({ok: false, message: 'bad request'})
+      }
+
       let newPole = null
       try {
         newPole = JSON.parse(req.body.newPole)
       } catch (e) {}
-      let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
-        if (!user || !user.isAdmin) {
-          res.status(300).send({ok: false, message: 'unauthorized'})
-        } else if (!newPole) {
-          res.status(400).send({ok: false, message: 'bad JSON in newPole'})
-        } else {
-          db.tables.Poles.create(newPole).then(newPole => {
-            console.log(newPole)
-            res.send({ok: true, message: 'pole record added successfully', newPole})
-          })
-        }
-      })
+
+      const tokenDecoded = helpers.decodeUser(req.body.token)
+      const user = await db.tables.Users.findOne({where: {id: tokenDecoded.id}})
+
+      if (!user || !user.isAdmin) {
+        return res.status(300).send({ok: false, message: 'unauthorized'})
+      }
+      
+      if (!newPole) {
+        return res.status(400).send({ok: false, message: 'bad JSON in newPole'})
+      }
+
+      const createdPole = await db.tables.Poles.create(newPole)
+      console.log(createdPole)
+      res.send({ok: true, message: 'pole record added successfully', newPole: createdPole})
+
+    } catch (error) {
+      console.error('Error in /poles/add:', error)
+      res.status(500).send({ok: false, message: 'Internal server error'})
     }
   })
 
-  app.post('/poles/delete', (req, res) => {
-    if (!req.body.token || !req.body.poleId) {
-      res.status(400).send({ok: false, message: 'bad request'})
-    } else {
-      let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
-        if (!user || !user.isAdmin) {
-          res.status(300).send({ok: false, message: 'unauthorized'})
-        } else {
-          db.tables.Poles.destroy({where: {id: req.body.poleId}}).then(oldPole => {
-            res.send({ok: true, message: 'pole record deleted successfully', oldPole})
-          })
-        }
-      })
+  app.post('/poles/delete', async (req, res) => {
+    try {
+      if (!req.body.token || !req.body.poleId) {
+        return res.status(400).send({ok: false, message: 'bad request'})
+      }
+
+      const tokenDecoded = helpers.decodeUser(req.body.token)
+      const user = await db.tables.Users.findOne({where: {id: tokenDecoded.id}})
+
+      if (!user || !user.isAdmin) {
+        return res.status(300).send({ok: false, message: 'unauthorized'})
+      }
+
+      const oldPole = await db.tables.Poles.destroy({where: {id: req.body.poleId}})
+      res.send({ok: true, message: 'pole record deleted successfully', oldPole})
+
+    } catch (error) {
+      console.error('Error in /poles/delete:', error)
+      res.status(500).send({ok: false, message: 'Internal server error'})
     }
   })
 
-  app.post('/poles/update', (req, res) => {
-    if (!req.body.token || !req.body.updatedPole) {
-      res.status(400).send({ok: false, message: 'bad request'})
-    } else {
+  app.post('/poles/update', async (req, res) => {
+    try {
+      if (!req.body.token || !req.body.updatedPole) {
+        return res.status(400).send({ok: false, message: 'bad request'})
+      }
+
       let updatedPole = null
       try {
         updatedPole = JSON.parse(req.body.updatedPole)
       } catch (e) {}
-      let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
-        if (!user.isAdmin) {
-          res.status(300).send({ok: false, message: 'unauthorized'})
-        } else if (!updatedPole) {
-          res.status(400).send({ok: false, message: 'bad request'})
-        } else {
-          db.tables.Poles.findOne({where: {id: updatedPole.id}}).then(foundPole => {
-            if (!foundPole) {
-              res.status(400).send({ok: false, message: 'pole not found'})
-            } else {
-              foundPole.update(updatedPole).then(updatedPole => {
-                res.send({ok: true, message: 'pole record updated successfully', updatedPole})
-              })
-            }
-          })
-        }
-      })
+
+      const tokenDecoded = helpers.decodeUser(req.body.token)
+      const user = await db.tables.Users.findOne({where: {id: tokenDecoded.id}})
+
+      if (!user.isAdmin) {
+        return res.status(300).send({ok: false, message: 'unauthorized'})
+      }
+
+      if (!updatedPole) {
+        return res.status(400).send({ok: false, message: 'bad request'})
+      }
+
+      const foundPole = await db.tables.Poles.findOne({where: {id: updatedPole.id}})
+      if (!foundPole) {
+        return res.status(400).send({ok: false, message: 'pole not found'})
+      }
+
+      const result = await foundPole.update(updatedPole)
+      res.send({ok: true, message: 'pole record updated successfully', updatedPole: result})
+
+    } catch (error) {
+      console.error('Error in /poles/update:', error)
+      res.status(500).send({ok: false, message: 'Internal server error'})
     }
   })
 
