@@ -60,8 +60,10 @@ const addOrUpdateJump = async (req, res, db) => {
       verified = true;
     } else {
       const athletesPr = await getPersonalBest(athleteProfileId, db);
-      // Auto verify if the jump is not a PR and not a championship. (If meet type is null, it's not a championship)
-      verified = hardMetrics?.height?.inches <= athletesPr && meetInfo?.championshipType === null;
+      // Auto verify if the jump is not a PR, not a championship, and not a record. (If meet type is null, it's not a championship)
+      verified = hardMetrics?.height?.inches <= athletesPr && 
+                  meetInfo?.championshipType === null && 
+                  meetInfo?.record === null;
     }
 
     // Upsert jump
