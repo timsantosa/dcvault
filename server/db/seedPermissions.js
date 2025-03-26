@@ -16,6 +16,7 @@ async function seedRolesAndPermissions(db) {
   
       // Create Permissions
       const permissions = [
+        { permissionKey: 'access_mobile_app', permissionName: 'Access mobile app', description: 'Allows access to the mobile app.' },
         { permissionKey: 'view_profiles', permissionName: 'View Athlete Profiles', description: 'Allows viewing of athlete profiles.' },
         { permissionKey: 'edit_others_profiles', permissionName: "Edit Other's Profiles", description: 'Allows editing of Athlete Profiles other than your own.' },
         { permissionKey: 'view_others_jumps', permissionName: 'View Jumps of Other Athletes', description: "Allows viewing of other athlete's jumps." },
@@ -38,7 +39,7 @@ async function seedRolesAndPermissions(db) {
       });
   
       const basePermissions = await db.tables.Permissions.findAll({
-        where: { permissionKey: ['view_profiles'] }
+        where: { permissionKey: ['view_profiles', 'access_mobile_app'] }
       });
   
       // Assign to Admin Role

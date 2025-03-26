@@ -50,7 +50,7 @@ const addOrUpdateJump = async (req, res, db) => {
       flattenedMeetInfo.meetType = meetInfo.championshipType;
       flattenedMeetInfo.division = meetInfo.division;
       flattenedMeetInfo.placement = meetInfo.placement;
-      flattenedMeetInfo.recordType = meetInfo.recordType;
+      flattenedMeetInfo.recordType = meetInfo.record;
       flattenedMeetInfo.meetEventDetails = meetInfo.eventDetails;
     }
 
