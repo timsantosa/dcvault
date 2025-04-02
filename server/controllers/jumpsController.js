@@ -18,7 +18,7 @@ const addOrUpdateJump = async (req, res, db) => {
       if (jumpHeight === undefined || jumpHeight === null || jumpHeight < 0 || !meetInfo) {
         return res.status(400).json({ ok: false, message: 'Missing height or meet info for meet jump' });
       }
-      if (jumpHeight === 0 && meetInfo.records) {
+      if (jumpHeight === 0 && meetInfo.records?.length > 0) {
         return res.status(400).json({ ok: false, message: 'No height for record jump' });
       }
     }
