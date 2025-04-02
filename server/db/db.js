@@ -263,6 +263,30 @@ columns.user_roles = {};
 
 columns.user_permissions = {};
 
+// Meet Data Types
+columns.championshipTypes = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+};
+
+columns.divisionTypes = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+};
+
+columns.recordTypes = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+};
 
 const syncTables = (schema, force) => {
   force = !!force
@@ -293,6 +317,10 @@ const syncTables = (schema, force) => {
   tables.User_Roles = schema.define('user_role', columns.user_roles);
   tables.User_Permissions = schema.define('user_permission', columns.user_permissions);
 
+  // Meet Data Types
+  tables.ChampionshipTypes = schema.define('championshipType', columns.championshipTypes);
+  tables.DivisionTypes = schema.define('divisionType', columns.divisionTypes);
+  tables.RecordTypes = schema.define('recordType', columns.recordTypes);
 
   // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})

@@ -10,6 +10,7 @@ const { getMobileUserInfo } = require('./controllers/authController');
 const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
 const { verifyJump, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
 const poleRoutes = require('./mobileRoutes/poleRoutes');
+const meetDataRoutes = require('./mobileRoutes/meetDataRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -25,6 +26,7 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/profile/image', imageUploadRoutes(db));
 
   app.use('/mobileapp/user/poles', poleRoutes(db));
+  app.use('/mobileapp/user/meet-data', meetDataRoutes(db));
   
   app.get('/mobileapp/user/info', async (req, res) => {
     getMobileUserInfo(req, res, db);
@@ -33,46 +35,6 @@ module.exports = function addMobileAppRoutes(app, db) {
   // Admin routes
   app.post('/mobileapp/user/jump/verify', checkPermission('verify_jumps'), (req, res) => verifyJump(req, res, db));
   app.get('/mobileapp/user/jumps/unverified', checkPermission('verify_jumps'), (req, res) => getUnverifiedMeetJumps(req, res, db));
-
-  // TODO: move to controller
-  app.get('/mobileapp/user/meetTypeOptions', async (req, res) => {
-    // TODO: Grab items from DB
-    res.json({
-      ok: true,
-      message: 'Successfully grabbed meet options',
-      meetTypeOptions: {
-        meetTypes: [
-          'County',
-          'Regional',
-          'State',
-          'Conference',
-          'National',
-          'International',
-          'World',
-          'Olympic',
-        ],
-        divisionTypes: [
-          'Elementary',
-          'Middle School',
-          'High School',
-          'Collegiate',
-          'Open',
-          'Elite',
-          'Masters',
-        ],
-        recordTypes: [
-          'School',
-          'Meet',
-          'Facility',
-          'State',
-          'Regional',
-          'National',
-          'Olympic',
-          'World',
-        ],
-      },
-    });
-  });
 
   app.use('/mobileapp/user/permissions', adminCheck, permissionRoutes);
 }

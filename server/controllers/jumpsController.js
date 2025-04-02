@@ -71,6 +71,10 @@ const addOrUpdateJump = async (req, res, db) => {
         !meetInfo?.records;
     }
 
+    // TODO: If jump was verified and became unverified due to an update, 
+    // then we need to repopulate the athlete's PRs because the jump is no longer verified.
+    // Also, don't unverify a jump if the records, height, or meet type are not changed.
+
     // Upsert jump
     const [jumpRow, created] = await db.tables.Jumps.upsert({
       id: jumpId,

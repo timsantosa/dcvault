@@ -24,6 +24,7 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'verify_jumps', permissionName: 'Verify Jumps', description: "Allows verifying of any athlete's jumps." },
         { permissionKey: 'manage_roles', permissionName: 'Manage Roles', description: 'Allows assigning roles and permissions to users.' },
         { permissionKey: 'verify_images', permissionName: 'Verify Images', description: "Allows user to verify other users' images" },
+        { permissionKey: 'manage_meet_data', permissionName: 'Manage Meet Data', description: 'Allows managing meet data like record types, championship types, and division types.' },
       ];
   
       for (const perm of permissions) {
