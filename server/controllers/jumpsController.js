@@ -13,8 +13,13 @@ const addOrUpdateJump = async (req, res, db) => {
       return res.status(400).json({ ok: false, message: 'Athlete ID and Date are required.' });
     }
     if (hardMetrics.setting === "Meet") {
-      if (!hardMetrics?.height?.inches || !meetInfo) {
+      // Allow 0 for height in case of no height
+      const jumpHeight = hardMetrics?.height?.inches;
+      if (jumpHeight === undefined || jumpHeight === null || jumpHeight < 0 || !meetInfo) {
         return res.status(400).json({ ok: false, message: 'Missing height or meet info for meet jump' });
+      }
+      if (jumpHeight === 0 && meetInfo.records) {
+        return res.status(400).json({ ok: false, message: 'No height for record jump' });
       }
     }
 
@@ -50,7 +55,7 @@ const addOrUpdateJump = async (req, res, db) => {
       flattenedMeetInfo.meetType = meetInfo.championshipType;
       flattenedMeetInfo.division = meetInfo.division;
       flattenedMeetInfo.placement = meetInfo.placement;
-      flattenedMeetInfo.recordType = meetInfo.record;
+      flattenedMeetInfo.recordType = meetInfo.records ? meetInfo.records.join(',') : '';
       flattenedMeetInfo.meetEventDetails = meetInfo.eventDetails;
     }
 
@@ -61,9 +66,9 @@ const addOrUpdateJump = async (req, res, db) => {
     } else {
       const athletesPr = await getPersonalBest(athleteProfileId, db);
       // Auto verify if the jump is not a PR, not a championship, and not a record. (If meet type is null, it's not a championship)
-      verified = hardMetrics?.height?.inches <= athletesPr && 
-                  meetInfo?.championshipType === null && 
-                  meetInfo?.record === null;
+      verified = hardMetrics?.height?.inches <= athletesPr &&
+        !meetInfo?.championshipType &&
+        !meetInfo?.records;
     }
 
     // Upsert jump
@@ -247,7 +252,7 @@ async function verifyJump(req, res, db) {
           },
         });
 
-        if (!currentPr || jump.heightInches > currentPr.Jump.heightInches) {
+        if (!currentPr || jump.heightInches > currentPr.jump.heightInches) {
           // Update PR
           if (currentPr) {
             await currentPr.destroy(); // Remove old PR record //TODO: What does this destroy, both the jump and the prRow?
@@ -261,7 +266,7 @@ async function verifyJump(req, res, db) {
         }
       }
 
-      message = 'Jump verified successfully.'
+      message = 'Jump verified successfully.';
     } else {
       jump.verified = false;
       await jump.save();
@@ -274,7 +279,7 @@ async function verifyJump(req, res, db) {
     // Reorder ranks for that gender. Can probably be done asyncronusly if needed
     await rankingCache.regenerateAllRankings();
 
-    res.json({ok: true, message, jump });
+    res.json({ ok: true, message, jump });
   } catch (error) {
     console.error('Error verifying jump:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
@@ -408,7 +413,8 @@ async function getPersonalBest(athleteProfileId, db) {
       ],
     });
 
-    return Math.max(...prs.map(pr => (pr.jump.heightInches ?? 0)));
+    const pr = Math.max(...prs.map(pr => (pr.jump.heightInches ?? 0)));
+    return Math.max(pr, 0);
   } catch (err) {
     console.error(`Error fetching PR for athleteId ${athleteProfileId}:`, err);
     return 0;
@@ -536,18 +542,18 @@ function mapDbRowToJump(dbRow) {
       },
     },
     meetInfo: {
-        facilitySetting: dbRow.facilitySetting ?? undefined,
-        eventDetails: dbRow.meetEventDetails ? { // maybe don't need to copy here?
-          meetName: dbRow.meetEventDetails.meetName,
-          facility: dbRow.meetEventDetails.facility,
-          location: dbRow.meetEventDetails.location,
-          organization: dbRow.meetEventDetails.organization,
-        } : undefined,
-        championshipType: dbRow.meetType ?? undefined,
-        division: dbRow.division ?? undefined,
-        placement: dbRow.placement ?? undefined,
-        record: dbRow.record ?? undefined,
-      },
+      facilitySetting: dbRow.facilitySetting ?? undefined,
+      eventDetails: dbRow.meetEventDetails ? { // maybe don't need to copy here?
+        meetName: dbRow.meetEventDetails.meetName,
+        facility: dbRow.meetEventDetails.facility,
+        location: dbRow.meetEventDetails.location,
+        organization: dbRow.meetEventDetails.organization,
+      } : undefined,
+      championshipType: dbRow.meetType ?? undefined,
+      division: dbRow.division ?? undefined,
+      placement: dbRow.placement ?? undefined,
+      records: dbRow.recordType ? dbRow.recordType.split(',') : [],
+    },
     notes: dbRow.notes ?? undefined,
     videoLink: dbRow.videoLink ?? undefined,
     verified: dbRow.verified,
