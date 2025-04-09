@@ -1,4 +1,3 @@
-
 const jwt = require('jwt-simple');
 const bcrypt = require('bcrypt-nodejs');
 const config = require('../config/config');
@@ -32,19 +31,19 @@ async function generateMobileUser(user, db) {
   ]);
 
   // Get associated athlete ids
-  const athleteProfile = await db.tables.AthleteProfiles.findOne({
+  const athleteProfiles = await db.tables.AthleteProfiles.findAll({
     attributes: ['id'],
     where: { userId: user.id },
     raw: true,
   });
-  const athlete = await db.tables.Athletes.findOne({
+  const athletes = await db.tables.Athletes.findAll({
     attributes: ['id'],
     where: { userId: user.id },
     raw: true,
   });
 
-  const athleteProfileId = athleteProfile?.id;
-  const athleteId = athlete?.id;
+  const athleteProfileIds = athleteProfiles.map(profile => profile.id);
+  const athleteIds = athletes.map(athlete => athlete.id);
 
   return {
     id: user.id,
@@ -52,8 +51,8 @@ async function generateMobileUser(user, db) {
     verified: user.verified,
     roles: roleNames,
     permissions: [...permissions], // Convert set to array
-    athleteProfileId: athleteProfileId || undefined, // TODO: Change to an array
-    athleteId: athleteId || undefined, // TODO: Change to an array
+    athleteProfileIds: athleteProfileIds,
+    athleteIds: athleteIds,
   };
 }
 

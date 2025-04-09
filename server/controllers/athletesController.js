@@ -79,7 +79,12 @@ const getProfile = async (req, res, db) => {
       return res.status(403).json({ ok: false, message: 'Invalid athlete profile ID.' });
     }
 
-    let attributes = ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender', 'profileImageVerified', 'backgroundImageVerified', 'isActiveMember'];
+    let attributes = [
+      'id', 'firstName', 'lastName',
+      'nationality', 'dob', 'height', 
+      'weight', 'profileImage', 'backgroundImage', 
+      'gender', 'profileImageVerified', 'backgroundImageVerified',
+      'isActiveMember', 'userId'];
     const userHasFullAccess = user.isAdmin || user.athleteProfileId == athleteProfileId;
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
@@ -184,9 +189,10 @@ const getProfile = async (req, res, db) => {
         largestPole,
       },
       isActiveMember: profileWithPR.isActiveMember,
+      userId: profileWithPR.userId,
     };
 
-    const foundAthlete = await db.tables.Athletes.findOne({where: {userId: user.id}});
+    const foundAthlete = await db.tables.Athletes.findOne({where: {userId: athleteProfile.userId}});
     if (!foundAthlete) {
       // TODO: Indicate athlete is not currently signed up
       res.json({ok: true, message: 'found athlete profile', athleteProfile});
@@ -206,7 +212,7 @@ const getProfile = async (req, res, db) => {
 
 const deleteProfile = async (req, res, db) => {
   console.log('delete profile');
-  res.json({ ok: false, message: 'Not implemented' });
+  res.status(500).json({ ok: false, message: 'Not implemented' });
 };
 
 const getProfiles = async (req, res, db) => {
@@ -230,7 +236,12 @@ const getProfiles = async (req, res, db) => {
     }
     const profilesWithPRs = await db.tables.AthleteProfiles.findAll({
       where: whereClause,
-      attributes: ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender', 'profileImageVerified', 'backgroundImageVerified', 'isActiveMember'],
+      attributes: [
+        'id', 'firstName', 'lastName',
+        'nationality', 'dob', 'height',
+        'weight', 'profileImage', 'backgroundImage',
+        'gender', 'profileImageVerified', 'backgroundImageVerified',
+        'isActiveMember', 'userId'],
       include: [
         {
           model: db.tables.PersonalRecords,
@@ -284,6 +295,7 @@ const getProfiles = async (req, res, db) => {
           largestPole: undefined, // TODO: Add this if needed
         },
         isActiveMember: profile.isActiveMember,
+        userId: profile.userId,
       };
     });
 

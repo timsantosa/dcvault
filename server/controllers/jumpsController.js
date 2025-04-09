@@ -35,15 +35,15 @@ const addOrUpdateJump = async (req, res, db) => {
       midMarkInches: hardMetrics?.run?.midMarkInches,
       targetTakeOffInches: hardMetrics?.run?.targetTakeOffInches,
       actualTakeOffInches: hardMetrics?.run?.actualTakeOffInches,
-      gripInches: hardMetrics?.pole?.gripInches,
+      poleGripInches: hardMetrics?.pole?.gripInches,
       poleLengthInches: hardMetrics?.pole?.lengthInches,
       poleWeight: hardMetrics?.pole?.weight,
       poleBrand: hardMetrics?.pole?.brand,
       poleFlex: hardMetrics?.pole?.flex,
       heightInches: hardMetrics?.height?.inches,
-      isBar: hardMetrics?.height?.isBar,
+      heightIsBar: hardMetrics?.height?.isBar,
       standardsInches: hardMetrics?.height?.standardsInches,
-      result: hardMetrics?.height?.result,
+      heightResult: hardMetrics?.height?.result,
       athleteHeightInches: hardMetrics?.athleteStats?.heightInches,
       athleteWeightPounds: hardMetrics?.athleteStats?.weightPounds,
     };
@@ -510,16 +510,14 @@ function mapDbRowToJump(dbRow) {
     id: dbRow.id,
     athleteProfileId: dbRow.athleteProfileId,
     date: dbRow.date,
-    softMetrics: dbRow.softMetrics
-      ? {
-        mentalRating: dbRow.softMetrics.mentalRating,
-        physicalRating: dbRow.softMetrics.physicalRating,
-        weatherRating: dbRow.softMetrics.weatherRating,
-      }
-      : undefined,
+    softMetrics: dbRow.softMetrics ? {
+      mentalRating: dbRow.softMetrics.mentalRating,
+      physicalRating: dbRow.softMetrics.physicalRating,
+      weatherRating: dbRow.softMetrics.weatherRating,
+    } : undefined,
     hardMetrics: {
       setting: dbRow.setting,
-      focus: dbRow.focus,
+      focus: dbRow.focus ?? undefined,
       run: {
         stepNum: dbRow.stepNum,
         distanceInches: dbRow.distanceInches,
@@ -534,12 +532,12 @@ function mapDbRowToJump(dbRow) {
         flex: dbRow.poleFlex ?? undefined,
         gripInches: dbRow.poleGripInches ?? undefined,
       },
-      height: {
+      height: dbRow.heightInches !== undefined ? {
         isBar: dbRow.heightIsBar,
         inches: dbRow.heightInches,
         standardsInches: dbRow.standardsInches ?? undefined,
         result: dbRow.heightResult ?? undefined,
-      },
+      } : undefined,
       athleteStats: {
         heightInches: dbRow.athleteHeightInches ?? undefined,
         weightPounds: dbRow.athleteWeightPounds ?? undefined,
