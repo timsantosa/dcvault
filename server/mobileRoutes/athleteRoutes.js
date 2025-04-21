@@ -1,5 +1,5 @@
 const express = require('express');
-const { getProfile, upsertProfile, deleteProfile, getProfiles, getLatestAthlete } = require('../controllers/athletesController');
+const { getProfile, upsertProfile, deleteProfile, getProfiles, getLatestAthlete, getAthleteProfilesForUser, getRegisteredAthletesForUser } = require('../controllers/athletesController');
 const { checkPermission } = require('../middlewares/mobileAuthMiddleware');
 
 
@@ -48,6 +48,9 @@ const athleteRoutes = (db) => {
   router.get('/profiles', (req, res) => getProfiles(req, res, db));
 
   router.get('/latestregistered', checkSelfOrAdmin, (req, res) => getLatestAthlete(req, res, db))
+
+  router.get('/user/profiles', checkPermission('manage_roles'), (req, res) => getAthleteProfilesForUser(req, res, db));
+  router.get('/user/registered', checkPermission('manage_roles'), (req, res) => getRegisteredAthletesForUser(req, res, db));
 
   return router;
 };

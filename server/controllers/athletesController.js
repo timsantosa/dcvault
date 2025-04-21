@@ -326,4 +326,80 @@ const getLatestAthlete = (req, res, db) => {
   });
 };
 
-module.exports = { upsertProfile, getProfile, deleteProfile, getProfiles, getLatestAthlete }
+
+const getAthleteProfilesForUser = async (req, res, db) => {
+  try {
+    const userId = parseInt(req.query.userId);
+    if (!helpers.isValidId(userId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid user ID' });
+    }
+
+    const profiles = await db.tables.AthleteProfiles.findAll({
+      where: { userId },
+      attributes: [
+        'id', 'firstName', 'lastName',
+        'nationality', 'dob', 'height',
+        'weight', 'profileImage', 'backgroundImage',
+        'gender', 'profileImageVerified', 'backgroundImageVerified',
+        'isActiveMember', 'userId'
+      ]
+    });
+
+    const athleteProfiles = profiles.map(profile => ({
+      id: profile.id,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      gender: profile.gender,
+      dob: profile.dob,
+      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
+      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+      nationality: profile.nationality,
+      stats: {
+        height: profile.height,
+        weight: profile.weight,
+        age: helpers.calculateAge(profile.dob)
+      },
+      isActiveMember: profile.isActiveMember,
+      userId: profile.userId,
+    }));
+
+    res.json({ ok: true, athleteProfiles });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch athlete profiles' });
+  }
+};
+
+const getRegisteredAthletesForUser = async (req, res, db) => {
+  try {
+    const userId = parseInt(req.query.userId);
+    if (!helpers.isValidId(userId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid user ID' });
+    }
+
+    const athletes = await db.tables.Athletes.findAll({
+      where: { userId },
+      attributes: [
+        'id', 'firstName', 'lastName', 'email',
+        'emergencyContactName', 'emergencyContactRelation',
+        'emergencyContactMDN', 'school', 'state',
+        'usatf', 'gender', 'medConditions', 'dob'
+      ]
+    });
+
+    res.json({ ok: true, athletes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch registered athletes' });
+  }
+};
+
+module.exports = { 
+  upsertProfile, 
+  getProfile, 
+  deleteProfile, 
+  getProfiles, 
+  getLatestAthlete,
+  getAthleteProfilesForUser,
+  getRegisteredAthletesForUser 
+};

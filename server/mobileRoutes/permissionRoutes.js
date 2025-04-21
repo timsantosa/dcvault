@@ -14,6 +14,7 @@ const {
   deleteRole,
   getAllRoles, 
   getAllPermissions, 
+  getUserById
 } = require('../controllers/permissionsController');
 const adminCheck = require('../middlewares/admin');
 
@@ -51,6 +52,9 @@ const permissionRoutes = (db) => {
 
   router.route('/role/:roleId/users')
     .get((req, res) => getAllUsersWithRole(req, res, db));
+
+  router.route('/user/:userId')
+    .get((req, res) => getUserById(req, res, db));
 
   return router;
 };
