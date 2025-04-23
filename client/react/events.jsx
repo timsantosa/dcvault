@@ -42,11 +42,11 @@ class Events extends React.Component {
         </p>
         <span className='event-block-details-header'>Dates</span>
         <ul className='event-block-details'>
-          <span className='event-block-date'>July 21st - July 25th, 2025</span>
+          <span className='event-block-date'>July 21st - July 25th, 2025 *Week 1 Registration open soon!</span>
           <br></br>
-          <span className='event-block-date'>July 28th - August 1st, 2025</span>
+          <span className='event-block-date'>July 28th - August 1st, 2025 *Registration will only open if week 1 fills up</span>
           <br></br>
-          <span className='event-block-date'>August 4th - August 8th, 2025</span>
+          <span className='event-block-date'>August 4th - August 8th, 2025 *Registration will only open if week 2 fills up</span>
           <br></br>
         </ul>
         <span className='event-block-details-header'>General Info</span>
@@ -84,11 +84,11 @@ class Events extends React.Component {
           </p>
           <span className='event-block-details-header'>Dates</span>
           <ul className='event-block-details'>
-            <span className='event-block-date'>July 21st - July 25th, 2025</span>
+            <span className='event-block-date'>July 21st - July 25th, 2025 *Week 1 Registration open soon!</span>
             <br></br>
-            <span className='event-block-date'>July 28th - August 1st, 2025</span>
+            <span className='event-block-date'>July 28th - August 1st, 2025 *Registration will only open if week 1 fills up</span>
             <br></br>
-            <span className='event-block-date'>August 4th - August 8th, 2025</span>
+            <span className='event-block-date'>August 4th - August 8th, 2025 *Registration will only open if week 2 fills up</span>
             <br></br>
           </ul>
         <span className='event-block-details-header'>General Info</span>
