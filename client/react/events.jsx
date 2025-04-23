@@ -29,6 +29,257 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('August 09, 2025'),
+        partial: (<div className='event-block' id='08AUG2025'>
+        <p className='event-block-title'>2025 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
+        <img src = "../img/events/kidscamp25_1.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+        <p className='event-block-info'>
+          <span className='event-block-date'>Pole Vaulting, Fitness and Games!</span>
+          <br></br>
+          <span className='event-block-date'>July 21st through August 8th</span>
+          <br></br>
+          <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+        </p>
+        <span className='event-block-details-header'>Dates</span>
+        <ul className='event-block-details'>
+          <span className='event-block-date'>July 21st - July 25th, 2025</span>
+          <br></br>
+          <span className='event-block-date'>July 28th - August 1st, 2025</span>
+          <br></br>
+          <span className='event-block-date'>August 4th - August 8th, 2025</span>
+          <br></br>
+        </ul>
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>Ages 7-12</li>
+          <li>Beginners through Advanced Pole Vaulters</li>
+          <li>2 weeks to choose from</li>
+          <li>Monday thru Friday 8:45am – 3:15pm</li>
+          <li>Dropoff window 8:45am-9:00am</li>
+          <li>Pickup window 3:00-3:15pm</li>
+          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more</li>
+          <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
+          <li>Tuesday &amp; Thursday includes an Ice Cream stop during lunch break</li>
+        </ul>
+        
+        <span className='event-block-details-header'>Included with Registration</span>
+        <ul className='event-block-details'>
+          <li>All equipment for use during camp</li>
+          <li>Ice Cream trips on Tuesday and Thursday</li>
+          <li>DC Vault t-shirt (youth sizes only)</li>
+          <li>Healthy Snacks</li>
+        </ul>
+        
+        <center><span className='red-text'>Click Arrow for More Info</span></center>
+        </div>),
+        full: (<div className='event-block' id='08AUG2025'>
+          <p className='event-block-title'>2025 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
+          <img src = "../img/events/kidscamp25_1.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+          <p className='event-block-info'>
+            <span className='event-block-date'>Pole Vaulting, Fitness and Games!</span>
+            <br></br>
+            <span className='event-block-date'>July 21st through August 8th</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <span className='event-block-details-header'>Dates</span>
+          <ul className='event-block-details'>
+            <span className='event-block-date'>July 21st - July 25th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>July 28th - August 1st, 2025</span>
+            <br></br>
+            <span className='event-block-date'>August 4th - August 8th, 2025</span>
+            <br></br>
+          </ul>
+        <span className='event-block-details-header'>General Info</span>
+        <ul className='event-block-details'>
+          <li>Ages 7-12</li>
+          <li>Beginners through Advanced Pole Vaulters</li>
+          <li>2 weeks to choose from</li>
+          <li>Monday thru Friday 8:45am – 3:15pm</li>
+          <li>Dropoff window 8:45am-9:00am</li>
+          <li>Pickup window 3:00-3:15pm</li>
+          <li>Kids will participate in daily pole vaulting, drills, strength training, games and more</li>
+          <li>Kids will be escorted to Lincoln Park for lunch break, drills, and games</li>
+          <li>Tuesday &amp; Thursday includes an Ice Cream stop during lunch break</li>
+        </ul>
+        
+        <span className='event-block-details-header'>Included with Registration</span>
+        <ul className='event-block-details'>
+          <li>All equipment for use during camp</li>
+          <li>Ice Cream trips on Tuesday and Thursday</li>
+          <li>DC Vault t-shirt (youth sizes only)</li>
+          <li>Healthy Snacks</li>
+        </ul>
+        <span className='event-block-details-header'>Daily Schedule</span>
+        <ul className='event-block-details'>
+          <li>8:45-9:00am </li>
+          <ul>
+            <li>drop-off window + games</li>
+          </ul>
+          <li>9:00-9:30am </li>
+          <ul>
+            <li>warm-ups + strength</li>
+          </ul>
+          <li>9:30-10:30am  </li>
+          <ul>
+            <li>drills</li>
+          </ul>
+          <li>10:30am-11am  </li>
+          <ul>
+            <li>break + snacks + games</li>
+          </ul>
+          <li>11-12pm </li>
+          <ul>
+            <li>vault</li>
+          </ul>
+          <li>12-12:30pm  </li>
+          <ul>
+            <li>walk to Lincoln Park</li>
+          </ul>
+          <li>12:30-1pm  </li>
+          <ul>
+            <li>lunch @ Lincoln Park (+ Ice Cream @ E. Market on Tue & Thu)</li>
+          </ul>
+          <li>1:00-1:30pm</li>
+          <ul>
+            <li>drills @ Lincoln Park</li>
+          </ul>
+          <li>1:30-2:00pm</li>
+          <ul>
+            <li>walk to DCV</li>
+          </ul>
+          <li>2:00pm-3:00pm</li>
+          <ul>
+            <li>vault</li>
+          </ul>
+          <li>3:00-3:15pm </li>
+          <ul>
+            <li>Pickup window + games</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Daily Technical Focus</span>
+        <ul className='event-block-details'>
+          <li>M - run / takeoff</li>
+          <ul>
+            <li>learn to carry and run with the pole and how to take-off</li>
+          </ul>
+          <li>T - swing</li>
+          <ul>
+            <li>learn to begin to swing upside down on the pole with rings, ropes and hanging drills</li>
+          </ul>
+          <li>W - extension </li>
+          <ul>
+            <li>learn how to pull yourself up the pole towards the bar with ropes, platforms and partner drills</li>
+          </ul>
+          <li>R - turn</li>
+          <ul>
+            <li>learn to turn over the bar with rings, ropes, platforms and ground drills</li>
+          </ul>
+          <li>F - height / competition </li>
+          <ul>
+            <li>Putting all of the technical work together, campers will have a competition to go over heights!</li>
+          </ul>
+        </ul>
+        <span className='event-block-details-header'>Games</span>
+        <ul className='event-block-details'>
+          <li>Water Balloon Fight</li>
+          <li>Face Painting</li>
+          <li>Sumo Ball Wrestling Match</li>
+          <li>Nerf Games</li>
+          <li>Relay Races</li>
+          <li>and more!</li>
+        </ul>
+        <span className='event-block-details-header'>What to Bring</span>
+        <ul className='event-block-details'>
+          <li>Water Bottle</li>
+          <li>Sunblock</li>
+          <li>Bug Spray</li>
+          <li>Bag Lunch (ice chest available at DCV)</li>
+          <li>Running shoes</li>
+          <li>Athletic active wear clothing</li>
+        </ul>
+        <span className='event-block-details-header'>Registration</span>
+        <ul className='event-block-details'>
+          <li>$450 per week</li>
+        </ul>
+        
+        <center><span className='red-text'>Click Arrow to Collapse Info</span></center>
+        </div>)
+      },
+      {
+        date: new Date('May 9, 2025'),
+        partial: (<div className='event-block' id='09MAY2025'>
+          <p className='event-block-title'>CAPITOL HILL <span className='red-text'>FLY-KIDS</span> OPEN HOUSE</p>
+          <img src = "../img/events/flykids-oh.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+          <p className='event-block-info'>
+            <span className='event-block-date'>Friday, May 9th 6:30pm-7:45pm</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <span className='event-block-details-header'>Generaal Info</span>
+          <ul className='event-block-details'>
+            <span className='event-block-date'>Open to any child ages 7-10 attending a Capitol Hill elementary or combined school. Hill kids will have the chance to try pole vaulting and experience high flying fun at DC Vault, the premier pole vault training center on the East Coast!</span>
+            <br></br>
+            <span className='event-block-date'>Friday, 6:30pm-7:45pm</span>
+            <br></br>
+            <span className='event-block-date'>No cost to register.</span>
+            <br></br>
+            <span className='event-block-date'>Limited space! </span>
+            <br></br>
+            <span className='event-block-date'>Must RSVP in advance (no exceptions): events@dcvault.org  </span>
+            <br></br>
+          </ul>
+      
+        </div>),
+        full: (<div className='event-block' id='09MAY2025'>
+          <p className='event-block-title'>CAPITOL HILL <span className='red-text'>FLY-KIDS</span> OPEN HOUSE</p>
+          <img src = "../img/events/flykids-oh.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
+          <p className='event-block-info'>
+            <span className='event-block-date'>Friday, May 9th 6:30pm-7:45pm</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <span className='event-block-details-header'>Generaal Info</span>
+          <ul className='event-block-details'>
+            <span className='event-block-date'>Open to any child ages 7-10 attending a Capitol Hill elementary or combined school. Hill kids will have the chance to try pole vaulting and experience high flying fun at DC Vault, the premier pole vault training center on the East Coast!</span>
+            <br></br>
+            <span className='event-block-date'>Friday, 6:30pm-7:45pm</span>
+            <br></br>
+            <span className='event-block-date'>No cost to register.</span>
+            <br></br>
+            <span className='event-block-date'>Limited space! </span>
+            <br></br>
+            <span className='event-block-date'>Must RSVP in advance (no exceptions): events@dcvault.org  </span>
+            <br></br>
+          </ul>
+        </div>)
+      },      
+      {
+        date: new Date('June 28, 2025'),
+        partial: (<div className='event-block' id='28JUN2025'>
+          <p className='event-block-title'>2025 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
+          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
+          <p className='event-block-info'>
+            <span className='event-block-date'>June 27th - June 28th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+        </div>),
+        full: (<div className='event-block' id='28JUN2025'>
+          <p className='event-block-title'>2025 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
+          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
+
+          <p className='event-block-info'>
+            <span className='event-block-date'>June 27th - June 28th, 2025</span>
+            <br></br>
+            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+          </p>
+          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+        </div>)
+      },
+      { //2024 Events
         date: new Date('August 09, 2024'),
         partial: (<div className='event-block' id='09AUG2024'>
         <p className='event-block-title'>2024 FLY-KIDS <span className='red-text'>SUMMER</span> CAMP</p>
@@ -820,63 +1071,6 @@ class Events extends React.Component {
 
 
       </div>)
-      },
-      {
-        date: new Date('August 8, 2025'),
-        partial: (<div className='event-block' id='08AUG2025'>
-          <p className='event-block-title'>2025 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
-          <img src = "../img/events/kidscamp25_1.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
-          <p className='event-block-info'>
-            <span className='event-block-date'>July 21st - July 25th, 2025</span>
-            <br></br>
-            <span className='event-block-date'>July 28th - August 1st, 2025</span>
-            <br></br>
-            <span className='event-block-date'>August 4th - August 8th, 2025</span>
-            <br></br>
-            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
-          </p>
-          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
-      
-          <center><span className='red-text'>Click Arrow for More Info</span></center>
-        </div>),
-        full: (<div className='event-block' id='08AUG2025'>
-          <p className='event-block-title'>2025 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>
-          <img src = "../img/events/kidscamp25_1.jpg" alt="FLY-KIDS" width = '350' class = "center"></img>
-          <p className='event-block-info'>
-            <span className='event-block-date'>July 21st - July 25th, 2025</span>
-            <br></br>
-            <span className='event-block-date'>July 28th - August 1st, 2025</span>
-            <br></br>
-            <span className='event-block-date'>August 4th - August 8th, 2025</span>
-            <br></br>
-            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
-          </p>
-          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
-        </div>)
-      },      
-      {
-        date: new Date('June 28, 2025'),
-        partial: (<div className='event-block' id='28JUN2025'>
-          <p className='event-block-title'>2025 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
-          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
-          <p className='event-block-info'>
-            <span className='event-block-date'>June 27th - June 28th, 2025</span>
-            <br></br>
-            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
-          </p>
-          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
-        </div>),
-        full: (<div className='event-block' id='28JUN2025'>
-          <p className='event-block-title'>2025 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
-          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
-
-          <p className='event-block-info'>
-            <span className='event-block-date'>June 27th - June 28th, 2025</span>
-            <br></br>
-            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
-          </p>
-          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
-        </div>)
       },
       {
         date: new Date('June 24, 2023'),
