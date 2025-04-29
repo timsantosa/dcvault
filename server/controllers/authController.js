@@ -208,4 +208,7 @@ const logout = async (req, res, db) => {
   }
 };
 
-module.exports = { mobileLogin, getMobileUserInfo }
+module.exports = { 
+  mobileLogin, 
+  getMobileUserInfo,
+}

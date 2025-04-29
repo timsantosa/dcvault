@@ -288,6 +288,55 @@ columns.recordTypes = {
   }
 };
 
+columns.drillTypes = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+};
+
+columns.drills = {
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+  },
+  date: { type: Sequelize.DATE, allowNull: false },
+  drillType: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  // Flattened run metrics
+  runStepNum: Sequelize.INTEGER,
+  runDistanceInches: Sequelize.FLOAT,
+  runTakeOffInches: Sequelize.FLOAT,
+  // Flattened pole metrics
+  poleId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.poles,
+      key: 'id',
+    },
+  },
+  poleLengthInches: Sequelize.FLOAT,
+  poleWeight: Sequelize.FLOAT,
+  poleBrand: Sequelize.ENUM('UCS', 'Altius', 'Dynasty', 'ESSX', 'Nordic', 'Pacer', 'Sky Pole', 'Other'),
+  poleFlex: Sequelize.FLOAT,
+  poleGripInches: Sequelize.FLOAT,
+  // Flattened athlete stats
+  athleteHeightInches: Sequelize.FLOAT,
+  athleteWeightPounds: Sequelize.FLOAT,
+  // JSON fields
+  softMetrics: Sequelize.JSON,
+  notes: Sequelize.TEXT,
+  videoLink: Sequelize.STRING,
+};
+
 const syncTables = (schema, force) => {
   force = !!force
 
@@ -321,6 +370,8 @@ const syncTables = (schema, force) => {
   tables.ChampionshipTypes = schema.define('championshipType', columns.championshipTypes);
   tables.DivisionTypes = schema.define('divisionType', columns.divisionTypes);
   tables.RecordTypes = schema.define('recordType', columns.recordTypes);
+  tables.DrillTypes = schema.define('drillType', columns.drillTypes);
+  tables.Drills = schema.define('drill', columns.drills);
 
   // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
@@ -372,6 +423,12 @@ const syncTables = (schema, force) => {
   tables.User_Permissions.belongsTo(tables.Users, { foreignKey: 'userId' });
   tables.User_Permissions.belongsTo(tables.Permissions, { foreignKey: 'permissionId' });
 
+  // Drill associations
+  tables.Drills.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
+  tables.AthleteProfiles.hasMany(tables.Drills, { as: 'drills', foreignKey: 'athleteProfileId' });
+  
+  tables.Drills.belongsTo(tables.Poles, { as: 'pole', foreignKey: 'poleId' });
+  tables.Poles.hasMany(tables.Drills, { as: 'drills', foreignKey: 'poleId' });
 
   tables.schema = schema;
   return schema.sync({force: force})

@@ -26,7 +26,7 @@ function authenticateJWT(req, res, next) {
 
 const checkPermission = (requiredPermission) => {
   return (req, res, next) => {
-    if (!req.user || !req.user.permissions.includes(requiredPermission)) {
+    if (!req.user || !req.user.permissions?.includes(requiredPermission)) {
       console.warn("User does not have required permission: ", requiredPermission);
       return res.status(403).json({ ok: false, message: 'Forbidden: Insufficient permissions' });
     }
@@ -34,4 +34,48 @@ const checkPermission = (requiredPermission) => {
   };
 };
 
-module.exports = { authenticateJWT, checkPermission };
+function athleteProfileBelongsToUser(athleteProfileId, user) {
+  if (user.athleteProfileIds && Array.isArray(user.athleteProfileIds)) {
+    return user.athleteProfileIds.includes(athleteProfileId);
+  }
+
+  if (user.athleteProfileId) {
+    console.warn('User does not have athleteProfileIds, but has athleteProfileId');
+    return user.athleteProfileId === athleteProfileId;
+  }
+  return false;
+}
+
+function checkOwnAthleteProfileOrPermission(req, res, next, permission) {
+  const user = req.user;
+  const athleteProfileId = req.query.athleteProfileId;
+
+  if (!user || !athleteProfileId) {
+    return res.status(400).json({ ok: false, message: 'Bad request' });
+  }
+
+  // First check if user has any athlete profile IDs at all
+  if (!user.athleteProfileIds && !user.athleteProfileId) {
+    return res.status(401).json({ ok: false, message: 'Unauthorized - No athlete profiles associated with user' });
+  }
+
+  // Check if user has the required permission
+  if (user.permissions.includes(permission)) {
+    return next();
+  }
+
+  // Check if user has access to this specific athlete profile
+  if (!athleteProfileBelongsToUser(athleteProfileId, user)) {
+    return res.status(403).json({ ok: false, message: 'Forbidden - No access to this athlete profile' });
+  }
+
+  next();
+}
+
+
+module.exports = { 
+  authenticateJWT,
+  checkPermission,
+  athleteProfileBelongsToUser,
+  checkOwnAthleteProfileOrPermission
+};

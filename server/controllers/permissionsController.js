@@ -5,10 +5,10 @@
 // } else {
 //   console.log('Permission denied');
 
-const { checkPermission } = require("../middlewares/mobileAuthMiddleware");
+// const { checkPermission } = require("../middlewares/mobileAuthMiddleware");
 
 // }
-const hasPermission = (user, key) => user.permissions?.includes(key);
+// const hasPermission = (user, key) => user.permissions?.includes(key);
 
 async function getPermissionsForRole(req, res, db) {
     try {
@@ -404,8 +404,7 @@ async function getUserById(req, res, db) {
     }
 }
 
-module.exports = { 
-    checkPermission,
+module.exports = {
 
     getRolesForUser,
     addRoleToUser,

@@ -7,8 +7,8 @@ async function upsertProfile(req, res, db) {
   try {
     const userSendingRequest = req.user;
     const newProfileData = req.body.athleteProfile;
-    const athleteIdToUpdate = req.body.athleteProfileId;
-    const userIdToCreateFor = req.body.userId;
+    const athleteIdToUpdate = req.query.athleteProfileId;
+    const userIdToCreateFor = req.query.userId;
 
 
     // either an athleteProfId needs to passed in for updating, or 
@@ -85,7 +85,7 @@ const getProfile = async (req, res, db) => {
       'weight', 'profileImage', 'backgroundImage', 
       'gender', 'profileImageVerified', 'backgroundImageVerified',
       'isActiveMember', 'userId'];
-    const userHasFullAccess = user.isAdmin || user.athleteProfileId == athleteProfileId;
+    const userHasFullAccess = user.isAdmin || user.athleteProfileIds?.includes(athleteProfileId);
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
     }

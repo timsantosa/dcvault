@@ -16,8 +16,6 @@ const {
   getAllPermissions, 
   getUserById
 } = require('../controllers/permissionsController');
-const adminCheck = require('../middlewares/admin');
-
 
 const permissionRoutes = (db) => {
   const router = express.Router();
