@@ -273,7 +273,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2023 Pole Vault Championships Registration is Open!
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2025 Pole Vault Championships Registration is Open!
                                 <br></br>
                             </p>
                     </div>
@@ -282,7 +282,7 @@ class AthleteInfo extends React.Component {
                         <label>
                             <span className='required'>Competition</span>
                             <input type ="checkbox" name="dates1" value="dmvchamps23"/>
-                            <label for="dmvchamps23">&nbsp;&nbsp;2023 Pole Vault Championships ($50)</label>
+                            <label for="dmvchamps23">&nbsp;&nbsp;2025 Pole Vault Championships ($50)</label>
                             <br></br>
                         </label>
                     </div>
@@ -359,11 +359,19 @@ class AthleteInfo extends React.Component {
                             <label>
                                 <span className='required'>Division</span>
                                 <select name='division'>
-                                    <option value=''>Select Division (All Men's divisions have reached max capacity)</option>
-                                    <option value='Fly-Kids'>Fly Kids (ages 7-10)</option>
-                                    <option value='Female Red Division'>PR Under 3.05m - 10' Female</option>
-                                    <option value='Female Black Division'>PR Over 3.05m - 10' Female</option>
-                                    <option value='Elite Women'>Elite Women (4.0m+)</option>
+                                    <option value=''>Select Division</option>
+                                    <option value='Boys DMV Champs'>Boy's DMV Champions Division (DMV High School State Champions Only!)</option>
+                                    <option value='Girls DMV Champs'>Girl's DMV Champions Division (DMV High School State Champions Only!)</option>
+                                    <option value='Girls Elementary'>Elementary School Division - Girls (Ages 7-11 who attended 5th grade and under during Spring of 2025)</option>
+                                    <option value='Boys Elementary'>Elementary School Division - Boys (Ages 7-11 who attended 5th grade and under during Spring of 2025)</option>
+                                    <option value='Girls Middle School'>Middle School Division - Girls (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
+                                    <option value='Boys Middle School'>Middle School Division - Boys (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
+                                    <option value='Girls High School'>High School Division - Girls (Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
+                                    <option value='Boys High School D1'>High School Division - Boys D1 PR under 12'6" (Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
+                                    <option value='Boys High School D2'>High School Division - Boys D2 PR 12'6"+(Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
+                                    <option value='Womens Adult'>Open Adult Division - Women</option>
+                                    <option value='Mens Adults'>Open Adult Division - Men</option>
+                                    <option value='Mens Emerging Elite'>Men’s Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
                                 </select>
                             </label>
                         </div>

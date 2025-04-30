@@ -555,7 +555,7 @@ class Payment extends React.Component {
         let price = 0
         let numWeeks = 0
         if(this.props.data.athleteInfo.dates1){
-            price+=400
+            price+=450
             numWeeks+=1
           }
           if(this.props.data.athleteInfo.dates2){

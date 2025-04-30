@@ -163,15 +163,16 @@ transporter.sendMail(mailOptions2, (error, info) => {
 */
 }
 
-module.exports.sendEventConfirmationEmailsTemp = (email, athleteInfo) => {
+module.exports.sendDMVEventConfirmationEmails = (email, athleteInfo) => {
     let mailOptions = {
         from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: '2024 Pole Vault Championships', // Subject line
+        subject: '2025 Pole Vault Championships', // Subject line
         to: email,
-        html: '<p>Thank you for registering for the 2024 Pole Vault Championships! Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org. For additional information including schedule, results, etc, please see our online event info <a href="https://dcvault.com/events">HERE</a>.</p>\
+        html: '<p>Thank you for registering for the 2025 Pole Vault Championships! Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org. For additional information including schedule, results, etc, please see our online event info <a href="https://dcvault.com/events">HERE</a>.</p>\
         <h3>Entry Fee - Spectators/Coaches</h3>\
         <ul>\
           <li>$10 for all non-competitors entering the facility (cash only)</li>\
+          <li>Entry free for DC Residents!</li>\
           <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>\
         </ul>\
         <h3>Facility</h3>\
@@ -200,7 +201,7 @@ module.exports.sendEventConfirmationEmailsTemp = (email, athleteInfo) => {
         <h3>Pole Drop-off/Pick-up</h3>\
         <ul>\
           <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>\
-          <li>Arrangements must be made MORE THAN 24 HOURS IN ADVANCE OF THE EVENT</li>\
+          <li>Arrangements must be made by June 20th - Email events@dcvault.org</li>\
         </ul>\
         <h3>Pole Rentals</h3>\
         <ul>\
@@ -235,10 +236,10 @@ module.exports.sendEventConfirmationEmailsTemp = (email, athleteInfo) => {
 module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
   let mailOptions = {
       from: '"DC Vault" <' + config.email.username + '>', // sender address
-      subject: '2024 Fly-Kids Summer Camp', // Subject line
+      subject: '2025 Fly-Kids Summer Camp', // Subject line
       to: email,
       html: '<p>Thank you for registering for the Fly-Kids Summer Camp!</p>\
-        <p>Please note - our lead camp counselors are Marley Oar and Edith Bosshart. We will provide the designated counselor contact phone # the first day of camp for emergencies.</p>\
+        <p>We will provide the designated counselor contact phone # the first day of camp for emergencies.</p>\
         <p>Please be sure to review the camp event information at DCVault.com/events and do not hesitate to contact us at Events@dcvault.org if you have any questions about the upcoming camp!</p>'
   }
 

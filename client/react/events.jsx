@@ -202,6 +202,7 @@ class Events extends React.Component {
         <span className='event-block-details-header'>Registration</span>
         <ul className='event-block-details'>
           <li>$450 per week</li>
+          <li><a style={{color: '#C0282D'}} href='https://dcvault.com/compete'>Register HERE!</a></li>
         </ul>
         
         <center><span className='red-text'>Click Arrow to Collapse Info</span></center>
@@ -257,8 +258,9 @@ class Events extends React.Component {
       },      
       {
         date: new Date('June 28, 2025'),
-        partial: (<div className='event-block' id='28JUN2025'>
+        partial: (          <div className='event-block' id='28JUN2025'>
           <p className='event-block-title'>2025 <span className='red-text'>Pole Vault</span> Championships</p>
+          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
           <p className='event-block-info'>
             <span className='event-block-date'>Washington DC</span><br></br>
             <span className='event-block-date'>Friday + Saturday, June 27th-28th 2025</span><br></br>
@@ -266,11 +268,14 @@ class Events extends React.Component {
           </p>
           <p className='event-block-info'>Hosted by: DC Vault and the National Pole Vault Association</p>
       
-          <p className='event-block-title'>DIVISION INFORMATION</p>
-      
-          <p className='event-block-title'>FRIDAY – Jun 27th</p>
-          <p className='event-block-title'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</p>
-          <p className='event-block-title'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></p>
+          <p className='event-block-info'>
+            <span className='event-block-date'>DIVISION INFORMATION</span><br></br>
+            <br></br>
+            <span className='event-block-date'>FRIDAY – Jun 27th</span><br></br>
+            <span className='event-block-date'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</span><br></br>
+            <span className='event-block-date'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span><br></br>
+          </p>
+
           <ul className='event-block-details'>
             <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions) in Maryland, Virginia or DC (verification required).</li>
             <li>The DMV Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
@@ -290,11 +295,14 @@ class Events extends React.Component {
             <li>3.00m (9’11”) starting height</li>
             <li>15cm progressions</li>
           </ul>
-          <p className='event-block-info'><em>NOTE:</em> Starting heights may be adjusted down or up based on entry marks of competitors. Final decision will be made after registration has closed.</p>
-      
-          <p className='event-block-title'>SATURDAY – Jun 28th</p>
-          <p className='event-block-title'><span className='red-text'>OPEN</span> DIVISION INFORMATION</p>
-          <p className='event-block-title'><span className='red-text'>ELEMENTARY</span> + <span className='red-text'>MIDDLE SCHOOL</span> + <span className='red-text'>HIGH SCHOOL</span> + <span className='red-text'>OPEN-ADULT</span> + <span className='red-text'>EMERGING ELITE</span></p>
+          <span className='event-block-details-header'><em>NOTE:</em> Starting heights may be adjusted down or up based on entry marks of competitors. Final decision will be made after registration has closed.</span>
+
+          <p className='event-block-info'>
+            <br></br>
+            <span className='event-block-date'>SATURDAY – Jun 28th</span><br></br>
+            <span className='event-block-date'><span className='red-text'>OPEN</span> DIVISION INFORMATION</span><br></br>
+            <span className='event-block-date'><span className='red-text'>ELEMENTARY</span> + <span className='red-text'>MIDDLE SCHOOL</span> + <span className='red-text'>HIGH SCHOOL</span> + <span className='red-text'>OPEN-ADULT</span> + <span className='red-text'>EMERGING ELITE</span></span><br></br>
+          </p>
           <span className='event-block-details-header'>Elementary School Division</span>
           <ul className='event-block-details'>
             <li>Any athlete age 7-11 who attended 5th grade and under during Spring of 2025</li>
@@ -326,9 +334,12 @@ class Events extends React.Component {
             <li>Any athlete with a PR of 4.57m (15’1”) or higher (verifiable)</li>
             <li>4.30m (14’1”) starting height</li>
           </ul>
-          <p className='event-block-info'><em>NOTE:</em> Male and female competitors in combined divisions are scored separately. 15cm progressions will be used for Open Divisions.</p>
-      
-          <p className='event-block-title'><span className='red-text'>ELITE INVITE</span> DIVISION INFORMATION</p>
+          <span className='event-block-details-header'><em>NOTE:</em> Male and female competitors in combined divisions are scored separately. 15cm progressions will be used for Open Divisions.</span>
+
+          <p className='event-block-info'>
+            <br></br>
+            <span className='event-block-date'><span className='red-text'>ELITE INVITE</span> DIVISION INFORMATION</span><br></br>
+          </p>
           <span className='event-block-details-header'>Entry Standards</span>
           <ul className='event-block-details'>
             <li>Elite Men
@@ -387,8 +398,10 @@ class Events extends React.Component {
             </li>
           </ul>
           <span className='event-block-details-header'>Elite Entries: Contact <span className='red-text'>Events@DCVault.org</span></span>
-      
-          <p className='event-block-title'><span className='red-text'>FLY KIDS</span> TRIAL CLASS INFORMATION</p>
+          <p className='event-block-info'>
+            <br></br>
+            <span className='event-block-date'><span className='red-text'>FLY KIDS</span> TRIAL CLASS INFORMATION</span><br></br>
+          </p>
           <span className='event-block-details-header'>Class Schedule and Registration</span>
           <ul className='event-block-details'>
             <li>Four 15-minute Fly-Kids Trial Classes will be offered free of charge during the event at the following times
@@ -406,10 +419,11 @@ class Events extends React.Component {
             <li>After paying admission to the facility, coordinate with the front gate staff to choose a time slot (children under age 11 enter free)</li>
             <li>Time slots are available to reserve in listed order only. Once each class fills up, the next time slot will become available for reserving.</li>
           </ul>
-        </div>),
+          </div>),
         full: (
           <div className='event-block' id='28JUN2025'>
             <p className='event-block-title'>2025 <span className='red-text'>Pole Vault</span> Championships</p>
+            <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
             <p className='event-block-info'>
               <span className='event-block-date'>Washington DC</span><br></br>
               <span className='event-block-date'>Friday + Saturday, June 27th-28th 2025</span><br></br>
@@ -417,11 +431,14 @@ class Events extends React.Component {
             </p>
             <p className='event-block-info'>Hosted by: DC Vault and the National Pole Vault Association</p>
         
-            <p className='event-block-title'>DIVISION INFORMATION</p>
-        
-            <p className='event-block-title'>FRIDAY – Jun 27th</p>
-            <p className='event-block-title'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</p>
-            <p className='event-block-title'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></p>
+            <p className='event-block-info'>
+              <span className='event-block-date'>DIVISION INFORMATION</span><br></br>
+              <br></br>
+              <span className='event-block-date'>FRIDAY – Jun 27th</span><br></br>
+              <span className='event-block-date'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</span><br></br>
+              <span className='event-block-date'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span><br></br>
+            </p>
+
             <ul className='event-block-details'>
               <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions) in Maryland, Virginia or DC (verification required).</li>
               <li>The DMV Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
@@ -441,11 +458,14 @@ class Events extends React.Component {
               <li>3.00m (9’11”) starting height</li>
               <li>15cm progressions</li>
             </ul>
-            <p className='event-block-info'><em>NOTE:</em> Starting heights may be adjusted down or up based on entry marks of competitors. Final decision will be made after registration has closed.</p>
-        
-            <p className='event-block-title'>SATURDAY – Jun 28th</p>
-            <p className='event-block-title'><span className='red-text'>OPEN</span> DIVISION INFORMATION</p>
-            <p className='event-block-title'><span className='red-text'>ELEMENTARY</span> + <span className='red-text'>MIDDLE SCHOOL</span> + <span className='red-text'>HIGH SCHOOL</span> + <span className='red-text'>OPEN-ADULT</span> + <span className='red-text'>EMERGING ELITE</span></p>
+            <span className='event-block-details-header'><em>NOTE:</em> Starting heights may be adjusted down or up based on entry marks of competitors. Final decision will be made after registration has closed.</span>
+
+            <p className='event-block-info'>
+              <br></br>
+              <span className='event-block-date'>SATURDAY – Jun 28th</span><br></br>
+              <span className='event-block-date'><span className='red-text'>OPEN</span> DIVISION INFORMATION</span><br></br>
+              <span className='event-block-date'><span className='red-text'>ELEMENTARY</span> + <span className='red-text'>MIDDLE SCHOOL</span> + <span className='red-text'>HIGH SCHOOL</span> + <span className='red-text'>OPEN-ADULT</span> + <span className='red-text'>EMERGING ELITE</span></span><br></br>
+            </p>
             <span className='event-block-details-header'>Elementary School Division</span>
             <ul className='event-block-details'>
               <li>Any athlete age 7-11 who attended 5th grade and under during Spring of 2025</li>
@@ -477,9 +497,12 @@ class Events extends React.Component {
               <li>Any athlete with a PR of 4.57m (15’1”) or higher (verifiable)</li>
               <li>4.30m (14’1”) starting height</li>
             </ul>
-            <p className='event-block-info'><em>NOTE:</em> Male and female competitors in combined divisions are scored separately. 15cm progressions will be used for Open Divisions.</p>
-        
-            <p className='event-block-title'><span className='red-text'>ELITE INVITE</span> DIVISION INFORMATION</p>
+            <span className='event-block-details-header'><em>NOTE:</em> Male and female competitors in combined divisions are scored separately. 15cm progressions will be used for Open Divisions.</span>
+
+            <p className='event-block-info'>
+              <br></br>
+              <span className='event-block-date'><span className='red-text'>ELITE INVITE</span> DIVISION INFORMATION</span><br></br>
+            </p>
             <span className='event-block-details-header'>Entry Standards</span>
             <ul className='event-block-details'>
               <li>Elite Men
@@ -538,8 +561,10 @@ class Events extends React.Component {
               </li>
             </ul>
             <span className='event-block-details-header'>Elite Entries: Contact <span className='red-text'>Events@DCVault.org</span></span>
-        
-            <p className='event-block-title'><span className='red-text'>FLY KIDS</span> TRIAL CLASS INFORMATION</p>
+            <p className='event-block-info'>
+              <br></br>
+              <span className='event-block-date'><span className='red-text'>FLY KIDS</span> TRIAL CLASS INFORMATION</span><br></br>
+            </p>
             <span className='event-block-details-header'>Class Schedule and Registration</span>
             <ul className='event-block-details'>
               <li>Four 15-minute Fly-Kids Trial Classes will be offered free of charge during the event at the following times
@@ -558,7 +583,7 @@ class Events extends React.Component {
               <li>Time slots are available to reserve in listed order only. Once each class fills up, the next time slot will become available for reserving.</li>
             </ul>
         
-            <p className='event-block-title'>GENERAL EVENT INFORMATION</p>
+            <p className='event-block-info'>GENERAL EVENT INFORMATION</p>
             <span className='event-block-details-header'>Spikes</span>
             <ul className='event-block-details'>
               <li><span className='red-text'>1/8" SPIKES ONLY</span> at this facility (not standard 1/4" spikes!)</li>
@@ -616,7 +641,7 @@ class Events extends React.Component {
               <li>The 2025 Pole Vault Championships are open to all athletes ages 7 and up</li>
               <li>Advanced Registration Only</li>
               <li>Registration Closes @ Midnight on Jun 20th</li>
-              <li>$50 for competitors – <a style={{color: '#C0282D'}} href='#'>Register HERE!</a></li>
+              <li>$50 for competitors – <a style={{color: '#C0282D'}} href='https://dcvault.com/dmvchamps'>Register HERE!</a></li>
             </ul>
             <span className='event-block-details-header'>Start List/Results</span>
             <ul className='event-block-details'>
