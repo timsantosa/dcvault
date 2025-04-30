@@ -394,6 +394,58 @@ const getRegisteredAthletesForUser = async (req, res, db) => {
   }
 };
 
+const getMedalCountsForProfile = async (req, res, db) => {
+  try {
+    const athleteProfileId = parseInt(req.query.athleteProfileId);
+    if (!helpers.isValidId(athleteProfileId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid athlete profile ID' });
+    }
+
+    // Query to count medals by placement
+    const medalCounts = await db.tables.Jumps.findAll({
+      where: {
+        athleteProfileId: athleteProfileId,
+        meetType: { [db.tables.schema.Op.ne]: null }, // meetType is not null (championship)
+        placement: { [db.tables.schema.Op.in]: [1, 2, 3] }, // Only count placements 1, 2, or 3
+        verified: true // Only count verified jumps
+      },
+      attributes: [
+        [db.tables.schema.fn('COUNT', db.tables.schema.col('id')), 'count'],
+        'placement'
+      ],
+      group: ['placement']
+    });
+
+    // Initialize counts
+    const counts = {
+      gold: 0,
+      silver: 0,
+      bronze: 0
+    };
+
+    // Update counts based on query results
+    medalCounts.forEach(medal => {
+      const count = parseInt(medal.getDataValue('count'));
+      switch (medal.placement) {
+        case 1:
+          counts.gold = count;
+          break;
+        case 2:
+          counts.silver = count;
+          break;
+        case 3:
+          counts.bronze = count;
+          break;
+      }
+    });
+
+    res.json({ ok: true, medalCounts: counts });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch medal counts' });
+  }
+};
+
 module.exports = { 
   upsertProfile, 
   getProfile, 
@@ -401,5 +453,6 @@ module.exports = {
   getProfiles, 
   getLatestAthlete,
   getAthleteProfilesForUser,
-  getRegisteredAthletesForUser 
+  getRegisteredAthletesForUser,
+  getMedalCountsForProfile
 };
