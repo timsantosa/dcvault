@@ -272,17 +272,14 @@ class AthleteInfo extends React.Component {
                     <form id='event-athlete-info' className='form-labels-on-top'>
 
                         <div className='form-title-row'>
-                                <h1>2024 Fly-Kids Summer Camp Registration</h1>
+                                <h1>2025 Fly-Kids Summer Camp Registration</h1>
                         </div>
 
                         <div className='form-row'>
                             <label>
                                 <span className='required'>Weeks</span>
-                                <input type ="checkbox" name="dates1" value="jul29-aug2"/>
-                                <label for="jul29-aug2">&nbsp;&nbsp;Jul 29th - Aug 2nd</label>
-                                <br></br>
-                                <input type ="checkbox" name="dates2" value="aug5-aug9"/>
-                                <label for="aug5-aug">&nbsp;&nbsp;Aug 5th - Aug 9th</label>
+                                <input type ="checkbox" name="dates1" value="jul21-jul25"/>
+                                <label for="jul29-aug2">&nbsp;&nbsp;Jul 21st - Jul 25th</label>
                                 <br></br>
                             </label>
                         </div>

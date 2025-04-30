@@ -269,8 +269,8 @@ class Events extends React.Component {
           <p className='event-block-title'>DIVISION INFORMATION</p>
       
           <p className='event-block-title'>FRIDAY – Jun 27th</p>
-          <span className='event-block-details-header'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</span>
-          <span className='event-block-details-header'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span>
+          <p className='event-block-title'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</p>
+          <p className='event-block-title'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></p>
           <ul className='event-block-details'>
             <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions) in Maryland, Virginia or DC (verification required).</li>
             <li>The DMV Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
@@ -420,8 +420,8 @@ class Events extends React.Component {
             <p className='event-block-title'>DIVISION INFORMATION</p>
         
             <p className='event-block-title'>FRIDAY – Jun 27th</p>
-            <span className='event-block-details-header'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</span>
-            <span className='event-block-details-header'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span>
+            <p className='event-block-title'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</p>
+            <p className='event-block-title'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></p>
             <ul className='event-block-details'>
               <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions) in Maryland, Virginia or DC (verification required).</li>
               <li>The DMV Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
@@ -616,7 +616,7 @@ class Events extends React.Component {
               <li>The 2025 Pole Vault Championships are open to all athletes ages 7 and up</li>
               <li>Advanced Registration Only</li>
               <li>Registration Closes @ Midnight on Jun 20th</li>
-              <li>$50 for competitors – <a style={{color: '#C0282D'}} href='#' target='_blank'>Register HERE!</a></li>
+              <li>$50 for competitors – <a style={{color: '#C0282D'}} href='#'>Register HERE!</a></li>
             </ul>
             <span className='event-block-details-header'>Start List/Results</span>
             <ul className='event-block-details'>
@@ -636,12 +636,12 @@ class Events extends React.Component {
             <ul className='event-block-details'>
               <li>DC Vault Pole Vault Center – 2200 East Capitol Street NE, Washington DC</li>
               <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
-              <li>Parking On-Site (Lot #3), download SITE MAP <a style={{color: '#C0282D'}} href='#' target='../files/DCV Site Map.pdf'>HERE</a> to view parking and team tent areas</li>
+              <li>Parking On-Site (Lot #3), download SITE MAP <a style={{color: '#C0282D'}} href='../files/DCV Site Map.pdf'>HERE</a> to view parking and team tent areas</li>
               <li>Athletes, Spectators and Coaches enter the facility from the E. Capitol Street sidewalk gate. Park in Lot #3, exit the lot onto the sidewalk and head to the double gate facing the street next to the DC VAULT storage shed</li>
               <li>$10 Admission for all non-competitors entering the facility (CASH ONLY)</li>
               <li>Children Under age 11 enter FREE</li>
               <li>Spectators and coaches may also watch from outside the fenced area free-of-charge</li>
-              <li><span className='red-text'>TENTS and CANOPIES are NOT allowed inside the venue</span>. Spectators wishing to use personal shade canopies or pop-up tent canopies may do so OUTSIDE of the fenced area and enter/exit the venue as needed after paying admission. Download SITE MAP <a style={{color: '#C0282D'}} href='../files/DCV Site Map.pdf' target='_blank'>HERE</a> to view parking and team tent areas.</li>
+              <li><span className='red-text'>TENTS and CANOPIES are NOT allowed inside the venue</span>. Spectators wishing to use personal shade canopies or pop-up tent canopies may do so OUTSIDE of the fenced area and enter/exit the venue as needed after paying admission. Download SITE MAP <a style={{color: '#C0282D'}} href='../files/DCV Site Map.pdf'>HERE</a> to view parking and team tent areas.</li>
               <li>Coaches who have paid admission may enter the facility and assist athletes in the designated coach’s box</li>
               <li><strong><span className='red-text'>PLEASE</span></strong> be professional and immediately move to the back of the coaching box after your athlete jumps before talking to your athlete so that the next competitor’s coach has a clear view of the runway and pit!</li>
             </ul>
