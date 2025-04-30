@@ -258,26 +258,420 @@ class Events extends React.Component {
       {
         date: new Date('June 28, 2025'),
         partial: (<div className='event-block' id='28JUN2025'>
-          <p className='event-block-title'>2025 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
-          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
+          <p className='event-block-title'>2025 <span className='red-text'>Pole Vault</span> Championships</p>
           <p className='event-block-info'>
-            <span className='event-block-date'>June 27th - June 28th, 2025</span>
-            <br></br>
-            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
+            <span className='event-block-date'>Washington DC</span><br></br>
+            <span className='event-block-date'>Friday + Saturday, June 27th-28th 2025</span><br></br>
+            <span className='event-block-date'>2200 East Capitol Street NE</span>
           </p>
-          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
+          <p className='event-block-info'>Hosted by: DC Vault and the National Pole Vault Association</p>
+      
+          <p className='event-block-title'>DIVISION INFORMATION</p>
+      
+          <p className='event-block-title'>FRIDAY – Jun 27th</p>
+          <span className='event-block-details-header'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</span>
+          <span className='event-block-details-header'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span>
+          <ul className='event-block-details'>
+            <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions) in Maryland, Virginia or DC (verification required).</li>
+            <li>The DMV Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
+            <li><em>Athletes who compete in the DMV Champions Division on Friday, June 27th may also register to compete in High School Divisions or Emerging Elite Divisions on Saturday, June 28th. Register online separately for each division.</em></li>
+          </ul>
+          <span className='event-block-details-header'>Boy’s DMV Champions Division</span>
+          <ul className='event-block-details'>
+            <li>Any male athlete who placed 1st at an indoor or outdoor High School State Championship in 2025</li>
+            <li>Must submit online source to verify results</li>
+            <li>4.00m (13’1.5”) starting height</li>
+            <li>15cm progressions</li>
+          </ul>
+          <span className='event-block-details-header'>Girl’s DMV Champions Division</span>
+          <ul className='event-block-details'>
+            <li>Any female athlete who placed 1st at an indoor or outdoor High School State Championship in 2025</li>
+            <li>Must submit online source to verify results</li>
+            <li>3.00m (9’11”) starting height</li>
+            <li>15cm progressions</li>
+          </ul>
+          <p className='event-block-info'><em>NOTE:</em> Starting heights may be adjusted down or up based on entry marks of competitors. Final decision will be made after registration has closed.</p>
+      
+          <p className='event-block-title'>SATURDAY – Jun 28th</p>
+          <p className='event-block-title'><span className='red-text'>OPEN</span> DIVISION INFORMATION</p>
+          <p className='event-block-title'><span className='red-text'>ELEMENTARY</span> + <span className='red-text'>MIDDLE SCHOOL</span> + <span className='red-text'>HIGH SCHOOL</span> + <span className='red-text'>OPEN-ADULT</span> + <span className='red-text'>EMERGING ELITE</span></p>
+          <span className='event-block-details-header'>Elementary School Division</span>
+          <ul className='event-block-details'>
+            <li>Any athlete age 7-11 who attended 5th grade and under during Spring of 2025</li>
+            <li>1.55m starting height (5’1”)</li>
+            <li>Combined Division (boys and girls scored separately)</li>
+          </ul>
+          <span className='event-block-details-header'>Middle School Division</span>
+          <ul className='event-block-details'>
+            <li>Any athlete age 11-14 who attended grades 6-8 during Spring of 2025</li>
+            <li>1.55m starting height (5’1”)</li>
+            <li>Combined Division (boys and girls scored separately)</li>
+          </ul>
+          <span className='event-block-details-header'>High School Division</span>
+          <ul className='event-block-details'>
+            <li>Any athlete age 14-18 who attended grades 9-12 in Spring of 2025</li>
+            <li>1.85m (6’1”) starting height for girls</li>
+            <li>2.45m (8’) starting height for boys Division II (PR under 12’6”)</li>
+            <li>3.35m (11’) starting height for boys Division I (PR 12’6”+)</li>
+          </ul>
+          <span className='event-block-details-header'>Open Adult Division (combined)</span>
+          <ul className='event-block-details'>
+            <li>Any athlete age 18 and up who graduated high school prior to 2025 with a PR less than 15’</li>
+            <li>1.85m (6’1”) starting height for women</li>
+            <li>2.45m (8’) starting height for men</li>
+            <li>Combined Division (men and women scored separately)</li>
+          </ul>
+          <span className='event-block-details-header'>Men’s Emerging Elite Division</span>
+          <ul className='event-block-details'>
+            <li>Any athlete with a PR of 4.57m (15’1”) or higher (verifiable)</li>
+            <li>4.30m (14’1”) starting height</li>
+          </ul>
+          <p className='event-block-info'><em>NOTE:</em> Male and female competitors in combined divisions are scored separately. 15cm progressions will be used for Open Divisions.</p>
+      
+          <p className='event-block-title'><span className='red-text'>ELITE INVITE</span> DIVISION INFORMATION</p>
+          <span className='event-block-details-header'>Entry Standards</span>
+          <ul className='event-block-details'>
+            <li>Elite Men
+              <ul>
+                <li><span className='red-text'>Event + Facility Record: 5.82m / 19’1.25” (Austin Miller - 2024)</span></li>
+                <li>5.5m (A) standard - automatic qualifying</li>
+                <li>5.2m (B) standard - waitlist</li>
+                <li>accepted B-standard entries posted by June 13th</li>
+                <li>alternates compete in the Men’s Emerging Elite Division</li>
+                <li>4.85m starting height</li>
+                <li>Progressions:
+                  <ul>
+                    <li>5.00+15 (16’5”)</li>
+                    <li>5.15 (16’11”)</li>
+                    <li>5.30 (17’5”)</li>
+                    <li>5.45+10 (17’11”)</li>
+                    <li>5.55 (18’3”)</li>
+                    <li>5.65 (18’6”)</li>
+                    <li>5.75+5 (18’10”)</li>
+                    <li>5.80 (19’)</li>
+                    <li>5.85 (19’2.75”) Event Record</li>
+                    <li>5.90 (19’4”)</li>
+                    <li>5.95 (19’6”)</li>
+                    <li>6.00 (19’8”)</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>Elite Women
+              <ul>
+                <li><span className='red-text'>Event + Facility Record: 4.73m / 15’6.25” (Bridget Williams - 2024)</span></li>
+                <li>4.3m (A) standard - automatic qualifying</li>
+                <li>4.0m (B) standard - waitlist</li>
+                <li>accepted B-standard entries posted by June 13th</li>
+                <li>alternates compete in the Men + Women Open Division or Girls High School division</li>
+                <li>3.75m starting height</li>
+                <li>Progressions:
+                  <ul>
+                    <li>4.00+15 (13’1”)</li>
+                    <li>4.15 (13’7”)</li>
+                    <li>4.30+10 (14’1”)</li>
+                    <li>4.40 (14’5”)</li>
+                    <li>4.50 (14’9”)</li>
+                    <li>4.60+5 (15’)</li>
+                    <li>4.65 (15’3”)</li>
+                    <li>4.70 (15’5”)</li>
+                    <li>4.75 (15’7”) Event Record</li>
+                    <li>4.80 (15’9”)</li>
+                    <li>4.85 (15’11”)</li>
+                    <li>4.90 (16’1”)</li>
+                    <li>4.95 (16’3”)</li>
+                    <li>5.00 (16’5”)</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <span className='event-block-details-header'>Elite Entries: Contact <span className='red-text'>Events@DCVault.org</span></span>
+      
+          <p className='event-block-title'><span className='red-text'>FLY KIDS</span> TRIAL CLASS INFORMATION</p>
+          <span className='event-block-details-header'>Class Schedule and Registration</span>
+          <ul className='event-block-details'>
+            <li>Four 15-minute Fly-Kids Trial Classes will be offered free of charge during the event at the following times
+              <ul>
+                <li>2:30pm</li>
+                <li>2:45pm</li>
+                <li>3:00pm</li>
+                <li>3:15pm</li>
+              </ul>
+            </li>
+            <li>6 participants per class</li>
+            <li>Ages 6-10 ONLY (strictly enforced)</li>
+            <li>Registration is first come first serve at the front gate</li>
+            <li>A parent must be present to sign the participant up for a time slot</li>
+            <li>After paying admission to the facility, coordinate with the front gate staff to choose a time slot (children under age 11 enter free)</li>
+            <li>Time slots are available to reserve in listed order only. Once each class fills up, the next time slot will become available for reserving.</li>
+          </ul>
         </div>),
-        full: (<div className='event-block' id='28JUN2025'>
-          <p className='event-block-title'>2025 <span className='red-text'>POLE VAULT</span> CHAMPIONSHIPS</p>
-          <img src = "../img/events/pvchamps25.jpg" alt="champs" width = '350' class = "center"></img>
-
-          <p className='event-block-info'>
-            <span className='event-block-date'>June 27th - June 28th, 2025</span>
-            <br></br>
-            <span className='event-block-date'>DC Vault: 2200 East Capitol street NE, Washington DC</span>
-          </p>
-          <p className='event-block-title'><span className='red-text'>MORE INFO COMING SOON</span></p>
-        </div>)
+        full: (
+          <div className='event-block' id='28JUN2025'>
+            <p className='event-block-title'>2025 <span className='red-text'>Pole Vault</span> Championships</p>
+            <p className='event-block-info'>
+              <span className='event-block-date'>Washington DC</span><br></br>
+              <span className='event-block-date'>Friday + Saturday, June 27th-28th 2025</span><br></br>
+              <span className='event-block-date'>2200 East Capitol Street NE</span>
+            </p>
+            <p className='event-block-info'>Hosted by: DC Vault and the National Pole Vault Association</p>
+        
+            <p className='event-block-title'>DIVISION INFORMATION</p>
+        
+            <p className='event-block-title'>FRIDAY – Jun 27th</p>
+            <span className='event-block-details-header'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</span>
+            <span className='event-block-details-header'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span>
+            <ul className='event-block-details'>
+              <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions) in Maryland, Virginia or DC (verification required).</li>
+              <li>The DMV Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
+              <li><em>Athletes who compete in the DMV Champions Division on Friday, June 27th may also register to compete in High School Divisions or Emerging Elite Divisions on Saturday, June 28th. Register online separately for each division.</em></li>
+            </ul>
+            <span className='event-block-details-header'>Boy’s DMV Champions Division</span>
+            <ul className='event-block-details'>
+              <li>Any male athlete who placed 1st at an indoor or outdoor High School State Championship in 2025</li>
+              <li>Must submit online source to verify results</li>
+              <li>4.00m (13’1.5”) starting height</li>
+              <li>15cm progressions</li>
+            </ul>
+            <span className='event-block-details-header'>Girl’s DMV Champions Division</span>
+            <ul className='event-block-details'>
+              <li>Any female athlete who placed 1st at an indoor or outdoor High School State Championship in 2025</li>
+              <li>Must submit online source to verify results</li>
+              <li>3.00m (9’11”) starting height</li>
+              <li>15cm progressions</li>
+            </ul>
+            <p className='event-block-info'><em>NOTE:</em> Starting heights may be adjusted down or up based on entry marks of competitors. Final decision will be made after registration has closed.</p>
+        
+            <p className='event-block-title'>SATURDAY – Jun 28th</p>
+            <p className='event-block-title'><span className='red-text'>OPEN</span> DIVISION INFORMATION</p>
+            <p className='event-block-title'><span className='red-text'>ELEMENTARY</span> + <span className='red-text'>MIDDLE SCHOOL</span> + <span className='red-text'>HIGH SCHOOL</span> + <span className='red-text'>OPEN-ADULT</span> + <span className='red-text'>EMERGING ELITE</span></p>
+            <span className='event-block-details-header'>Elementary School Division</span>
+            <ul className='event-block-details'>
+              <li>Any athlete age 7-11 who attended 5th grade and under during Spring of 2025</li>
+              <li>1.55m starting height (5’1”)</li>
+              <li>Combined Division (boys and girls scored separately)</li>
+            </ul>
+            <span className='event-block-details-header'>Middle School Division</span>
+            <ul className='event-block-details'>
+              <li>Any athlete age 11-14 who attended grades 6-8 during Spring of 2025</li>
+              <li>1.55m starting height (5’1”)</li>
+              <li>Combined Division (boys and girls scored separately)</li>
+            </ul>
+            <span className='event-block-details-header'>High School Division</span>
+            <ul className='event-block-details'>
+              <li>Any athlete age 14-18 who attended grades 9-12 in Spring of 2025</li>
+              <li>1.85m (6’1”) starting height for girls</li>
+              <li>2.45m (8’) starting height for boys Division II (PR under 12’6”)</li>
+              <li>3.35m (11’) starting height for boys Division I (PR 12’6”+)</li>
+            </ul>
+            <span className='event-block-details-header'>Open Adult Division (combined)</span>
+            <ul className='event-block-details'>
+              <li>Any athlete age 18 and up who graduated high school prior to 2025 with a PR less than 15’</li>
+              <li>1.85m (6’1”) starting height for women</li>
+              <li>2.45m (8’) starting height for men</li>
+              <li>Combined Division (men and women scored separately)</li>
+            </ul>
+            <span className='event-block-details-header'>Men’s Emerging Elite Division</span>
+            <ul className='event-block-details'>
+              <li>Any athlete with a PR of 4.57m (15’1”) or higher (verifiable)</li>
+              <li>4.30m (14’1”) starting height</li>
+            </ul>
+            <p className='event-block-info'><em>NOTE:</em> Male and female competitors in combined divisions are scored separately. 15cm progressions will be used for Open Divisions.</p>
+        
+            <p className='event-block-title'><span className='red-text'>ELITE INVITE</span> DIVISION INFORMATION</p>
+            <span className='event-block-details-header'>Entry Standards</span>
+            <ul className='event-block-details'>
+              <li>Elite Men
+                <ul>
+                  <li><span className='red-text'>Event + Facility Record: 5.82m / 19’1.25” (Austin Miller - 2024)</span></li>
+                  <li>5.5m (A) standard - automatic qualifying</li>
+                  <li>5.2m (B) standard - waitlist</li>
+                  <li>accepted B-standard entries posted by June 13th</li>
+                  <li>alternates compete in the Men’s Emerging Elite Division</li>
+                  <li>4.85m starting height</li>
+                  <li>Progressions:
+                    <ul>
+                      <li>5.00+15 (16’5”)</li>
+                      <li>5.15 (16’11”)</li>
+                      <li>5.30 (17’5”)</li>
+                      <li>5.45+10 (17’11”)</li>
+                      <li>5.55 (18’3”)</li>
+                      <li>5.65 (18’6”)</li>
+                      <li>5.75+5 (18’10”)</li>
+                      <li>5.80 (19’)</li>
+                      <li>5.85 (19’2.75”) Event Record</li>
+                      <li>5.90 (19’4”)</li>
+                      <li>5.95 (19’6”)</li>
+                      <li>6.00 (19’8”)</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Elite Women
+                <ul>
+                  <li><span className='red-text'>Event + Facility Record: 4.73m / 15’6.25” (Bridget Williams - 2024)</span></li>
+                  <li>4.3m (A) standard - automatic qualifying</li>
+                  <li>4.0m (B) standard - waitlist</li>
+                  <li>accepted B-standard entries posted by June 13th</li>
+                  <li>alternates compete in the Men + Women Open Division or Girls High School division</li>
+                  <li>3.75m starting height</li>
+                  <li>Progressions:
+                    <ul>
+                      <li>4.00+15 (13’1”)</li>
+                      <li>4.15 (13’7”)</li>
+                      <li>4.30+10 (14’1”)</li>
+                      <li>4.40 (14’5”)</li>
+                      <li>4.50 (14’9”)</li>
+                      <li>4.60+5 (15’)</li>
+                      <li>4.65 (15’3”)</li>
+                      <li>4.70 (15’5”)</li>
+                      <li>4.75 (15’7”) Event Record</li>
+                      <li>4.80 (15’9”)</li>
+                      <li>4.85 (15’11”)</li>
+                      <li>4.90 (16’1”)</li>
+                      <li>4.95 (16’3”)</li>
+                      <li>5.00 (16’5”)</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <span className='event-block-details-header'>Elite Entries: Contact <span className='red-text'>Events@DCVault.org</span></span>
+        
+            <p className='event-block-title'><span className='red-text'>FLY KIDS</span> TRIAL CLASS INFORMATION</p>
+            <span className='event-block-details-header'>Class Schedule and Registration</span>
+            <ul className='event-block-details'>
+              <li>Four 15-minute Fly-Kids Trial Classes will be offered free of charge during the event at the following times
+                <ul>
+                  <li>2:30pm</li>
+                  <li>2:45pm</li>
+                  <li>3:00pm</li>
+                  <li>3:15pm</li>
+                </ul>
+              </li>
+              <li>6 participants per class</li>
+              <li>Ages 6-10 ONLY (strictly enforced)</li>
+              <li>Registration is first come first serve at the front gate</li>
+              <li>A parent must be present to sign the participant up for a time slot</li>
+              <li>After paying admission to the facility, coordinate with the front gate staff to choose a time slot (children under age 11 enter free)</li>
+              <li>Time slots are available to reserve in listed order only. Once each class fills up, the next time slot will become available for reserving.</li>
+            </ul>
+        
+            <p className='event-block-title'>GENERAL EVENT INFORMATION</p>
+            <span className='event-block-details-header'>Spikes</span>
+            <ul className='event-block-details'>
+              <li><span className='red-text'>1/8" SPIKES ONLY</span> at this facility (not standard 1/4" spikes!)</li>
+              <ul>
+                <li><strong>ELITE DIVISION</strong> athletes may wear 1/4" spikes</li>
+              </ul>
+              <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition</li>
+              <li><span className='red-text'>1/8” spikes</span> can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>
+              <ul>
+                <li><em>Strongly Recommended</em> so you don't waste time at the event trying to change spikes!</li>
+              </ul>
+              <li>Available for $5 per set at the event (bring your own spike wrench)</li>
+            </ul>
+            <span className='event-block-details-header'>Schedule</span>
+            <ul className='event-block-details'>
+              <li><strong>Fri, June 27th</strong></li>
+              <ul>
+                <li>12:00pm Staff Arrive</li>
+                <li>12:45pm Gates Open</li>
+                <li>1:00pm Girl’s DMV Champions Division – warmups (black pit)</li>
+                <li>2:00pm Girl’s DMV Champions Division – competition (black pit)</li>
+                <li>3:00pm (or 1-hr after completion of girl’s division) Boy’s DMV Champions Division – warmups (black pit)</li>
+                <li>4:00pm Boy’s DMV Champions Division – competition (black pit)</li>
+              </ul>
+              <li><strong>Sat, June 28th</strong> <em>(Note: <span className='red-text'>Rolling Schedule</span> – arrive early in case your time slot moves up!)</em></li>
+              <ul>
+                <li>07:30am Staff Arrive</li>
+                <li>08:30am Gates Open</li>
+                <li>08:30am Men’s Emerging Elite – warmups (black pit)</li>
+                <li>08:30am Open Adult Division – warmups (red pit)</li>
+                <li>09:30am Men’s Emerging Elite – competition (black pit)</li>
+                <li>09:30am Open Adult Division – competition (red pit)</li>
+                <li>11:00am Girls High School Division – warmups (red pit)</li>
+                <li>12:00pm Girls High School Division – competition (red pit)</li>
+                <li>12:00pm ELITE Division Women – warmups (black pit)</li>
+                <li>1:00pm ELITE Division Women – competition (black pit)</li>
+                <li>2:00pm Middle School Boys + Girls – warmups (red pit)</li>
+                <li>2:30pm Middle School Boys + Girls – competition (red pit)</li>
+                <li>2:30pm ELITE Division Men – warmups (black pit)</li>
+                <li>2:30pm Fly-Kids Trial Class 1 – (Fly-Kids pit)</li>
+                <li>2:45pm Fly-Kids Trial Class 2 – (Fly-Kids pit)</li>
+                <li>3:00pm Elementary School Boys + Girls – warmups (red pit)</li>
+                <li>3:00pm Fly-Kids Trial Class 3 – (Fly-Kids pit)</li>
+                <li>3:15pm Fly-Kids Trial Class 4 – (Fly-Kids pit)</li>
+                <li>3:30pm ELITE Division Men – competition (black pit)</li>
+                <li>3:30pm Elementary School Boys + Girls – competition (red pit)</li>
+                <li>5:00pm High School Boys Division I – warmups (black pit)</li>
+                <li>5:00pm High School Boys Division II – warmups (red pit)</li>
+                <li>6:00pm High School Boys Division I – competition (black pit)</li>
+                <li>6:00pm High School Boys Division II – competition (red pit)</li>
+              </ul>
+            </ul>
+            <span className='event-block-details-header'>Registration</span>
+            <ul className='event-block-details'>
+              <li>The 2025 Pole Vault Championships are open to all athletes ages 7 and up</li>
+              <li>Advanced Registration Only</li>
+              <li>Registration Closes @ Midnight on Jun 20th</li>
+              <li>$50 for competitors – <a style={{color: '#C0282D'}} href='#' target='_blank'>Register HERE!</a></li>
+            </ul>
+            <span className='event-block-details-header'>Start List/Results</span>
+            <ul className='event-block-details'>
+              <li>Download Start List <a style={{color: '#C0282D'}} href='#' target='_blank'>HERE!</a> (Available June 23rd)</li>
+              <li>Download Final Results <a style={{color: '#C0282D'}} href='#' target='_blank'>HERE!</a> (Available July 2nd)</li>
+            </ul>
+            <span className='event-block-details-header'>Awards/Sanctioning</span>
+            <ul className='event-block-details'>
+              <li>Medals will be awarded in all divisions, 1st through 3rd place</li>
+              <li>Jiffy Car Rack Pole Carrier for 1st place finishers!</li>
+              <li>Special Limited-Edition Medals Awarded for facility records and DMV Champions Division (boys + girls)</li>
+              <li>USATF + World Athletics Sanctioned</li>
+              <li>Elite Division Results will be published to WorldAthletics.org</li>
+              <li>Open Division Results will be published to Milesplit.com and DCVault.com/events</li>
+            </ul>
+            <span className='event-block-details-header'>Venue/Spectators/Coaches</span>
+            <ul className='event-block-details'>
+              <li>DC Vault Pole Vault Center – 2200 East Capitol Street NE, Washington DC</li>
+              <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>
+              <li>Parking On-Site (Lot #3), download SITE MAP <a style={{color: '#C0282D'}} href='#' target='../files/DCV Site Map.pdf'>HERE</a> to view parking and team tent areas</li>
+              <li>Athletes, Spectators and Coaches enter the facility from the E. Capitol Street sidewalk gate. Park in Lot #3, exit the lot onto the sidewalk and head to the double gate facing the street next to the DC VAULT storage shed</li>
+              <li>$10 Admission for all non-competitors entering the facility (CASH ONLY)</li>
+              <li>Children Under age 11 enter FREE</li>
+              <li>Spectators and coaches may also watch from outside the fenced area free-of-charge</li>
+              <li><span className='red-text'>TENTS and CANOPIES are NOT allowed inside the venue</span>. Spectators wishing to use personal shade canopies or pop-up tent canopies may do so OUTSIDE of the fenced area and enter/exit the venue as needed after paying admission. Download SITE MAP <a style={{color: '#C0282D'}} href='../files/DCV Site Map.pdf' target='_blank'>HERE</a> to view parking and team tent areas.</li>
+              <li>Coaches who have paid admission may enter the facility and assist athletes in the designated coach’s box</li>
+              <li><strong><span className='red-text'>PLEASE</span></strong> be professional and immediately move to the back of the coaching box after your athlete jumps before talking to your athlete so that the next competitor’s coach has a clear view of the runway and pit!</li>
+            </ul>
+            <span className='event-block-details-header'>Pole Storage</span>
+            <ul className='event-block-details'>
+              <li>Overnight pole storage can be arranged. For drop-off and pick-up, email <span className='red-text'>Events@dcvault.org</span> by June 20th</li>
+            </ul>
+            <span className='event-block-details-header'>Pole Rentals</span>
+            <ul className='event-block-details'>
+              <li>UCS Spirit Poles Available for Rent (inquire)</li>
+              <li>$30 cash at check-in</li>
+              <li>You may be sharing your rental pole</li>
+              <li>ID will be held until the pole is returned</li>
+            </ul>
+            <span className='event-block-details-header'>Event Features / Food</span>
+            <ul className='event-block-details'>
+              <li>Free Grilled hotdogs and veggie dogs for competitors and spectators while they last!</li>
+              <li>Bring something special for yourself if you’d like to grill it up!</li>
+            </ul>
+            <span className='event-block-details-header'>Pets</span>
+            <ul className='event-block-details'>
+              <li>Dog friendly venue!</li>
+              <li>Bring a leash and water for your critter</li>
+            </ul>
+            <span className='event-block-details-header'>General Info</span>
+            <ul className='event-block-details'>
+              <li>For additional information, email <span className='red-text'>Events@dcvault.org</span></li>
+            </ul>
+          </div>
+        )
       },
       { //2024 Events
         date: new Date('August 09, 2024'),
