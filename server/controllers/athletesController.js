@@ -282,6 +282,7 @@ const getProfiles = async (req, res, db) => {
         id: profile.id,
         firstName: profile.firstName,
         lastName: profile.lastName,
+        gender: profile.gender,
         nationality: profile.nationality,
         dob: profile.dob,
         profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
