@@ -60,20 +60,51 @@ const addOrUpdateJump = async (req, res, db) => {
     }
 
     // Maybe consider auto-verifying if admin made request. Need to update PRs then.
-    var verified = false;
-    if (hardMetrics?.setting !== "Meet") { // Auto verify practice jumps
-      verified = true;
+    var needsVerification = false;
+    var originalJump = null;
+    var wasPr = false;
+
+    if (jumpId) {
+      // Get the original jump if we're updating
+      originalJump = await db.tables.Jumps.findByPk(jumpId);
+      
+      if (!originalJump) {
+        return res.status(404).json({ ok: false, message: 'Jump not found.' });
+      }
+
+      if (!originalJump.verified) {
+        // If original jump was unverified, just do normal verification check
+        needsVerification = await requiresVerification(hardMetrics, meetInfo, athleteProfileId, db);
+      } else {
+        // Original jump was verified, check if any critical fields changed
+        const criticalFieldsChanged = 
+          (meetInfo?.records?.join(',') !== originalJump.recordType) ||
+          (meetInfo?.championshipType !== originalJump.meetType) ||
+          (meetInfo?.placement !== originalJump.placement) ||
+          (hardMetrics?.height?.inches !== originalJump.heightInches) ||
+          (hardMetrics?.setting !== originalJump.setting);
+
+        if (criticalFieldsChanged) {
+          needsVerification = true;
+          
+          // Only check if it was a PR if we need to recalculate PRs
+          const prRecord = await db.tables.PersonalRecords.findOne({
+            where: { jumpId, athleteProfileId }
+          });
+          wasPr = !!prRecord;
+        }
+      }
     } else {
-      const athletesPr = await getPersonalBest(athleteProfileId, db);
-      // Auto verify if the jump is not a PR, not a championship, and not a record. (If meet type is null, it's not a championship)
-      verified = hardMetrics?.height?.inches <= athletesPr &&
-        !meetInfo?.championshipType &&
-        !meetInfo?.records;
+      // New jump, just do normal verification check
+      needsVerification = await requiresVerification(hardMetrics, meetInfo, athleteProfileId, db);
     }
 
-    // TODO: If jump was verified and became unverified due to an update, 
-    // then we need to repopulate the athlete's PRs because the jump is no longer verified.
-    // Also, don't unverify a jump if the records, height, or meet type are not changed.
+    // If we're updating a verified PR and it needs re-verification, we need to recalculate PRs
+    if (jumpId && wasPr && needsVerification) {
+      await populatePRsForAthlete(athleteProfileId, db);
+    }
+    
+    const verified = !needsVerification;
 
     // Upsert jump
     const [jumpRow, created] = await db.tables.Jumps.upsert({
@@ -100,6 +131,38 @@ const addOrUpdateJump = async (req, res, db) => {
     res.status(500).json({ ok: false, message: 'Internal server error.' });
   }
 };
+
+// Verification helper (throws errors)
+async function requiresVerification(hardMetrics, meetInfo, athleteProfileId, db) {
+  // Auto verify practice jumps
+  if (hardMetrics?.setting !== "Meet") {
+    return false;
+  }
+  if (!meetInfo) { 
+    console.error("Jump is a meet jump but has no meet info.");
+    return true;
+  }
+
+  // If it's a championship placement, we need to verify it
+  if (meetInfo.championshipType 
+    && meetInfo.placement 
+    && meetInfo.placement >= 1 && meetInfo.placement <= 3) {
+    return true;
+  }
+
+  // If it's a record jump, we need to verify it
+  if (meetInfo.records) {
+    return true;
+  } 
+
+  // If it's a PR jump, we need to verify it
+  const athletesPr = await getPersonalBest(athleteProfileId, db);
+  if (hardMetrics?.height?.inches > athletesPr) {
+    return true;
+  }
+
+  return false
+}
 
 // Used by admins to check other's jumps
 const getJump = async (req, res, db) => {
@@ -467,7 +530,7 @@ module.exports = {
   verifyJump,
   // populatePRsForAthlete,
   getUnverifiedMeetJumps,
-  // getPersonalBest,
+  getPersonalBest,
   // getPersonalBests,
   // getLargestPole,
 }

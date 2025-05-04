@@ -90,106 +90,55 @@ const getProfile = async (req, res, db) => {
       // attributes.push('email', ) //TODO: add any restricted columns here
     }
 
-    // TODO: Don't need all this, can use cache to retrieve the PR
-    // Query to fetch AthleteProfile with their best PR
-    const profileWithPR = await db.tables.AthleteProfiles.findOne({
+    const profile = await db.tables.AthleteProfiles.findOne({
       where: { id: athleteProfileId },
       attributes: attributes,
+    });
+
+    if (!profile) {
+      return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
+    }
+
+    const cachedRank = await rankingCache.getRankingForAthlete(profile.id, profile.gender) || undefined;
+    
+    // Get the highest PR using the dedicated function
+    const highestPr = await getPersonalBest(profile.id, db);
+    
+    // Get the largest pole used in PRs
+    const largestPole = await db.tables.PersonalRecords.findOne({
+      where: { athleteProfileId: profile.id },
       include: [
         {
-          model: db.tables.PersonalRecords,
-          as: 'personalRecords',
-          attributes: ['stepNum'],
-          required: false, // Ensures athleteProfile is returned even if no personalRecords exist
-          include: [
-            {
-              model: db.tables.Jumps,
-              as: 'jump',
-              attributes: ['heightInches', 'poleLengthInches', 'poleWeight'],
-            },
-          ],
-          where: db.tables.schema.literal(
-            `(personalRecords.jumpId IS NULL OR personalRecords.jumpId = (
-              SELECT id FROM jumps 
-              WHERE jumps.id = personalRecords.jumpId 
-              ORDER BY jumps.heightInches DESC 
-              LIMIT 1
-            ))`
-          ),
+          model: db.tables.Jumps,
+          as: 'jump',
+          attributes: ['poleLengthInches', 'poleWeight'],
+          order: [['poleLengthInches', 'DESC']],
         },
       ],
     });
 
-
-
-    // const profileWithPRs = await db.tables.AthleteProfiles.findOne({
-    //   where: { id: athleteProfileId },
-    //   attributes: attributes,
-    //   include: [
-    //     {
-    //       model: db.tables.PersonalRecords,
-    //       as: 'personalRecords',
-    //       attributes: ['stepNum'],
-    //       include: [
-    //         {
-    //           model: db.tables.Jumps,
-    //           as: 'jump',
-    //           attributes: ['heightInches', 'poleLengthInches', 'poleWeight'], // Include the PR height and pole
-    //         },
-    //       ],
-    //     },
-    //   ],
-    //   order: [
-    //     [db.tables.schema.literal(
-    //       `(SELECT MAX(jumps.heightInches) 
-    //         FROM personalRecords AS pr 
-    //         INNER JOIN jumps ON pr.jumpId = jumps.id 
-    //         WHERE pr.athleteProfileId = AthleteProfile.id)`
-    //     ),
-    //     'DESC'],
-    //   ],
-    // });
-
-    if (!profileWithPR) {
-      return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
-    }
-
-    const cachedRank = await rankingCache.getRankingForAthlete(profileWithPR.id, profileWithPR.gender) || undefined;
-    
-    var height = undefined;
-    var largestPole = undefined;
-    if (profileWithPR.personalRecords.length > 0) {
-      const pr = profileWithPR.personalRecords[0];
-      if (pr.jump?.poleLengthInches && pr.jump?.poleWeight) {
-        largestPole = {
-          lengthInches: pr.jump.poleLengthInches,
-          weight: pr.jump.poleWeight,
-        };
-      }
-      if (pr.jump?.heightInches) {
-        height = pr.jump?.heightInches;
-      }
-    }
-
     const athleteProfile = {
-      id: profileWithPR.id,
-      firstName: profileWithPR.firstName,
-      lastName: profileWithPR.lastName,
-      gender: profileWithPR.gender,
-      dob: profileWithPR.dob,
-      profileImage: profileWithPR.profileImageVerified ? profileWithPR.profileImage : undefined,
-      backgroundImage: profileWithPR.backgroundImageVerified ? profileWithPR.backgroundImage : undefined,
-      nationality: profileWithPR.nationality,
+      id: profile.id,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      gender: profile.gender,
+      dob: profile.dob,
+      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
+      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+      nationality: profile.nationality,
       stats: {
-        height: profileWithPR.height,
-        weight: profileWithPR.weight,
-        age: helpers.calculateAge(profileWithPR.dob),
+        height: profile.height,
+        weight: profile.weight,
+        age: helpers.calculateAge(profile.dob),
         rank: cachedRank,
-        pr: height,
-        largestPole,
+        pr: highestPr,
+        largestPole: largestPole?.jump ? {
+          lengthInches: largestPole.jump.poleLengthInches,
+          weight: largestPole.jump.poleWeight,
+        } : undefined,
       },
-      isActiveMember: profileWithPR.isActiveMember,
-      userId: profileWithPR.userId,
+      isActiveMember: profile.isActiveMember,
+      userId: profile.userId,
     };
 
     const foundAthlete = await db.tables.Athletes.findOne({where: {userId: athleteProfile.userId}});
