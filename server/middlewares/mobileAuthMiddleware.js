@@ -36,12 +36,13 @@ const checkPermission = (requiredPermission) => {
 
 function athleteProfileBelongsToUser(athleteProfileId, user) {
   if (user.athleteProfileIds && Array.isArray(user.athleteProfileIds)) {
-    return user.athleteProfileIds.includes(athleteProfileId);
+    return user.athleteProfileIds.includes(athleteProfileId) ||
+           user.athleteProfileIds.includes(Number(athleteProfileId));
   }
 
   if (user.athleteProfileId) {
     console.warn('User does not have athleteProfileIds, but has athleteProfileId');
-    return user.athleteProfileId === athleteProfileId;
+    return user.athleteProfileId === athleteProfileId || user.athleteProfileId === Number(athleteProfileId);
   }
   return false;
 }
