@@ -8,7 +8,7 @@ const {
   updateChampionshipTypes,
   updateDivisionTypes,
   updateRecordTypes
-} = require('../controllers/MeetDataController');
+} = require('../controllers/meetDataController');
 const { checkPermission } = require('../middlewares/mobileAuthMiddleware');
 
 module.exports = function meetDataRoutes(db) {
