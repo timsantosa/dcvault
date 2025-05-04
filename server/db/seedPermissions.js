@@ -16,6 +16,7 @@ async function seedRolesAndPermissions(db) {
   
       // Create Permissions
       const permissions = [
+        { permissionKey: 'access_mobile_app', permissionName: 'Access mobile app', description: 'Allows access to the mobile app.' },
         { permissionKey: 'view_profiles', permissionName: 'View Athlete Profiles', description: 'Allows viewing of athlete profiles.' },
         { permissionKey: 'edit_others_profiles', permissionName: "Edit Other's Profiles", description: 'Allows editing of Athlete Profiles other than your own.' },
         { permissionKey: 'view_others_jumps', permissionName: 'View Jumps of Other Athletes', description: "Allows viewing of other athlete's jumps." },
@@ -23,6 +24,8 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'verify_jumps', permissionName: 'Verify Jumps', description: "Allows verifying of any athlete's jumps." },
         { permissionKey: 'manage_roles', permissionName: 'Manage Roles', description: 'Allows assigning roles and permissions to users.' },
         { permissionKey: 'verify_images', permissionName: 'Verify Images', description: "Allows user to verify other users' images" },
+        { permissionKey: 'manage_meet_data', permissionName: 'Manage Meet Data', description: 'Allows managing meet data like record types, championship types, and division types.' },
+        { permissionKey: 'manage_drill_types', permissionName: 'Manage Drill Types', description: 'Allows managing drill types.' },
       ];
   
       for (const perm of permissions) {
@@ -38,7 +41,7 @@ async function seedRolesAndPermissions(db) {
       });
   
       const basePermissions = await db.tables.Permissions.findAll({
-        where: { permissionKey: ['view_profiles'] }
+        where: { permissionKey: ['view_profiles', 'access_mobile_app'] }
       });
   
       // Assign to Admin Role

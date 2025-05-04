@@ -5,12 +5,13 @@ const { authenticateJWT, checkPermission } = require('./middlewares/mobileAuthMi
 const athleteRoutes = require('./mobileRoutes/athleteRoutes');
 const authRoutes = require('./mobileRoutes/authRoutes');
 const permissionRoutes = require('./mobileRoutes/permissionRoutes');
-const adminCheck = require('./middlewares/admin');
 const { getMobileUserInfo } = require('./controllers/authController');
 const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
 const { verifyJump, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
 const poleRoutes = require('./mobileRoutes/poleRoutes');
-
+const meetDataRoutes = require('./mobileRoutes/meetDataRoutes');
+const drillTypeRoutes = require('./mobileRoutes/drillTypeRoutes');
+const drillRoutes = require('./mobileRoutes/drillRoutes');
 module.exports = function addMobileAppRoutes(app, db) {
 
   
@@ -21,60 +22,24 @@ module.exports = function addMobileAppRoutes(app, db) {
   // Everything under '/mobileapp/user' will need to be authenticated
   app.use('/mobileapp/user', authenticateJWT);
   app.use('/mobileapp/user/log', jumpRoutes(db));
+  app.use('/mobileapp/user/log', drillRoutes(db));
   app.use('/mobileapp/user/athlete', athleteRoutes(db));
   app.use('/mobileapp/user/profile/image', imageUploadRoutes(db));
 
   app.use('/mobileapp/user/poles', poleRoutes(db));
+  app.use('/mobileapp/user/meet-data', meetDataRoutes(db));
   
   app.get('/mobileapp/user/info', async (req, res) => {
     getMobileUserInfo(req, res, db);
   });
 
+  app.use('/mobileapp/user/drillTypes', drillTypeRoutes(db));
+
   // Admin routes
   app.post('/mobileapp/user/jump/verify', checkPermission('verify_jumps'), (req, res) => verifyJump(req, res, db));
   app.get('/mobileapp/user/jumps/unverified', checkPermission('verify_jumps'), (req, res) => getUnverifiedMeetJumps(req, res, db));
 
-  // TODO: move to controller
-  app.get('/mobileapp/user/meetTypeOptions', async (req, res) => {
-    // TODO: Grab items from DB
-    res.json({
-      ok: true,
-      message: 'Successfully grabbed meet options',
-      meetTypeOptions: {
-        meetTypes: [
-          'County',
-          'Regional',
-          'State',
-          'Conference',
-          'National',
-          'International',
-          'World',
-          'Olympic',
-        ],
-        divisionTypes: [
-          'Elementary',
-          'Middle School',
-          'High School',
-          'Collegiate',
-          'Open',
-          'Elite',
-          'Masters',
-        ],
-        recordTypes: [
-          'School',
-          'Meet',
-          'Facility',
-          'State',
-          'Regional',
-          'National',
-          'Olympic',
-          'World',
-        ],
-      },
-    });
-  });
-
-  app.use('/mobileapp/user/permissions', adminCheck, permissionRoutes);
+  app.use('/mobileapp/user/permissions', checkPermission('manage_roles'), permissionRoutes(db));
 }
 
 

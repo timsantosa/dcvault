@@ -1,8 +1,21 @@
-
 const express = require('express');
-const { addRoleToUser, removeRoleFromUser } = require('../controllers/permissionsController');
-const adminCheck = require('../middlewares/admin');
-
+const {
+  getRolesForUser,
+  addRoleToUser,
+  removeRoleFromUser,
+  getPermissionsForUser,
+  addPermissionToUser,
+  removePermissionFromUser,
+  getPermissionsForRole,
+  addPermissionToRole,
+  removePermissionFromRole,
+  getAllUsersWithRole,
+  createRole,
+  deleteRole,
+  getAllRoles, 
+  getAllPermissions, 
+  getUserById
+} = require('../controllers/permissionsController');
 
 const permissionRoutes = (db) => {
   const router = express.Router();
@@ -22,6 +35,24 @@ const permissionRoutes = (db) => {
     .get((req, res) => getPermissionsForRole(req, res, db))
     .post((req, res) => addPermissionToRole(req, res, db))
     .delete((req, res) => removePermissionFromRole(req, res, db));
+
+  router.route('/list')
+    .get((req, res) => getAllPermissions(req, res, db));
+
+  router.route('/roles')
+    .get((req, res) => getAllRoles(req, res, db));
+
+  router.route('/role')
+    .post((req, res) => createRole(req, res, db));
+
+  router.route('/role/:roleId')
+    .delete((req, res) => deleteRole(req, res, db));
+
+  router.route('/role/:roleId/users')
+    .get((req, res) => getAllUsersWithRole(req, res, db));
+
+  router.route('/user/:userId')
+    .get((req, res) => getUserById(req, res, db));
 
   return router;
 };

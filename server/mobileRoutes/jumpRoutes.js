@@ -1,38 +1,26 @@
 const express = require('express');
 const { getJump, addOrUpdateJump, deleteJump, fetchJumps, verifyJump, getUnverifiedMeetJumps } = require('../controllers/jumpsController');
-const adminCheck = require('../middlewares/admin');
-const { checkPermission } = require('../middlewares/mobileAuthMiddleware');
+const { checkPermission, checkOwnAthleteProfileOrPermission } = require('../middlewares/mobileAuthMiddleware');
 
 
 const jumpRoutes = (db) => {
   const router = express.Router();
 
-  // TODO: Change to self or permission check
-  const checkSelfOrAdmin = (req, res, next) => {
-    const user = req.user;
-    if(user.isAdmin) {
-      return next();
-    }
+  const checkJumpViewPermission = (req, res, next) => {
+    checkOwnAthleteProfileOrPermission(req, res, next, 'view_others_jumps');
+  }
 
-    const athleteProfileId = req.query.athleteProfileId;
-    if (!athleteProfileId || !user.athleteProfileId) {
-      return res.status(400).json({ ok: false, message: 'Unauthorized' });
-    }
-
-    if (athleteProfileId != user.athleteProfileId) {
-      return res.status(403).json({ ok: false, message: 'Forbidden' });
-    }
-
-    next();
+  const checkJumpEditPermission = (req, res, next) => {
+    checkOwnAthleteProfileOrPermission(req, res, next, 'edit_others_jumps');
   }
 
   // Pass the db to the controller functions
   router.route('/jump')
-    .get(checkSelfOrAdmin, (req, res) => getJump(req, res, db))
-    .put(checkSelfOrAdmin, (req, res) => addOrUpdateJump(req, res, db))
-    .delete(checkSelfOrAdmin, (req, res) => deleteJump(req, res, db));
+    .get(checkJumpViewPermission, (req, res) => getJump(req, res, db))
+    .put(checkJumpEditPermission, (req, res) => addOrUpdateJump(req, res, db))
+    .delete(checkJumpEditPermission, (req, res) => deleteJump(req, res, db));
     
-  router.get('/jumps', checkSelfOrAdmin, (req, res) => fetchJumps(req, res, db));
+  router.get('/jumps', checkJumpViewPermission, (req, res) => fetchJumps(req, res, db));
 
   return router;
 };

@@ -7,8 +7,8 @@ async function upsertProfile(req, res, db) {
   try {
     const userSendingRequest = req.user;
     const newProfileData = req.body.athleteProfile;
-    const athleteIdToUpdate = req.body.athleteProfileId;
-    const userIdToCreateFor = req.body.userId;
+    const athleteIdToUpdate = req.query.athleteProfileId;
+    const userIdToCreateFor = req.query.userId;
 
 
     // either an athleteProfId needs to passed in for updating, or 
@@ -76,117 +76,71 @@ const getProfile = async (req, res, db) => {
   try {
     const athleteProfileId = parseInt(req.query.athleteProfileId);
     if (!helpers.isValidId(athleteProfileId)) {
-      return res.status(403).json({ ok: false, message: 'Invalid athlete profile ID.' });
+      return res.status(400).json({ ok: false, message: 'Invalid athlete profile ID.' });
     }
 
-    let attributes = ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender', 'profileImageVerified', 'backgroundImageVerified', 'isActiveMember'];
-    const userHasFullAccess = user.isAdmin || user.athleteProfileId == athleteProfileId;
+    let attributes = [
+      'id', 'firstName', 'lastName',
+      'nationality', 'dob', 'height', 
+      'weight', 'profileImage', 'backgroundImage', 
+      'gender', 'profileImageVerified', 'backgroundImageVerified',
+      'isActiveMember', 'userId'];
+    const userHasFullAccess = user.isAdmin || user.athleteProfileIds?.includes(athleteProfileId);
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
     }
 
-    // TODO: Don't need all this, can use cache to retrieve the PR
-    // Query to fetch AthleteProfile with their best PR
-    const profileWithPR = await db.tables.AthleteProfiles.findOne({
-      where: { id: athleteProfileId },
+    const profile = await db.tables.AthleteProfiles.findByPk(athleteProfileId, {
       attributes: attributes,
+    });
+
+    if (!profile) {
+      return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
+    }
+
+    const cachedRank = await rankingCache.getRankingForAthlete(profile.id, profile.gender) || undefined;
+    
+    // Get the highest PR using the dedicated function
+    const highestPr = await getPersonalBest(profile.id, db);
+    
+    // Get the largest pole used in PRs
+    const largestPole = await db.tables.PersonalRecords.findOne({
+      where: { athleteProfileId: profile.id },
       include: [
         {
-          model: db.tables.PersonalRecords,
-          as: 'personalRecords',
-          attributes: ['stepNum'],
-          required: false, // Ensures athleteProfile is returned even if no personalRecords exist
-          include: [
-            {
-              model: db.tables.Jumps,
-              as: 'jump',
-              attributes: ['heightInches', 'poleLengthInches', 'poleWeight'],
-            },
-          ],
-          where: db.tables.schema.literal(
-            `(personalRecords.jumpId IS NULL OR personalRecords.jumpId = (
-              SELECT id FROM jumps 
-              WHERE jumps.id = personalRecords.jumpId 
-              ORDER BY jumps.heightInches DESC 
-              LIMIT 1
-            ))`
-          ),
+          model: db.tables.Jumps,
+          as: 'jump',
+          attributes: ['poleLengthInches', 'poleWeight'],
+          order: [['poleLengthInches', 'DESC']],
         },
       ],
     });
 
-
-
-    // const profileWithPRs = await db.tables.AthleteProfiles.findOne({
-    //   where: { id: athleteProfileId },
-    //   attributes: attributes,
-    //   include: [
-    //     {
-    //       model: db.tables.PersonalRecords,
-    //       as: 'personalRecords',
-    //       attributes: ['stepNum'],
-    //       include: [
-    //         {
-    //           model: db.tables.Jumps,
-    //           as: 'jump',
-    //           attributes: ['heightInches', 'poleLengthInches', 'poleWeight'], // Include the PR height and pole
-    //         },
-    //       ],
-    //     },
-    //   ],
-    //   order: [
-    //     [db.tables.schema.literal(
-    //       `(SELECT MAX(jumps.heightInches) 
-    //         FROM personalRecords AS pr 
-    //         INNER JOIN jumps ON pr.jumpId = jumps.id 
-    //         WHERE pr.athleteProfileId = AthleteProfile.id)`
-    //     ),
-    //     'DESC'],
-    //   ],
-    // });
-
-    if (!profileWithPR) {
-      return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
-    }
-
-    const cachedRank = await rankingCache.getRankingForAthlete(profileWithPR.id, profileWithPR.gender) || undefined;
-    
-    var height = undefined;
-    var largestPole = undefined;
-    if (profileWithPR.personalRecords.length > 0) {
-      const pr = profileWithPR.personalRecords[0];
-      if (pr.jump?.poleLengthInches && pr.jump?.poleWeight) {
-        largestPole = {
-          lengthInches: pr.jump.poleLengthInches,
-          weight: pr.jump.poleWeight,
-        };
-      }
-      if (pr.jump?.heightInches) {
-        height = pr.jump?.heightInches;
-      }
-    }
-
     const athleteProfile = {
-      id: profileWithPR.id,
-      firstName: profileWithPR.firstName,
-      lastName: profileWithPR.lastName,
-      gender: profileWithPR.gender,
-      dob: profileWithPR.dob,
-      profileImage: profileWithPR.profileImageVerified ? profileWithPR.profileImage : undefined,
-      backgroundImage: profileWithPR.backgroundImageVerified ? profileWithPR.backgroundImage : undefined,
-      nationality: profileWithPR.nationality,
+      id: profile.id,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      gender: profile.gender,
+      dob: profile.dob,
+      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
+      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+      nationality: profile.nationality,
       stats: {
-        height: profileWithPR.height,
-        weight: profileWithPR.weight,
-        age: helpers.calculateAge(profileWithPR.dob),
+        height: profile.height,
+        weight: profile.weight,
+        age: helpers.calculateAge(profile.dob),
         rank: cachedRank,
-        pr: height,
-        largestPole,
+        pr: highestPr,
+        largestPole: largestPole?.jump ? {
+          lengthInches: largestPole.jump.poleLengthInches,
+          weight: largestPole.jump.poleWeight,
+        } : undefined,
       },
-      isActiveMember: profileWithPR.isActiveMember,
+      isActiveMember: profile.isActiveMember,
+      userId: profile.userId,
     };
 
-    const foundAthlete = await db.tables.Athletes.findOne({where: {userId: user.id}});
+    const foundAthlete = await db.tables.Athletes.findOne({where: {userId: athleteProfile.userId}});
     if (!foundAthlete) {
       // TODO: Indicate athlete is not currently signed up
       res.json({ok: true, message: 'found athlete profile', athleteProfile});
@@ -206,7 +160,7 @@ const getProfile = async (req, res, db) => {
 
 const deleteProfile = async (req, res, db) => {
   console.log('delete profile');
-  res.json({ ok: false, message: 'Not implemented' });
+  res.status(500).json({ ok: false, message: 'Not implemented' });
 };
 
 const getProfiles = async (req, res, db) => {
@@ -230,7 +184,12 @@ const getProfiles = async (req, res, db) => {
     }
     const profilesWithPRs = await db.tables.AthleteProfiles.findAll({
       where: whereClause,
-      attributes: ['id', 'firstName', 'lastName', 'nationality', 'dob', 'height', 'weight', 'profileImage', 'backgroundImage', 'gender', 'profileImageVerified', 'backgroundImageVerified', 'isActiveMember'],
+      attributes: [
+        'id', 'firstName', 'lastName',
+        'nationality', 'dob', 'height',
+        'weight', 'profileImage', 'backgroundImage',
+        'gender', 'profileImageVerified', 'backgroundImageVerified',
+        'isActiveMember', 'userId'],
       include: [
         {
           model: db.tables.PersonalRecords,
@@ -271,6 +230,7 @@ const getProfiles = async (req, res, db) => {
         id: profile.id,
         firstName: profile.firstName,
         lastName: profile.lastName,
+        gender: profile.gender,
         nationality: profile.nationality,
         dob: profile.dob,
         profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
@@ -284,6 +244,7 @@ const getProfiles = async (req, res, db) => {
           largestPole: undefined, // TODO: Add this if needed
         },
         isActiveMember: profile.isActiveMember,
+        userId: profile.userId,
       };
     });
 
@@ -314,4 +275,133 @@ const getLatestAthlete = (req, res, db) => {
   });
 };
 
-module.exports = { upsertProfile, getProfile, deleteProfile, getProfiles, getLatestAthlete }
+
+const getAthleteProfilesForUser = async (req, res, db) => {
+  try {
+    const userId = parseInt(req.query.userId);
+    if (!helpers.isValidId(userId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid user ID' });
+    }
+
+    const profiles = await db.tables.AthleteProfiles.findAll({
+      where: { userId },
+      attributes: [
+        'id', 'firstName', 'lastName',
+        'nationality', 'dob', 'height',
+        'weight', 'profileImage', 'backgroundImage',
+        'gender', 'profileImageVerified', 'backgroundImageVerified',
+        'isActiveMember', 'userId'
+      ]
+    });
+
+    const athleteProfiles = profiles.map(profile => ({
+      id: profile.id,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      gender: profile.gender,
+      dob: profile.dob,
+      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
+      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+      nationality: profile.nationality,
+      stats: {
+        height: profile.height,
+        weight: profile.weight,
+        age: helpers.calculateAge(profile.dob)
+      },
+      isActiveMember: profile.isActiveMember,
+      userId: profile.userId,
+    }));
+
+    res.json({ ok: true, athleteProfiles });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch athlete profiles' });
+  }
+};
+
+const getRegisteredAthletesForUser = async (req, res, db) => {
+  try {
+    const userId = parseInt(req.query.userId);
+    if (!helpers.isValidId(userId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid user ID' });
+    }
+
+    const athletes = await db.tables.Athletes.findAll({
+      where: { userId },
+      attributes: [
+        'id', 'firstName', 'lastName', 'email',
+        'emergencyContactName', 'emergencyContactRelation',
+        'emergencyContactMDN', 'school', 'state',
+        'usatf', 'gender', 'medConditions', 'dob'
+      ]
+    });
+
+    res.json({ ok: true, athletes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch registered athletes' });
+  }
+};
+
+const getMedalCountsForProfile = async (req, res, db) => {
+  try {
+    const athleteProfileId = parseInt(req.query.athleteProfileId);
+    if (!helpers.isValidId(athleteProfileId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid athlete profile ID' });
+    }
+
+    // Query to count medals by placement
+    const medalCounts = await db.tables.Jumps.findAll({
+      where: {
+        athleteProfileId: athleteProfileId,
+        meetType: { [db.tables.schema.Sequelize.Op.ne]: null }, // meetType is not null (championship)
+        placement: { [db.tables.schema.Sequelize.Op.in]: [1, 2, 3] }, // Only count placements 1, 2, or 3
+        verified: true // Only count verified jumps
+      },
+      attributes: [
+        [db.tables.schema.Sequelize.fn('COUNT', db.tables.schema.Sequelize.col('id')), 'count'],
+        'placement'
+      ],
+      group: ['placement']
+    });
+
+    // Initialize counts
+    const counts = {
+      gold: 0,
+      silver: 0,
+      bronze: 0
+    };
+
+    // Update counts based on query results
+    medalCounts.forEach(medal => {
+      const count = parseInt(medal.getDataValue('count'));
+      switch (medal.placement) {
+        case 1:
+          counts.gold = count;
+          break;
+        case 2:
+          counts.silver = count;
+          break;
+        case 3:
+          counts.bronze = count;
+          break;
+      }
+    });
+
+    res.json({ ok: true, medalCounts: counts });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch medal counts' });
+  }
+};
+
+module.exports = { 
+  upsertProfile, 
+  getProfile, 
+  deleteProfile, 
+  getProfiles, 
+  getLatestAthlete,
+  getAthleteProfilesForUser,
+  getRegisteredAthletesForUser,
+  getMedalCountsForProfile
+};
