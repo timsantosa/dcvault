@@ -76,7 +76,7 @@ const getProfile = async (req, res, db) => {
   try {
     const athleteProfileId = parseInt(req.query.athleteProfileId);
     if (!helpers.isValidId(athleteProfileId)) {
-      return res.status(403).json({ ok: false, message: 'Invalid athlete profile ID.' });
+      return res.status(400).json({ ok: false, message: 'Invalid athlete profile ID.' });
     }
 
     let attributes = [

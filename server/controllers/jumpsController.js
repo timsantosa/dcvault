@@ -211,7 +211,7 @@ const deleteJump = async (req, res, db) => {
     });
     if (personalRecord) {
       personalRecord.destroy();
-      populatePRsForAthlete(athleteProfileId, db);
+      await populatePRsForAthlete(athleteProfileId, db);
     }
 
     await jump.destroy();
@@ -338,7 +338,7 @@ async function verifyJump(req, res, db) {
       jump.verified = false;
       await jump.save();
       // If a jump was unverified, we just need to find the next best one
-      populatePRsForAthlete(jump.athleteProfileId)
+      await populatePRsForAthlete(jump.athleteProfileId, db)
 
       message = 'Jump unverified successfully.'
     }
