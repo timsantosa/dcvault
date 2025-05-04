@@ -90,8 +90,7 @@ const getProfile = async (req, res, db) => {
       // attributes.push('email', ) //TODO: add any restricted columns here
     }
 
-    const profile = await db.tables.AthleteProfiles.findOne({
-      where: { id: athleteProfileId },
+    const profile = await db.tables.AthleteProfiles.findByPk(athleteProfileId, {
       attributes: attributes,
     });
 
