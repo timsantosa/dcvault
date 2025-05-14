@@ -8,7 +8,7 @@ import Register from './register.jsx'
 import AdminPanel from './admin-panel.jsx'
 import ContactModal from './contact-modal.jsx'
 import GenericModal from './generic-modal.jsx'
-import Dmvchamps from './dmvchamps.jsx'
+import pvchamps from './pvchamps.jsx'
 import PoleApp from './pole-app.jsx'
 import Events from './events.jsx'
 import Competition from './competition.jsx'
@@ -79,8 +79,8 @@ if (currentPage.indexOf('account') !== -1) {
     render(<Events />, document.getElementById('events-container'))
 } else if(currentPage.indexOf('compete') !== -1){
     render(<Competition />, document.getElementById('competition-page'))
-} else if(currentPage.indexOf('dmvchamps') !== -1){
-  render(<Dmvchamps />, document.getElementById('dmv-champs'))
+} else if(currentPage.indexOf('pvchamps') !== -1){
+  render(<pvchamps />, document.getElementById('pvchamps'))
 }else{
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))
@@ -92,6 +92,6 @@ if (currentPage.indexOf('account') !== -1) {
     loginDiv.style.visibility = 'visible'
   }
 }
-//else if(currentPage.indexOf('dmvchamps') !== -1){
-//  render(<Dmvchamps />, document.getElementById('dmv-champs'))
+//else if(currentPage.indexOf('pvchamps') !== -1){
+//  render(<pvchamps />, document.getElementById('pvchamps'))
 //} 

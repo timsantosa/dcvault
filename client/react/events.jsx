@@ -349,7 +349,7 @@ class Events extends React.Component {
                 <li>5.2m (B) standard - waitlist</li>
                 <li>accepted B-standard entries posted by June 13th</li>
                 <li>alternates compete in the Men’s Emerging Elite Division</li>
-                <li>4.85m starting height</li>
+                <li>5m starting height</li>
                 <li>Progressions:
                   <ul>
                     <li>5.00+15 (16’5”)</li>
@@ -375,7 +375,7 @@ class Events extends React.Component {
                 <li>4.0m (B) standard - waitlist</li>
                 <li>accepted B-standard entries posted by June 13th</li>
                 <li>alternates compete in the Men + Women Open Division or Girls High School division</li>
-                <li>3.75m starting height</li>
+                <li>4m starting height</li>
                 <li>Progressions:
                   <ul>
                     <li>4.00+15 (13’1”)</li>
@@ -512,7 +512,7 @@ class Events extends React.Component {
                   <li>5.2m (B) standard - waitlist</li>
                   <li>accepted B-standard entries posted by June 13th</li>
                   <li>alternates compete in the Men’s Emerging Elite Division</li>
-                  <li>4.85m starting height</li>
+                  <li>5m starting height</li>
                   <li>Progressions:
                     <ul>
                       <li>5.00+15 (16’5”)</li>
@@ -538,7 +538,7 @@ class Events extends React.Component {
                   <li>4.0m (B) standard - waitlist</li>
                   <li>accepted B-standard entries posted by June 13th</li>
                   <li>alternates compete in the Men + Women Open Division or Girls High School division</li>
-                  <li>3.75m starting height</li>
+                  <li>4m starting height</li>
                   <li>Progressions:
                     <ul>
                       <li>4.00+15 (13’1”)</li>
@@ -641,7 +641,7 @@ class Events extends React.Component {
               <li>The 2025 Pole Vault Championships are open to all athletes ages 7 and up</li>
               <li>Advanced Registration Only</li>
               <li>Registration Closes @ Midnight on Jun 20th</li>
-              <li>$50 for competitors – <a style={{color: '#C0282D'}} href='https://dcvault.com/dmvchamps'>Register HERE!</a></li>
+              <li>$50 for competitors – <a style={{color: '#C0282D'}} href='https://dcvault.com/pvchamps'>Register HERE!</a></li>
             </ul>
             <span className='event-block-details-header'>Start List/Results</span>
             <ul className='event-block-details'>

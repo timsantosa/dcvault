@@ -4,7 +4,7 @@ const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
 
-class Dmvchamps extends React.Component {
+class pvchamps extends React.Component {
     constructor (props) {
         super(props)
 
@@ -70,7 +70,7 @@ class Dmvchamps extends React.Component {
         let progressBar = this.state.showBar ? (<ProgressBar pageNum={this.state.pageNum} />) : ''
         if (this.state.registrationOpen) {
             return (
-                <section id='dmvchamps'>
+                <section id='pvchamps'>
                     <div className='container'>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
@@ -281,8 +281,8 @@ class AthleteInfo extends React.Component {
                     <div className='form-row'>
                         <label>
                             <span className='required'>Competition</span>
-                            <input type ="checkbox" name="dates1" value="dmvchamps23"/>
-                            <label for="dmvchamps23">&nbsp;&nbsp;2025 Pole Vault Championships ($50)</label>
+                            <input type ="checkbox" name="dates1" value="pvchamps25"/>
+                            <label for="pvchamps25">&nbsp;&nbsp;2025 Pole Vault Championships ($50)</label>
                             <br></br>
                         </label>
                     </div>
@@ -878,4 +878,4 @@ class ProgressBar extends React.Component {
     }
 }
 
-export default Dmvchamps
+export default pvchamps
