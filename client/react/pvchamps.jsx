@@ -4,7 +4,7 @@ const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
 
-class pvchamps extends React.Component {
+class Pvchamps extends React.Component {
     constructor (props) {
         super(props)
 
@@ -878,4 +878,4 @@ class ProgressBar extends React.Component {
     }
 }
 
-export default pvchamps
+export default Pvchamps
