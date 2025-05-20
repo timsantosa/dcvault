@@ -1,6 +1,11 @@
 const express = require('express');
-const { getProfile, upsertProfile, deleteProfile, getProfiles, getLatestAthlete, getAthleteProfilesForUser, getRegisteredAthletesForUser, getMedalCountsForProfile } = require('../controllers/athletesController');
-const { checkPermission, checkOwnAthleteProfileOrPermission } = require('../middlewares/mobileAuthMiddleware');
+const { getProfile, upsertProfile, deleteProfile, getProfiles, getAthleteProfilesForUser, getRegisteredAthletesForUser, getMedalCountsForProfile, getRegisteredAthlete } = require('../controllers/athletesController');
+const { 
+  checkPermission, 
+  checkOwnAthleteProfileOrPermission,
+  checkOwnUserOrPermission,
+  checkOwnUserOrProfileOrPermission,
+} = require('../middlewares/mobileAuthMiddleware');
 
 
 const athleteRoutes = (db) => {
@@ -28,21 +33,27 @@ const athleteRoutes = (db) => {
   const checkEditProfilePermission = (req, res, next) => {
     checkOwnAthleteProfileOrPermission(req, res, next, 'edit_others_profiles');
   }
+  const checkCreateProfilePermission = (req, res, next) => {
+    checkOwnUserOrProfileOrPermission(req, res, next, 'edit_others_profiles');
+  }
+  const checkManageRolesPermission = (req, res, next) => {
+    checkOwnUserOrPermission(req, res, next, 'manage_roles');
+  }
 
   // Pass the db to the controller functions
   router.route('/profile') // TODO: Consider converting to use user id as a path parameter
     .get(checkPermission('view_profiles'), (req, res) => getProfile(req, res, db))
-    .put(checkEditProfilePermission, (req, res) => upsertProfile(req, res, db))
+    .put(checkCreateProfilePermission, (req, res) => upsertProfile(req, res, db))
     .delete(checkEditProfilePermission, (req, res) => deleteProfile(req, res, db));
 
   router.get('/profiles', checkPermission('view_profiles'), (req, res) => getProfiles(req, res, db));
 
-  // TODO: this might get replaced by /user/registered
-  router.get('/latestregistered', checkSelfOrAdmin, (req, res) => getLatestAthlete(req, res, db))
-
-  router.get('/user/profiles', checkPermission('manage_roles'), (req, res) => getAthleteProfilesForUser(req, res, db));
-  router.get('/user/registered', checkPermission('manage_roles'), (req, res) => getRegisteredAthletesForUser(req, res, db));
+  router.get('/user/profiles', checkManageRolesPermission, (req, res) => getAthleteProfilesForUser(req, res, db));
+  router.get('/user/registered', checkManageRolesPermission, (req, res) => getRegisteredAthletesForUser(req, res, db));
   router.get('/medals', checkPermission('view_profiles'), (req, res) => getMedalCountsForProfile(req, res, db));
+
+  // TODO: Add permission check
+  router.get('/registered', (req, res) => getRegisteredAthlete(req, res, db));
 
   return router;
 };

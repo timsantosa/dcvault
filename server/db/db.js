@@ -152,6 +152,7 @@ columns.athleteProfiles = {
   lastName: Sequelize.STRING,
   nationality: {type: Sequelize.STRING, defaultValue: 'US'},
   profileImage: Sequelize.STRING,
+  // TODO: Remove verified, create a separate table for holding suggested images.
   profileImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column profileImageVerified bool;
   backgroundImage: Sequelize.STRING,
   backgroundImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column backgroundImageVerified bool;
@@ -159,8 +160,25 @@ columns.athleteProfiles = {
   weight: Sequelize.INTEGER, // Pounds
   dob: Sequelize.STRING,
   gender: Sequelize.STRING,
-  isActiveMember: { type: Sequelize.BOOLEAN, defaultValue: true, allowNull: false, }, //ALTER TABLE athleteProfiles ADD COLUMN isActiveMember BOOLEAN NOT NULL DEFAULT TRUE;
-  // User FK
+  // If alwaysActiveOverride is true, the athlete profile will always be considered an active member.
+  alwaysActiveOverride: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false, }, //ALTER TABLE athleteProfiles CHANGE COLUMN isActiveMember alwaysActiveOverride BOOLEAN NOT NULL DEFAULT FALSE;
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.users,
+      key: 'id',
+    },
+  },
+  // ALTER TABLE athleteProfiles ADD COLUMN athleteId INT, ADD FOREIGN KEY (athleteId) REFERENCES athletes(id);
+  athleteId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.athletes,
+      key: 'id',
+    },
+  },
 }
 
 columns.jumps = {
@@ -393,7 +411,10 @@ const syncTables = (schema, force) => {
   // Mobile app related
   tables.AthleteProfiles.belongsTo(tables.Users, { as: 'user' }) // Puts a userId column in AthleteProfiles, each profile "belongs" to a User
   tables.Users.hasMany(tables.AthleteProfiles, { as: 'athleteProfiles', foreignKey: 'userId' }) // Each User "has many" AthleteProfiles somewhere in the DB (only one for now though)
-
+  
+  tables.AthleteProfiles.belongsTo(tables.Athletes, { as: 'athlete', foreignKey: 'athleteId' })
+  tables.Athletes.hasOne(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteId' })
+  
   tables.Jumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
   tables.AthleteProfiles.hasMany(tables.Jumps, { as: 'jumps', foreignKey: 'athleteProfileId' })
 
