@@ -75,11 +75,11 @@ const addOrUpdateJump = async (req, res, db) => {
       if (!originalJump.verified) {
         // If original jump was unverified, just do normal verification check
         needsVerification = await requiresVerification(hardMetrics, meetInfo, athleteProfileId, db);
-      } else {
+      } else if (hardMetrics?.setting === "Meet") {
         // Original jump was verified, check if any critical fields changed
         const criticalFieldsChanged = 
           (meetInfo?.records?.join(',') !== originalJump.recordType) ||
-          (meetInfo?.championshipType !== originalJump.meetType) ||
+          (meetInfo?.championshipType != originalJump.meetType) ||
           (meetInfo?.placement !== originalJump.placement) ||
           (hardMetrics?.height?.inches !== originalJump.heightInches) ||
           (hardMetrics?.setting !== originalJump.setting);
