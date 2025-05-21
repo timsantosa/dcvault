@@ -288,7 +288,7 @@ class Events extends React.Component {
             <li>4.00m (13’1.5”) starting height</li>
             <li>15cm progressions</li>
           </ul>
-          <span className='event-block-details-header'>Girl’s DMV Champions Division</span>
+          <span className='event-block-details-header'>Girl’s State Champions Division</span>
           <ul className='event-block-details'>
             <li>Any female athlete who placed 1st at an indoor or outdoor High School State Championship in 2025</li>
             <li>Must submit online source to verify results</li>
@@ -603,10 +603,10 @@ class Events extends React.Component {
               <ul>
                 <li>12:00pm Staff Arrive</li>
                 <li>12:45pm Gates Open</li>
-                <li>1:00pm Girl’s DMV Champions Division – warmups (black pit)</li>
-                <li>2:00pm Girl’s DMV Champions Division – competition (black pit)</li>
-                <li>3:00pm (or 1-hr after completion of girl’s division) Boy’s DMV Champions Division – warmups (black pit)</li>
-                <li>4:00pm Boy’s DMV Champions Division – competition (black pit)</li>
+                <li>1:00pm Girl’s State Champions Division – warmups (black pit)</li>
+                <li>2:00pm Girl’s State Champions Division – competition (black pit)</li>
+                <li>3:00pm (or 1-hr after completion of girl’s division) Boy’s State Champions Division – warmups (black pit)</li>
+                <li>4:00pm Boy’s State Champions Division – competition (black pit)</li>
               </ul>
               <li><strong>Sat, June 28th</strong> <em>(Note: <span className='red-text'>Rolling Schedule</span> – arrive early in case your time slot moves up!)</em></li>
               <ul>
@@ -652,7 +652,7 @@ class Events extends React.Component {
             <ul className='event-block-details'>
               <li>Medals will be awarded in all divisions, 1st through 3rd place</li>
               <li>Jiffy Car Rack Pole Carrier for 1st place finishers!</li>
-              <li>Special Limited-Edition Medals Awarded for facility records and DMV Champions Division (boys + girls)</li>
+              <li>Special Limited-Edition Medals Awarded for facility records and State Champions Division (boys + girls)</li>
               <li>USATF + World Athletics Sanctioned</li>
               <li>Elite Division Results will be published to WorldAthletics.org</li>
               <li>Open Division Results will be published to Milesplit.com and DCVault.com/events</li>
