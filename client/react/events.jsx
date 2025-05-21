@@ -272,16 +272,16 @@ class Events extends React.Component {
             <span className='event-block-date'>DIVISION INFORMATION</span><br></br>
             <br></br>
             <span className='event-block-date'>FRIDAY – Jun 27th</span><br></br>
-            <span className='event-block-date'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</span><br></br>
-            <span className='event-block-date'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span><br></br>
+            <span className='event-block-date'><span className='red-text'>STATE CHAMPIONS</span> DIVISION</span><br></br>
+            <span className='event-block-date'><span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span><br></br>
           </p>
 
           <ul className='event-block-details'>
-            <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions) in Maryland, Virginia or DC (verification required).</li>
-            <li>The DMV Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
-            <li><em>Athletes who compete in the DMV Champions Division on Friday, June 27th may also register to compete in High School Divisions or Emerging Elite Divisions on Saturday, June 28th. Register online separately for each division.</em></li>
+            <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions - verification required).</li>
+            <li>The State Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
+            <li><em>Athletes who compete in the State Champions Division on Friday, June 27th may also register to compete in High School Divisions or Emerging Elite Divisions on Saturday, June 28th. Register online separately for each division.</em></li>
           </ul>
-          <span className='event-block-details-header'>Boy’s DMV Champions Division</span>
+          <span className='event-block-details-header'>Boy’s State Champions Division</span>
           <ul className='event-block-details'>
             <li>Any male athlete who placed 1st at an indoor or outdoor High School State Championship in 2025</li>
             <li>Must submit online source to verify results</li>
@@ -435,23 +435,23 @@ class Events extends React.Component {
               <span className='event-block-date'>DIVISION INFORMATION</span><br></br>
               <br></br>
               <span className='event-block-date'>FRIDAY – Jun 27th</span><br></br>
-              <span className='event-block-date'><span className='red-text'>DMV STATE CHAMPIONS</span> DIVISION</span><br></br>
-              <span className='event-block-date'>DC + MD + VA <span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span><br></br>
+              <span className='event-block-date'><span className='red-text'>STATE CHAMPIONS</span> DIVISION</span><br></br>
+              <span className='event-block-date'><span className='red-text'>HIGH SCHOOL</span> STATE CHAMPIONS <span className='red-text'>ONLY!</span></span><br></br>
             </p>
 
             <ul className='event-block-details'>
-              <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions) in Maryland, Virginia or DC (verification required).</li>
-              <li>The DMV Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
-              <li><em>Athletes who compete in the DMV Champions Division on Friday, June 27th may also register to compete in High School Divisions or Emerging Elite Divisions on Saturday, June 28th. Register online separately for each division.</em></li>
+              <li>Open only to athletes who placed 1st at a 2025 indoor or outdoor High School State Championship (all divisions - verification required).</li>
+              <li>The State Champions Division is an opportunity for the best of the best to compete head-to-head!</li>
+              <li><em>Athletes who compete in the State Champions Division on Friday, June 27th may also register to compete in High School Divisions or Emerging Elite Divisions on Saturday, June 28th. Register online separately for each division.</em></li>
             </ul>
-            <span className='event-block-details-header'>Boy’s DMV Champions Division</span>
+            <span className='event-block-details-header'>Boy’s State Champions Division</span>
             <ul className='event-block-details'>
               <li>Any male athlete who placed 1st at an indoor or outdoor High School State Championship in 2025</li>
               <li>Must submit online source to verify results</li>
               <li>4.00m (13’1.5”) starting height</li>
               <li>15cm progressions</li>
             </ul>
-            <span className='event-block-details-header'>Girl’s DMV Champions Division</span>
+            <span className='event-block-details-header'>Girl’s State Champions Division</span>
             <ul className='event-block-details'>
               <li>Any female athlete who placed 1st at an indoor or outdoor High School State Championship in 2025</li>
               <li>Must submit online source to verify results</li>

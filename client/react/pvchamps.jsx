@@ -301,6 +301,16 @@ class AthleteInfo extends React.Component {
                                 </select>
                             </label>
                         </div>
+                        <div className='form-row'>
+                            <label>
+                                <span className='required'>Are you a registering for an Elite Division? (Standards - Men: 5.5m+ / Women: 4.3m+)</span>
+                                <select name='member'>
+                                    <option value=''>Select yes/no</option>
+                                    <option value='elite'>Yes</option>
+                                    <option value='not-elite'>No</option>
+                                </select>
+                            </label>
+                        </div>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6'>
                                 <div className='form-row'>
@@ -360,8 +370,8 @@ class AthleteInfo extends React.Component {
                                 <span className='required'>Division</span>
                                 <select name='division'>
                                     <option value=''>Select Division</option>
-                                    <option value='Boys DMV Champs'>Boy's DMV Champions Division (DMV High School State Champions Only!)</option>
-                                    <option value='Girls DMV Champs'>Girl's DMV Champions Division (DMV High School State Champions Only!)</option>
+                                    <option value='Boys State Champs'>Boy's State Champions Division (High School State Champions Only!)</option>
+                                    <option value='Girls State Champs'>Girl's State Champions Division (High School State Champions Only!)</option>
                                     <option value='Girls Elementary'>Elementary School Division - Girls (Ages 7-11 who attended 5th grade and under during Spring of 2025)</option>
                                     <option value='Boys Elementary'>Elementary School Division - Boys (Ages 7-11 who attended 5th grade and under during Spring of 2025)</option>
                                     <option value='Girls Middle School'>Middle School Division - Girls (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
@@ -372,6 +382,8 @@ class AthleteInfo extends React.Component {
                                     <option value='Womens Adult'>Open Adult Division - Women</option>
                                     <option value='Mens Adults'>Open Adult Division - Men</option>
                                     <option value='Mens Emerging Elite'>Men’s Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
+                                    <option value='Mens Elite'>Elite Women (PR of 5.5m or higher)</option>
+                                    <option value='Womens Elite'>Elite Men (PR of 4.3m or higher)</option>
                                 </select>
                             </label>
                         </div>
@@ -618,6 +630,8 @@ class Payment extends React.Component {
         let price = 0
         if(this.props.data.athleteInfo.dates1){
             if(this.props.data.athleteInfo.member == "dcvault-member"){
+                price = 5
+            }else if(this.props.data.athleteInfo.member == "elite"){
                 price = 5
             }else{
                 price+=50
