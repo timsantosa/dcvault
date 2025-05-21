@@ -37,6 +37,7 @@ async function upsertProfile(req, res, db) {
       weight: newProfileData.weight,
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId, // TODO: check if athleteId is already associated with another profile
+      alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false,
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
@@ -146,6 +147,7 @@ const getProfile = async (req, res, db) => {
       isActiveMember,
       userId: profile.userId,
       athleteId: profile.athleteId,
+      alwaysActiveOverride: profile.alwaysActiveOverride, // Only used for editing profile.
     };
 
     // Only query for athlete if we have an athleteId
@@ -178,16 +180,43 @@ const getProfiles = async (req, res, db) => {
   const user = req.user;
 
   try {
-    const { gender, allTime, page = 1, limit } = req.query;
-    var offset = 0;
-    if (limit) {
-      offset = (page - 1) * limit;
-    }
+    const { gender, allTime: allTimeStr, offset: offsetStr = '0', limit: limitStr = '20', search } = req.query;
+    const allTime = allTimeStr !== 'false'; // Convert string to boolean
+    const offset = parseInt(offsetStr, 10);
+    const limit = parseInt(limitStr, 10);
 
     // Base where clause
     let whereClause = {};
     if (gender) {
       whereClause.gender = gender;
+    }
+
+    // Add search conditions if search term exists
+    if (search) {
+      const searchTerm = search.toLowerCase();
+      whereClause[db.tables.schema.Sequelize.Op.or] = [
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        ),
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        ),
+        // Search in full name (for cases like "John Do")
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn(
+            'LOWER',
+            db.tables.schema.Sequelize.fn(
+              'concat',
+              db.tables.schema.Sequelize.col('firstName'),
+              ' ',
+              db.tables.schema.Sequelize.col('lastName')
+            )
+          ),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        )
+      ];
     }
 
     // Only query purchases and add active status conditions if not requesting all time
@@ -221,17 +250,32 @@ const getProfiles = async (req, res, db) => {
         }
       });
 
-      whereClause[db.tables.schema.Sequelize.Op.or] = [
-        { alwaysActiveOverride: true },
-        {
-          athleteId: {
-            [db.tables.schema.Sequelize.Op.in]: Array.from(athleteActiveStatus.keys())
+      // Define active member conditions
+      const activeMemberConditions = {
+        [db.tables.schema.Sequelize.Op.or]: [
+          { alwaysActiveOverride: true },
+          {
+            athleteId: {
+              [db.tables.schema.Sequelize.Op.in]: Array.from(athleteActiveStatus.keys())
+            }
           }
-        }
-      ];
+        ]
+      };
+
+      // If we already have search conditions, we need to combine them with active status
+      if (whereClause[db.tables.schema.Sequelize.Op.or]) {
+        whereClause[db.tables.schema.Sequelize.Op.and] = [
+          { [db.tables.schema.Sequelize.Op.or]: whereClause[db.tables.schema.Sequelize.Op.or] },
+          activeMemberConditions
+        ];
+        delete whereClause[db.tables.schema.Sequelize.Op.or];
+      } else {
+        whereClause[db.tables.schema.Sequelize.Op.or] = activeMemberConditions[db.tables.schema.Sequelize.Op.or];
+      }
     }
 
-    const profilesWithPRs = await db.tables.AthleteProfiles.findAll({
+    // Use findAndCountAll instead of separate queries
+    const { count: totalCount, rows: profilesWithPRs } = await db.tables.AthleteProfiles.findAndCountAll({
       where: whereClause,
       attributes: [
         'id', 'firstName', 'lastName',
@@ -264,8 +308,8 @@ const getProfiles = async (req, res, db) => {
           'DESC',
         ],
       ],      
-      limit: limit ? parseInt(limit, 10) : undefined,
-      offset: parseInt(offset, 10),
+      limit,
+      offset,
     });
 
     // Map the data into a structured response
@@ -298,13 +342,20 @@ const getProfiles = async (req, res, db) => {
           largestPole: undefined,
         },
         isActiveMember,
-        activeReason: profile.alwaysActiveOverride ? 'override' : 'registered',
         userId: profile.userId,
         athleteId: profile.athleteId,
+        alwaysActiveOverride: profile.alwaysActiveOverride,
       };
     });
 
-    res.json({ ok: true, athletes, page: parseInt(page, 10), limit: parseInt(limit, 10) });
+    const hasMore = offset + athletes.length < totalCount;
+
+    res.json({ 
+      ok: true, 
+      athletes,
+      hasMore,
+      totalCount
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ ok: false, error: 'Failed to fetch athlete profiles' });
