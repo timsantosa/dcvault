@@ -518,17 +518,22 @@ const getMedalCountsForProfile = async (req, res, db) => {
 };
 
 async function getRegisteredAthlete(req, res, db) {
-  const athleteId = parseInt(req.query.athleteId);
-  if (!helpers.isValidId(athleteId)) {
-    return res.status(400).json({ ok: false, message: 'Invalid athlete ID' });
-  }
+  try {
+    const athleteId = parseInt(req.query.athleteId);
+    if (!helpers.isValidId(athleteId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid athlete ID' });
+    }
 
-  const athlete = await db.tables.Athletes.findByPk(athleteId);
-  if (!athlete) {
-    return res.status(404).json({ ok: false, message: 'Athlete not found' });
-  }
+    const athlete = await db.tables.Athletes.findByPk(athleteId);
+    if (!athlete) {
+      return res.status(404).json({ ok: false, message: 'Athlete not found' });
+    }
 
-  res.json({ ok: true, athlete, message: 'found athlete' });
+    res.json({ ok: true, athlete, message: 'found athlete' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch athlete' });
+  }
 }
 
 // TODO: this will change once we are counting classes.
