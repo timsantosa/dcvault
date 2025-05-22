@@ -1,123 +1,132 @@
-const db = require('../db/db')
+const db = require('../db/db');
 
 class RankingCache {
     constructor() {
-        this.rankings = { male: null, female: null };
-        // this.rankMap = { male: new Map(), female: new Map() }; // For quick lookup
-      }
+        // Structure: { gender: { allTime: [...], active: [...] } }
+        this.rankings = {
+            male: { allTime: null, active: null },
+            female: { allTime: null, active: null },
+            other: { allTime: null, active: null }
+        };
+    }
 
-  async generateRanking(gender) {
-    console.log(`Generating ranking for ${gender} athletes...`);
+    async generateRanking(gender, type = 'active') {
+        console.log(`Generating ${type} ranking for ${gender} athletes...`);
 
-//     const sql = `
-//       SELECT 
-//           ap.id AS athleteProfileId,
-//           MAX(j.heightInches) AS bestHeight
-//       FROM 
-//           athleteProfiles ap
-//       JOIN 
-//           personalRecords pr ON pr.athleteProfileId = ap.id
-//       JOIN 
-//           jumps j ON j.id = pr.jumpId
-//       WHERE 
-//           ap.gender = :gender
-//       GROUP BY 
-//           ap.id
-//       ORDER BY 
-//           bestHeight DESC;
-//   `;
-
-//     const [results] = await sequelize.query(sql, {
-//       type: sequelize.QueryTypes.SELECT,
-//       replacements: { gender },
-//     });
-
-    // // Attach ranks to results
-    // this.rankings[gender] = results.map((athlete, index) => ({
-    //   athleteProfileId: athlete.athleteProfileId,
-    //   bestHeight: athlete.bestHeight,
-    //   rank: index + 1, // 1-based ranking
-    // }));
-
-    // Get best heights from personalRecords for active athletes
-    const results = await db.tables.AthleteProfiles.findAll({
-        where: { gender, isActiveMember: true },
-        include: [
-          {
-            model: db.tables.PersonalRecords,
-            as: 'personalRecords',
+        // Base query for athlete profiles
+        const query = {
+            where: { gender },
             include: [
-              {
-                model: db.tables.Jumps,
-                as: 'jump',
-                attributes: ['heightInches', 'id'],
-              },
+                {
+                    model: db.tables.PersonalRecords,
+                    as: 'personalRecords',
+                    include: [
+                        {
+                            model: db.tables.Jumps,
+                            as: 'jump',
+                            attributes: ['heightInches', 'id'],
+                        },
+                    ],
+                },
             ],
-          },
-        ],
-      });
-  
-      // Convert to ranking list
-      const rankingList = results
-        .map((athlete) => {
+        };
 
-          if (!athlete.personalRecords || athlete.personalRecords.length === 0) {
-            return { athleteProfileId: athlete.id, bestHeight: 0 }; // Handle empty array case
-          }
+        // If generating active rankings, we need to check active status
+        if (type === 'active') {
+            const results = await db.tables.AthleteProfiles.findAll(query);
+            
+            // Filter for active members and create rankings
+            const activeProfiles = await Promise.all(
+                results.map(async (profile) => {
+                    const isActive = await require('./athletesController').isAthleteProfileActive(profile, db);
+                    return isActive ? profile : null;
+                })
+            );
+
+            const rankingList = activeProfiles
+                .filter(profile => profile !== null)
+                .map((athlete) => {
+                    if (!athlete.personalRecords || athlete.personalRecords.length === 0) {
+                        return { athleteProfileId: athlete.id, bestHeight: 0 };
+                    }
+
+                    const bestPr = athlete.personalRecords.reduce((bestSoFar, current) => {
+                        return current.jump.heightInches > bestSoFar.jump.heightInches ? current : bestSoFar;
+                    }, athlete.personalRecords[0]);
+
+                    return {
+                        athleteProfileId: athlete.id,
+                        jumpId: bestPr.jump.id,
+                        bestHeight: bestPr.jump.heightInches
+                    };
+                })
+                .sort((a, b) => b.bestHeight - a.bestHeight)
+                .map((athlete, index) => ({
+                    ...athlete,
+                    rank: index + 1,
+                }));
+
+            this.rankings[gender].active = rankingList;
+        } else {
+            // For all-time rankings, we don't need to check active status
+            const results = await db.tables.AthleteProfiles.findAll(query);
+
+            const rankingList = results
+                .map((athlete) => {
+                    if (!athlete.personalRecords || athlete.personalRecords.length === 0) {
+                        return { athleteProfileId: athlete.id, bestHeight: 0 };
+                    }
+
+                    const bestPr = athlete.personalRecords.reduce((bestSoFar, current) => {
+                        return current.jump.heightInches > bestSoFar.jump.heightInches ? current : bestSoFar;
+                    }, athlete.personalRecords[0]);
+
+                    return {
+                        athleteProfileId: athlete.id,
+                        jumpId: bestPr.jump.id,
+                        bestHeight: bestPr.jump.heightInches
+                    };
+                })
+                .sort((a, b) => b.bestHeight - a.bestHeight)
+                .map((athlete, index) => ({
+                    ...athlete,
+                    rank: index + 1,
+                }));
+
+            this.rankings[gender].allTime = rankingList;
+        }
+
+        console.log(`${type} ranking generated for ${gender}.`);
+    }
+
+    async getRankingForAthlete(athleteProfileId, gender, type = 'active') {
+        if (!gender) {
+            return null;
+        }
+
+        if (!this.rankings[gender][type]) {
+            await this.generateRanking(gender, type);
+        }
+
+        const rankEntry = this.rankings[gender][type].find(
+            (entry) => entry.athleteProfileId === athleteProfileId
+        );
+
+        return rankEntry ? rankEntry.rank : null;
+    }
+
+    async regenerateAllRankings() {
+        console.log('Regenerating all rankings...');
+        const genders = ['male', 'female', 'other'];
+        const types = ['allTime', 'active'];
         
-          const bestPr = athlete.personalRecords.reduce((bestSoFar, current) => {
-            return current.jump.heightInches > bestSoFar.jump.heightInches ? current : bestSoFar;
-          }, athlete.personalRecords[0]);
-
-          // const bestHeight = athlete.personalRecords.length
-          //   ? Math.max(...athlete.personalRecords.map((pr) => pr.jump.heightInches))
-          //   : 0; // Default to 0 if no PRs
-  
-          return { 
-            athleteProfileId: athlete.id, 
-            jumpId: bestPr.jump.id, 
-            bestHeight: bestPr.jump.heightInches
-          };
-        })
-        .sort((a, b) => b.bestHeight - a.bestHeight) // Sort descending
-        .map((athlete, index) => ({
-          ...athlete,
-          rank: index + 1,
-        }));
-
-    // Store rankings and create quick lookup map
-    this.rankings[gender] = rankingList;
-    // this.rankMap[gender].clear();
-    // rankingList.forEach((athlete) => {
-    //   this.rankMap[gender].set(athlete.athleteProfileId, athlete.rank);
-    // });
-
-    console.log(`Ranking generated for ${gender}.`);
-  }
-
-  async getRankingForAthlete(athleteProfileId, gender) {
-    if(!gender) {
-        return null;
+        await Promise.all(
+            genders.flatMap(gender => 
+                types.map(type => this.generateRanking(gender, type))
+            )
+        );
+        console.log('All rankings updated.');
     }
-
-    if (!this.rankings[gender]) {
-      await this.generateRanking(gender);
-    }
-
-    const rankEntry = this.rankings[gender].find(
-      (entry) => entry.athleteProfileId === athleteProfileId
-    );
-
-      return rankEntry ? rankEntry.rank : null; // Returns rank or null if not found
-
-    // return this.rankMap[gender].get(athleteProfileId) || null;
-  }
-
-  async regenerateAllRankings() {
-    console.log('Regenerating all rankings...');
-    await Promise.all([this.generateRanking('male'), this.generateRanking('female'), this.generateRanking('other')]);
-    console.log('Rankings updated.');
-  }
 }
 
 // Singleton instance

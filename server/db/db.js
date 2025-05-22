@@ -32,7 +32,7 @@ columns.trainingOptions = {
 columns.athletes = {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
-  email: {type: Sequelize.STRING, unique: false},
+  email: { type: Sequelize.STRING, unique: false },
   notifications: Sequelize.STRING,
   emergencyContactName: Sequelize.STRING,
   emergencyContactMDN: Sequelize.STRING,
@@ -150,8 +150,9 @@ columns.addresses = {
 columns.athleteProfiles = {
   firstName: Sequelize.STRING,
   lastName: Sequelize.STRING,
-  nationality: {type: Sequelize.STRING, defaultValue: 'US'},
+  nationality: { type: Sequelize.STRING, defaultValue: 'US' },
   profileImage: Sequelize.STRING,
+  // TODO: Remove verified, create a separate table for holding suggested images.
   profileImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column profileImageVerified bool;
   backgroundImage: Sequelize.STRING,
   backgroundImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column backgroundImageVerified bool;
@@ -159,8 +160,25 @@ columns.athleteProfiles = {
   weight: Sequelize.INTEGER, // Pounds
   dob: Sequelize.STRING,
   gender: Sequelize.STRING,
-  isActiveMember: { type: Sequelize.BOOLEAN, defaultValue: true, allowNull: false, }, //ALTER TABLE athleteProfiles ADD COLUMN isActiveMember BOOLEAN NOT NULL DEFAULT TRUE;
-  // User FK
+  // If alwaysActiveOverride is true, the athlete profile will always be considered an active member.
+  alwaysActiveOverride: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false, }, //ALTER TABLE athleteProfiles CHANGE COLUMN isActiveMember alwaysActiveOverride BOOLEAN NOT NULL DEFAULT FALSE;
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.users,
+      key: 'id',
+    },
+  },
+  // ALTER TABLE athleteProfiles ADD COLUMN athleteId INT, ADD FOREIGN KEY (athleteId) REFERENCES athletes(id);
+  athleteId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.athletes,
+      key: 'id',
+    },
+  },
 }
 
 columns.jumps = {
@@ -224,7 +242,10 @@ columns.personalRecords = {
       key: 'id',
     },
   },
-  stepNum: { type: Sequelize.INTEGER, allowNull: false, },
+  stepNum: { 
+    type: Sequelize.INTEGER, 
+    allowNull: false,
+  },
   jumpId: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -357,7 +378,15 @@ const syncTables = (schema, force) => {
   // Mobile app specific
   tables.AthleteProfiles = schema.define('athleteProfile', columns.athleteProfiles);
   tables.Jumps = schema.define('jump', columns.jumps);
-  tables.PersonalRecords = schema.define('personalRecord', columns.personalRecords);
+  tables.PersonalRecords = schema.define('personalRecord', columns.personalRecords, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['athleteProfileId', 'stepNum'],
+        name: 'unique_step_per_athlete'
+      }
+    ]
+  }); // ALTER TABLE personalRecords ADD CONSTRAINT unique_step_per_athlete UNIQUE (athleteProfileId, stepNum);
 
   // Mobile app permissions
   tables.Roles = schema.define('role', columns.roles);
@@ -394,6 +423,9 @@ const syncTables = (schema, force) => {
   tables.AthleteProfiles.belongsTo(tables.Users, { as: 'user' }) // Puts a userId column in AthleteProfiles, each profile "belongs" to a User
   tables.Users.hasMany(tables.AthleteProfiles, { as: 'athleteProfiles', foreignKey: 'userId' }) // Each User "has many" AthleteProfiles somewhere in the DB (only one for now though)
 
+  tables.AthleteProfiles.belongsTo(tables.Athletes, { as: 'athlete', foreignKey: 'athleteId' })
+  tables.Athletes.hasOne(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteId' })
+
   tables.Jumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
   tables.AthleteProfiles.hasMany(tables.Jumps, { as: 'jumps', foreignKey: 'athleteProfileId' })
 
@@ -426,12 +458,12 @@ const syncTables = (schema, force) => {
   // Drill associations
   tables.Drills.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
   tables.AthleteProfiles.hasMany(tables.Drills, { as: 'drills', foreignKey: 'athleteProfileId' });
-  
+
   tables.Drills.belongsTo(tables.Poles, { as: 'pole', foreignKey: 'poleId' });
   tables.Poles.hasMany(tables.Drills, { as: 'drills', foreignKey: 'poleId' });
 
   tables.schema = schema;
-  return schema.sync({force: force})
+  return schema.sync({ force: force })
 }
 
 module.exports = {
