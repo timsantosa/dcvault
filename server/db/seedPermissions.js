@@ -26,6 +26,7 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'verify_images', permissionName: 'Verify Images', description: "Allows user to verify other users' images" },
         { permissionKey: 'manage_meet_data', permissionName: 'Manage Meet Data', description: 'Allows managing meet data like record types, championship types, and division types.' },
         { permissionKey: 'manage_drill_types', permissionName: 'Manage Drill Types', description: 'Allows managing drill types.' },
+        { permissionKey: 'manage_active_profiles', permissionName: 'Manage Active Profiles', description: "Allows user to set athlete profiles as always active, even if they don't have a currently registered athleteId" },
       ];
   
       for (const perm of permissions) {

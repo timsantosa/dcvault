@@ -75,11 +75,11 @@ const addOrUpdateJump = async (req, res, db) => {
       if (!originalJump.verified) {
         // If original jump was unverified, just do normal verification check
         needsVerification = await requiresVerification(hardMetrics, meetInfo, athleteProfileId, db);
-      } else {
+      } else if (hardMetrics?.setting === "Meet") {
         // Original jump was verified, check if any critical fields changed
         const criticalFieldsChanged = 
           (meetInfo?.records?.join(',') !== originalJump.recordType) ||
-          (meetInfo?.championshipType !== originalJump.meetType) ||
+          (meetInfo?.championshipType != originalJump.meetType) ||
           (meetInfo?.placement !== originalJump.placement) ||
           (hardMetrics?.height?.inches !== originalJump.heightInches) ||
           (hardMetrics?.setting !== originalJump.setting);
@@ -119,6 +119,12 @@ const addOrUpdateJump = async (req, res, db) => {
       verified,
     });
 
+    // If jump is already verified, check if we need to update the personal records table.
+    // Otherwise it will get updated when it gets verified.
+    if (verified) {
+      checkIfJumpIsStepPr(jumpRow, db);
+    }
+
     const jump = mapDbRowToJump(jumpRow);
 
     res.json({
@@ -151,7 +157,7 @@ async function requiresVerification(hardMetrics, meetInfo, athleteProfileId, db)
   }
 
   // If it's a record jump, we need to verify it
-  if (meetInfo.records) {
+  if (meetInfo.records && meetInfo.records.length > 0) {
     return true;
   } 
 
@@ -197,26 +203,45 @@ const deleteJump = async (req, res, db) => {
       return res.status(400).json({ ok: false, message: 'Missing jump ID or athlete profile id' });
     }
 
-    const jump = await db.tables.Jumps.findByPk(jumpId);
+    // Start a transaction using the Jumps model's sequelize instance
+    const transaction = await db.tables.Jumps.sequelize.transaction();
 
-    if (!jump) {
-      return res.status(404).json({ ok: false, message: 'Jump not found.' });
+    try {
+      const jump = await db.tables.Jumps.findByPk(jumpId, { transaction });
+
+      if (!jump) {
+        await transaction.rollback();
+        return res.status(404).json({ ok: false, message: 'Jump not found.' });
+      }
+
+      // Check if jump was a PR
+      const personalRecord = await db.tables.PersonalRecords.findOne({
+        where: { jumpId, athleteProfileId },
+        transaction
+      });
+
+      // If it was a PR, delete the PR record first
+      if (personalRecord) {
+        await personalRecord.destroy({ transaction });
+      }
+
+      // Then delete the jump
+      await jump.destroy({ transaction });
+
+      // Finally, if it was a PR, repopulate PRs
+      if (personalRecord) {
+        await populatePRsForAthlete(athleteProfileId, db, transaction);
+      }
+
+      // Commit the transaction
+      await transaction.commit();
+
+      res.json({ ok: true, message: 'Jump deletion successful.' });
+    } catch (error) {
+      // If anything fails, rollback the transaction
+      await transaction.rollback();
+      throw error;
     }
-
-    console.log('athlete id', jump.athleteProfileId);
-
-    // Check if jump was a PR and destroy that record, then destroy the jump itself.
-    const personalRecord = await db.tables.PersonalRecords.findOne({
-      where: { jumpId, athleteProfileId },
-    });
-    if (personalRecord) {
-      personalRecord.destroy();
-      await populatePRsForAthlete(athleteProfileId, db);
-    }
-
-    await jump.destroy();
-
-    res.json({ ok: true, message: 'Jump deletion successful.' });
   } catch (error) {
     console.error('Error in deleteJump:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
@@ -307,31 +332,7 @@ async function verifyJump(req, res, db) {
       jump.verified = true;
       await jump.save();
 
-      // Check if it's a meet jump and update PR records if applicable
-      if (jump.setting === 'Meet' && jump.heightInches) {
-
-        // Check if this jump beats the current PR for its stepNum
-        const currentPr = await db.tables.PersonalRecords.findOne({
-          where: { athleteProfileId: jump.athleteProfileId, stepNum: jump.stepNum },
-          include: {
-            model: db.tables.Jumps,
-            as: 'jump',
-          },
-        });
-
-        if (!currentPr || jump.heightInches > currentPr.jump.heightInches) {
-          // Update PR
-          if (currentPr) {
-            await currentPr.destroy(); // Remove old PR record //TODO: What does this destroy, both the jump and the prRow?
-          }
-
-          await db.tables.PersonalRecords.create({
-            athleteProfileId: jump.athleteProfileId,
-            stepNum: jump.stepNum,
-            jumpId: jump.id,
-          });
-        }
-      }
+      checkIfJumpIsStepPr(jump, db);
 
       message = 'Jump verified successfully.';
     } else {
@@ -353,7 +354,35 @@ async function verifyJump(req, res, db) {
   }
 }
 
-async function populatePRsForAthlete(athleteProfileId, db) {
+async function checkIfJumpIsStepPr(jump, db) {
+  // Check if it's a meet jump and update PR records if applicable
+  if (jump.setting === 'Meet' && jump.heightInches) {
+
+    // Check if this jump beats the current PR for its stepNum
+    const currentPr = await db.tables.PersonalRecords.findOne({
+      where: { athleteProfileId: jump.athleteProfileId, stepNum: jump.stepNum },
+      include: {
+        model: db.tables.Jumps,
+        as: 'jump',
+      },
+    });
+
+    if (!currentPr || jump.heightInches > currentPr.jump.heightInches) {
+      // Update PR
+      if (currentPr) {
+        await currentPr.destroy(); // Remove old PR record //TODO: What does this destroy, both the jump and the prRow?
+      }
+
+      await db.tables.PersonalRecords.create({
+        athleteProfileId: jump.athleteProfileId,
+        stepNum: jump.stepNum,
+        jumpId: jump.id,
+      });
+    }
+  }
+}
+
+async function populatePRsForAthlete(athleteProfileId, db, transaction) {
   // Step 1: Get all verified "Meet" jumps for the athlete, grouped by stepNum
   const jumps = await db.tables.Jumps.findAll({
     where: {
@@ -365,6 +394,7 @@ async function populatePRsForAthlete(athleteProfileId, db) {
       'id', 'stepNum', 'heightInches'
     ],
     order: [['stepNum', 'ASC'], ['heightInches', 'DESC']], // Order by stepNum, then highest height
+    transaction
   });
 
   if (!jumps.length) {
@@ -380,19 +410,23 @@ async function populatePRsForAthlete(athleteProfileId, db) {
     }
   });
 
-  // Step 3: Upsert personal records for each stepNum
+  // Step 3: Delete all existing PRs for this athlete
+  await db.tables.PersonalRecords.destroy({
+    where: { athleteProfileId },
+    transaction
+  });
+
+  // Step 4: Create new PRs for each stepNum using upsert
   for (const stepNum in bestJumps) {
     const bestJump = bestJumps[stepNum];
-
     await db.tables.PersonalRecords.upsert({
       athleteProfileId: athleteProfileId,
       stepNum: bestJump.stepNum,
       jumpId: bestJump.id,
+      uniqueStep: athleteProfileId, // This will enforce uniqueness
     }, {
-      where: {
-        athleteProfileId: athleteProfileId,
-        stepNum: bestJump.stepNum,
-      }
+      transaction,
+      fields: ['jumpId'], // Only update the jumpId if record exists
     });
   }
 

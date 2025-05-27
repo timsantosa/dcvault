@@ -1,5 +1,6 @@
 const jwt = require('jwt-simple');
 const config = require('../config/config');
+const { isValidId } = require('../lib/helpers');
 
 function authenticateJWT(req, res, next) {
   const authBearer = req.headers?.authorization;
@@ -49,9 +50,9 @@ function athleteProfileBelongsToUser(athleteProfileId, user) {
 
 function checkOwnAthleteProfileOrPermission(req, res, next, permission) {
   const user = req.user;
-  const athleteProfileId = req.query.athleteProfileId;
+  const athleteProfileId = parseInt(req.query.athleteProfileId);
 
-  if (!user || !athleteProfileId) {
+  if (!user || !athleteProfileId || !isValidId(athleteProfileId)) {
     return res.status(400).json({ ok: false, message: 'Bad request' });
   }
 
@@ -73,10 +74,60 @@ function checkOwnAthleteProfileOrPermission(req, res, next, permission) {
   next();
 }
 
+function checkOwnUserOrPermission(req, res, next, permission) {
+  const user = req.user;
+  const userId = parseInt(req.query.userId);
+
+  if (!user || !user.id || !isValidId(userId)) {
+    return res.status(400).json({ ok: false, message: 'Bad request' });
+  }
+
+  // Check if user has the required permission
+  if (user.permissions.includes(permission)) {
+    return next();
+  }
+
+  // Check if user has access to this specific athlete profile
+  if (user.id !== userId) {
+    return res.status(403).json({ ok: false, message: 'Forbidden - No access to this athlete profile' });
+  }
+
+  next();
+}
+
+function checkOwnUserOrProfileOrPermission(req, res, next, permission) {
+  const user = req.user;
+  const athleteProfileId = parseInt(req.query.athleteProfileId);
+  const userId = parseInt(req.query.userId);
+
+  if (!user) {
+    return res.status(400).json({ ok: false, message: 'Bad request' });
+  }
+
+  // Check if user has the required permission
+  if (user.permissions.includes(permission)) {
+    return next();
+  }
+
+  // Check if user has access to this specific athlete profile
+  if (athleteProfileId && athleteProfileBelongsToUser(athleteProfileId, user)) {
+    return next();
+  }
+
+  // Check if user has access to this specific user
+  if (userId && user.id === userId) {
+    return next();
+  }
+
+  return res.status(403).json({ ok: false, message: 'Forbidden - No access to this resource' });
+}
+
 
 module.exports = { 
   authenticateJWT,
   checkPermission,
   athleteProfileBelongsToUser,
-  checkOwnAthleteProfileOrPermission
+  checkOwnAthleteProfileOrPermission,
+  checkOwnUserOrPermission,
+  checkOwnUserOrProfileOrPermission,
 };

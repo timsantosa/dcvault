@@ -101,6 +101,7 @@ async function deleteProfilePicture(req, res, db) {
       const oldPublicId = getCloudinaryPublicId(athlete.profileImage);
       if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
       athlete.profileImage = null;
+      athlete.profileImageVerified = false;
       await athlete.save();
     }
 
@@ -123,6 +124,7 @@ async function deleteBackgroundImage(req, res, db) {
       const oldPublicId = getCloudinaryPublicId(athlete.backgroundImage);
       if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
       athlete.backgroundImage = null;
+      athlete.backgroundImageVerified = false;
       await athlete.save();
     }
 
@@ -161,8 +163,14 @@ async function getAllUnverifiedImages(req, res, db) {
     const unverifiedProfiles = await db.tables.AthleteProfiles.findAll({
       where: {
         [Op.or]: [
-          { profileImageVerified: false },
-          { backgroundImageVerified: false }
+          {
+            profileImage: { [Op.ne]: null },
+            profileImageVerified: false
+          },
+          {
+            backgroundImage: { [Op.ne]: null },
+            backgroundImageVerified: false
+          }
         ]
       },
       attributes: ['id', 'firstName', 'lastName', 'profileImage', 'backgroundImage', 'profileImageVerified', 'backgroundImageVerified']
