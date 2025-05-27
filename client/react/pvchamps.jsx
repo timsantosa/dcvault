@@ -382,8 +382,8 @@ class AthleteInfo extends React.Component {
                                     <option value='Womens Adult'>Open Adult Division - Women</option>
                                     <option value='Mens Adults'>Open Adult Division - Men</option>
                                     <option value='Mens Emerging Elite'>Men’s Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
-                                    <option value='Mens Elite'>Elite Women (PR of 5.5m or higher)</option>
-                                    <option value='Womens Elite'>Elite Men (PR of 4.3m or higher)</option>
+                                    <option value='Mens Elite'>Elite Women (PR of 4.3m or higher)</option>
+                                    <option value='Womens Elite'>Elite Men (PR of 5.5m or higher)</option>
                                 </select>
                             </label>
                         </div>
