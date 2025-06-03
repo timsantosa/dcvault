@@ -48,6 +48,19 @@ function athleteProfileBelongsToUser(athleteProfileId, user) {
   return false;
 }
 
+function checkOwnAthleteProfile(req, res, next) {
+  const user = req.user;
+  const athleteProfileId = parseInt(req.query.athleteProfileId);
+  if (!user || !athleteProfileId || !isValidId(athleteProfileId)) {
+    return res.status(400).json({ ok: false, message: 'Bad request' });
+  }
+
+  if (!athleteProfileBelongsToUser(athleteProfileId, user)) {
+    return res.status(403).json({ ok: false, message: 'Forbidden - Athlete profile does not belong to user' });
+  }
+  next();
+}
+
 function checkOwnAthleteProfileOrPermission(req, res, next, permission) {
   const user = req.user;
   const athleteProfileId = parseInt(req.query.athleteProfileId);
@@ -130,4 +143,5 @@ module.exports = {
   checkOwnAthleteProfileOrPermission,
   checkOwnUserOrPermission,
   checkOwnUserOrProfileOrPermission,
+  checkOwnAthleteProfile,
 };

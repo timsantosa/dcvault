@@ -177,6 +177,92 @@ const deleteProfile = async (req, res, db) => {
 };
 
 const getProfiles = async (req, res, db) => {
+  try {
+    const { userId, athleteProfileIds, search } = req.query;
+    
+    // Validate inputs
+    if (userId && !helpers.isValidId(parseInt(userId))) {
+      return res.status(400).json({ ok: false, message: 'Invalid user ID' });
+    }
+
+    if (athleteProfileIds) {
+      const ids = athleteProfileIds.split(',').map(id => parseInt(id, 10));
+      if (ids.some(id => !helpers.isValidId(id))) {
+        return res.status(400).json({ ok: false, message: 'Invalid athlete profile ID in list' });
+      }
+    }
+
+    // Build where clause
+    let whereClause = {};
+    if (userId) {
+      whereClause.userId = parseInt(userId);
+    }
+    if (athleteProfileIds) {
+      const ids = athleteProfileIds.split(',').map(id => parseInt(id, 10));
+      whereClause.id = {
+        [db.tables.schema.Sequelize.Op.in]: ids
+      };
+    }
+
+    // Add search conditions if search term exists
+    if (search) {
+      const searchTerm = search.toLowerCase();
+      whereClause[db.tables.schema.Sequelize.Op.or] = [
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        ),
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        ),
+        // Search in full name (for cases like "John Do")
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn(
+            'LOWER',
+            db.tables.schema.Sequelize.fn(
+              'concat',
+              db.tables.schema.Sequelize.col('firstName'),
+              ' ',
+              db.tables.schema.Sequelize.col('lastName')
+            )
+          ),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        )
+      ];
+    }
+
+    const profiles = await db.tables.AthleteProfiles.findAll({
+      where: whereClause,
+    });
+
+    const athleteProfiles = profiles.map(profile => ({
+      id: profile.id,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      gender: profile.gender,
+      dob: profile.dob,
+      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
+      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+      nationality: profile.nationality,
+      stats: {
+        height: profile.height,
+        weight: profile.weight,
+        age: helpers.calculateAge(profile.dob)
+      },
+      alwaysActiveOverride: profile.alwaysActiveOverride,
+      userId: profile.userId,
+      athleteId: profile.athleteId
+    }));
+
+    res.json({ ok: true, athleteProfiles });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: 'Failed to fetch athlete profiles' });
+  }
+};
+
+const getRankedProfiles = async (req, res, db) => {
   const user = req.user;
 
   try {
@@ -362,51 +448,6 @@ const getProfiles = async (req, res, db) => {
   }
 };
 
-
-
-const getAthleteProfilesForUser = async (req, res, db) => {
-  try {
-    const userId = parseInt(req.query.userId);
-    if (!helpers.isValidId(userId)) {
-      return res.status(400).json({ ok: false, message: 'Invalid user ID' });
-    }
-
-    const profiles = await db.tables.AthleteProfiles.findAll({
-      where: { userId },
-      attributes: [
-        'id', 'firstName', 'lastName',
-        'nationality', 'dob', 'height',
-        'weight', 'profileImage', 'backgroundImage',
-        'gender', 'profileImageVerified', 'backgroundImageVerified',
-        'alwaysActiveOverride', 'userId', 'athleteId'
-      ]
-    });
-
-    const athleteProfiles = profiles.map(profile => ({
-      id: profile.id,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      gender: profile.gender,
-      dob: profile.dob,
-      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
-      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
-      nationality: profile.nationality,
-      stats: {
-        height: profile.height,
-        weight: profile.weight,
-        age: helpers.calculateAge(profile.dob)
-      },
-      alwaysActiveOverride: profile.alwaysActiveOverride,
-      userId: profile.userId,
-    }));
-
-    res.json({ ok: true, athleteProfiles });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ ok: false, message: 'Failed to fetch athlete profiles' });
-  }
-};
-
 const getRegisteredAthletesForUser = async (req, res, db) => {
   try {
     const userId = parseInt(req.query.userId);
@@ -579,8 +620,8 @@ module.exports = {
   upsertProfile, 
   getProfile, 
   deleteProfile, 
+  getRankedProfiles,
   getProfiles,
-  getAthleteProfilesForUser,
   getRegisteredAthletesForUser,
   getMedalCountsForProfile,
   isAthleteProfileActive,

@@ -1,7 +1,16 @@
 const express = require('express');
-const { getProfile, upsertProfile, deleteProfile, getProfiles, getAthleteProfilesForUser, getRegisteredAthletesForUser, getMedalCountsForProfile, getRegisteredAthlete } = require('../controllers/athletesController');
-const { 
-  checkPermission, 
+const {
+  getProfile,
+  upsertProfile,
+  deleteProfile,
+  getRankedProfiles,
+  getProfiles,
+  getRegisteredAthletesForUser,
+  getMedalCountsForProfile,
+  getRegisteredAthlete
+} = require('../controllers/athletesController');
+const {
+  checkPermission,
   checkOwnAthleteProfileOrPermission,
   checkOwnUserOrPermission,
   checkOwnUserOrProfileOrPermission,
@@ -13,12 +22,12 @@ const athleteRoutes = (db) => {
 
   const checkSelfOrAdmin = (req, res, next) => {
     const user = req.user;
-    if(user.isAdmin) {
+    if (user.isAdmin) {
       return next();
     }
 
     const userId = req.query.userId
-    
+
     // If the request has a userId, and it's the same as the user's who
     // is sending the request, then we're good.
     if (userId && user.id &&
@@ -26,7 +35,7 @@ const athleteRoutes = (db) => {
     ) {
       return next();
     }
-      
+
     return res.status(403).json({ ok: false, message: 'Forbidden' });
   }
 
@@ -47,8 +56,8 @@ const athleteRoutes = (db) => {
     .delete(checkEditProfilePermission, (req, res) => deleteProfile(req, res, db));
 
   router.get('/profiles', checkPermission('view_profiles'), (req, res) => getProfiles(req, res, db));
+  router.get('/profiles/ranked', checkPermission('view_profiles'), (req, res) => getRankedProfiles(req, res, db));
 
-  router.get('/user/profiles', checkManageRolesPermission, (req, res) => getAthleteProfilesForUser(req, res, db));
   router.get('/user/registered', checkManageRolesPermission, (req, res) => getRegisteredAthletesForUser(req, res, db));
   router.get('/medals', checkPermission('view_profiles'), (req, res) => getMedalCountsForProfile(req, res, db));
 
