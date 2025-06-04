@@ -377,8 +377,8 @@ class AthleteInfo extends React.Component {
                                     <option value='Girls Middle School'>Middle School Division - Girls (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
                                     <option value='Boys Middle School'>Middle School Division - Boys (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
                                     <option value='Girls High School'>High School Division - Girls (Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
-                                    <option value='Boys High School D1'>High School Division - Boys D1 PR under 12'6" (Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
-                                    <option value='Boys High School D2'>High School Division - Boys D2 PR 12'6"+(Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
+                                    <option value='Boys High School D1'>High School Division - Boys D1 PR 12'6"+(Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
+                                    <option value='Boys High School D2'>High School Division - Boys D2 PR under 12'6" (Ages 14-18 who attended grades 9-12 in Spring of 2025) </option>
                                     <option value='Womens Adult'>Open Adult Division - Women</option>
                                     <option value='Mens Adults'>Open Adult Division - Men</option>
                                     <option value='Mens Emerging Elite'>Men’s Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
