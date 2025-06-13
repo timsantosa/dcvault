@@ -166,7 +166,7 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division','member-discount','elite-discount']
+        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division','memberdisc','elitedisc']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
@@ -294,7 +294,7 @@ class AthleteInfo extends React.Component {
                         <div className='form-row'>
                             <label>
                                 <span className='required'>Are you a CURRENT member of DC Vault?</span>
-                                <select name='member-discount'>
+                                <select name='memberdisc'>
                                     <option value=''>Select yes/no</option>
                                     <option value='dcvault-member'>Yes</option>
                                     <option value='not-member'>No</option>
@@ -304,7 +304,7 @@ class AthleteInfo extends React.Component {
                         <div className='form-row'>
                             <label>
                                 <span className='required'>Are you a registering for an Elite Division? (Standards - Men: 5.5m+ / Women: 4.3m+)</span>
-                                <select name='elite-discount'>
+                                <select name='elitedisc'>
                                     <option value=''>Select yes/no</option>
                                     <option value='elite'>Yes</option>
                                     <option value='not-elite'>No</option>
@@ -629,9 +629,9 @@ class Payment extends React.Component {
         super(props)
         let price = 0
         if(this.props.data.athleteInfo.dates1){
-            if(this.props.data.athleteInfo.member-discount == "dcvault-member"){
+            if(this.props.data.athleteInfo.memberdisc == "dcvault-member"){
                 price = 5
-            }else if(this.props.data.athleteInfo.elite-discount == "elite"){
+            }else if(this.props.data.athleteInfo.elitedisc == "elite"){
                 price = 5
             }else{
                 price+=50
