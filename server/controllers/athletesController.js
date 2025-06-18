@@ -124,6 +124,10 @@ const getProfile = async (req, res, db) => {
       order: [[{ model: db.tables.Jumps, as: 'jump' }, 'poleLengthInches', 'DESC']],
     });
 
+    // Get medal counts for this profile
+    const medalCountsMap = await getMedalCountsForProfiles([profile.id], db);
+    const medalCounts = medalCountsMap.get(profile.id) || { gold: 0, silver: 0, bronze: 0 };
+
     const athleteProfile = {
       id: profile.id,
       firstName: profile.firstName,
@@ -143,6 +147,7 @@ const getProfile = async (req, res, db) => {
           lengthInches: largestPole.jump.poleLengthInches,
           weight: largestPole.jump.poleWeight,
         } : undefined,
+        medalCounts,
       },
       isActiveMember,
       userId: profile.userId,
@@ -236,24 +241,33 @@ const getProfiles = async (req, res, db) => {
       where: whereClause,
     });
 
-    const athleteProfiles = profiles.map(profile => ({
-      id: profile.id,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      gender: profile.gender,
-      dob: profile.dob,
-      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
-      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
-      nationality: profile.nationality,
-      stats: {
-        height: profile.height,
-        weight: profile.weight,
-        age: helpers.calculateAge(profile.dob)
-      },
-      alwaysActiveOverride: profile.alwaysActiveOverride,
-      userId: profile.userId,
-      athleteId: profile.athleteId
-    }));
+    // Get medal counts for all profiles in bulk
+    // const profileIdsForMedals = profiles.map(profile => profile.id);
+    // const medalCountsMap = await getMedalCountsForProfiles(profileIdsForMedals, db);
+
+    const athleteProfiles = profiles.map(profile => {
+      // const medalCounts = medalCountsMap.get(profile.id) || { gold: 0, silver: 0, bronze: 0 };
+      
+      return {
+        id: profile.id,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        gender: profile.gender,
+        dob: profile.dob,
+        profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
+        backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+        nationality: profile.nationality,
+        stats: {
+          height: profile.height,
+          weight: profile.weight,
+          age: helpers.calculateAge(profile.dob),
+          // medalCounts,
+        },
+        alwaysActiveOverride: profile.alwaysActiveOverride,
+        userId: profile.userId,
+        athleteId: profile.athleteId
+      };
+    });
 
     res.json({ ok: true, athleteProfiles });
   } catch (err) {
@@ -398,6 +412,10 @@ const getRankedProfiles = async (req, res, db) => {
       offset,
     });
 
+    // Get medal counts for all profiles in bulk
+    const profileIdsForMedals = profilesWithPRs.map(profile => profile.id);
+    const medalCountsMap = await getMedalCountsForProfiles(profileIdsForMedals, db);
+
     // Map the data into a structured response
     const athletes = profilesWithPRs.map((profile, index) => {
       // Find the best PR from the included personalRecords and jumps
@@ -409,6 +427,9 @@ const getRankedProfiles = async (req, res, db) => {
       // Determine active status
       const isActiveMember = profile.alwaysActiveOverride || 
                       (profile.athleteId && athleteActiveStatus.get(profile.athleteId));
+
+      // Get medal counts for this profile
+      const medalCounts = medalCountsMap.get(profile.id) || { gold: 0, silver: 0, bronze: 0 };
 
       return {
         id: profile.id,
@@ -426,6 +447,7 @@ const getRankedProfiles = async (req, res, db) => {
           rank: offset + index + 1,
           pr: bestPR,
           largestPole: undefined,
+          medalCounts,
         },
         isActiveMember,
         userId: profile.userId,
@@ -513,43 +535,9 @@ const getMedalCountsForProfile = async (req, res, db) => {
       return res.status(400).json({ ok: false, message: 'Invalid athlete profile ID' });
     }
 
-    // Query to count medals by placement
-    const medalCounts = await db.tables.Jumps.findAll({
-      where: {
-        athleteProfileId: athleteProfileId,
-        meetType: { [db.tables.schema.Sequelize.Op.ne]: null }, // meetType is not null (championship)
-        placement: { [db.tables.schema.Sequelize.Op.in]: [1, 2, 3] }, // Only count placements 1, 2, or 3
-        verified: true // Only count verified jumps
-      },
-      attributes: [
-        [db.tables.schema.Sequelize.fn('COUNT', db.tables.schema.Sequelize.col('id')), 'count'],
-        'placement'
-      ],
-      group: ['placement']
-    });
-
-    // Initialize counts
-    const counts = {
-      gold: 0,
-      silver: 0,
-      bronze: 0
-    };
-
-    // Update counts based on query results
-    medalCounts.forEach(medal => {
-      const count = parseInt(medal.getDataValue('count'));
-      switch (medal.placement) {
-        case 1:
-          counts.gold = count;
-          break;
-        case 2:
-          counts.silver = count;
-          break;
-        case 3:
-          counts.bronze = count;
-          break;
-      }
-    });
+    // Use the helper function to get medal counts
+    const medalCountsMap = await getMedalCountsForProfiles([athleteProfileId], db);
+    const counts = medalCountsMap.get(athleteProfileId) || { gold: 0, silver: 0, bronze: 0 };
 
     res.json({ ok: true, medalCounts: counts });
   } catch (err) {
@@ -616,6 +604,59 @@ async function isAthleteProfileActive(athleteProfile, db) {
   return purchaseYear === currentYear;
 }
 
+// Helper function to get medal counts for multiple athlete profiles
+async function getMedalCountsForProfiles(athleteProfileIds, db) {
+  if (!athleteProfileIds || athleteProfileIds.length === 0) {
+    return new Map();
+  }
+
+  const medalCounts = await db.tables.Jumps.findAll({
+    where: {
+      athleteProfileId: { [db.tables.schema.Sequelize.Op.in]: athleteProfileIds },
+      meetType: { [db.tables.schema.Sequelize.Op.ne]: null }, // meetType is not null (championship)
+      placement: { [db.tables.schema.Sequelize.Op.in]: [1, 2, 3] }, // Only count placements 1, 2, or 3
+      verified: true // Only count verified jumps
+    },
+    attributes: [
+      'athleteProfileId',
+      [db.tables.schema.Sequelize.fn('COUNT', db.tables.schema.Sequelize.col('id')), 'count'],
+      'placement'
+    ],
+    group: ['athleteProfileId', 'placement']
+  });
+
+  // Create a map of athleteProfileId to medal counts
+  const medalCountsMap = new Map();
+  
+  // Initialize all profiles with zero counts
+  athleteProfileIds.forEach(id => {
+    medalCountsMap.set(id, { gold: 0, silver: 0, bronze: 0 });
+  });
+
+  // Update counts based on query results
+  medalCounts.forEach(medal => {
+    const profileId = medal.athleteProfileId;
+    const count = parseInt(medal.getDataValue('count'));
+    const currentCounts = medalCountsMap.get(profileId) || { gold: 0, silver: 0, bronze: 0 };
+    
+    switch (medal.placement) {
+      case 1:
+        currentCounts.gold = count;
+        break;
+      case 2:
+        currentCounts.silver = count;
+        break;
+      case 3:
+        currentCounts.bronze = count;
+        break;
+    }
+    
+    medalCountsMap.set(profileId, currentCounts);
+  });
+
+  return medalCountsMap;
+}
+
 module.exports = { 
   upsertProfile, 
   getProfile, 
@@ -626,4 +667,5 @@ module.exports = {
   getMedalCountsForProfile,
   isAthleteProfileActive,
   getRegisteredAthlete,
+  getMedalCountsForProfiles,
 };
