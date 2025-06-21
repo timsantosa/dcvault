@@ -640,7 +640,8 @@ class Events extends React.Component {
                 <li>2:45pm Fly-Kids Trial Class 2 – (Pit #4)</li>
                 <li>3:00pm Fly-Kids Trial Class 3 – (Pit #4)</li>
                 <li>3:15pm Fly-Kids Trial Class 4 – (Pit #4)</li>
-
+                <li><span className='red-text'>Afterparty</span></li>
+                <li>9:00pm Elite Invite Divison Afterparty</li>
               </ul>
             </ul>
             <span className='event-block-details-header'>Registration</span>
