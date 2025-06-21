@@ -604,38 +604,39 @@ class Events extends React.Component {
               <li><strong>Fri, June 27th</strong></li>
               <ul>
                 <li>12:00pm Staff Arrive</li>
-                <li>12:45pm Gates Open</li>
-                <li>1:00pm Girl’s State Champions Division – warmups (black pit)</li>
-                <li>2:00pm Girl’s State Champions Division – competition (black pit)</li>
-                <li>3:00pm (or 1-hr after completion of girl’s division) Boy’s State Champions Division – warmups (black pit)</li>
-                <li>4:00pm Boy’s State Champions Division – competition (black pit)</li>
+                <li>1:00pm Gates Open</li>
+                <li>1:00pm Girl’s State Champions Division – warmups (Pit #1)</li>
+                <li>2:00pm Girl’s State Champions Division – competition (Pit #1)</li>
+                <li>3:00pm Boy’s State Champions Division – warmups (Pit #1)</li>
+                <li>4:00pm Boy’s State Champions Division – competition (Pit #1)</li>
               </ul>
               <li><strong>Sat, June 28th</strong> <em>(Note: <span className='red-text'>Rolling Schedule</span> – arrive early in case your time slot moves up!)</em></li>
               <ul>
-                <li>07:30am Staff Arrive</li>
-                <li>08:30am Gates Open</li>
-                <li>08:30am Men’s Emerging Elite – warmups (black pit)</li>
-                <li>08:30am Open Adult Division – warmups (red pit)</li>
-                <li>09:30am Men’s Emerging Elite – competition (black pit)</li>
-                <li>09:30am Open Adult Division – competition (red pit)</li>
-                <li>11:00am Girls High School Division – warmups (red pit)</li>
-                <li>12:00pm Girls High School Division – competition (red pit)</li>
-                <li>12:00pm ELITE Division Women – warmups (black pit)</li>
-                <li>1:00pm ELITE Division Women – competition (black pit)</li>
-                <li>2:00pm Middle School Boys + Girls – warmups (red pit)</li>
-                <li>2:30pm Middle School Boys + Girls – competition (red pit)</li>
-                <li>2:30pm ELITE Division Men – warmups (black pit)</li>
-                <li>2:30pm Fly-Kids Trial Class 1 – (Fly-Kids pit)</li>
-                <li>2:45pm Fly-Kids Trial Class 2 – (Fly-Kids pit)</li>
-                <li>3:00pm Elementary School Boys + Girls – warmups (red pit)</li>
-                <li>3:00pm Fly-Kids Trial Class 3 – (Fly-Kids pit)</li>
-                <li>3:15pm Fly-Kids Trial Class 4 – (Fly-Kids pit)</li>
+                <li>7:30am Staff Arrive</li>
+                <li>8:30am Gates Open</li>
+                <li>8:30am Mens Emerging Elite – warmups (Pit #1)</li>
+                <li>9:30am Mens Emerging Elite – competition (Pit #1)</li>
+                <li>12:00pm ELITE Division Women – warmups (Pit #1)</li>
+                <li>1:00pm ELITE Division Women – competition (Pit #1)</li>
+                <li>2:30pm ELITE Division Men – warmups (Pit #1)</li>
                 <li>3:30pm ELITE Division Men – competition (black pit)</li>
-                <li>3:30pm Elementary School Boys + Girls – competition (red pit)</li>
-                <li>5:00pm High School Boys Division I – warmups (black pit)</li>
-                <li>5:00pm High School Boys Division II – warmups (red pit)</li>
-                <li>6:00pm High School Boys Division I – competition (black pit)</li>
-                <li>6:00pm High School Boys Division II – competition (red pit)</li>
+                <li>5:00pm High School Boys Division I – warmups (Pit #1)</li>
+                <li>5:45pm High School Boys Division I – competition (Pit #1)</li>
+                <li>8:30am Mens Open Adult Division – warmups (Pit #2)</li>
+                <li>9:30am Mens Open Adult Division – competition (Pit #2)</li>
+                <li>12:00pm Girls High School Division – warmups (Pit #2)</li>
+                <li>12:45pm Girls High School Division – competition (Pit #2)</li>
+                <li>2:30pm Boys and Girls Elementary School + Middle School – warmups (Pit #2)</li>
+                <li>3:15pm Boys and Girls Elementary School + Middle School – competition (Pit #2)</li>
+                <li>5:00pm High School Boys Division II – warmups (Pit #2)</li>
+                <li>5:45pm High School Boys Division II – competition (Pit #2)</li>
+                <li>8:30am Womens Open Adult Division – warmups (Pit #3)</li>
+                <li>9:30am Womens Open Adult Division – competition (Pit #3)</li>
+                <li>2:30pm Fly-Kids Trial Class 1 – (Pit #4)</li>
+                <li>2:45pm Fly-Kids Trial Class 2 – (Pit #4)</li>
+                <li>3:00pm Fly-Kids Trial Class 3 – (Pit #4)</li>
+                <li>3:15pm Fly-Kids Trial Class 4 – (Pit #4)</li>
+
               </ul>
             </ul>
             <span className='event-block-details-header'>Registration</span>
