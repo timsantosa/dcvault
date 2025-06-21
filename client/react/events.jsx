@@ -614,14 +614,16 @@ class Events extends React.Component {
               <ul>
                 <li>7:30am Staff Arrive</li>
                 <li>8:30am Gates Open</li>
+                <li><span className='red-text'>Pit #1 Schedule</span></li>
                 <li>8:30am Mens Emerging Elite – warmups (Pit #1)</li>
                 <li>9:30am Mens Emerging Elite – competition (Pit #1)</li>
                 <li>12:00pm ELITE Division Women – warmups (Pit #1)</li>
                 <li>1:00pm ELITE Division Women – competition (Pit #1)</li>
                 <li>2:30pm ELITE Division Men – warmups (Pit #1)</li>
-                <li>3:30pm ELITE Division Men – competition (black pit)</li>
+                <li>3:30pm ELITE Division Men – competition (Pit #1)</li>
                 <li>5:00pm High School Boys Division I – warmups (Pit #1)</li>
                 <li>5:45pm High School Boys Division I – competition (Pit #1)</li>
+                <li><span className='red-text'>Pit #2 Schedule</span></li>
                 <li>8:30am Mens Open Adult Division – warmups (Pit #2)</li>
                 <li>9:30am Mens Open Adult Division – competition (Pit #2)</li>
                 <li>12:00pm Girls High School Division – warmups (Pit #2)</li>
@@ -630,8 +632,10 @@ class Events extends React.Component {
                 <li>3:15pm Boys and Girls Elementary School + Middle School – competition (Pit #2)</li>
                 <li>5:00pm High School Boys Division II – warmups (Pit #2)</li>
                 <li>5:45pm High School Boys Division II – competition (Pit #2)</li>
+                <li><span className='red-text'>Pit #3 Schedule</span></li>                
                 <li>8:30am Womens Open Adult Division – warmups (Pit #3)</li>
                 <li>9:30am Womens Open Adult Division – competition (Pit #3)</li>
+                <li><span className='red-text'>Pit #4 Schedule</span></li>                
                 <li>2:30pm Fly-Kids Trial Class 1 – (Pit #4)</li>
                 <li>2:45pm Fly-Kids Trial Class 2 – (Pit #4)</li>
                 <li>3:00pm Fly-Kids Trial Class 3 – (Pit #4)</li>
