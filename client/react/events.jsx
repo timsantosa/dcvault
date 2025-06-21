@@ -642,8 +642,7 @@ class Events extends React.Component {
             <ul className='event-block-details'>
               <li>The 2025 Pole Vault Championships are open to all athletes ages 7 and up</li>
               <li>Advanced Registration Only</li>
-              <li>Registration Closes @ Midnight on Jun 20th</li>
-              <li>$50 for competitors – <a style={{color: '#C0282D'}} href='https://dcvault.com/pvchamps'>Register HERE!</a></li>
+              <li>Registration Closed</li>
             </ul>
             <span className='event-block-details-header'>Start List/Results</span>
             <ul className='event-block-details'>
