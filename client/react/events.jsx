@@ -420,6 +420,11 @@ class Events extends React.Component {
             <li>After paying admission to the facility, coordinate with the front gate staff to choose a time slot (children under age 11 enter free)</li>
             <li>Time slots are available to reserve in listed order only. Once each class fills up, the next time slot will become available for reserving.</li>
           </ul>
+          <span className='event-block-details-header'>Start List/Results</span>
+          <ul className='event-block-details'>
+            <li>Start List <a style={{color: '#C0282D'}} href='#' target='https://www.polevaultchampionships.com/lineup'>HERE!</a></li>
+            <li>Download Final Results <a style={{color: '#C0282D'}} href='#' target='_blank'>HERE!</a> (Available July 2nd)</li>
+          </ul>
           </div>),
         full: (
           <div className='event-block' id='28JUN2025'>
@@ -652,7 +657,7 @@ class Events extends React.Component {
             </ul>
             <span className='event-block-details-header'>Start List/Results</span>
             <ul className='event-block-details'>
-              <li>Download Start List <a style={{color: '#C0282D'}} href='#' target='_blank'>HERE!</a> (Available June 23rd)</li>
+              <li>Start List <a style={{color: '#C0282D'}} href='#' target='https://www.polevaultchampionships.com/lineup'>HERE!</a></li>
               <li>Download Final Results <a style={{color: '#C0282D'}} href='#' target='_blank'>HERE!</a> (Available July 2nd)</li>
             </ul>
             <span className='event-block-details-header'>Awards/Sanctioning</span>
