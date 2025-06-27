@@ -374,6 +374,42 @@ const getRankedProfiles = async (req, res, db) => {
       }
     }
 
+    // Build the rank subquery to get actual global rank
+    const activeAthleteIds = Array.from(athleteActiveStatus.keys());
+    const activeAthleteIdsClause = activeAthleteIds.length > 0 
+      ? `OR ap2.athleteId IN (${activeAthleteIds.join(',')})` 
+      : '';
+
+    const rankSubquery = `
+      (SELECT COUNT(*) + 1
+       FROM athleteProfiles AS ap2
+       WHERE ap2.id != athleteProfile.id
+       AND (
+         SELECT COALESCE(MAX(j2.heightInches), 0)
+         FROM personalRecords AS pr2
+         INNER JOIN jumps AS j2 ON pr2.jumpId = j2.id
+         WHERE pr2.athleteProfileId = ap2.id
+       ) > (
+         SELECT COALESCE(MAX(j1.heightInches), 0)
+         FROM personalRecords AS pr1
+         INNER JOIN jumps AS j1 ON pr1.jumpId = j1.id
+         WHERE pr1.athleteProfileId = athleteProfile.id
+       )
+       ${gender ? `AND ap2.gender = '${gender}'` : ''}
+       ${!allTime ? `
+       AND (ap2.alwaysActiveOverride = true ${activeAthleteIdsClause})` : ''}
+      )`;
+
+    // Build total count subquery (without search filters)
+    const totalCountSubquery = `
+      (SELECT COUNT(*)
+       FROM athleteProfiles AS ap3
+       WHERE 1=1
+       ${gender ? `AND ap3.gender = '${gender}'` : ''}
+       ${!allTime ? `
+       AND (ap3.alwaysActiveOverride = true ${activeAthleteIdsClause})` : ''}
+      )`;
+
     // Use findAndCountAll instead of separate queries
     const { count: totalCount, rows: profilesWithPRs } = await db.tables.AthleteProfiles.findAndCountAll({
       where: whereClause,
@@ -382,7 +418,9 @@ const getRankedProfiles = async (req, res, db) => {
         'nationality', 'dob', 'height',
         'weight', 'profileImage', 'backgroundImage',
         'gender', 'profileImageVerified', 'backgroundImageVerified',
-        'alwaysActiveOverride', 'athleteId', 'userId'
+        'alwaysActiveOverride', 'athleteId', 'userId',
+        [db.tables.schema.literal(rankSubquery), 'actualRank'],
+        [db.tables.schema.literal(totalCountSubquery), 'totalCount']
       ],
       include: [
         {
@@ -444,7 +482,7 @@ const getRankedProfiles = async (req, res, db) => {
           height: profile.height,
           weight: profile.weight,
           age: helpers.calculateAge(profile.dob),
-          rank: offset + index + 1,
+          rank: profile.getDataValue('actualRank') || 1,
           pr: bestPR,
           largestPole: undefined,
           medalCounts,
@@ -456,13 +494,15 @@ const getRankedProfiles = async (req, res, db) => {
       };
     });
 
-    const hasMore = offset + athletes.length < totalCount;
+    // Get the total count from the first result (all results will have the same value)
+    const accurateTotalCount = profilesWithPRs.length > 0 ? profilesWithPRs[0].getDataValue('totalCount') : 0;
+    const hasMore = offset + athletes.length < accurateTotalCount;
 
     res.json({ 
       ok: true, 
       athletes,
       hasMore,
-      totalCount
+      totalCount: accurateTotalCount
     });
   } catch (err) {
     console.error(err);
