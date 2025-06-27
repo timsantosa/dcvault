@@ -285,39 +285,28 @@ const getRankedProfiles = async (req, res, db) => {
     const offset = parseInt(offsetStr, 10);
     const limit = parseInt(limitStr, 10);
 
-    // Base where clause
-    let whereClause = {};
-    if (gender) {
-      whereClause.gender = gender;
-    }
-
-    // Add search conditions if search term exists
-    if (search) {
-      const searchTerm = search.toLowerCase();
-      whereClause[db.tables.schema.Sequelize.Op.or] = [
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        // Search in full name (for cases like "John Do")
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn(
-            'LOWER',
-            db.tables.schema.Sequelize.fn(
-              'concat',
-              db.tables.schema.Sequelize.col('firstName'),
-              ' ',
-              db.tables.schema.Sequelize.col('lastName')
-            )
-          ),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        )
-      ];
-    }
+    // Helper function to build base where clause (without search filters)
+    const buildBaseWhereClause = (athleteActiveStatus) => {
+      const baseWhereClause = {};
+      if (gender) {
+        baseWhereClause.gender = gender;
+      }
+      
+      if (!allTime) {
+        const activeMemberConditions = {
+          [db.tables.schema.Sequelize.Op.or]: [
+            { alwaysActiveOverride: true },
+            {
+              athleteId: {
+                [db.tables.schema.Sequelize.Op.in]: Array.from(athleteActiveStatus.keys())
+              }
+            }
+          ]
+        };
+        Object.assign(baseWhereClause, activeMemberConditions);
+      }
+      return baseWhereClause;
+    };
 
     // Only query purchases and add active status conditions if not requesting all time
     let athleteActiveStatus = new Map();
@@ -349,29 +338,44 @@ const getRankedProfiles = async (req, res, db) => {
           athleteActiveStatus.set(purchase.athleteId, true);
         }
       });
+    }
 
-      // Define active member conditions
-      const activeMemberConditions = {
-        [db.tables.schema.Sequelize.Op.or]: [
-          { alwaysActiveOverride: true },
-          {
-            athleteId: {
-              [db.tables.schema.Sequelize.Op.in]: Array.from(athleteActiveStatus.keys())
-            }
-          }
-        ]
-      };
+    // Build base where clause
+    const baseWhereClause = buildBaseWhereClause(athleteActiveStatus);
 
-      // If we already have search conditions, we need to combine them with active status
-      if (whereClause[db.tables.schema.Sequelize.Op.or]) {
-        whereClause[db.tables.schema.Sequelize.Op.and] = [
-          { [db.tables.schema.Sequelize.Op.or]: whereClause[db.tables.schema.Sequelize.Op.or] },
-          activeMemberConditions
-        ];
-        delete whereClause[db.tables.schema.Sequelize.Op.or];
-      } else {
-        whereClause[db.tables.schema.Sequelize.Op.or] = activeMemberConditions[db.tables.schema.Sequelize.Op.or];
-      }
+    // Add search conditions if search term exists
+    let whereClause = { ...baseWhereClause };
+    if (search) {
+      const searchTerm = search.toLowerCase();
+      const searchConditions = [
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        ),
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        ),
+        // Search in full name (for cases like "John Do")
+        db.tables.schema.Sequelize.where(
+          db.tables.schema.Sequelize.fn(
+            'LOWER',
+            db.tables.schema.Sequelize.fn(
+              'concat',
+              db.tables.schema.Sequelize.col('firstName'),
+              ' ',
+              db.tables.schema.Sequelize.col('lastName')
+            )
+          ),
+          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
+        )
+      ];
+
+      // Combine base conditions with search conditions using AND
+      whereClause[db.tables.schema.Sequelize.Op.and] = [
+        baseWhereClause,
+        { [db.tables.schema.Sequelize.Op.or]: searchConditions }
+      ];
     }
 
     // Build the rank subquery to get actual global rank
@@ -407,7 +411,7 @@ const getRankedProfiles = async (req, res, db) => {
        WHERE 1=1
        ${gender ? `AND ap3.gender = '${gender}'` : ''}
        ${!allTime ? `
-       AND (ap3.alwaysActiveOverride = true ${activeAthleteIdsClause})` : ''}
+       AND (ap3.alwaysActiveOverride = true ${activeAthleteIdsClause.replace('ap2.', 'ap3.')})` : ''}
       )`;
 
     // Use findAndCountAll instead of separate queries
@@ -495,7 +499,16 @@ const getRankedProfiles = async (req, res, db) => {
     });
 
     // Get the total count from the first result (all results will have the same value)
-    const accurateTotalCount = profilesWithPRs.length > 0 ? profilesWithPRs[0].getDataValue('totalCount') : 0;
+    let accurateTotalCount;
+    if (profilesWithPRs.length > 0) {
+      accurateTotalCount = profilesWithPRs[0].getDataValue('totalCount');
+    } else {
+      // If no results from search, get the total count separately
+      const { count } = await db.tables.AthleteProfiles.findAndCountAll({
+        where: baseWhereClause,
+      });
+      accurateTotalCount = count;
+    }
     const hasMore = offset + athletes.length < accurateTotalCount;
 
     res.json({ 
