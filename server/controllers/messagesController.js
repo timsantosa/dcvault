@@ -268,7 +268,8 @@ async function sendMessage(req, res, db) {
 
     // TODO: Send notifications to all participants except sender
     // TODO: If this is a reaction, send specific notification to the original message sender
-
+    // TODO: Only send notification to user once, in case they have multiple athletes per account.
+    
     res.json({ ok: true, message: fullMessage });
   } catch (error) {
     console.error('Error sending message:', error);

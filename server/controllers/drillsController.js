@@ -1,3 +1,5 @@
+const { validatePoleBrand } = require("../utils/poleBrandValidation");
+
 const addOrUpdateDrill = async (req, res, db) => {
   try {
     const athleteProfileId = req.query.athleteProfileId;
@@ -21,7 +23,7 @@ const addOrUpdateDrill = async (req, res, db) => {
       poleId: hardMetrics.pole?.id,
       poleLengthInches: hardMetrics.pole?.lengthInches,
       poleWeight: hardMetrics.pole?.weight,
-      poleBrand: hardMetrics.pole?.brand,
+      poleBrand: validatePoleBrand(hardMetrics.pole?.brand),
       poleFlex: hardMetrics.pole?.flex,
       poleGripInches: hardMetrics.pole?.gripInches,
       // Flattened athlete stats

@@ -1,6 +1,7 @@
 // import { Request, Response } from 'express';
 
 const rankingCache = require("./athleteRankingCache");
+const { validatePoleBrand } = require("../utils/poleBrandValidation");
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
@@ -38,7 +39,7 @@ const addOrUpdateJump = async (req, res, db) => {
       poleGripInches: hardMetrics?.pole?.gripInches,
       poleLengthInches: hardMetrics?.pole?.lengthInches,
       poleWeight: hardMetrics?.pole?.weight,
-      poleBrand: hardMetrics?.pole?.brand,
+      poleBrand: validatePoleBrand(hardMetrics?.pole?.brand),
       poleFlex: hardMetrics?.pole?.flex,
       heightInches: hardMetrics?.height?.inches,
       heightIsBar: hardMetrics?.height?.isBar,
