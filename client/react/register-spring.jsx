@@ -1283,42 +1283,42 @@ class Payment extends React.Component {
     var cont = this.continue.bind(this)
     var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email
 
-    paypal.Button.render({ // eslint-disable-line
-      env: window.configVariables.PAYPAL_MODE, // sandbox | production
-      client: {
-        sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
-        production: window.configVariables.PAYPAL_CLIENT_ID
-      },
-      commit: true,
-
-      style: {
-        size: 'responsive',
-        shape: 'rect',
-        color: 'silver',
-        label: 'pay'
-      },
-
-      payment: function (data, actions) {
-        return actions.payment.create({
-          payment: {
-            transactions: [
+    if (window.paypal && window.paypal.Buttons) {
+      window.paypal.Buttons({
+        style: {
+          layout: 'vertical',
+          color: 'silver',
+          shape: 'rect',
+          label: 'pay'
+        },
+        createOrder: function (data, actions) {
+          return actions.order.create({
+            purchase_units: [
               {
-                amount: { total: amount.toFixed(2), currency: 'USD' },
-                note_to_payee: paymentDescription
+                amount: { value: amount.toFixed(2), currency_code: 'USD' },
+                description: paymentDescription
               }
             ]
-          }
-        })
-      },
-
-    // onAuthorize() is called when the buyer approves the payment
-      onAuthorize: function (data, actions) {
-        return actions.payment.execute().then(function () {
-          cont(data)
-        })
-      }
-
-    }, '#paypal-button-container')
+          })
+        },
+        onApprove: function (data, actions) {
+          return actions.order.capture().then(function (details) {
+            cont({
+              paymentID: data.orderID,
+              payerID: data.payerID || (details && details.payer && details.payer.payer_id),
+              details
+            })
+          })
+        },
+        onError: function (err) {
+          // Optionally handle errors
+          alert('PayPal payment failed: ' + err)
+        }
+      }).render('#paypal-button-container')
+    } else {
+      // Optionally handle PayPal SDK not loaded
+      document.getElementById('paypal-button-container').innerHTML = '<p>PayPal SDK failed to load. Please refresh the page.</p>'
+    }
   }
 
   continue (data) {

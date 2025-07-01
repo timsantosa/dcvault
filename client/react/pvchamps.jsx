@@ -381,7 +381,7 @@ class AthleteInfo extends React.Component {
                                     <option value='Boys High School D2'>High School Division - Boys D2 PR under 12'6" (Ages 14-18 who attended grades 9-12 in Spring of 2025) </option>
                                     <option value='Womens Adult'>Open Adult Division - Women</option>
                                     <option value='Mens Adults'>Open Adult Division - Men</option>
-                                    <option value='Mens Emerging Elite'>Men’s Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
+                                    <option value='Mens Emerging Elite'>Men's Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
                                     <option value='Mens Elite'>Elite Women (PR of 4.3m or higher)</option>
                                     <option value='Womens Elite'>Elite Men (PR of 5.5m or higher)</option>
                                 </select>
@@ -679,77 +679,42 @@ class Payment extends React.Component {
         amount = parseFloat(amount)
 
         var cont = this.continue.bind(this)
-        var dateLst = ""
-        if(this.props.data.athleteInfo.dates1){
-            dateLst += this.props.data.athleteInfo.dates1 + ", "
-        }
-        if(this.props.data.athleteInfo.dates2){
-            dateLst += this.props.data.athleteInfo.dates2 + ", "
-        }
-        if(this.props.data.athleteInfo.dates3){
-            dateLst += this.props.data.athleteInfo.dates3 + ", "
-        }
-        if(this.props.data.athleteInfo.dates4){
-            dateLst += this.props.data.athleteInfo.dates4 + ", "
-        }
-        if(this.props.data.athleteInfo.dates5){
-            dateLst += this.props.data.athleteInfo.dates5 + ", "
-        }
-        if(this.props.data.athleteInfo.dates6){
-            dateLst += this.props.data.athleteInfo.dates6 + ", "
-        }
-        if(this.props.data.athleteInfo.dates7){
-            dateLst += this.props.data.athleteInfo.dates7 + ", "
-        }
-        if(this.props.data.athleteInfo.dates8){
-            dateLst += this.props.data.athleteInfo.dates8 + ", "
-        }
-        if(this.props.data.athleteInfo.dates9){
-            dateLst += this.props.data.athleteInfo.dates9 + ", "
-        }
-        if(this.props.data.athleteInfo.dates10){
-            dateLst += this.props.data.athleteInfo.dates10 + ", "
-        }
-        this.props.data.athleteInfo.dates1 = dateLst
-        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\n State:' + this.props.data.athleteInfo.state + '\n Division: ' + this.props.data.athleteInfo.division +  '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competitions: ' + dateLst
+        var paymentDescription = 'PVChamps Payment for: ' + this.props.data.athleteName + '\nAthlete Email: ' + this.props.data.athleteEmail
 
-
-        paypal.Button.render({ // eslint-disable-line
-            env: window.configVariables.PAYPAL_MODE, // sandbox | production
-            client: {
-                sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
-                production: window.configVariables.PAYPAL_CLIENT_ID
-            },
-            commit: true,
-
-            style: {
-                size: 'responsive',
-                shape: 'rect',
-                color: 'silver',
-                label: 'pay'
-            },
-
-            payment: function (data, actions) {
-                return actions.payment.create({
-                    payment: {
-                        transactions: [
+        if (window.paypal && window.paypal.Buttons) {
+            window.paypal.Buttons({
+                style: {
+                    layout: 'vertical',
+                    color: 'silver',
+                    shape: 'rect',
+                    label: 'pay'
+                },
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [
                             {
-                                amount: { total: amount.toFixed(2), currency: 'USD' },
-                                note_to_payee: paymentDescription
+                                amount: { value: amount.toFixed(2), currency_code: 'USD' },
+                                description: paymentDescription
                             }
                         ]
-                    }
-                })
-            },
-
-            // onAuthorize() is called when the buyer approves the payment
-            onAuthorize: function (data, actions) {
-                return actions.payment.execute().then(function () {
-                    cont(data)
-                })
-            }
-
-        }, '#paypal-button-container')
+                    })
+                },
+                onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                        cont({
+                            paymentID: data.orderID,
+                            payerID: data.payerID || (details && details.payer && details.payer.payer_id),
+                            details
+                        })
+                    })
+                },
+                onError: function (err) {
+                    alert('PayPal payment failed: ' + err)
+                }
+            }).render('#paypal-button-container')
+        } else {
+            document.getElementById('paypal-button-container').innerHTML = '<p>PayPal SDK failed to load. Please refresh the page.</p>'
+        }
     }
 
     continue (data) {
