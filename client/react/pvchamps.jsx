@@ -679,7 +679,39 @@ class Payment extends React.Component {
         amount = parseFloat(amount)
 
         var cont = this.continue.bind(this)
-        var paymentDescription = 'PVChamps Payment for: ' + this.props.data.athleteName + '\nAthlete Email: ' + this.props.data.athleteEmail
+        var dateLst = ""
+        if(this.props.data.athleteInfo.dates1){
+            dateLst += this.props.data.athleteInfo.dates1 + ", "
+        }
+        if(this.props.data.athleteInfo.dates2){
+            dateLst += this.props.data.athleteInfo.dates2 + ", "
+        }
+        if(this.props.data.athleteInfo.dates3){
+            dateLst += this.props.data.athleteInfo.dates3 + ", "
+        }
+        if(this.props.data.athleteInfo.dates4){
+            dateLst += this.props.data.athleteInfo.dates4 + ", "
+        }
+        if(this.props.data.athleteInfo.dates5){
+            dateLst += this.props.data.athleteInfo.dates5 + ", "
+        }
+        if(this.props.data.athleteInfo.dates6){
+            dateLst += this.props.data.athleteInfo.dates6 + ", "
+        }
+        if(this.props.data.athleteInfo.dates7){
+            dateLst += this.props.data.athleteInfo.dates7 + ", "
+        }
+        if(this.props.data.athleteInfo.dates8){
+            dateLst += this.props.data.athleteInfo.dates8 + ", "
+        }
+        if(this.props.data.athleteInfo.dates9){
+            dateLst += this.props.data.athleteInfo.dates9 + ", "
+        }
+        if(this.props.data.athleteInfo.dates10){
+            dateLst += this.props.data.athleteInfo.dates10 + ", "
+        }
+        this.props.data.athleteInfo.dates1 = dateLst
+        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\n State:' + this.props.data.athleteInfo.state + '\n Division: ' + this.props.data.athleteInfo.division +  '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competitions: ' + dateLst
 
         if (window.paypal && window.paypal.Buttons) {
             window.paypal.Buttons({
