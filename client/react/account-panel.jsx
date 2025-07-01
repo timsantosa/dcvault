@@ -1,6 +1,7 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
 import GenericModal from './generic-modal.jsx'
+import { loadPayPalSDK } from './paypal-helpers'
 const $ = window.$
 
 class AccountPanel extends React.Component {
@@ -422,10 +423,26 @@ class PoleRentalPurchase extends React.Component {
     }
   }
 
-  componentDidMount () {
-    if (!this.state.successfulPayment) {
-      this.renderButton()
-    }
+  componentDidMount() {
+    // Load PayPal SDK and render button
+    this.loadPayPalButton()
+  }
+
+  loadPayPalButton() {
+    loadPayPalSDK().then((paypal) => {
+      paypal.Buttons({
+        createOrder: this.createOrder.bind(this),
+        onApprove: this.onApprove.bind(this),
+        style: {
+          layout: "horizontal",
+          color: "silver",
+          shape: "rect",
+          label: "pay"
+        }
+      }).render('#paypal-button-container');
+    }).catch((error) => {
+      console.error('Failed to load PayPal SDK:', error);
+    });
   }
 
   continue (data) {
@@ -444,48 +461,30 @@ class PoleRentalPurchase extends React.Component {
     })
   }
 
-  renderButton () {
+  createOrder(data, actions) {
     let amount = 1.03 * this.state.price
-
-    var cont = this.continue.bind(this)
     var paymentDescription = 'Pole rental: ' + this.state.periodDisplay + '; Athlete: ' + this.props.athlete.firstName + ' ' + this.props.athlete.lastName
 
-    paypal.Button.render({ // eslint-disable-line
-      env: window.configVariables.PAYPAL_MODE, // sandbox | production
-      client: {
-        sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
-        production: window.configVariables.PAYPAL_CLIENT_ID
-      },
-      commit: true,
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: amount.toFixed(2),
+            currency_code: "USD"
+          },
+          description: paymentDescription
+        }
+      ]
+    })
+  }
 
-      style: {
-        size: 'responsive',
-        shape: 'rect',
-        color: 'silver',
-        label: 'pay'
-      },
-
-      payment: function (data, actions) {
-        return actions.payment.create({
-          payment: {
-            transactions: [
-              {
-                amount: { total: amount.toFixed(2), currency: 'USD' },
-                note_to_payee: paymentDescription
-              }
-            ]
-          }
-        })
-      },
-
-    // onAuthorize() is called when the buyer approves the payment
-      onAuthorize: function (data, actions) {
-        return actions.payment.execute().then(function () {
-          cont(data)
-        })
-      }
-
-    }, '#paypal-button-container')
+  onApprove(data, actions) {
+    return actions.order.capture().then((details) => {
+      this.continue({
+        paymentID: details.id,
+        payerID: details.payer.payer_id
+      })
+    })
   }
 
   render () {
