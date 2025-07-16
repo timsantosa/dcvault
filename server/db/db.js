@@ -284,6 +284,32 @@ columns.user_roles = {};
 
 columns.user_permissions = {};
 
+// Refresh Tokens for mobile app
+columns.mobileRefreshTokens = {
+  token: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.users,
+      key: 'id',
+    },
+  },
+  expiresAt: {
+    type: Sequelize.DATE,
+    allowNull: false,
+  },
+  isRevoked: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
+};
+
 // Meet Data Types
 columns.championshipTypes = {
   name: {
@@ -560,6 +586,23 @@ const syncTables = (schema, force) => {
   tables.Role_Permissions = schema.define('role_permission', columns.role_permissions);
   tables.User_Roles = schema.define('user_role', columns.user_roles);
   tables.User_Permissions = schema.define('user_permission', columns.user_permissions);
+  tables.MobileRefreshTokens = schema.define('mobileRefreshToken', columns.mobileRefreshTokens, {
+    indexes: [
+      {
+        fields: ['token'],
+        unique: true,
+        name: 'mobile_refresh_tokens_token_unique'
+      },
+      {
+        fields: ['userId', 'isRevoked'],
+        name: 'mobile_refresh_tokens_user_revoked'
+      },
+      {
+        fields: ['expiresAt'],
+        name: 'mobile_refresh_tokens_expires'
+      }
+    ]
+  });
 
   // Meet Data Types
   tables.ChampionshipTypes = schema.define('championshipType', columns.championshipTypes);
@@ -620,6 +663,10 @@ const syncTables = (schema, force) => {
 
   tables.User_Permissions.belongsTo(tables.Users, { foreignKey: 'userId' });
   tables.User_Permissions.belongsTo(tables.Permissions, { foreignKey: 'permissionId' });
+
+  // Refresh token associations
+  tables.MobileRefreshTokens.belongsTo(tables.Users, { foreignKey: 'userId' });
+  tables.Users.hasMany(tables.MobileRefreshTokens, { foreignKey: 'userId' });
 
   // Drill associations
   tables.Drills.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
