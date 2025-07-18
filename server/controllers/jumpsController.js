@@ -80,11 +80,11 @@ const addOrUpdateJump = async (req, res, db) => {
       } else if (hardMetrics?.setting === "Meet") {
         // Original jump was verified, check if any critical fields changed
         const criticalFieldsChanged = 
-          (meetInfo?.records?.join(',') !== originalJump.recordType) ||
-          (meetInfo?.championshipType != originalJump.meetType) ||
-          (meetInfo?.placement !== originalJump.placement) ||
-          (hardMetrics?.height?.inches !== originalJump.heightInches) ||
-          (hardMetrics?.setting !== originalJump.setting);
+          (flattenedMeetInfo.recordType != originalJump.recordType ?? '') ||
+          (meetInfo?.championshipType != originalJump.meetType ?? '') ||
+          (meetInfo?.placement != originalJump.placement ?? '') ||
+          (hardMetrics?.height?.inches != originalJump.heightInches) ||
+          (hardMetrics?.setting != originalJump.setting);
 
         if (criticalFieldsChanged) {
           needsVerification = true;
@@ -99,11 +99,6 @@ const addOrUpdateJump = async (req, res, db) => {
     } else {
       // New jump, just do normal verification check
       needsVerification = await requiresVerification(hardMetrics, meetInfo, athleteProfileId, db);
-    }
-
-    // If we're updating a verified PR and it needs re-verification, we need to recalculate PRs
-    if (jumpId && wasPr && needsVerification) {
-      await populatePRsForAthlete(athleteProfileId, db);
     }
     
     const verified = !needsVerification;
@@ -120,6 +115,11 @@ const addOrUpdateJump = async (req, res, db) => {
       ...flattenedMeetInfo,
       verified,
     });
+
+    // If we're updating a verified PR and it needs re-verification, we need to recalculate PRs
+    if (jumpId && wasPr && needsVerification) {
+      await populatePRsForAthlete(athleteProfileId, db); //TODO: must do this after unverification
+    }
 
     // If jump is already verified, check if we need to update the personal records table.
     // Otherwise it will get updated when it gets verified.
