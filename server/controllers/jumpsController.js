@@ -2,6 +2,7 @@
 
 const rankingCache = require("./athleteRankingCache");
 const { validatePoleBrand } = require("../utils/poleBrandValidation");
+const { getBestOfPersonalRecords } = require("../lib/helpers");
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
@@ -164,7 +165,7 @@ async function requiresVerification(hardMetrics, meetInfo, athleteProfileId, db)
 
   // If it's a PR jump, we need to verify it
   const athletesPr = await getPersonalBest(athleteProfileId, db);
-  if (hardMetrics?.height?.inches > athletesPr) {
+  if (hardMetrics?.height?.inches > athletesPr.heightInches) {
     return true;
   }
 
@@ -265,10 +266,17 @@ const fetchJumps = async (req, res, db) => {
       where.stepNum = stepNum;
     }
 
-    // Fetch PRs for the athlete
+    // Fetch PRs for the athlete with jump data included
     const personalRecords = await db.tables.PersonalRecords.findAll({
       where: { athleteProfileId },
       attributes: ['stepNum', 'jumpId'],
+      include: [
+        {
+          model: db.tables.Jumps,
+          as: 'jump',
+          attributes: ['id', 'heightInches'],
+        },
+      ],
     });
 
     // Create a map of PR jump IDs for quick lookup
@@ -276,6 +284,10 @@ const fetchJumps = async (req, res, db) => {
     personalRecords.forEach(pr => {
       prMap.set(pr.stepNum, pr.jumpId);
     });
+
+    // Find the overall PR (highest height among all PRs)
+    const bestPr = getBestOfPersonalRecords(personalRecords);
+    const overallPrJumpId = bestPr.jumpId;
 
     let limit = null;
     let offset = null;
@@ -295,7 +307,8 @@ const fetchJumps = async (req, res, db) => {
 
     let returnedJumps = jumps.map(mapDbRowToJump).map((jump => ({
       ...jump,
-      isPr: prMap.get(jump.stepNum) === jump.id
+      isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
+      isPr: jump.id === overallPrJumpId,
     })));
 
     res.json({
@@ -478,29 +491,6 @@ async function getUnverifiedMeetJumps(req, res, db) {
   }
 }
 
-async function getPersonalBests(athleteProfileId, db) {
-  try {
-    const prs = await db.tables.PersonalRecords.findAll({
-      where: { athleteProfileId },
-      include: [
-        {
-          model: db.tables.Jumps,
-          as: 'jump',
-        },
-      ],
-    });
-
-    return prs.map(pr => ({
-      stepNum: pr.stepNum,
-      jump: mapDbRowToJump(pr.jump).map((j) => ({
-        ...j,
-        isPr: true,
-      })),
-    }));
-  } catch {
-
-  }
-}
 
 async function getPersonalBest(athleteProfileId, db) {
   try {
@@ -510,16 +500,15 @@ async function getPersonalBest(athleteProfileId, db) {
         {
           model: db.tables.Jumps,
           as: 'jump',
-          attributes: ['heightInches'],
+          attributes: ['heightInches', 'id'],
         },
       ],
     });
 
-    const pr = Math.max(...prs.map(pr => (pr.jump.heightInches ?? 0)));
-    return Math.max(pr, 0);
+    return getBestOfPersonalRecords(prs);
   } catch (err) {
     console.error(`Error fetching PR for athleteId ${athleteProfileId}:`, err);
-    return 0;
+    return { heightInches: 0, jumpId: null };
   }
 }
 

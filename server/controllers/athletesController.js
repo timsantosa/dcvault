@@ -142,7 +142,7 @@ const getProfile = async (req, res, db) => {
         weight: profile.weight,
         age: helpers.calculateAge(profile.dob),
         rank: cachedRank,
-        pr: highestPr,
+        pr: highestPr, // Object containing height and jump id
         largestPole: largestPole?.jump ? {
           lengthInches: largestPole.jump.poleLengthInches,
           weight: largestPole.jump.poleWeight,
@@ -461,10 +461,7 @@ const getRankedProfiles = async (req, res, db) => {
     // Map the data into a structured response
     const athletes = profilesWithPRs.map((profile, index) => {
       // Find the best PR from the included personalRecords and jumps
-      const bestPR = profile.personalRecords.reduce((max, record) => {
-        const jumpHeight = record.jump ? record.jump.heightInches : 0;
-        return jumpHeight > max ? jumpHeight : max;
-      }, 0);
+      const pr = helpers.getBestOfPersonalRecords(profile.personalRecords);
 
       // Determine active status
       const isActiveMember = profile.alwaysActiveOverride || 
@@ -487,7 +484,7 @@ const getRankedProfiles = async (req, res, db) => {
           weight: profile.weight,
           age: helpers.calculateAge(profile.dob),
           rank: profile.getDataValue('actualRank') || 1,
-          pr: bestPR,
+          pr,
           largestPole: undefined,
           medalCounts,
         },

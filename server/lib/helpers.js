@@ -328,3 +328,41 @@ module.exports.isValidId = (id) => {
   return typeof id === 'number' && Number.isInteger(id) && isFinite(id);
 }
 
+/**
+ * Get the best personal record from a collection of personal records
+ * @param {Array} personalRecords - Array of personal record objects with jump data
+ * @returns {Object} Object containing heightInches and jumpId of the best PR
+ */
+function getBestOfPersonalRecords(personalRecords) {
+  if (!personalRecords || personalRecords.length === 0) {
+    return { heightInches: 0, jumpId: null };
+  }
+
+  // Find the PR with the highest height
+  const bestPr = personalRecords.reduce((best, current) => {
+    const currentHeight = current.jump ? current.jump.heightInches ?? 0 : 0;
+    const bestHeight = best.jump ? best.jump.heightInches ?? 0 : 0;
+    return currentHeight > bestHeight ? current : best;
+  });
+
+  return {
+    heightInches: Math.max(bestPr.jump ? bestPr.jump.heightInches ?? 0 : 0, 0),
+    jumpId: bestPr.jump ? bestPr.jump.id : null
+  };
+}
+
+module.exports = {
+  decodeUser: module.exports.decodeUser,
+  getCurrentQuarter: module.exports.getCurrentQuarter,
+  sendCode: module.exports.sendCode,
+  resetPass: module.exports.resetPass,
+  sendConfirmationEmails: module.exports.sendConfirmationEmails,
+  sendDMVEventConfirmationEmails: module.exports.sendDMVEventConfirmationEmails,
+  sendEventConfirmationEmails: module.exports.sendEventConfirmationEmails,
+  randString: module.exports.randString,
+  sendWithReplyTo: module.exports.sendWithReplyTo,
+  calculateAge: module.exports.calculateAge,
+  isValidId: module.exports.isValidId,
+  getBestOfPersonalRecords,
+};
+
