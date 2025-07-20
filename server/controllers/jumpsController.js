@@ -118,7 +118,7 @@ const addOrUpdateJump = async (req, res, db) => {
 
     // If we're updating a verified PR and it needs re-verification, we need to recalculate PRs
     if (jumpId && wasPr && needsVerification) {
-      await populatePRsForAthlete(athleteProfileId, db); //TODO: must do this after unverification
+      await populatePRsForAthlete(athleteProfileId, db);
     }
 
     // If jump is already verified, check if we need to update the personal records table.

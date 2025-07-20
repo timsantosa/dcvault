@@ -2,18 +2,14 @@ const helpers = require('../lib/helpers');
 const rankingCache = require('./athleteRankingCache');
 const { getPersonalBest } = require('./jumpsController');
 
-async function upsertProfile(req, res, db) {
+async function createProfile(req, res, db) {
   try {
     const userSendingRequest = req.user;
     const newProfileData = req.body.athleteProfile;
-    const athleteProfileIdToUpdate = req.query.athleteProfileId;
     const userIdToCreateFor = req.query.userId;
 
-
-    // either an athleteProfId needs to passed in for updating, or 
-    // a userId must be used for creating new profiles
-    if (!athleteProfileIdToUpdate && !userIdToCreateFor) {
-      return res.status(400).json({ ok: false, message: 'User or athlete not specified' });
+    if (!userIdToCreateFor) {
+      return res.status(400).json({ ok: false, message: 'User ID is required for creating a profile' });
     }
 
     // Check for required fields
@@ -21,12 +17,72 @@ async function upsertProfile(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Missing required fields' });
     }
 
-    const query = athleteProfileIdToUpdate
-      ? { where: { id: athleteProfileIdToUpdate } } // Find profile by athleteProfileId (for updates)
-      : { where: { userId: userIdToCreateFor } }; // Find profile by userId (for creation)
+    // Check if there's already a profile with the same first name, last name, and birthday for this user
+    const existingProfile = await db.tables.AthleteProfiles.findOne({
+      where: {
+        userId: userIdToCreateFor,
+        firstName: newProfileData.firstName,
+        lastName: newProfileData.lastName,
+        dob: newProfileData.dob
+      }
+    });
 
-    // Maybe consider using upsert?
-    const existingProfile = await db.tables.AthleteProfiles.findOne(query);
+    if (existingProfile) {
+      return res.status(400).json({ 
+        ok: false, 
+        message: 'A profile with the same first name, last name, and birthday already exists for this user' 
+      });
+    }
+
+    let athleteProfileData = {
+      firstName: newProfileData.firstName,
+      lastName: newProfileData.lastName,
+      dob: newProfileData.dob,
+      nationality: newProfileData.nationality ?? 'US',
+      height: newProfileData.height,
+      weight: newProfileData.weight,
+      gender: newProfileData.gender,
+      athleteId: newProfileData.associatedAthleteId,
+      alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false,
+      userId: userIdToCreateFor
+    }
+
+    if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
+      athleteProfileData.alwaysActiveOverride = newProfileData.alwaysActiveOverride;
+    }
+
+    const newProfile = await db.tables.AthleteProfiles.create(athleteProfileData);
+    console.log(`Profile created successfully with id ${newProfile.id}`);
+    return res.status(201).json({ ok: true, message: "Profile Created", athleteProfileId: newProfile.id });
+
+  } catch (error) {
+    console.error('Error in createProfile:', error);
+    return res.status(500).json({ ok: false, message: 'Server error', error: error.message });
+  }
+}
+
+async function updateProfile(req, res, db) {
+  try {
+    const userSendingRequest = req.user;
+    const newProfileData = req.body.athleteProfile;
+    const athleteProfileIdToUpdate = req.query.athleteProfileId;
+
+    if (!athleteProfileIdToUpdate) {
+      return res.status(400).json({ ok: false, message: 'Athlete profile ID is required for updating a profile' });
+    }
+
+    // Check for required fields
+    if (!newProfileData || !newProfileData.firstName || !newProfileData.lastName || !newProfileData.dob || !newProfileData.gender) {
+      return res.status(400).json({ ok: false, message: 'Missing required fields' });
+    }
+
+    const existingProfile = await db.tables.AthleteProfiles.findOne({
+      where: { id: athleteProfileIdToUpdate }
+    });
+
+    if (!existingProfile) {
+      return res.status(404).json({ ok: false, message: 'Athlete profile not found' });
+    }
 
     let athleteProfileData = {
       firstName: newProfileData.firstName,
@@ -44,29 +100,17 @@ async function upsertProfile(req, res, db) {
       athleteProfileData.alwaysActiveOverride = newProfileData.alwaysActiveOverride;
     }
 
-    if (existingProfile) {
-      // Update existing profile
-      await existingProfile.update(athleteProfileData);
+    // Update existing profile
+    await existingProfile.update(athleteProfileData);
 
-      console.log(`Profile updated successfully with id ${existingProfile.id}`);
-      return res.status(200).json({
-        ok: true,
-        message: "Profile updated.",
-      });
-    }
-
-    // If profile does not exist, create a new one
-    athleteProfileData.userId = userIdToCreateFor;
-    if (!athleteProfileData.nationality) {
-      athleteProfileData.nationality = 'US';
-    }
-
-    const newProfile = await db.tables.AthleteProfiles.create(athleteProfileData);
-    console.log(`Profile created successfully with id ${newProfile.id}`);
-    return res.status(200).json({ ok: true, message: "Profile Created", athleteProfileId: newProfile.id });
+    console.log(`Profile updated successfully with id ${existingProfile.id}`);
+    return res.status(200).json({
+      ok: true,
+      message: "Profile updated.",
+    });
 
   } catch (error) {
-    console.error('Error in upsertProfile:', error);
+    console.error('Error in updateProfile:', error);
     return res.status(500).json({ ok: false, message: 'Server error', error: error.message });
   }
 }
@@ -177,8 +221,78 @@ const getProfile = async (req, res, db) => {
 };
 
 const deleteProfile = async (req, res, db) => {
-  console.log('delete profile');
-  res.status(500).json({ ok: false, message: 'Not implemented' });
+  try {
+    const userSendingRequest = req.user;
+    const athleteProfileId = parseInt(req.query.athleteProfileId);
+
+    if (!athleteProfileId || !helpers.isValidId(athleteProfileId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid athlete profile ID' });
+    }
+
+    // Check if the profile exists
+    const existingProfile = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
+    if (!existingProfile) {
+      return res.status(404).json({ ok: false, message: 'Athlete profile not found' });
+    }
+
+    // Use a transaction to ensure all deletions happen atomically
+    const transaction = await db.tables.schema.transaction();
+
+    try {
+      // Delete in the correct order to avoid foreign key constraint violations
+      
+      // 1. Delete PersonalRecords first (they reference both Jumps and AthleteProfiles)
+      await db.tables.PersonalRecords.destroy({
+        where: { athleteProfileId },
+        transaction
+      });
+
+      // 2. Delete Jumps (they reference AthleteProfiles)
+      await db.tables.Jumps.destroy({
+        where: { athleteProfileId },
+        transaction
+      });
+
+      // 3. Delete Drills (they reference AthleteProfiles)
+      await db.tables.Drills.destroy({
+        where: { athleteProfileId },
+        transaction
+      });
+
+      // 4. Finally delete the AthleteProfile
+      await db.tables.AthleteProfiles.destroy({
+        where: { id: athleteProfileId },
+        transaction
+      });
+
+      // Commit the transaction
+      await transaction.commit();
+
+      // Regenerate rankings since an athlete profile was deleted
+      try {
+        await rankingCache.regenerateAllRankings();
+        console.log('Rankings regenerated after athlete profile deletion');
+      } catch (rankingError) {
+        console.error('Error regenerating rankings after profile deletion:', rankingError);
+        // Don't fail the deletion if ranking regeneration fails
+      }
+
+      console.log(`Athlete profile ${athleteProfileId} deleted successfully`);
+      return res.status(200).json({ 
+        ok: true, 
+        message: 'Athlete profile deleted successfully' 
+      });
+
+    } catch (error) {
+      // Rollback the transaction if any error occurs
+      await transaction.rollback();
+      throw error;
+    }
+
+  } catch (error) {
+    console.error('Error in deleteProfile:', error);
+    return res.status(500).json({ ok: false, message: 'Server error', error: error.message });
+  }
 };
 
 const getProfiles = async (req, res, db) => {
@@ -707,8 +821,9 @@ async function getMedalCountsForProfiles(athleteProfileIds, db) {
   return medalCountsMap;
 }
 
-module.exports = { 
-  upsertProfile, 
+module.exports = {
+  createProfile,
+  updateProfile,
   getProfile, 
   deleteProfile, 
   getRankedProfiles,

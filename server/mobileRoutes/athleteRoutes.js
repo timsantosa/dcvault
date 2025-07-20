@@ -1,7 +1,8 @@
 const express = require('express');
 const {
   getProfile,
-  upsertProfile,
+  createProfile,
+  updateProfile,
   deleteProfile,
   getRankedProfiles,
   getProfiles,
@@ -52,8 +53,10 @@ const athleteRoutes = (db) => {
   // Pass the db to the controller functions
   router.route('/profile') // TODO: Consider converting to use user id as a path parameter
     .get(checkPermission('view_profiles'), (req, res) => getProfile(req, res, db))
-    .put(checkCreateProfilePermission, (req, res) => upsertProfile(req, res, db))
     .delete(checkEditProfilePermission, (req, res) => deleteProfile(req, res, db));
+
+  router.post('/profile/create', checkCreateProfilePermission, (req, res) => createProfile(req, res, db));
+  router.put('/profile/update', checkEditProfilePermission, (req, res) => updateProfile(req, res, db));
 
   router.get('/profiles', checkPermission('view_profiles'), (req, res) => getProfiles(req, res, db));
   router.get('/profiles/ranked', checkPermission('view_profiles'), (req, res) => getRankedProfiles(req, res, db));
