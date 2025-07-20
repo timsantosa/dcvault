@@ -34,6 +34,18 @@ async function createProfile(req, res, db) {
       });
     }
 
+    if (newProfileData.associatedAthleteId) {
+      const existingProfile = await db.tables.AthleteProfiles.findOne({
+        where: { athleteId: newProfileData.associatedAthleteId }
+      });
+      if (existingProfile) {
+        return res.status(400).json({ 
+          ok: false, 
+          message: 'The athleteId is already associated with another profile' 
+        });
+      }
+    }
+
     let athleteProfileData = {
       firstName: newProfileData.firstName,
       lastName: newProfileData.lastName,
@@ -84,6 +96,18 @@ async function updateProfile(req, res, db) {
       return res.status(404).json({ ok: false, message: 'Athlete profile not found' });
     }
 
+    if (newProfileData.associatedAthleteId) {
+      const existingProfile = await db.tables.AthleteProfiles.findOne({
+        where: { athleteId: newProfileData.associatedAthleteId }
+      });
+      if (existingProfile && existingProfile.id !== athleteProfileIdToUpdate) {
+        return res.status(400).json({ 
+          ok: false, 
+          message: 'The athleteId is already associated with another profile' 
+        });
+      }
+    }
+
     let athleteProfileData = {
       firstName: newProfileData.firstName,
       lastName: newProfileData.lastName,
@@ -92,7 +116,7 @@ async function updateProfile(req, res, db) {
       height: newProfileData.height,
       weight: newProfileData.weight,
       gender: newProfileData.gender,
-      athleteId: newProfileData.associatedAthleteId, // TODO: check if athleteId is already associated with another profile
+      athleteId: newProfileData.associatedAthleteId,
       alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false,
     }
 

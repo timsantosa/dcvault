@@ -98,7 +98,8 @@ async function cleanupUserTokens(userId, db) {
 // Create a refresh token in the database
 async function createRefreshToken(userId, db) {
   // Clean up existing tokens for this user first
-  await cleanupUserTokens(userId, db);
+  // Commenting this out allows multiple devices to stay logged in
+  // await cleanupUserTokens(userId, db);
   
   const token = generateRefreshToken();
   const expiresAt = getRefreshTokenExpiry();

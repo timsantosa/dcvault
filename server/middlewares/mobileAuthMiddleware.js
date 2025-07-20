@@ -11,15 +11,16 @@ function authenticateJWT(req, res, next) {
       code: 'NO_TOKEN'
     });
   }
-  const token = authBearer.split(' ')[1]; // Put inside a try/catch
-  if (!token) {
-    return res.status(401).json({
-      ok: false, 
-      message: 'no token',
-      code: 'NO_TOKEN'
-    });
-  } 
+
   try {
+    const token = authBearer.split(' ')[1]; 
+    if (!token) {
+      return res.status(401).json({
+        ok: false, 
+        message: 'no token',
+        code: 'NO_TOKEN'
+      });
+    } 
     const user = jwt.decode(token, config.auth.secret);
     if (!user) {
       return res.status(401).json({
@@ -30,14 +31,14 @@ function authenticateJWT(req, res, next) {
     }
 
     // Check if token has expired
-    // if (user.exp && user.exp < Math.floor(Date.now() / 1000)) {
-    //   return res.status(401).json({
-    //     ok: false, 
-    //     message: 'token expired',
-    //     code: 'TOKEN_EXPIRED',
-    //     currentTime: Date.now()
-    //   });
-    // }
+    if (user.exp && user.exp < Math.floor(Date.now() / 1000)) {
+      return res.status(401).json({
+        ok: false, 
+        message: 'token expired',
+        code: 'TOKEN_EXPIRED',
+        currentTime: Date.now()
+      });
+    }
     
     // Successfully authenticated, move along and attach user to request
     req.user = user;
