@@ -77,7 +77,7 @@ async function updateProfile(req, res, db) {
   try {
     const userSendingRequest = req.user;
     const newProfileData = req.body.athleteProfile;
-    const athleteProfileIdToUpdate = req.query.athleteProfileId;
+    const athleteProfileIdToUpdate = parseInt(req.query.athleteProfileId);
 
     if (!athleteProfileIdToUpdate) {
       return res.status(400).json({ ok: false, message: 'Athlete profile ID is required for updating a profile' });
