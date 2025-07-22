@@ -329,7 +329,7 @@ columns.divisionTypes = {
 
 columns.recordTypes = {
   name: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING, // TODO: maybe make this text for longer records
     allowNull: false,
     unique: true
   }

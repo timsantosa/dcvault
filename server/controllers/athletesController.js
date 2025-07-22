@@ -801,7 +801,12 @@ async function getMedalCountsForProfiles(athleteProfileIds, db) {
   const medalCounts = await db.tables.Jumps.findAll({
     where: {
       athleteProfileId: { [db.tables.schema.Sequelize.Op.in]: athleteProfileIds },
-      meetType: { [db.tables.schema.Sequelize.Op.ne]: null }, // meetType is not null (championship)
+      meetType: { 
+        [db.tables.schema.Sequelize.Op.and]: [
+          { [db.tables.schema.Sequelize.Op.ne]: null }, // meetType is not null
+          { [db.tables.schema.Sequelize.Op.ne]: '' }    // meetType is not empty string
+        ]
+      }, // meetType is not null and not empty (championship)
       placement: { [db.tables.schema.Sequelize.Op.in]: [1, 2, 3] }, // Only count placements 1, 2, or 3
       verified: true // Only count verified jumps
     },
