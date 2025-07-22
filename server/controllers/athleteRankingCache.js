@@ -112,6 +112,14 @@ class RankingCache {
             (entry) => entry.athleteProfileId === athleteProfileId
         );
 
+        // If the rankEntry is not found, they may have recently registered, so we need to re-generate the ranking for the athlete
+        if (!rankEntry) {
+            await this.generateRanking(gender, type);
+            // This may cause an infinite loop if for some reason the athlete
+            // is never in the rankings.
+            // return this.getRankingForAthlete(athleteProfileId, gender, type);
+        }
+
         return rankEntry ? rankEntry.rank : null;
     }
 

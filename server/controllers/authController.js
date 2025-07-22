@@ -1,6 +1,14 @@
 const jwt = require('jwt-simple');
 const bcrypt = require('bcrypt-nodejs');
+const crypto = require('crypto');
+const { Op } = require('sequelize');
 const config = require('../config/config');
+
+const mobileRefreshTokenExpiry = 6 * 30 * 24 * 60 * 60 * 1000; // 6 months in milliseconds
+const mobileRefreshTokenNeverExpiry = 100 * 365 * 24 * 60 * 60 * 1000; // 100 years in milliseconds
+const mobileAccessTokenExpiry = 15 * 60; // 15 minutes in seconds
+
+// Helpers
 
 // User parameter should be an object from users table or a mobile user object
 async function generateMobileUser(user, db) {
@@ -56,6 +64,64 @@ async function generateMobileUser(user, db) {
   };
 }
 
+// Generate a secure random refresh token
+function generateRefreshToken() {
+  return crypto.randomBytes(40).toString('hex');
+}
+
+function getRefreshTokenExpiry() {
+  if (config.auth.mobileRefreshTokenExpires === 'true') {
+    return new Date(Date.now() + mobileRefreshTokenExpiry); // 6 months
+  } else {
+    return new Date(Date.now() + mobileRefreshTokenNeverExpiry); // 100 years
+  }
+}
+
+// Clean up expired refresh tokens
+async function cleanupExpiredRefreshTokens(db) {
+  await db.tables.MobileRefreshTokens.destroy({
+    where: {
+      expiresAt: {
+        [Op.lt]: new Date()
+      }
+    }
+  });
+}
+
+// Clean up existing tokens for a specific user
+async function cleanupUserTokens(userId, db) {
+  await db.tables.MobileRefreshTokens.destroy({
+    where: { userId }
+  });
+}
+
+// Create a refresh token in the database
+async function createRefreshToken(userId, db) {
+  // Clean up existing tokens for this user first
+  // Commenting this out allows multiple devices to stay logged in
+  // await cleanupUserTokens(userId, db);
+  
+  const token = generateRefreshToken();
+  const expiresAt = getRefreshTokenExpiry();
+
+  await db.tables.MobileRefreshTokens.create({
+    token,
+    userId,
+    expiresAt,
+    isRevoked: false
+  });
+
+  return token;
+}
+
+function generateJWTWithPayload(payload) {
+  return jwt.encode({
+    ...payload,
+    exp: Math.floor(Date.now() / 1000) + mobileAccessTokenExpiry
+  }, config.auth.secret);
+}
+
+// Endpoints
 
 const mobileLogin = async (req, res, db) => {
   try {
@@ -78,42 +144,115 @@ const mobileLogin = async (req, res, db) => {
     // During login, if they have no roles assigned to them, add the base role
     await assignBaseRoleIfNecessary(user.id, user.isAdmin, db);
 
-    // Generate JWT with roles & permissions
+    // Generate JWT payload with roles & permissions
     const tokenPayload = await generateMobileUser(user, db);
 
-    // const token = jwt.sign(tokenPayload, config.auth.secret, { expiresIn: '1h' });
-    const token = jwt.encode(tokenPayload, config.auth.secret);
+    const accessToken = generateJWTWithPayload(tokenPayload);
 
-    return res.json({ ok: true, message: 'Login successful', token });
+    // Create refresh token (this will also clean up existing tokens for this user)
+    const refreshToken = await createRefreshToken(user.id, db);
 
-    // Create Refresh Token
-    // const refreshToken = crypto.randomBytes(40).toString('hex'); // Generate a random token
-    // await db.tables.RefreshTokens.create({
-    //   userId: user.id,
-    //   token: refreshToken,
-    //   expiresAt: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000), // 180 days expiration
-    // });
+    // Clean up expired refresh tokens periodically
+    await cleanupExpiredRefreshTokens(db);
 
-    res.json({
-      ok: true,
-      message: 'Login successful',
+    return res.json({ 
+      ok: true, 
+      message: 'Login successful', 
       accessToken,
-      // refreshToken,
+      refreshToken,
+      expiresIn: mobileAccessTokenExpiry
     });
+
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ ok: false, message: 'Internal server error' });
   }
 };
 
+// Refresh access token using refresh token
+const refreshToken = async (req, res, db) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ ok: false, message: 'No refresh token provided' });
+    }
+
+    // Find refresh token in database
+    const storedToken = await db.tables.MobileRefreshTokens.findOne({ 
+      where: { 
+        token: refreshToken,
+        isRevoked: false
+      },
+      include: [{ model: db.tables.Users }]
+    });
+
+    if (!storedToken) {
+      return res.status(403).json({ ok: false, message: 'Invalid refresh token' });
+    }
+
+    // Check if token is expired
+    if (new Date() > storedToken.expiresAt) {
+      // Remove expired token
+      await storedToken.destroy();
+      return res.status(403).json({ ok: false, message: 'Refresh token expired' });
+    }
+
+    // Generate new access token and user info
+    const tokenPayload = await generateMobileUser(storedToken.user, db);
+    const accessToken = generateJWTWithPayload(tokenPayload);
+
+    return res.json({ 
+      ok: true, 
+      message: 'Token refreshed successfully', 
+      accessToken,
+      expiresIn: mobileAccessTokenExpiry,
+      userInfo: tokenPayload
+    });
+
+  } catch (error) {
+    console.error('Refresh token error:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error' });
+  }
+};
+
+// Revoke refresh token (logout)
+const revokeToken = async (req, res, db) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ ok: false, message: 'No refresh token provided' });
+    }
+
+    // Mark token as revoked
+    await db.tables.MobileRefreshTokens.update(
+      { isRevoked: true },
+      { where: { token: refreshToken } }
+    );
+
+    return res.json({ ok: true, message: 'Token revoked successfully' });
+
+  } catch (error) {
+    console.error('Revoke token error:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error' });
+  }
+};
 
 // Also allows client to refresh token
 async function getMobileUserInfo(req, res, db) {
   try {
     const user = req.user;
     const refreshedUser = await generateMobileUser(user, db);
-    const token = jwt.encode(refreshedUser, config.auth.secret);
-    res.json({ ok: true, message: "Refreshed mobile user", userInfo: refreshedUser, token })
+    
+    // Create new access token with 15-minute expiration
+    const accessToken = generateJWTWithPayload(refreshedUser);
+
+    res.json({ 
+      ok: true, 
+      message: "Refreshed mobile user", 
+      userInfo: refreshedUser, 
+      accessToken,
+      expiresIn: mobileAccessTokenExpiry
+    });
   } catch (error) {
     console.error('Refresh error:', error);
     res.status(500).json({ ok: false, message: 'Internal server error' });
@@ -141,74 +280,9 @@ async function assignBaseRoleIfNecessary(userId, isAdmin, db) {
   }
 }
 
-// Unused below
-
-
-const register = (req, res, db) => {
-  // TODO: 
-  res.json({ ok: true, message: 'Registration successful' });
-};
-
-
-// Save for later
-const refreshToken = async (req, res, db) => {
-  try {
-    const { refreshToken } = req.body;
-    if (!refreshToken) {
-      return res.status(400).json({ ok: false, message: 'No refresh token provided' });
-    }
-
-    // Find refresh token in database
-    const storedToken = await db.tables.RefreshTokens.findOne({ where: { token: refreshToken } });
-
-    if (!storedToken || storedToken.expiresAt < new Date()) {
-      return res.status(403).json({ ok: false, message: 'Invalid or expired refresh token' });
-    }
-
-    // Find user associated with token
-    const user = await db.tables.Users.findByPk(storedToken.userId);
-    if (!user) {
-      return res.status(403).json({ ok: false, message: 'User not found' });
-    }
-
-    // Generate new Access Token
-    // Create Access Token
-    const accessTokenPayload = { // TODO: Wrong object
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      verified: user.verified,
-      // TODO: add more data here
-    };
-    const newAccessToken = jwt.encode(accessTokenPayload,
-      config.auth.secret//,
-      // { expiresIn: '15m' }
-    );
-
-    res.json({ ok: true, accessToken: newAccessToken });
-  } catch (error) {
-    console.error('Refresh token error:', error);
-    res.status(500).json({ ok: false, message: 'Internal server error' });
-  }
-};
-
-const logout = async (req, res, db) => {
-  try {
-    const { refreshToken } = req.body;
-    if (!refreshToken) {
-      return res.status(400).json({ ok: false, message: 'No refresh token provided' });
-    }
-
-    await db.tables.RefreshTokens.destroy({ where: { token: refreshToken } });
-
-    res.json({ ok: true, message: 'Logged out successfully' });
-  } catch (error) {
-    console.error('Logout error:', error);
-    res.status(500).json({ ok: false, message: 'Internal server error' });
-  }
-};
-
 module.exports = { 
   mobileLogin, 
   getMobileUserInfo,
+  refreshToken,
+  revokeToken,
 }

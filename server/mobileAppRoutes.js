@@ -12,6 +12,8 @@ const poleRoutes = require('./mobileRoutes/poleRoutes');
 const meetDataRoutes = require('./mobileRoutes/meetDataRoutes');
 const drillTypeRoutes = require('./mobileRoutes/drillTypeRoutes');
 const drillRoutes = require('./mobileRoutes/drillRoutes');
+const messageRoutes = require('./mobileRoutes/messageRoutes');
+
 module.exports = function addMobileAppRoutes(app, db) {
 
   
@@ -28,6 +30,7 @@ module.exports = function addMobileAppRoutes(app, db) {
 
   app.use('/mobileapp/user/poles', poleRoutes(db));
   app.use('/mobileapp/user/meet-data', meetDataRoutes(db));
+  app.use('/mobileapp/user/messaging', messageRoutes(db));
   
   app.get('/mobileapp/user/info', async (req, res) => {
     getMobileUserInfo(req, res, db);
@@ -41,57 +44,3 @@ module.exports = function addMobileAppRoutes(app, db) {
 
   app.use('/mobileapp/user/permissions', checkPermission('manage_roles'), permissionRoutes(db));
 }
-
-
-// TODO: Remove these
-/*
- * Helper function to authorize a user's token from the request.
- * 
- * successHandler should take req, res, and an object with an email and password if 
- * the token was valid.
- */
-// function authorizeUser(req, res, successHandler) {
-//   let authBearer = req.headers?.authorization;
-//   if (!authBearer) {
-//     res.status(403).send(JSON.stringify({ok: false, message: 'no token'}));
-//     console.log("No authorization header");
-//     return;
-//   }
-//   let token = authBearer.split(' ')[1];
-//   if (!token) {
-//     res.status(403).send(JSON.stringify({ok: false, message: 'no token'}));
-//     return;
-//   } 
-//   try {
-//     let user = jwt.decode(token, config.auth.secret);
-//     // let user2 = helpers.decodeUser(token);
-//     if (!user) {
-//       res.status(403).send(JSON.stringify({ok: false, message: 'bad token'}));
-//       return;
-//     }
-//     successHandler(user)
-//   } catch (e) {
-//     res.status(403).send(JSON.stringify({ok: false, message: 'bad token'}));
-//   }
-// }
-
-/*
- * Helper function to get a user from the request.
- * If no user is found, sends a network response with an error.
- * 
- * successHandler should take a user as an argument.
- */
-// function findUser(db, req, res, successHandler) {
-//   authorizeUser(req, res, (user) => {
-//     // Check to ensure user still exists in the database
-//     db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((foundUser) => {
-//       if (!foundUser) {
-//         res.status(403).send(JSON.stringify({ok: false, message: 'invalid user token'}));
-//         return;
-//       }
-//       successHandler(foundUser);
-//     }).catch(err => {
-//       res.status(500).send({ok: false, message: 'Server error', error: err.message});
-//     });
-//   });
-// }

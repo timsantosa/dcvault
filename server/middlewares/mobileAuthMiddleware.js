@@ -5,23 +5,62 @@ const { isValidId } = require('../lib/helpers');
 function authenticateJWT(req, res, next) {
   const authBearer = req.headers?.authorization;
   if (!authBearer) {
-    return res.status(401).json({ok: false, message: 'no token'});
+    return res.status(401).json({
+      ok: false, 
+      message: 'no token',
+      code: 'NO_TOKEN'
+    });
   }
-  const token = authBearer.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ok: false, message: 'no token'});
-  } 
+
   try {
-    let user = jwt.decode(token, config.auth.secret);
-    // let user2 = helpers.decodeUser(token);
+    const token = authBearer.split(' ')[1]; 
+    if (!token) {
+      return res.status(401).json({
+        ok: false, 
+        message: 'no token',
+        code: 'NO_TOKEN'
+      });
+    } 
+    const user = jwt.decode(token, config.auth.secret);
     if (!user) {
-      return res.status(401).json({ok: false, message: 'bad token'});
+      return res.status(401).json({
+        ok: false, 
+        message: 'bad token',
+        code: 'INVALID_TOKEN'
+      });
     }
+
+    // Check if token has expired
+    if (user.exp && user.exp < Math.floor(Date.now() / 1000)) {
+      return res.status(401).json({
+        ok: false, 
+        message: 'token expired',
+        code: 'TOKEN_EXPIRED',
+        currentTime: Date.now()
+      });
+    }
+    
     // Successfully authenticated, move along and attach user to request
     req.user = user;
     next();
   } catch (e) {
-    return res.status(401).json({ok: false, message: 'bad token'});
+    console.error('JWT decode error:', e);
+    
+    // Check if the error is specifically about token expiration
+    if (e.message === 'Token expired') {
+      return res.status(401).json({
+        ok: false, 
+        message: 'token expired',
+        code: 'TOKEN_EXPIRED',
+        currentTime: Date.now()
+      });
+    }
+    
+    return res.status(401).json({
+      ok: false, 
+      message: 'bad token',
+      code: 'INVALID_TOKEN'
+    });
   }
 }
 
@@ -46,6 +85,19 @@ function athleteProfileBelongsToUser(athleteProfileId, user) {
     return user.athleteProfileId === athleteProfileId || user.athleteProfileId === Number(athleteProfileId);
   }
   return false;
+}
+
+function checkOwnAthleteProfile(req, res, next) {
+  const user = req.user;
+  const athleteProfileId = parseInt(req.query.athleteProfileId);
+  if (!user || !athleteProfileId || !isValidId(athleteProfileId)) {
+    return res.status(400).json({ ok: false, message: 'Bad request' });
+  }
+
+  if (!athleteProfileBelongsToUser(athleteProfileId, user)) {
+    return res.status(403).json({ ok: false, message: 'Forbidden - Athlete profile does not belong to user' });
+  }
+  next();
 }
 
 function checkOwnAthleteProfileOrPermission(req, res, next, permission) {
@@ -130,4 +182,5 @@ module.exports = {
   checkOwnAthleteProfileOrPermission,
   checkOwnUserOrPermission,
   checkOwnUserOrProfileOrPermission,
+  checkOwnAthleteProfile,
 };

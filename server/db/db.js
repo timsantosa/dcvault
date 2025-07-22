@@ -207,7 +207,7 @@ columns.jumps = {
   poleId: Sequelize.INTEGER, // TODO: add to db, add relationship
   poleLengthInches: Sequelize.FLOAT,
   poleWeight: Sequelize.FLOAT,
-  poleBrand: Sequelize.ENUM('UCS', 'Altius', 'Dynasty', 'ESSX', 'Nordic', 'Pacer', 'Sky Pole', 'Other'),
+  poleBrand: Sequelize.ENUM('UCS', 'Altius', 'Dynasty', 'ESSX', 'Nordic', 'Pacer', 'Sky Pole', 'KIDS', 'Other'),
   poleFlex: Sequelize.FLOAT,
   poleGripInches: Sequelize.FLOAT,
   heightIsBar: Sequelize.BOOLEAN,
@@ -284,6 +284,32 @@ columns.user_roles = {};
 
 columns.user_permissions = {};
 
+// Refresh Tokens for mobile app
+columns.mobileRefreshTokens = {
+  token: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.users,
+      key: 'id',
+    },
+  },
+  expiresAt: {
+    type: Sequelize.DATE,
+    allowNull: false,
+  },
+  isRevoked: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
+};
+
 // Meet Data Types
 columns.championshipTypes = {
   name: {
@@ -346,7 +372,7 @@ columns.drills = {
   },
   poleLengthInches: Sequelize.FLOAT,
   poleWeight: Sequelize.FLOAT,
-  poleBrand: Sequelize.ENUM('UCS', 'Altius', 'Dynasty', 'ESSX', 'Nordic', 'Pacer', 'Sky Pole', 'Other'),
+  poleBrand: Sequelize.ENUM('UCS', 'Altius', 'Dynasty', 'ESSX', 'Nordic', 'Pacer', 'Sky Pole', 'KIDS', 'Other'),
   poleFlex: Sequelize.FLOAT,
   poleGripInches: Sequelize.FLOAT,
   // Flattened athlete stats
@@ -357,6 +383,131 @@ columns.drills = {
   notes: Sequelize.TEXT,
   videoLink: Sequelize.STRING,
 };
+
+// Mobile Messages Infrastructure
+// columns.conversations = {
+//   id: {
+//     type: Sequelize.INTEGER,
+//     autoIncrement: true,
+//     primaryKey: true,
+//   },
+//   name: {
+//     type: Sequelize.STRING,
+//     allowNull: true, // null for direct messages
+//   },
+//   type: {
+//     type: Sequelize.ENUM('direct', 'group'),
+//     allowNull: false,
+//   },
+//   createdBy: {
+//     type: Sequelize.INTEGER,
+//     allowNull: false,
+//     references: {
+//       model: tables.athleteProfiles,
+//       key: 'id',
+//     },
+//   },
+//   settings: {
+//     type: Sequelize.JSON,
+//     allowNull: false,
+//     defaultValue: {
+//       canSendMessages: true,
+//       canReact: true,
+//     },
+//   },
+//   isActive: {
+//     type: Sequelize.BOOLEAN,
+//     allowNull: false,
+//     defaultValue: true,
+//   },
+// };
+
+// columns.conversationParticipants = {
+//   id: {
+//     type: Sequelize.INTEGER,
+//     autoIncrement: true,
+//     primaryKey: true,
+//   },
+//   conversationId: {
+//     type: Sequelize.INTEGER,
+//     allowNull: false,
+//     references: {
+//       model: tables.conversations,
+//       key: 'id',
+//     },
+//   },
+//   athleteProfileId: {
+//     type: Sequelize.INTEGER,
+//     allowNull: false,
+//     references: {
+//       model: tables.athleteProfiles,
+//       key: 'id',
+//     },
+//   },
+//   role: {
+//     type: Sequelize.ENUM('admin', 'member', 'readonly'),
+//     allowNull: false,
+//     defaultValue: 'member',
+//   },
+//   joinedAt: {
+//     type: Sequelize.DATE,
+//     allowNull: false,
+//     defaultValue: Sequelize.NOW,
+//   },
+//   lastReadAt: {
+//     type: Sequelize.DATE,
+//     allowNull: true,
+//   },
+// };
+
+// columns.messages = {
+//   id: {
+//     type: Sequelize.INTEGER,
+//     autoIncrement: true,
+//     primaryKey: true,
+//   },
+//   conversationId: {
+//     type: Sequelize.INTEGER,
+//     allowNull: false,
+//     references: {
+//       model: tables.conversations,
+//       key: 'id',
+//     },
+//   },
+//   senderId: {
+//     type: Sequelize.INTEGER,
+//     allowNull: false,
+//     references: {
+//       model: tables.athleteProfiles,
+//       key: 'id',
+//     },
+//   },
+//   parentMessageId: { // For replies and reactions
+//     type: Sequelize.INTEGER,
+//     allowNull: true,
+//     references: {
+//       model: tables.messages,
+//       key: 'id',
+//     },
+//   },
+//   type: {
+//     type: Sequelize.ENUM('text', 'reaction', 'system', 'attachment'),
+//     allowNull: false,
+//     defaultValue: 'text',
+//   },
+//   content: {
+//     type: Sequelize.TEXT,
+//     allowNull: true, // null for reactions
+//   },
+//   attachments: {
+//     type: Sequelize.JSON,
+//     allowNull: true,
+//   },
+//   deletedAt: {
+//     type: Sequelize.DATE,
+//     allowNull: true,
+//   },
+// };
 
 const syncTables = (schema, force) => {
   force = !!force
@@ -388,12 +539,70 @@ const syncTables = (schema, force) => {
     ]
   }); // ALTER TABLE personalRecords ADD CONSTRAINT unique_step_per_athlete UNIQUE (athleteProfileId, stepNum);
 
+  // // Messaging tables
+  // tables.Conversations = schema.define('conversation', columns.conversations, {
+  //   indexes: [
+  //     {
+  //       fields: ['createdBy', 'isActive'],
+  //       name: 'conversations_creator_active'
+  //     }
+  //   ]
+  // });
+
+  // tables.ConversationParticipants = schema.define('conversationParticipant', columns.conversationParticipants, {
+  //   indexes: [
+  //     {
+  //       fields: ['conversationId', 'athleteProfileId'],
+  //       unique: true,
+  //       name: 'unique_conversation_participant'
+  //     },
+  //     {
+  //       fields: ['athleteProfileId', 'lastReadAt'],
+  //       name: 'participant_last_read'
+  //     }
+  //   ]
+  // });
+
+  // tables.Messages = schema.define('message', columns.messages, {
+  //   indexes: [
+  //     {
+  //       fields: ['conversationId', 'createdAt'],
+  //       name: 'messages_conversation_created'
+  //     },
+  //     {
+  //       fields: ['parentMessageId'],
+  //       name: 'messages_parent'
+  //     },
+  //     {
+  //       fields: ['senderId', 'createdAt'],
+  //       name: 'messages_sender_created'
+  //     }
+  //   ]
+  // });
+
   // Mobile app permissions
   tables.Roles = schema.define('role', columns.roles);
   tables.Permissions = schema.define('permission', columns.permissions);
   tables.Role_Permissions = schema.define('role_permission', columns.role_permissions);
   tables.User_Roles = schema.define('user_role', columns.user_roles);
   tables.User_Permissions = schema.define('user_permission', columns.user_permissions);
+  tables.MobileRefreshTokens = schema.define('mobileRefreshToken', columns.mobileRefreshTokens, {
+    indexes: [
+      {
+        fields: ['token'],
+        unique: true,
+        name: 'mobile_refresh_tokens_token_unique'
+      },
+      {
+        fields: ['userId', 'isRevoked'],
+        name: 'mobile_refresh_tokens_user_revoked'
+      },
+      {
+        fields: ['expiresAt'],
+        name: 'mobile_refresh_tokens_expires'
+      }
+    ]
+  });
 
   // Meet Data Types
   tables.ChampionshipTypes = schema.define('championshipType', columns.championshipTypes);
@@ -455,12 +664,35 @@ const syncTables = (schema, force) => {
   tables.User_Permissions.belongsTo(tables.Users, { foreignKey: 'userId' });
   tables.User_Permissions.belongsTo(tables.Permissions, { foreignKey: 'permissionId' });
 
+  // Refresh token associations
+  tables.MobileRefreshTokens.belongsTo(tables.Users, { foreignKey: 'userId' });
+  tables.Users.hasMany(tables.MobileRefreshTokens, { foreignKey: 'userId' });
+
   // Drill associations
   tables.Drills.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
   tables.AthleteProfiles.hasMany(tables.Drills, { as: 'drills', foreignKey: 'athleteProfileId' });
 
   tables.Drills.belongsTo(tables.Poles, { as: 'pole', foreignKey: 'poleId' });
   tables.Poles.hasMany(tables.Drills, { as: 'drills', foreignKey: 'poleId' });
+
+  // Messaging associations
+  // tables.Conversations.belongsTo(tables.AthleteProfiles, { as: 'creator', foreignKey: 'createdBy' });
+  // tables.AthleteProfiles.hasMany(tables.Conversations, { as: 'createdConversations', foreignKey: 'createdBy' });
+
+  // tables.ConversationParticipants.belongsTo(tables.Conversations, { as: 'conversation', foreignKey: 'conversationId' });
+  // tables.Conversations.hasMany(tables.ConversationParticipants, { as: 'participants', foreignKey: 'conversationId' });
+
+  // tables.ConversationParticipants.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
+  // tables.AthleteProfiles.hasMany(tables.ConversationParticipants, { as: 'conversationMemberships', foreignKey: 'athleteProfileId' });
+
+  // tables.Messages.belongsTo(tables.Conversations, { as: 'conversation', foreignKey: 'conversationId' });
+  // tables.Conversations.hasMany(tables.Messages, { as: 'messages', foreignKey: 'conversationId' });
+
+  // tables.Messages.belongsTo(tables.AthleteProfiles, { as: 'sender', foreignKey: 'senderId' });
+  // tables.AthleteProfiles.hasMany(tables.Messages, { as: 'sentMessages', foreignKey: 'senderId' });
+
+  // tables.Messages.belongsTo(tables.Messages, { as: 'parentMessage', foreignKey: 'parentMessageId' });
+  // tables.Messages.hasMany(tables.Messages, { as: 'replies', foreignKey: 'parentMessageId' });
 
   tables.schema = schema;
   return schema.sync({ force: force })
