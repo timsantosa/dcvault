@@ -54,10 +54,10 @@ const addOrUpdateJump = async (req, res, db) => {
     let flattenedMeetInfo = {}
     if (hardMetrics?.setting === "Meet") {
       flattenedMeetInfo.facilitySetting = meetInfo.facilitySetting;
-      flattenedMeetInfo.meetType = meetInfo.championshipType;
-      flattenedMeetInfo.division = meetInfo.division;
-      flattenedMeetInfo.placement = meetInfo.placement;
-      flattenedMeetInfo.recordType = meetInfo.records ? meetInfo.records.join(',') : '';
+      flattenedMeetInfo.meetType = meetInfo.championshipType || null; // Set to null if empty/undefined
+      flattenedMeetInfo.division = meetInfo.division || null;
+      flattenedMeetInfo.placement = meetInfo.placement || null;
+      flattenedMeetInfo.recordType = meetInfo.records ? meetInfo.records.join(',') : null;
       flattenedMeetInfo.meetEventDetails = meetInfo.eventDetails;
     }
 
@@ -81,7 +81,7 @@ const addOrUpdateJump = async (req, res, db) => {
         // Original jump was verified, check if any critical fields changed
         const criticalFieldsChanged = 
           (flattenedMeetInfo.recordType != originalJump.recordType ?? '') ||
-          (meetInfo?.championshipType != originalJump.meetType ?? '') ||
+          ((meetInfo?.championshipType || null) != (originalJump.meetType || null)) ||
           (meetInfo?.placement != originalJump.placement ?? '') ||
           (hardMetrics?.height?.inches != originalJump.heightInches) ||
           (hardMetrics?.setting != originalJump.setting);
@@ -638,13 +638,13 @@ function mapDbRowToJump(dbRow) {
         location: dbRow.meetEventDetails.location,
         organization: dbRow.meetEventDetails.organization,
       } : undefined,
-      championshipType: dbRow.meetType ?? undefined,
-      division: dbRow.division ?? undefined,
-      placement: dbRow.placement ?? undefined,
+      championshipType: dbRow.meetType || undefined, // Convert empty string to undefined
+      division: dbRow.division || undefined,
+      placement: dbRow.placement || undefined,
       records: dbRow.recordType ? dbRow.recordType.split(',') : [],
     },
-    notes: dbRow.notes ?? undefined,
-    videoLink: dbRow.videoLink ?? undefined,
+    notes: dbRow.notes || undefined,
+    videoLink: dbRow.videoLink || undefined,
     verified: dbRow.verified,
   };
 }
