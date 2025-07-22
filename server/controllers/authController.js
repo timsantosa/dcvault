@@ -97,9 +97,34 @@ async function cleanupUserTokens(userId, db) {
 
 // Create a refresh token in the database
 async function createRefreshToken(userId, db) {
-  // Clean up existing tokens for this user first
-  // Commenting this out allows multiple devices to stay logged in
-  // await cleanupUserTokens(userId, db);
+  // Check how many active tokens this user already has
+  const existingTokens = await db.tables.MobileRefreshTokens.count({
+    where: { 
+      userId,
+      isRevoked: false,
+      expiresAt: {
+        [Op.gt]: new Date() // Not expired
+      }
+    }
+  });
+
+  // If user has 5 or more active tokens, remove the oldest one
+  if (existingTokens >= 5) {
+    const oldestToken = await db.tables.MobileRefreshTokens.findOne({
+      where: { 
+        userId,
+        isRevoked: false,
+        expiresAt: {
+          [Op.gt]: new Date()
+        }
+      },
+      order: [['createdAt', 'ASC']]
+    });
+    
+    if (oldestToken) {
+      await oldestToken.destroy();
+    }
+  }
   
   const token = generateRefreshToken();
   const expiresAt = getRefreshTokenExpiry();
