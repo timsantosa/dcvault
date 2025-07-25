@@ -351,6 +351,38 @@ function getBestOfPersonalRecords(personalRecords) {
   };
 }
 
+/**
+ * Sort athlete profiles by their personal records (height descending, date ascending for ties)
+ * @param {Array} profiles - Array of athlete profile objects with personalRecords with jump data
+ * @returns {Array} Sorted array of profiles
+ */
+function sortProfilesByPR(profiles) {
+  return profiles.sort((a, b) => {
+    // Get the best PR for each athlete
+    const aPr = getBestOfPersonalRecords(a.personalRecords);
+    const bPr = getBestOfPersonalRecords(b.personalRecords);
+    
+    // Compare heights first (descending)
+    if (aPr.heightInches !== bPr.heightInches) {
+      return bPr.heightInches - aPr.heightInches;
+    }
+    
+    // If heights are equal, compare dates (ascending - earlier date wins)
+    // Find the earliest date among jumps with the best height for each athlete
+    const aBestJumps = a.personalRecords.filter(pr => 
+      pr.jump && pr.jump.heightInches === aPr.heightInches
+    );
+    const bBestJumps = b.personalRecords.filter(pr => 
+      pr.jump && pr.jump.heightInches === bPr.heightInches
+    );
+    
+    const aEarliestDate = Math.min(...aBestJumps.map(pr => new Date(pr.jump.date)));
+    const bEarliestDate = Math.min(...bBestJumps.map(pr => new Date(pr.jump.date)));
+    
+    return aEarliestDate - bEarliestDate;
+  });
+}
+
 module.exports = {
   decodeUser: module.exports.decodeUser,
   getCurrentQuarter: module.exports.getCurrentQuarter,
@@ -364,5 +396,6 @@ module.exports = {
   calculateAge: module.exports.calculateAge,
   isValidId: module.exports.isValidId,
   getBestOfPersonalRecords,
+  sortProfilesByPR,
 };
 
