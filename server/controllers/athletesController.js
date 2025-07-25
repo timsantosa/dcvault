@@ -414,6 +414,8 @@ const getProfiles = async (req, res, db) => {
   }
 };
 
+// For now, we do the sorting in JavaScript. If we need to be more efficient,
+// we should upgrade MySQL from 5.7 and do the sorting in SQL.
 const getRankedProfiles = async (req, res, db) => {
   const user = req.user;
 
