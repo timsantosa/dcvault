@@ -37,7 +37,6 @@
     "mysql2": "^2.3.3",
     "nodemailer": "^4.6.4",
     "path": "^0.12.7",
-    "paypal-express-checkout": "^1.6.3",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-tooltip": "^3.5.0",
