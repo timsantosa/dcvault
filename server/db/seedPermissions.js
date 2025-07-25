@@ -29,6 +29,7 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'manage_active_profiles', permissionName: 'Manage Active Profiles', description: "Allows user to set athlete profiles as always active, even if they don't have a currently registered athleteId" },
         { permissionKey: 'manage_conversations', permissionName: 'Manage Conversations', description: 'Allows user to create new conversations or edit existing conversations.' },
         { permissionKey: 'create_athlete_profiles', permissionName: 'Create Athlete Profiles', description: 'Allows user to create new Athlete Profiles for their own user account.' },
+        { permissionKey: 'jumps_access_override', permissionName: 'Jumps Access Override', description: "Allows any athlete profile under this user to access their own jumps even if they don't have a currentlyregistered athleteId or the alwaysActive flag is off." },
       ];
   
       for (const perm of permissions) {
