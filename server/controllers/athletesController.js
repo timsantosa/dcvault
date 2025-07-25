@@ -540,31 +540,10 @@ const getRankedProfiles = async (req, res, db) => {
           ],
         },
       ],
-      order: [
-        [
-          db.tables.schema.literal(`
-            (SELECT MAX(j.heightInches)
-             FROM personalRecords AS pr
-             INNER JOIN jumps AS j ON pr.jumpId = j.id
-             WHERE pr.athleteProfileId = athleteProfile.id)`),
-          'DESC',
-        ],
-        [
-          db.tables.schema.literal(`
-            (SELECT MIN(j.date)
-             FROM personalRecords AS pr
-             INNER JOIN jumps AS j ON pr.jumpId = j.id
-             WHERE pr.athleteProfileId = athleteProfile.id
-             AND j.heightInches = (
-               SELECT MAX(j2.heightInches)
-               FROM personalRecords AS pr2
-               INNER JOIN jumps AS j2 ON pr2.jumpId = j2.id
-               WHERE pr2.athleteProfileId = athleteProfile.id
-             ))`),
-          'ASC',
-        ],
-      ],
     });
+
+    // Sort the profiles in JavaScript to avoid MySQL 5.7 compatibility issues
+    helpers.sortProfilesByPR(allProfilesForRanking);
 
     // Calculate global rankings
     const globalRankings = new Map();
@@ -596,40 +575,22 @@ const getRankedProfiles = async (req, res, db) => {
           ],
         },
       ],
-      order: [
-        [
-          db.tables.schema.literal(`
-            (SELECT MAX(j.heightInches)
-             FROM personalRecords AS pr
-             INNER JOIN jumps AS j ON pr.jumpId = j.id
-             WHERE pr.athleteProfileId = athleteProfile.id)`),
-          'DESC',
-        ],
-        [
-          db.tables.schema.literal(`
-            (SELECT MIN(j.date)
-             FROM personalRecords AS pr
-             INNER JOIN jumps AS j ON pr.jumpId = j.id
-             WHERE pr.athleteProfileId = athleteProfile.id
-             AND j.heightInches = (
-               SELECT MAX(j2.heightInches)
-               FROM personalRecords AS pr2
-               INNER JOIN jumps AS j2 ON pr2.jumpId = j2.id
-               WHERE pr2.athleteProfileId = athleteProfile.id
-             ))`),
-          'ASC',
-        ],
-      ],      
-      limit,
-      offset,
+      limit: null, // Get all matching results first
+      offset: 0,
     });
 
+    // Sort the search results by the same criteria as global rankings
+    helpers.sortProfilesByPR(profilesWithPRs);
+
+    // Apply pagination after sorting
+    const paginatedProfiles = profilesWithPRs.slice(offset, offset + limit);
+
     // Get medal counts for all profiles in bulk
-    const profileIdsForMedals = profilesWithPRs.map(profile => profile.id);
+    const profileIdsForMedals = paginatedProfiles.map(profile => profile.id);
     const medalCountsMap = await getMedalCountsForProfiles(profileIdsForMedals, db);
 
     // Map the data into a structured response
-    const athletes = profilesWithPRs.map((profile, index) => {
+    const athletes = paginatedProfiles.map((profile, index) => {
       // Find the best PR from the included personalRecords and jumps
       const pr = helpers.getBestOfPersonalRecords(profile.personalRecords);
 
