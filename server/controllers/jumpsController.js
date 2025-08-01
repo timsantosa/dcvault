@@ -637,6 +637,7 @@ function mapDbRowToJump(dbRow) {
         facility: dbRow.meetEventDetails.facility,
         location: dbRow.meetEventDetails.location,
         organization: dbRow.meetEventDetails.organization,
+        meetResultsLink: dbRow.meetEventDetails.meetResultsLink,
       } : undefined,
       championshipType: dbRow.meetType || undefined, // Convert empty string to undefined
       division: dbRow.division || undefined,
