@@ -8,7 +8,8 @@ const {
   editMessage,
   addParticipants,
   removeParticipant,
-  deleteMessage
+  deleteMessage,
+  deleteConversation
 } = require('../controllers/messagesController');
 
 function userCanManageConversations(req, res, next) {
@@ -61,6 +62,12 @@ module.exports = function messageRoutes(db) {
   router.delete('/messages/:messageId',
     checkOwnAthleteProfile,
     (req, res) => deleteMessage(req, res, db)
+  );
+
+  // Delete a conversation
+  router.delete('/conversations/:conversationId',
+    userCanManageConversations,
+    (req, res) => deleteConversation(req, res, db)
   );
 
   return router;

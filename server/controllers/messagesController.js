@@ -1,4 +1,5 @@
 const { literal } = require('sequelize');
+const { Op } = require('sequelize');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -98,6 +99,10 @@ async function getConversation(req, res, db) {
       ]
     });
 
+    if (!conversation) {
+      return res.status(404).json({ ok: false, message: 'Conversation not found' });
+    }
+
     // Get total count for pagination
     const totalMessages = await db.tables.Messages.count({
       where: { conversationId }
@@ -123,7 +128,8 @@ async function getConversation(req, res, db) {
 async function createConversation(req, res, db) {
   try {
     const { name, type, participantIds, settings } = req.body;
-    const { athleteProfileId } = req.query;
+    const { athleteProfileId: athleteProfileIdString } = req.query;
+    const athleteProfileId = parseInt(athleteProfileIdString);
 
     if (!athleteProfileId || !type || !participantIds?.length) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
@@ -131,22 +137,35 @@ async function createConversation(req, res, db) {
 
     // For direct conversations, check if one already exists between these participants
     if (type === 'direct' && participantIds.length === 1) {
-      const existingConversation = await db.tables.Conversations.findOne({
+      // First, get all direct conversations that include the target participant
+      // This is the optimization - there will be far fewer conversations with this participant
+      const conversationsWithTargetParticipant = await db.tables.Conversations.findAll({
         where: { type: 'direct' },
         include: [{
           model: db.tables.ConversationParticipants,
           as: 'participants',
           where: {
-            athleteProfileId: {
-              [db.Sequelize.Op.in]: [athleteProfileId, participantIds[0]]
-            }
-          },
-          having: db.sequelize.literal('COUNT(DISTINCT "participants"."athleteProfileId") = 2')
+            athleteProfileId: participantIds[0]
+          }
         }]
       });
 
-      if (existingConversation) {
-        return res.json({ ok: true, conversation: existingConversation });
+      // For each conversation, check if it also includes the current user and has exactly 2 participants
+      for (const conversation of conversationsWithTargetParticipant) {
+        // Get all participants for this conversation
+        const allParticipants = await db.tables.ConversationParticipants.findAll({
+          where: { conversationId: conversation.id },
+          attributes: ['athleteProfileId']
+        });
+
+        const participantIds = allParticipants.map(p => p.athleteProfileId);
+        
+        // Check if this is a direct conversation between exactly these two users
+        if (participantIds.length === 2 && 
+            participantIds.includes(athleteProfileId) && 
+            participantIds.includes(participantIds[0])) {
+          return res.json({ ok: true, conversation });
+        }
       }
     }
 
@@ -177,7 +196,7 @@ async function createConversation(req, res, db) {
       // Commit the transaction
       await transaction.commit();
 
-      // TODO: Send notifications to all participants about new conversation
+      // TODO: Send notifications to all participants about new conversation. Or not?
 
       res.json({ ok: true, conversation });
     } catch (error) {
@@ -465,6 +484,68 @@ async function deleteMessage(req, res, db) {
   }
 }
 
+// Delete a conversation
+async function deleteConversation(req, res, db) {
+  try {
+    const { conversationId } = req.params;
+    const { athleteProfileId } = req.query;
+
+    if (!conversationId || !athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+
+    // Check if user is admin of the conversation
+    const participant = await db.tables.ConversationParticipants.findOne({
+      where: { 
+        conversationId, 
+        athleteProfileId,
+        role: 'admin'
+      }
+    });
+
+    if (!participant) {
+      return res.status(403).json({ ok: false, message: 'Not authorized to delete this conversation' });
+    }
+
+    // Start a transaction
+    const transaction = await db.tables.Conversations.sequelize.transaction();
+
+    try {
+      // Delete all messages in the conversation
+      await db.tables.Messages.destroy({
+        where: { conversationId },
+        transaction
+      });
+
+      // Delete all participants
+      await db.tables.ConversationParticipants.destroy({
+        where: { conversationId },
+        transaction
+      });
+
+      // Delete the conversation itself
+      await db.tables.Conversations.destroy({
+        where: { id: conversationId },
+        transaction
+      });
+
+      // Commit the transaction
+      await transaction.commit();
+
+      // TODO: Send notifications to all participants about conversation deletion (maybe)
+
+      res.json({ ok: true, message: 'Conversation deleted successfully' });
+    } catch (error) {
+      // If anything fails, rollback the transaction
+      await transaction.rollback();
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    res.status(500).json({ ok: false, message: 'Failed to delete conversation' });
+  }
+}
+
 module.exports = {
   getConversations,
   getConversation,
@@ -473,5 +554,6 @@ module.exports = {
   editMessage,
   addParticipants,
   removeParticipant,
-  deleteMessage
+  deleteMessage,
+  deleteConversation
 }; 
