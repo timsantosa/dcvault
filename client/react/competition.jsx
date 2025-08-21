@@ -1,5 +1,6 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+import { loadPayPalSDK } from './paypal-helpers'
 const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
@@ -593,21 +594,36 @@ class Payment extends React.Component {
     }
 
     componentDidMount () {
-        this.calculatePrice()
         $('#event-payment').submit((e) => {
             e.preventDefault()
         })
+        
+        // Load PayPal SDK and render button
+        this.loadPayPalButton()
     }
 
-    calculatePrice () {
-        let price = this.state.price * 1.03
-        this.renderButton(price)
+    loadPayPalButton() {
+        loadPayPalSDK().then((paypal) => {
+            paypal.Buttons({
+                createOrder: this.createOrder.bind(this),
+                onApprove: this.onApprove.bind(this),
+                style: {
+                    layout: "horizontal",
+                    color: "silver",
+                    shape: "rect",
+                    label: "pay"
+                }
+            }).render('#paypal-button-container');
+        }).catch((error) => {
+            console.error('Failed to load PayPal SDK:', error);
+            this.setState({
+                errorText: 'Failed to load payment system. Please refresh the page and try again.'
+            });
+        });
     }
 
-    renderButton (amount) {
-        amount = parseFloat(amount)
-
-        var cont = this.continue.bind(this)
+    createOrder(data, actions) {
+        let amount = parseFloat(this.state.price * 1.03)
         var dateLst = ""
         if(this.props.data.athleteInfo.dates1){
             dateLst += this.props.data.athleteInfo.dates1 + ", "
@@ -642,43 +658,26 @@ class Payment extends React.Component {
         this.props.data.athleteInfo.dates1 = dateLst
         var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Weeks: ' + dateLst
 
+        return actions.order.create({
+            purchase_units: [
+                {
+                    amount: {
+                        value: amount.toFixed(2),
+                        currency_code: "USD"
+                    },
+                    description: paymentDescription
+                }
+            ]
+        })
+    }
 
-        paypal.Button.render({ // eslint-disable-line
-            env: window.configVariables.PAYPAL_MODE, // sandbox | production
-            client: {
-                sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
-                production: window.configVariables.PAYPAL_CLIENT_ID
-            },
-            commit: true,
-
-            style: {
-                size: 'responsive',
-                shape: 'rect',
-                color: 'silver',
-                label: 'pay'
-            },
-
-            payment: function (data, actions) {
-                return actions.payment.create({
-                    payment: {
-                        transactions: [
-                            {
-                                amount: { total: amount.toFixed(2), currency: 'USD' },
-                                note_to_payee: paymentDescription
-                            }
-                        ]
-                    }
-                })
-            },
-
-            // onAuthorize() is called when the buyer approves the payment
-            onAuthorize: function (data, actions) {
-                return actions.payment.execute().then(function () {
-                    cont(data)
-                })
-            }
-
-        }, '#paypal-button-container')
+    onApprove(data, actions) {
+        return actions.order.capture().then((details) => {
+            this.continue({
+                paymentID: details.id,
+                payerID: details.payer.payer_id
+            })
+        })
     }
 
     continue (data) {
