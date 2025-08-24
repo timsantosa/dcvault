@@ -164,6 +164,7 @@ async function createConversation(req, res, db) {
         if (participantIds.length === 2 && 
             participantIds.includes(athleteProfileId) && 
             participantIds.includes(participantIds[0])) {
+          conversation.participants = allParticipants;
           return res.json({ ok: true, conversation });
         }
       }
