@@ -62,7 +62,7 @@ async function getConversations(req, res, db) {
       order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
     });
 
-    // Get announcement conversations that the user is part of (without loading all participants)
+    // Get announcement conversations that the user is part of (with only the requesting athlete's participant info)
     const announcementConversations = await db.tables.Conversations.findAll({
       where: {
         type: { [Op.in]: ['announcement_all', 'announcement_active'] }
@@ -73,7 +73,11 @@ async function getConversations(req, res, db) {
           as: 'participants',
           required: true,
           where: { athleteProfileId },
-          attributes: [] // Don't load participant data
+          include: [{
+            model: db.tables.AthleteProfiles,
+            as: 'athleteProfile',
+            attributes: ['id', 'firstName', 'lastName', 'profileImage']
+          }]
         },
         {
           model: db.tables.Messages,
@@ -90,9 +94,8 @@ async function getConversations(req, res, db) {
       order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
     });
 
-    // For announcement conversations, add empty participants array and participant count
+    // For announcement conversations, add participant count
     for (const conversation of announcementConversations) {
-      conversation.dataValues.participants = [];
       conversation.dataValues.participantCount = await db.tables.ConversationParticipants.count({
         where: { conversationId: conversation.id }
       });
@@ -126,9 +129,14 @@ async function getConversation(req, res, db) {
     const parsedLimit = parseInt(limit);
     const offset = (parseInt(page) - 1) * parsedLimit;
 
-    // Check if user is part of the conversation
+    // Check if user is part of the conversation and get their participant info
     const participant = await db.tables.ConversationParticipants.findOne({
-      where: { conversationId, athleteProfileId }
+      where: { conversationId, athleteProfileId },
+      include: [{
+        model: db.tables.AthleteProfiles,
+        as: 'athleteProfile',
+        attributes: ['id', 'firstName', 'lastName', 'profileImage']
+      }]
     });
 
     if (!participant) {
@@ -165,8 +173,8 @@ async function getConversation(req, res, db) {
 
     // Handle participants based on conversation type
     if (conversation.type === 'announcement_all' || conversation.type === 'announcement_active') {
-      // For announcement conversations, don't load all participants
-      conversation.dataValues.participants = [];
+      // For announcement conversations, use the participant info we already fetched
+      conversation.dataValues.participants = [participant];
       conversation.dataValues.participantCount = await db.tables.ConversationParticipants.count({
         where: { conversationId }
       });
