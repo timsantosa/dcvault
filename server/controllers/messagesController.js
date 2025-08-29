@@ -1,4 +1,10 @@
 const { literal, Op } = require('sequelize');
+const { 
+  canSendAnnouncements, 
+  getOrCreateAnnouncementConversation,
+  syncAllAthleteParticipants,
+  syncActiveAthleteParticipants
+} = require('../utils/messagesUtils');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -9,7 +15,11 @@ async function getConversations(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
     }
 
-    const conversations = await db.tables.Conversations.findAll({
+    // First, get all regular conversations that the user is part of
+    const userRegularConversations = await db.tables.Conversations.findAll({
+      where: {
+        type: { [Op.notIn]: ['announcement_all', 'announcement_active'] }
+      },
       include: [
         {
           model: db.tables.ConversationParticipants,
@@ -22,11 +32,11 @@ async function getConversations(req, res, db) {
       order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
     });
 
-    // Now get the full conversation data with all participants for each conversation
-    const conversationIds = conversations.map(conv => conv.id);
-    
-    const fullConversations = await db.tables.Conversations.findAll({
-      where: { id: conversationIds },
+    const regularConversationIds = userRegularConversations.map(conv => conv.id);
+
+    // Now get the full regular conversation data with ALL participants
+    const regularConversations = await db.tables.Conversations.findAll({
+      where: { id: regularConversationIds },
       include: [
         {
           model: db.tables.ConversationParticipants,
@@ -52,7 +62,51 @@ async function getConversations(req, res, db) {
       order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
     });
 
-    res.json({ ok: true, conversations: fullConversations });
+    // Get announcement conversations that the user is part of (without loading all participants)
+    const announcementConversations = await db.tables.Conversations.findAll({
+      where: {
+        type: { [Op.in]: ['announcement_all', 'announcement_active'] }
+      },
+      include: [
+        {
+          model: db.tables.ConversationParticipants,
+          as: 'participants',
+          required: true,
+          where: { athleteProfileId },
+          attributes: [] // Don't load participant data
+        },
+        {
+          model: db.tables.Messages,
+          as: 'messages',
+          limit: 1,
+          order: [['createdAt', 'DESC']],
+          include: [{
+            model: db.tables.AthleteProfiles,
+            as: 'sender',
+            attributes: ['id', 'firstName', 'lastName']
+          }]
+        }
+      ],
+      order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
+    });
+
+    // For announcement conversations, add empty participants array and participant count
+    for (const conversation of announcementConversations) {
+      conversation.dataValues.participants = [];
+      conversation.dataValues.participantCount = await db.tables.ConversationParticipants.count({
+        where: { conversationId: conversation.id }
+      });
+    }
+
+    // Combine and sort all conversations by last message time
+    const allConversations = [...regularConversations, ...announcementConversations];
+    allConversations.sort((a, b) => {
+      const aLastMessage = a.messages?.[0]?.createdAt || a.createdAt;
+      const bLastMessage = b.messages?.[0]?.createdAt || b.createdAt;
+      return new Date(bLastMessage) - new Date(aLastMessage);
+    });
+
+    res.json({ ok: true, conversations: allConversations });
   } catch (error) {
     console.error('Error getting conversations:', error);
     res.status(500).json({ ok: false, message: 'Failed to get conversations' });
@@ -86,18 +140,10 @@ async function getConversation(req, res, db) {
 
     // TODO: Send notification to other participants that user has read messages
 
+    // Get conversation with conditional participant loading
     const conversation = await db.tables.Conversations.findOne({
       where: { id: conversationId },
       include: [
-        {
-          model: db.tables.ConversationParticipants,
-          as: 'participants',
-          include: [{
-            model: db.tables.AthleteProfiles,
-            as: 'athleteProfile',
-            attributes: ['id', 'firstName', 'lastName', 'profileImage']
-          }]
-        },
         {
           model: db.tables.Messages,
           as: 'messages',
@@ -115,6 +161,26 @@ async function getConversation(req, res, db) {
 
     if (!conversation) {
       return res.status(404).json({ ok: false, message: 'Conversation not found' });
+    }
+
+    // Handle participants based on conversation type
+    if (conversation.type === 'announcement_all' || conversation.type === 'announcement_active') {
+      // For announcement conversations, don't load all participants
+      conversation.dataValues.participants = [];
+      conversation.dataValues.participantCount = await db.tables.ConversationParticipants.count({
+        where: { conversationId }
+      });
+    } else {
+      // For regular conversations, load all participants
+      const participants = await db.tables.ConversationParticipants.findAll({
+        where: { conversationId },
+        include: [{
+          model: db.tables.AthleteProfiles,
+          as: 'athleteProfile',
+          attributes: ['id', 'firstName', 'lastName', 'profileImage']
+        }]
+      });
+      conversation.dataValues.participants = participants;
     }
 
     // Get total count for pagination
@@ -144,6 +210,18 @@ async function createConversation(req, res, db) {
     const { name, type, participantIds, settings } = req.body;
     const { athleteProfileId: athleteProfileIdString } = req.query;
     const athleteProfileId = parseInt(athleteProfileIdString);
+
+    // Handle announcement conversations specially
+    if (type === 'announcement_all' || type === 'announcement_active') {
+      // Check if user has permission to create announcements
+      if (!canSendAnnouncements(req.user)) {
+        return res.status(403).json({ ok: false, message: 'Insufficient permissions to create announcement conversations' });
+      }
+
+      // Get or create the announcement conversation
+      const conversation = await getOrCreateAnnouncementConversation(type, athleteProfileId, db);
+      return res.json({ ok: true, conversation });
+    }
 
     if (!athleteProfileId || !type || !participantIds?.length) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
@@ -398,6 +476,24 @@ async function sendMessage(req, res, db) {
     
     if (!canSend) {
       return res.status(403).json({ ok: false, message: 'Not authorized to send messages' });
+    }
+
+    // If this is an announcement conversation and user has announcement permissions, sync participants
+    if (participant.conversation.type === 'announcement_all' || participant.conversation.type === 'announcement_active') {
+      if (!canSendAnnouncements(req.user)) {
+        return res.status(403).json({ ok: false, message: 'Not authorized to send announcement messages' });
+      }
+
+      try {
+        if (participant.conversation.type === 'announcement_all') {
+          await syncAllAthleteParticipants(conversationId, db);
+        } else if (participant.conversation.type === 'announcement_active') {
+          await syncActiveAthleteParticipants(conversationId, db);
+        }
+      } catch (syncError) {
+        console.error('Error syncing announcement participants:', syncError);
+        // Continue with message sending even if sync fails
+      }
     }
 
     // Create the message

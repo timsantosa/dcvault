@@ -396,7 +396,7 @@ columns.conversations = {
     allowNull: true, // null for direct messages
   },
   type: {
-    type: Sequelize.ENUM('direct', 'group'),
+    type: Sequelize.ENUM('direct', 'group', 'announcement_all', 'announcement_active'),
     allowNull: false,
   },
   createdBy: {
