@@ -1,5 +1,4 @@
-const { literal } = require('sequelize');
-const { Op } = require('sequelize');
+const { literal, Op } = require('sequelize');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -15,7 +14,23 @@ async function getConversations(req, res, db) {
         {
           model: db.tables.ConversationParticipants,
           as: 'participants',
+          required: true,
           where: { athleteProfileId },
+          attributes: []
+        }
+      ],
+      order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
+    });
+
+    // Now get the full conversation data with all participants for each conversation
+    const conversationIds = conversations.map(conv => conv.id);
+    
+    const fullConversations = await db.tables.Conversations.findAll({
+      where: { id: conversationIds },
+      include: [
+        {
+          model: db.tables.ConversationParticipants,
+          as: 'participants',
           include: [{
             model: db.tables.AthleteProfiles,
             as: 'athleteProfile',
@@ -34,11 +49,10 @@ async function getConversations(req, res, db) {
           }]
         }
       ],
-    //   order: [[{ model: db.tables.Messages, as: 'messages' }, 'createdAt', 'DESC']]
       order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
     });
 
-    res.json({ ok: true, conversations });
+    res.json({ ok: true, conversations: fullConversations });
   } catch (error) {
     console.error('Error getting conversations:', error);
     res.status(500).json({ ok: false, message: 'Failed to get conversations' });
@@ -192,7 +206,10 @@ async function createConversation(req, res, db) {
         }))
       ];
 
-      await db.tables.ConversationParticipants.bulkCreate(participants, { transaction });
+      await db.tables.ConversationParticipants.bulkCreate(participants, { 
+        transaction,
+        ignoreDuplicates: true 
+      });
 
       // Commit the transaction
       await transaction.commit();
@@ -208,6 +225,123 @@ async function createConversation(req, res, db) {
   } catch (error) {
     console.error('Error creating conversation:', error);
     res.status(500).json({ ok: false, message: 'Failed to create conversation' });
+  }
+}
+
+async function updateConversation(req, res, db) {
+  try {
+    const { conversationId } = req.params;
+    const { name, settings, participantIds } = req.body;
+    const { athleteProfileId } = req.query;
+
+    if (!conversationId || !athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+
+    // Check if user is admin of the conversation
+    const adminParticipant = await db.tables.ConversationParticipants.findOne({
+      where: { 
+        conversationId, 
+        athleteProfileId,
+        role: 'admin'
+      }
+    });
+
+    if (!adminParticipant) {
+      return res.status(403).json({ ok: false, message: 'Not authorized to update this conversation' });
+    }
+
+    // Start a transaction
+    const transaction = await db.tables.Conversations.sequelize.transaction();
+
+    try {
+      // Update conversation fields if provided
+      const updateData = {};
+      if (name !== undefined) updateData.name = name;
+      if (settings !== undefined) updateData.settings = settings;
+
+      if (Object.keys(updateData).length > 0) {
+        await db.tables.Conversations.update(updateData, {
+          where: { id: conversationId },
+          transaction
+        });
+      }
+
+      // Update participants if provided
+      if (participantIds !== undefined) {
+        // Get ALL current participants (to avoid role-based duplicates)
+        const currentParticipants = await db.tables.ConversationParticipants.findAll({
+          where: { 
+            conversationId
+          },
+          attributes: ['athleteProfileId', 'role'],
+          transaction
+        });
+        
+        const currentParticipantIds = currentParticipants.map(p => p.athleteProfileId);
+        const newParticipantIds = new Set(participantIds);
+        
+        // Remove only MEMBER participants who are no longer in the list (preserve admins)
+        const memberParticipants = currentParticipants.filter(p => p.role === 'member');
+        const memberParticipantIds = memberParticipants.map(p => p.athleteProfileId);
+        const participantsToRemove = memberParticipantIds.filter(id => !newParticipantIds.has(id));
+        if (participantsToRemove.length > 0) {
+          await db.tables.ConversationParticipants.destroy({
+            where: { 
+              conversationId,
+              athleteProfileId: participantsToRemove,
+              role: 'member'
+            },
+            transaction
+          });
+        }
+        
+        // Add only new participants
+        const participantsToAdd = participantIds.filter(id => !currentParticipantIds.includes(id));
+        if (participantsToAdd.length > 0) {
+          const newParticipants = participantsToAdd.map(id => ({
+            conversationId,
+            athleteProfileId: id,
+            role: 'member'
+          }));
+
+          await db.tables.ConversationParticipants.bulkCreate(newParticipants, { 
+            transaction,
+            ignoreDuplicates: true 
+          });
+        }
+      }
+
+      // Commit the transaction
+      await transaction.commit();
+
+      // Get the updated conversation with all participants
+      const updatedConversation = await db.tables.Conversations.findOne({
+        where: { id: conversationId },
+        include: [
+          {
+            model: db.tables.ConversationParticipants,
+            as: 'participants',
+            include: [{
+              model: db.tables.AthleteProfiles,
+              as: 'athleteProfile',
+              attributes: ['id', 'firstName', 'lastName', 'profileImage']
+            }]
+          }
+        ]
+      });
+
+      // TODO: Send notifications to participants about conversation updates
+
+      res.json({ ok: true, conversation: updatedConversation });
+    } catch (error) {
+      // If anything fails, rollback the transaction
+      await transaction.rollback();
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error updating conversation:', error);
+    res.status(500).json({ ok: false, message: 'Failed to update conversation' });
   }
 }
 
@@ -383,7 +517,9 @@ async function addParticipants(req, res, db) {
       role: 'member'
     }));
 
-    await db.tables.ConversationParticipants.bulkCreate(newParticipants);
+    await db.tables.ConversationParticipants.bulkCreate(newParticipants, {
+      ignoreDuplicates: true
+    });
 
     // TODO: Send notifications to new participants about being added to conversation
 
@@ -551,6 +687,7 @@ module.exports = {
   getConversations,
   getConversation,
   createConversation,
+  updateConversation,
   sendMessage,
   editMessage,
   addParticipants,

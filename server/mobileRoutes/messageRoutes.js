@@ -4,6 +4,7 @@ const {
   getConversations,
   getConversation,
   createConversation,
+  updateConversation,
   sendMessage,
   editMessage,
   addParticipants,
@@ -32,6 +33,12 @@ module.exports = function messageRoutes(db) {
   router.post('/conversations', 
     userCanManageConversations,
     (req, res) => createConversation(req, res, db)
+  );
+
+  // Update a conversation (requires permission)
+  router.put('/conversations/:conversationId',
+    userCanManageConversations,
+    (req, res) => updateConversation(req, res, db)
   );
 
   // Send a message (can be regular message or reaction)
