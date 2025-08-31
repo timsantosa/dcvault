@@ -1,4 +1,10 @@
-const { literal } = require('sequelize');
+const { literal, Op } = require('sequelize');
+const { 
+  canSendAnnouncements, 
+  getOrCreateAnnouncementConversation,
+  syncAllAthleteParticipants,
+  syncActiveAthleteParticipants
+} = require('../utils/messagesUtils');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -9,11 +15,63 @@ async function getConversations(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
     }
 
-    const conversations = await db.tables.Conversations.findAll({
+    // First, get all regular conversations that the user is part of
+    const userRegularConversations = await db.tables.Conversations.findAll({
+      where: {
+        type: { [Op.notIn]: ['announcement_all', 'announcement_active'] }
+      },
       include: [
         {
           model: db.tables.ConversationParticipants,
           as: 'participants',
+          required: true,
+          where: { athleteProfileId },
+          attributes: []
+        }
+      ],
+      order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
+    });
+
+    const regularConversationIds = userRegularConversations.map(conv => conv.id);
+
+    // Now get the full regular conversation data with ALL participants
+    const regularConversations = await db.tables.Conversations.findAll({
+      where: { id: regularConversationIds },
+      include: [
+        {
+          model: db.tables.ConversationParticipants,
+          as: 'participants',
+          include: [{
+            model: db.tables.AthleteProfiles,
+            as: 'athleteProfile',
+            attributes: ['id', 'firstName', 'lastName', 'profileImage']
+          }]
+        },
+        {
+          model: db.tables.Messages,
+          as: 'messages',
+          limit: 1,
+          order: [['createdAt', 'DESC']],
+          include: [{
+            model: db.tables.AthleteProfiles,
+            as: 'sender',
+            attributes: ['id', 'firstName', 'lastName']
+          }]
+        }
+      ],
+      order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
+    });
+
+    // Get announcement conversations that the user is part of (with only the requesting athlete's participant info)
+    const announcementConversations = await db.tables.Conversations.findAll({
+      where: {
+        type: { [Op.in]: ['announcement_all', 'announcement_active'] }
+      },
+      include: [
+        {
+          model: db.tables.ConversationParticipants,
+          as: 'participants',
+          required: true,
           where: { athleteProfileId },
           include: [{
             model: db.tables.AthleteProfiles,
@@ -33,11 +91,56 @@ async function getConversations(req, res, db) {
           }]
         }
       ],
-    //   order: [[{ model: db.tables.Messages, as: 'messages' }, 'createdAt', 'DESC']]
       order: [[literal('(SELECT MAX(createdAt) FROM messages WHERE messages.conversationId = conversation.id)'), 'DESC']]
     });
 
-    res.json({ ok: true, conversations });
+    // For announcement conversations, add participant count
+    for (const conversation of announcementConversations) {
+      conversation.dataValues.participantCount = await db.tables.ConversationParticipants.count({
+        where: { conversationId: conversation.id }
+      });
+    }
+
+    // Calculate unread counts for all conversations using Sequelize (safer approach)
+    const conversationsWithUnread = await Promise.all(
+      [...regularConversations, ...announcementConversations].map(async (conversation) => {
+        // Get the user's participant record for this conversation
+        const userParticipant = await db.tables.ConversationParticipants.findOne({
+          where: { 
+            conversationId: conversation.id, 
+            athleteProfileId: parseInt(athleteProfileId) 
+          },
+          attributes: ['lastReadAt']
+        });
+        
+        const lastReadAt = userParticipant?.lastReadAt;
+        
+        // Count unread messages (excluding user's own messages)
+        const unreadCount = await db.tables.Messages.count({
+          where: {
+            conversationId: conversation.id,
+            senderId: { [Op.ne]: parseInt(athleteProfileId) }, // Don't count own messages
+            ...(lastReadAt ? {
+              createdAt: { [Op.gt]: lastReadAt }
+            } : {}) // If never read, count all messages from others
+          }
+        });
+
+        return {
+          ...conversation.toJSON(),
+          unreadCount
+        };
+      })
+    );
+
+    // Sort conversations by last message time
+    conversationsWithUnread.sort((a, b) => {
+      const aLastMessage = a.messages?.[0]?.createdAt || a.createdAt;
+      const bLastMessage = b.messages?.[0]?.createdAt || b.createdAt;
+      return new Date(bLastMessage) - new Date(aLastMessage);
+    });
+
+    res.json({ ok: true, conversations: conversationsWithUnread });
   } catch (error) {
     console.error('Error getting conversations:', error);
     res.status(500).json({ ok: false, message: 'Failed to get conversations' });
@@ -57,9 +160,14 @@ async function getConversation(req, res, db) {
     const parsedLimit = parseInt(limit);
     const offset = (parseInt(page) - 1) * parsedLimit;
 
-    // Check if user is part of the conversation
+    // Check if user is part of the conversation and get their participant info
     const participant = await db.tables.ConversationParticipants.findOne({
-      where: { conversationId, athleteProfileId }
+      where: { conversationId, athleteProfileId },
+      include: [{
+        model: db.tables.AthleteProfiles,
+        as: 'athleteProfile',
+        attributes: ['id', 'firstName', 'lastName', 'profileImage']
+      }]
     });
 
     if (!participant) {
@@ -71,18 +179,10 @@ async function getConversation(req, res, db) {
 
     // TODO: Send notification to other participants that user has read messages
 
+    // Get conversation with conditional participant loading
     const conversation = await db.tables.Conversations.findOne({
       where: { id: conversationId },
       include: [
-        {
-          model: db.tables.ConversationParticipants,
-          as: 'participants',
-          include: [{
-            model: db.tables.AthleteProfiles,
-            as: 'athleteProfile',
-            attributes: ['id', 'firstName', 'lastName', 'profileImage']
-          }]
-        },
         {
           model: db.tables.Messages,
           as: 'messages',
@@ -97,6 +197,30 @@ async function getConversation(req, res, db) {
         }
       ]
     });
+
+    if (!conversation) {
+      return res.status(404).json({ ok: false, message: 'Conversation not found' });
+    }
+
+    // Handle participants based on conversation type
+    if (conversation.type === 'announcement_all' || conversation.type === 'announcement_active') {
+      // For announcement conversations, use the participant info we already fetched
+      conversation.dataValues.participants = [participant];
+      conversation.dataValues.participantCount = await db.tables.ConversationParticipants.count({
+        where: { conversationId }
+      });
+    } else {
+      // For regular conversations, load all participants
+      const participants = await db.tables.ConversationParticipants.findAll({
+        where: { conversationId },
+        include: [{
+          model: db.tables.AthleteProfiles,
+          as: 'athleteProfile',
+          attributes: ['id', 'firstName', 'lastName', 'profileImage']
+        }]
+      });
+      conversation.dataValues.participants = participants;
+    }
 
     // Get total count for pagination
     const totalMessages = await db.tables.Messages.count({
@@ -123,7 +247,20 @@ async function getConversation(req, res, db) {
 async function createConversation(req, res, db) {
   try {
     const { name, type, participantIds, settings } = req.body;
-    const { athleteProfileId } = req.query;
+    const { athleteProfileId: athleteProfileIdString } = req.query;
+    const athleteProfileId = parseInt(athleteProfileIdString);
+
+    // Handle announcement conversations specially
+    if (type === 'announcement_all' || type === 'announcement_active') {
+      // Check if user has permission to create announcements
+      if (!canSendAnnouncements(req.user)) {
+        return res.status(403).json({ ok: false, message: 'Insufficient permissions to create announcement conversations' });
+      }
+
+      // Get or create the announcement conversation
+      const conversation = await getOrCreateAnnouncementConversation(type, athleteProfileId, db);
+      return res.json({ ok: true, conversation });
+    }
 
     if (!athleteProfileId || !type || !participantIds?.length) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
@@ -131,22 +268,36 @@ async function createConversation(req, res, db) {
 
     // For direct conversations, check if one already exists between these participants
     if (type === 'direct' && participantIds.length === 1) {
-      const existingConversation = await db.tables.Conversations.findOne({
+      // First, get all direct conversations that include the target participant
+      // This is the optimization - there will be far fewer conversations with this participant
+      const conversationsWithTargetParticipant = await db.tables.Conversations.findAll({
         where: { type: 'direct' },
         include: [{
           model: db.tables.ConversationParticipants,
           as: 'participants',
           where: {
-            athleteProfileId: {
-              [db.Sequelize.Op.in]: [athleteProfileId, participantIds[0]]
-            }
-          },
-          having: db.sequelize.literal('COUNT(DISTINCT "participants"."athleteProfileId") = 2')
+            athleteProfileId: participantIds[0]
+          }
         }]
       });
 
-      if (existingConversation) {
-        return res.json({ ok: true, conversation: existingConversation });
+      // For each conversation, check if it also includes the current user and has exactly 2 participants
+      for (const conversation of conversationsWithTargetParticipant) {
+        // Get all participants for this conversation
+        const allParticipants = await db.tables.ConversationParticipants.findAll({
+          where: { conversationId: conversation.id },
+          attributes: ['athleteProfileId']
+        });
+
+        const participantIds = allParticipants.map(p => p.athleteProfileId);
+        
+        // Check if this is a direct conversation between exactly these two users
+        if (participantIds.length === 2 && 
+            participantIds.includes(athleteProfileId) && 
+            participantIds.includes(participantIds[0])) {
+          conversation.participants = allParticipants;
+          return res.json({ ok: true, conversation });
+        }
       }
     }
 
@@ -172,12 +323,15 @@ async function createConversation(req, res, db) {
         }))
       ];
 
-      await db.tables.ConversationParticipants.bulkCreate(participants, { transaction });
+      await db.tables.ConversationParticipants.bulkCreate(participants, { 
+        transaction,
+        ignoreDuplicates: true 
+      });
 
       // Commit the transaction
       await transaction.commit();
 
-      // TODO: Send notifications to all participants about new conversation
+      // TODO: Send notifications to all participants about new conversation. Or not?
 
       res.json({ ok: true, conversation });
     } catch (error) {
@@ -188,6 +342,123 @@ async function createConversation(req, res, db) {
   } catch (error) {
     console.error('Error creating conversation:', error);
     res.status(500).json({ ok: false, message: 'Failed to create conversation' });
+  }
+}
+
+async function updateConversation(req, res, db) {
+  try {
+    const { conversationId } = req.params;
+    const { name, settings, participantIds } = req.body;
+    const { athleteProfileId } = req.query;
+
+    if (!conversationId || !athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+
+    // Check if user is admin of the conversation
+    const adminParticipant = await db.tables.ConversationParticipants.findOne({
+      where: { 
+        conversationId, 
+        athleteProfileId,
+        role: 'admin'
+      }
+    });
+
+    if (!adminParticipant) {
+      return res.status(403).json({ ok: false, message: 'Not authorized to update this conversation' });
+    }
+
+    // Start a transaction
+    const transaction = await db.tables.Conversations.sequelize.transaction();
+
+    try {
+      // Update conversation fields if provided
+      const updateData = {};
+      if (name !== undefined) updateData.name = name;
+      if (settings !== undefined) updateData.settings = settings;
+
+      if (Object.keys(updateData).length > 0) {
+        await db.tables.Conversations.update(updateData, {
+          where: { id: conversationId },
+          transaction
+        });
+      }
+
+      // Update participants if provided
+      if (participantIds !== undefined) {
+        // Get ALL current participants (to avoid role-based duplicates)
+        const currentParticipants = await db.tables.ConversationParticipants.findAll({
+          where: { 
+            conversationId
+          },
+          attributes: ['athleteProfileId', 'role'],
+          transaction
+        });
+        
+        const currentParticipantIds = currentParticipants.map(p => p.athleteProfileId);
+        const newParticipantIds = new Set(participantIds);
+        
+        // Remove only MEMBER participants who are no longer in the list (preserve admins)
+        const memberParticipants = currentParticipants.filter(p => p.role === 'member');
+        const memberParticipantIds = memberParticipants.map(p => p.athleteProfileId);
+        const participantsToRemove = memberParticipantIds.filter(id => !newParticipantIds.has(id));
+        if (participantsToRemove.length > 0) {
+          await db.tables.ConversationParticipants.destroy({
+            where: { 
+              conversationId,
+              athleteProfileId: participantsToRemove,
+              role: 'member'
+            },
+            transaction
+          });
+        }
+        
+        // Add only new participants
+        const participantsToAdd = participantIds.filter(id => !currentParticipantIds.includes(id));
+        if (participantsToAdd.length > 0) {
+          const newParticipants = participantsToAdd.map(id => ({
+            conversationId,
+            athleteProfileId: id,
+            role: 'member'
+          }));
+
+          await db.tables.ConversationParticipants.bulkCreate(newParticipants, { 
+            transaction,
+            ignoreDuplicates: true 
+          });
+        }
+      }
+
+      // Commit the transaction
+      await transaction.commit();
+
+      // Get the updated conversation with all participants
+      const updatedConversation = await db.tables.Conversations.findOne({
+        where: { id: conversationId },
+        include: [
+          {
+            model: db.tables.ConversationParticipants,
+            as: 'participants',
+            include: [{
+              model: db.tables.AthleteProfiles,
+              as: 'athleteProfile',
+              attributes: ['id', 'firstName', 'lastName', 'profileImage']
+            }]
+          }
+        ]
+      });
+
+      // TODO: Send notifications to participants about conversation updates
+
+      res.json({ ok: true, conversation: updatedConversation });
+    } catch (error) {
+      // If anything fails, rollback the transaction
+      await transaction.rollback();
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error updating conversation:', error);
+    res.status(500).json({ ok: false, message: 'Failed to update conversation' });
   }
 }
 
@@ -244,6 +515,24 @@ async function sendMessage(req, res, db) {
     
     if (!canSend) {
       return res.status(403).json({ ok: false, message: 'Not authorized to send messages' });
+    }
+
+    // If this is an announcement conversation and user has announcement permissions, sync participants
+    if (participant.conversation.type === 'announcement_all' || participant.conversation.type === 'announcement_active') {
+      if (!canSendAnnouncements(req.user)) {
+        return res.status(403).json({ ok: false, message: 'Not authorized to send announcement messages' });
+      }
+
+      try {
+        if (participant.conversation.type === 'announcement_all') {
+          await syncAllAthleteParticipants(conversationId, db);
+        } else if (participant.conversation.type === 'announcement_active') {
+          await syncActiveAthleteParticipants(conversationId, db);
+        }
+      } catch (syncError) {
+        console.error('Error syncing announcement participants:', syncError);
+        // Continue with message sending even if sync fails
+      }
     }
 
     // Create the message
@@ -363,7 +652,9 @@ async function addParticipants(req, res, db) {
       role: 'member'
     }));
 
-    await db.tables.ConversationParticipants.bulkCreate(newParticipants);
+    await db.tables.ConversationParticipants.bulkCreate(newParticipants, {
+      ignoreDuplicates: true
+    });
 
     // TODO: Send notifications to new participants about being added to conversation
 
@@ -465,13 +756,139 @@ async function deleteMessage(req, res, db) {
   }
 }
 
+// Get unread message counts for all conversations (for badges)
+async function getUnreadCounts(req, res, db) {
+  try {
+    const { athleteProfileId } = req.query;
+    
+    if (!athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+
+    // Get all conversations the user participates in using Sequelize
+    const participants = await db.tables.ConversationParticipants.findAll({
+      where: { athleteProfileId: parseInt(athleteProfileId) },
+      include: [{
+        model: db.tables.Conversations,
+        as: 'conversation',
+        attributes: ['id', 'name', 'type']
+      }],
+      attributes: ['conversationId', 'lastReadAt']
+    });
+
+    const unreadCounts = await Promise.all(
+      participants.map(async (participant) => {
+        const conversationId = participant.conversationId;
+        const lastReadAt = participant.lastReadAt;
+        
+        const unreadCount = await db.tables.Messages.count({
+          where: {
+            conversationId,
+            senderId: { [Op.ne]: parseInt(athleteProfileId) }, // Don't count own messages
+            ...(lastReadAt ? {
+              createdAt: { [Op.gt]: lastReadAt }
+            } : {}) // If never read, count all messages from others
+          }
+        });
+
+        return {
+          conversationId,
+          unreadCount,
+          conversation: participant.conversation
+        };
+      })
+    );
+
+    // Calculate total unread across all conversations
+    const totalUnread = unreadCounts.reduce((sum, conv) => sum + conv.unreadCount, 0);
+
+    // Filter to only conversations with unread messages for efficiency
+    const conversationsWithUnread = unreadCounts.filter(conv => conv.unreadCount > 0);
+
+    res.json({ 
+      ok: true, 
+      unreadCounts: conversationsWithUnread,
+      totalUnread,
+      hasUnreadMessages: totalUnread > 0
+    });
+  } catch (error) {
+    console.error('Error getting unread counts:', error);
+    res.status(500).json({ ok: false, message: 'Failed to get unread counts' });
+  }
+}
+
+// Delete a conversation
+async function deleteConversation(req, res, db) {
+  try {
+    const { conversationId } = req.params;
+    const { athleteProfileId } = req.query;
+
+    if (!conversationId || !athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+
+    // Check if user is admin of the conversation
+    const participant = await db.tables.ConversationParticipants.findOne({
+      where: { 
+        conversationId, 
+        athleteProfileId,
+        role: 'admin'
+      }
+    });
+
+    if (!participant) {
+      return res.status(403).json({ ok: false, message: 'Not authorized to delete this conversation' });
+    }
+
+    // Start a transaction
+    const transaction = await db.tables.Conversations.sequelize.transaction();
+
+    try {
+      // Delete all messages in the conversation
+      await db.tables.Messages.destroy({
+        where: { conversationId },
+        transaction
+      });
+
+      // Delete all participants
+      await db.tables.ConversationParticipants.destroy({
+        where: { conversationId },
+        transaction
+      });
+
+      // Delete the conversation itself
+      await db.tables.Conversations.destroy({
+        where: { id: conversationId },
+        transaction
+      });
+
+      // Commit the transaction
+      await transaction.commit();
+
+      // TODO: Send notifications to all participants about conversation deletion (maybe)
+
+      res.json({ ok: true, message: 'Conversation deleted successfully' });
+    } catch (error) {
+      // If anything fails, rollback the transaction
+      await transaction.rollback();
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    res.status(500).json({ ok: false, message: 'Failed to delete conversation' });
+  }
+}
+
 module.exports = {
   getConversations,
   getConversation,
   createConversation,
+  updateConversation,
   sendMessage,
   editMessage,
   addParticipants,
   removeParticipant,
-  deleteMessage
+  deleteMessage,
+  deleteConversation,
+  getUnreadCounts
 }; 

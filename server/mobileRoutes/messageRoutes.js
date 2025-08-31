@@ -4,11 +4,14 @@ const {
   getConversations,
   getConversation,
   createConversation,
+  updateConversation,
   sendMessage,
   editMessage,
   addParticipants,
   removeParticipant,
-  deleteMessage
+  deleteMessage,
+  deleteConversation,
+  getUnreadCounts
 } = require('../controllers/messagesController');
 
 function userCanManageConversations(req, res, next) {
@@ -21,6 +24,9 @@ module.exports = function messageRoutes(db) {
   // Get all conversations for the current user
   router.get('/conversations', checkOwnAthleteProfile, (req, res) => getConversations(req, res, db));
 
+  // Get unread message counts for badges
+  router.get('/conversations/unread-counts', checkOwnAthleteProfile, (req, res) => getUnreadCounts(req, res, db));
+
   // Get a single conversation with its messages
   router.get('/conversations/:conversationId',
     checkOwnAthleteProfile,
@@ -31,6 +37,12 @@ module.exports = function messageRoutes(db) {
   router.post('/conversations', 
     userCanManageConversations,
     (req, res) => createConversation(req, res, db)
+  );
+
+  // Update a conversation (requires permission)
+  router.put('/conversations/:conversationId',
+    userCanManageConversations,
+    (req, res) => updateConversation(req, res, db)
   );
 
   // Send a message (can be regular message or reaction)
@@ -61,6 +73,12 @@ module.exports = function messageRoutes(db) {
   router.delete('/messages/:messageId',
     checkOwnAthleteProfile,
     (req, res) => deleteMessage(req, res, db)
+  );
+
+  // Delete a conversation
+  router.delete('/conversations/:conversationId',
+    userCanManageConversations,
+    (req, res) => deleteConversation(req, res, db)
   );
 
   return router;
