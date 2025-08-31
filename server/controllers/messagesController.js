@@ -101,15 +101,46 @@ async function getConversations(req, res, db) {
       });
     }
 
-    // Combine and sort all conversations by last message time
-    const allConversations = [...regularConversations, ...announcementConversations];
-    allConversations.sort((a, b) => {
+    // Calculate unread counts for all conversations using Sequelize (safer approach)
+    const conversationsWithUnread = await Promise.all(
+      [...regularConversations, ...announcementConversations].map(async (conversation) => {
+        // Get the user's participant record for this conversation
+        const userParticipant = await db.tables.ConversationParticipants.findOne({
+          where: { 
+            conversationId: conversation.id, 
+            athleteProfileId: parseInt(athleteProfileId) 
+          },
+          attributes: ['lastReadAt']
+        });
+        
+        const lastReadAt = userParticipant?.lastReadAt;
+        
+        // Count unread messages (excluding user's own messages)
+        const unreadCount = await db.tables.Messages.count({
+          where: {
+            conversationId: conversation.id,
+            senderId: { [Op.ne]: parseInt(athleteProfileId) }, // Don't count own messages
+            ...(lastReadAt ? {
+              createdAt: { [Op.gt]: lastReadAt }
+            } : {}) // If never read, count all messages from others
+          }
+        });
+
+        return {
+          ...conversation.toJSON(),
+          unreadCount
+        };
+      })
+    );
+
+    // Sort conversations by last message time
+    conversationsWithUnread.sort((a, b) => {
       const aLastMessage = a.messages?.[0]?.createdAt || a.createdAt;
       const bLastMessage = b.messages?.[0]?.createdAt || b.createdAt;
       return new Date(bLastMessage) - new Date(aLastMessage);
     });
 
-    res.json({ ok: true, conversations: allConversations });
+    res.json({ ok: true, conversations: conversationsWithUnread });
   } catch (error) {
     console.error('Error getting conversations:', error);
     res.status(500).json({ ok: false, message: 'Failed to get conversations' });
@@ -725,6 +756,67 @@ async function deleteMessage(req, res, db) {
   }
 }
 
+// Get unread message counts for all conversations (for badges)
+async function getUnreadCounts(req, res, db) {
+  try {
+    const { athleteProfileId } = req.query;
+    
+    if (!athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+
+    // Get all conversations the user participates in using Sequelize
+    const participants = await db.tables.ConversationParticipants.findAll({
+      where: { athleteProfileId: parseInt(athleteProfileId) },
+      include: [{
+        model: db.tables.Conversations,
+        as: 'conversation',
+        attributes: ['id', 'name', 'type']
+      }],
+      attributes: ['conversationId', 'lastReadAt']
+    });
+
+    const unreadCounts = await Promise.all(
+      participants.map(async (participant) => {
+        const conversationId = participant.conversationId;
+        const lastReadAt = participant.lastReadAt;
+        
+        const unreadCount = await db.tables.Messages.count({
+          where: {
+            conversationId,
+            senderId: { [Op.ne]: parseInt(athleteProfileId) }, // Don't count own messages
+            ...(lastReadAt ? {
+              createdAt: { [Op.gt]: lastReadAt }
+            } : {}) // If never read, count all messages from others
+          }
+        });
+
+        return {
+          conversationId,
+          unreadCount,
+          conversation: participant.conversation
+        };
+      })
+    );
+
+    // Calculate total unread across all conversations
+    const totalUnread = unreadCounts.reduce((sum, conv) => sum + conv.unreadCount, 0);
+
+    // Filter to only conversations with unread messages for efficiency
+    const conversationsWithUnread = unreadCounts.filter(conv => conv.unreadCount > 0);
+
+    res.json({ 
+      ok: true, 
+      unreadCounts: conversationsWithUnread,
+      totalUnread,
+      hasUnreadMessages: totalUnread > 0
+    });
+  } catch (error) {
+    console.error('Error getting unread counts:', error);
+    res.status(500).json({ ok: false, message: 'Failed to get unread counts' });
+  }
+}
+
 // Delete a conversation
 async function deleteConversation(req, res, db) {
   try {
@@ -797,5 +889,6 @@ module.exports = {
   addParticipants,
   removeParticipant,
   deleteMessage,
-  deleteConversation
+  deleteConversation,
+  getUnreadCounts
 }; 

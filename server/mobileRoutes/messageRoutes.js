@@ -10,7 +10,8 @@ const {
   addParticipants,
   removeParticipant,
   deleteMessage,
-  deleteConversation
+  deleteConversation,
+  getUnreadCounts
 } = require('../controllers/messagesController');
 
 function userCanManageConversations(req, res, next) {
@@ -22,6 +23,9 @@ module.exports = function messageRoutes(db) {
 
   // Get all conversations for the current user
   router.get('/conversations', checkOwnAthleteProfile, (req, res) => getConversations(req, res, db));
+
+  // Get unread message counts for badges
+  router.get('/conversations/unread-counts', checkOwnAthleteProfile, (req, res) => getUnreadCounts(req, res, db));
 
   // Get a single conversation with its messages
   router.get('/conversations/:conversationId',
