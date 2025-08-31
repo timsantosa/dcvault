@@ -1,4 +1,5 @@
 const db = require('../db/db');
+const { getBestOfPersonalRecords, sortProfilesByPR } = require('../utils/rankingUtils');
 
 class RankingCache {
     constructor() {
@@ -24,7 +25,7 @@ class RankingCache {
                         {
                             model: db.tables.Jumps,
                             as: 'jump',
-                            attributes: ['heightInches', 'id'],
+                            attributes: ['heightInches', 'id', 'date'],
                         },
                     ],
                 },
@@ -43,55 +44,42 @@ class RankingCache {
                 })
             );
 
-            const rankingList = activeProfiles
-                .filter(profile => profile !== null)
-                .map((athlete) => {
-                    if (!athlete.personalRecords || athlete.personalRecords.length === 0) {
-                        return { athleteProfileId: athlete.id, bestHeight: 0 };
-                    }
+            const filteredProfiles = activeProfiles.filter(profile => profile !== null);
+            
+            // Sort using the same logic as getRankedAthleteProfiles
+            sortProfilesByPR(filteredProfiles);
 
-                    const bestPr = athlete.personalRecords.reduce((bestSoFar, current) => {
-                        return current.jump.heightInches > bestSoFar.jump.heightInches ? current : bestSoFar;
-                    }, athlete.personalRecords[0]);
+            const rankingList = filteredProfiles.map((athlete, index) => {
+                // Get the best PR using the helper function
+                const bestPr = getBestOfPersonalRecords(athlete.personalRecords);
 
-                    return {
-                        athleteProfileId: athlete.id,
-                        jumpId: bestPr.jump.id,
-                        bestHeight: bestPr.jump.heightInches
-                    };
-                })
-                .sort((a, b) => b.bestHeight - a.bestHeight)
-                .map((athlete, index) => ({
-                    ...athlete,
+                return {
+                    athleteProfileId: athlete.id,
+                    jumpId: bestPr.jumpId,
+                    bestHeight: bestPr.heightInches,
                     rank: index + 1,
-                }));
+                };
+            });
 
             this.rankings[gender].active = rankingList;
         } else {
             // For all-time rankings, we don't need to check active status
             const results = await db.tables.AthleteProfiles.findAll(query);
 
-            const rankingList = results
-                .map((athlete) => {
-                    if (!athlete.personalRecords || athlete.personalRecords.length === 0) {
-                        return { athleteProfileId: athlete.id, bestHeight: 0 };
-                    }
+            // Sort using the same logic as getRankedAthleteProfiles
+            sortProfilesByPR(results);
 
-                    const bestPr = athlete.personalRecords.reduce((bestSoFar, current) => {
-                        return current.jump.heightInches > bestSoFar.jump.heightInches ? current : bestSoFar;
-                    }, athlete.personalRecords[0]);
+            const rankingList = results.map((athlete, index) => {
+                // Get the best PR using the helper function
+                const bestPr = getBestOfPersonalRecords(athlete.personalRecords);
 
-                    return {
-                        athleteProfileId: athlete.id,
-                        jumpId: bestPr.jump.id,
-                        bestHeight: bestPr.jump.heightInches
-                    };
-                })
-                .sort((a, b) => b.bestHeight - a.bestHeight)
-                .map((athlete, index) => ({
-                    ...athlete,
+                return {
+                    athleteProfileId: athlete.id,
+                    jumpId: bestPr.jumpId,
+                    bestHeight: bestPr.heightInches,
                     rank: index + 1,
-                }));
+                };
+            });
 
             this.rankings[gender].allTime = rankingList;
         }

@@ -2,7 +2,7 @@
 
 const rankingCache = require("./athleteRankingCache");
 const { validatePoleBrand } = require("../utils/poleBrandValidation");
-const { getBestOfPersonalRecords } = require("../lib/helpers");
+const { getBestOfPersonalRecords } = require("../utils/rankingUtils");
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {

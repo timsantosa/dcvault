@@ -1,6 +1,7 @@
 const helpers = require('../lib/helpers');
 const rankingCache = require('./athleteRankingCache');
 const { getPersonalBest } = require('./jumpsController');
+const { getBestOfPersonalRecords, sortProfilesByPR } = require('../utils/rankingUtils');
 
 async function createProfile(req, res, db) {
   try {
@@ -545,7 +546,7 @@ const getRankedProfiles = async (req, res, db) => {
     });
 
     // Sort the profiles in JavaScript to avoid MySQL 5.7 compatibility issues
-    helpers.sortProfilesByPR(allProfilesForRanking);
+    sortProfilesByPR(allProfilesForRanking);
 
     // Calculate global rankings
     const globalRankings = new Map();
@@ -582,7 +583,7 @@ const getRankedProfiles = async (req, res, db) => {
     });
 
     // Sort the search results by the same criteria as global rankings
-    helpers.sortProfilesByPR(profilesWithPRs);
+    sortProfilesByPR(profilesWithPRs);
 
     // Apply pagination after sorting
     const paginatedProfiles = profilesWithPRs.slice(offset, offset + limit);
@@ -594,7 +595,7 @@ const getRankedProfiles = async (req, res, db) => {
     // Map the data into a structured response
     const athletes = paginatedProfiles.map((profile, index) => {
       // Find the best PR from the included personalRecords and jumps
-      const pr = helpers.getBestOfPersonalRecords(profile.personalRecords);
+      const pr = getBestOfPersonalRecords(profile.personalRecords);
 
       // Determine active status
       const isActiveMember = profile.alwaysActiveOverride || 

@@ -67,7 +67,7 @@ async function syncActiveAthleteParticipants(conversationId, db) {
   try {
     // Get all athlete profiles
     const allAthleteProfiles = await db.tables.AthleteProfiles.findAll({
-      attributes: ['id'],
+      attributes: ['id', 'alwaysActiveOverride', 'athleteId'],
       transaction
     });
 
@@ -86,7 +86,7 @@ async function syncActiveAthleteParticipants(conversationId, db) {
         conversationId,
         role: { [Op.ne]: 'admin' }
       },
-      attributes: ['id', 'alwaysActiveOverride', 'athleteId'],
+      attributes: ['athleteProfileId'],
       transaction
     });
 
