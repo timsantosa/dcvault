@@ -3,6 +3,7 @@
 const rankingCache = require("./athleteRankingCache");
 const { validatePoleBrand } = require("../utils/poleBrandValidation");
 const { getBestOfPersonalRecords } = require("../utils/rankingUtils");
+const NotificationUtils = require("../utils/notificationUtils");
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
@@ -125,6 +126,16 @@ const addOrUpdateJump = async (req, res, db) => {
     // Otherwise it will get updated when it gets verified.
     if (verified) {
       checkIfJumpIsStepPr(jumpRow, db);
+    }
+
+    // Send notification to admins if this is a new meet jump that needs verification
+    if (created && needsVerification && flattenedHardMetrics.setting === 'Meet') {
+      try {
+        await NotificationUtils.notifyAdminsOfPendingJump(jumpRow.id, athleteProfileId);
+      } catch (notificationError) {
+        console.error('Error sending jump verification notification:', notificationError);
+        // Don't fail the jump creation if notification fails
+      }
     }
 
     const jump = mapDbRowToJump(jumpRow);

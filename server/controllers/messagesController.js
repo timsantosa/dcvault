@@ -5,6 +5,7 @@ const {
   syncAllAthleteParticipants,
   syncActiveAthleteParticipants
 } = require('../utils/messagesUtils');
+const NotificationUtils = require('../utils/notificationUtils');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -179,6 +180,9 @@ async function getConversation(req, res, db) {
 
     // TODO: Send notification to other participants that user has read messages
 
+    // TODO: Right now, reactions count as part of the pagination. 
+    // This should be fine since every message is created before the reaction is made,
+    // but it does limit the number of actual messages.
     // Get conversation with conditional participant loading
     const conversation = await db.tables.Conversations.findOne({
       where: { id: conversationId },
@@ -555,9 +559,42 @@ async function sendMessage(req, res, db) {
       }]
     });
 
-    // TODO: Send notifications to all participants except sender
-    // TODO: If this is a reaction, send specific notification to the original message sender
-    // TODO: Only send notification to user once, in case they have multiple athletes per account.
+    // Send push notifications to participants (but not the sender)
+    try {
+      if (type === 'text' || type === 'attachment') {
+        // For regular messages, notify all participants except sender
+        await NotificationUtils.notifyMessageRecipients(
+          conversationId, 
+          athleteProfileId, 
+          content || 'Sent an attachment' // TODO: Move attachment to a separate case.
+        );
+      } else if (type === 'reaction' && parentMessageId) {
+        // For reactions, notify the original message sender (if different from reaction sender)
+        const originalMessage = await db.tables.Messages.findByPk(parentMessageId);
+        if (originalMessage && originalMessage.senderId !== athleteProfileId) {
+          const reacterProfile = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
+          const reacterName = `${reacterProfile.firstName} ${reacterProfile.lastName}`;
+          
+          const title = participant.conversation.name || 'New Reaction';
+          const body = `${reacterName} ${content}d to your message: ${originalMessage.content}`;
+          const data = {
+            type: 'reaction',
+            conversationId,
+            originalMessageId: parentMessageId,
+            reacterName
+          };
+          await NotificationUtils.sendNotificationToAthleteProfiles(
+            [originalMessage.senderId],
+            title,
+            body,
+            data
+          );
+        }
+      }
+    } catch (notificationError) {
+      console.error('Error sending push notification for message:', notificationError);
+      // Don't fail the message send if notification fails
+    }
     
     res.json({ ok: true, message: fullMessage });
   } catch (error) {

@@ -384,6 +384,37 @@ columns.drills = {
   videoLink: Sequelize.STRING,
 };
 
+// User Devices for Push Notifications
+columns.userDevices = {
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.users,
+      key: 'id',
+    },
+  },
+  expoPushToken: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true, // Ensure no duplicate tokens
+  },
+  deviceInfo: {
+    type: Sequelize.JSON, // Store device details like model, OS version, etc.
+    allowNull: true,
+  },
+  isActive: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true,
+    allowNull: false,
+  },
+  lastUsed: {
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW,
+    allowNull: false,
+  },
+};
+
 // Mobile Messages Infrastructure
 columns.conversations = {
   id: {
@@ -534,6 +565,25 @@ const syncTables = (schema, force) => {
     ]
   }); // ALTER TABLE personalRecords ADD CONSTRAINT unique_step_per_athlete UNIQUE (athleteProfileId, stepNum);
 
+  // User Devices table
+  tables.UserDevices = schema.define('userDevice', columns.userDevices, {
+    indexes: [
+      {
+        fields: ['userId', 'isActive'],
+        name: 'user_devices_user_active'
+      },
+      {
+        fields: ['expoPushToken'],
+        unique: true,
+        name: 'user_devices_token_unique'
+      },
+      {
+        fields: ['lastUsed'],
+        name: 'user_devices_last_used'
+      }
+    ]
+  });
+
   // Messaging tables
   tables.Conversations = schema.define('conversation', columns.conversations, {
     indexes: [
@@ -662,6 +712,10 @@ const syncTables = (schema, force) => {
   // Refresh token associations
   tables.MobileRefreshTokens.belongsTo(tables.Users, { foreignKey: 'userId' });
   tables.Users.hasMany(tables.MobileRefreshTokens, { foreignKey: 'userId' });
+
+  // User Devices associations
+  tables.UserDevices.belongsTo(tables.Users, { as: 'user', foreignKey: 'userId' });
+  tables.Users.hasMany(tables.UserDevices, { as: 'devices', foreignKey: 'userId' });
 
   // Drill associations
   tables.Drills.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
