@@ -16,12 +16,12 @@ class NotificationsController {
       const userId = req.user.id; // From JWT middleware
       
       if (!expoPushToken) {
-        await t.rollback();
+        if (!t.finished) await t.rollback();
         return res.status(400).json({ error: 'expoPushToken is required' });
       }
 
       if (!Expo.isExpoPushToken(expoPushToken)) {
-        await t.rollback();
+        if (!t.finished) await t.rollback();
         return res.status(400).json({ error: 'Invalid Expo push token format' });
       }
 
@@ -89,7 +89,11 @@ class NotificationsController {
         });
       }
     } catch (error) {
-      await t.rollback();
+        try {
+            if (!t.finished) await t.rollback();
+        } catch (error) {
+            console.error('Error rolling back transaction:', error);
+        }
       console.error('Error registering device:', error);
       
       // If it's a unique constraint error, it means race condition occurred
