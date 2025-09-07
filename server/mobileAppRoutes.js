@@ -13,6 +13,7 @@ const meetDataRoutes = require('./mobileRoutes/meetDataRoutes');
 const drillTypeRoutes = require('./mobileRoutes/drillTypeRoutes');
 const drillRoutes = require('./mobileRoutes/drillRoutes');
 const messageRoutes = require('./mobileRoutes/messageRoutes');
+const notificationRoutes = require('./mobileRoutes/notificationRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -31,6 +32,7 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/poles', poleRoutes(db));
   app.use('/mobileapp/user/meet-data', meetDataRoutes(db));
   app.use('/mobileapp/user/messaging', messageRoutes(db));
+  app.use('/mobileapp/user/notifications', notificationRoutes(db));
   
   app.get('/mobileapp/user/info', async (req, res) => {
     getMobileUserInfo(req, res, db);
