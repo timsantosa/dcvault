@@ -280,16 +280,85 @@ class NotificationsController {
         where: { isActive: false }
       });
 
-      // Get device breakdown by platform
-      const devicesByPlatform = await tables.UserDevices.findAll({
-        where: { isActive: true },
-        attributes: [
-          [tables.UserDevices.sequelize.fn('JSON_EXTRACT', tables.UserDevices.sequelize.col('deviceInfo'), '$.platform'), 'platform'],
-          [tables.UserDevices.sequelize.fn('COUNT', '*'), 'count']
-        ],
-        group: [tables.UserDevices.sequelize.fn('JSON_EXTRACT', tables.UserDevices.sequelize.col('deviceInfo'), '$.platform')],
-        raw: true
-      });
+      // Get device breakdown by platform - MySQL 5.7 compatible approach
+      let devicesByPlatform = [];
+      try {
+        // Try the JSON_EXTRACT approach first (works in MySQL 5.7.8+)
+        devicesByPlatform = await tables.UserDevices.findAll({
+          where: { isActive: true },
+          attributes: [
+            [tables.UserDevices.sequelize.fn('JSON_EXTRACT', tables.UserDevices.sequelize.col('deviceInfo'), '$.platform'), 'platform'],
+            [tables.UserDevices.sequelize.fn('COUNT', '*'), 'count']
+          ],
+          group: [tables.UserDevices.sequelize.fn('JSON_EXTRACT', tables.UserDevices.sequelize.col('deviceInfo'), '$.platform')],
+          raw: true
+        });
+      } catch (jsonError) {
+        console.warn('JSON_EXTRACT not supported, falling back to application-level parsing:', jsonError.message);
+        
+        try {
+          // Fallback: Get all devices and parse JSON in application
+          const allDevices = await tables.UserDevices.findAll({
+            where: { isActive: true },
+            attributes: ['deviceInfo'],
+            raw: true
+          });
+          
+          // Parse deviceInfo and count platforms
+          const platformCounts = {};
+          
+          if (Array.isArray(allDevices)) {
+            allDevices.forEach(device => {
+              try {
+                // Handle null/undefined device or deviceInfo
+                if (!device || device.deviceInfo === null || device.deviceInfo === undefined) {
+                  platformCounts['Unknown'] = (platformCounts['Unknown'] || 0) + 1;
+                  return;
+                }
+                
+                let deviceInfo;
+                if (typeof device.deviceInfo === 'string') {
+                  // Parse JSON string, but handle empty strings
+                  deviceInfo = device.deviceInfo.trim() ? JSON.parse(device.deviceInfo) : {};
+                } else if (typeof device.deviceInfo === 'object') {
+                  deviceInfo = device.deviceInfo;
+                } else {
+                  // Unexpected type
+                  deviceInfo = {};
+                }
+                
+                // Safely extract platform
+                const platform = (deviceInfo && typeof deviceInfo === 'object' && deviceInfo.platform) 
+                  ? String(deviceInfo.platform) 
+                  : 'Unknown';
+                
+                platformCounts[platform] = (platformCounts[platform] || 0) + 1;
+              } catch (parseError) {
+                // Handle any JSON parsing or other errors for this device
+                console.warn('Error parsing device info for individual device:', parseError.message);
+                platformCounts['Unknown'] = (platformCounts['Unknown'] || 0) + 1;
+              }
+            });
+          }
+          
+          // Convert to expected format with safe handling
+          try {
+            devicesByPlatform = Object.entries(platformCounts || {}).map(([platform, count]) => ({
+              platform: String(platform || 'Unknown'),
+              count: String(Number(count) || 0) // Ensure valid number conversion
+            }));
+          } catch (formatError) {
+            console.error('Error formatting platform counts:', formatError.message);
+            // Provide safe fallback
+            devicesByPlatform = [{ platform: 'Unknown', count: '0' }];
+          }
+          
+        } catch (fallbackError) {
+          console.error('Fallback devicesByPlatform query failed:', fallbackError.message);
+          // Provide safe fallback when everything fails
+          devicesByPlatform = [{ platform: 'Unknown', count: '0' }];
+        }
+      }
 
       res.json({
         totalUsers,
