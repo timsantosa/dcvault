@@ -6,105 +6,94 @@ const NotificationUtils = require('../utils/notificationUtils');
 class NotificationsController {
   /**
    * Register or update a device token for the current user
-   * Handles new phones automatically by associating the token with the logged-in user
+   * Simple approach using findOrCreate to handle duplicates gracefully
    */
   static async registerDevice(req, res) {
-    const t = await tables.schema.transaction(); // Start transaction
-    
     try {
       const { expoPushToken, deviceInfo } = req.body;
-      const userId = req.user.id; // From JWT middleware
+      const userId = req.user.id;
       
       if (!expoPushToken) {
-        if (!t.finished) await t.rollback();
         return res.status(400).json({ error: 'expoPushToken is required' });
       }
 
       if (!Expo.isExpoPushToken(expoPushToken)) {
-        if (!t.finished) await t.rollback();
         return res.status(400).json({ error: 'Invalid Expo push token format' });
       }
 
-      // Check if this token already exists for any user (with lock to prevent race conditions)
-      const existingDevice = await tables.UserDevices.findOne({
+      // Try to find or create the device
+      const [device, created] = await tables.UserDevices.findOrCreate({
         where: { expoPushToken },
-        lock: t.LOCK.UPDATE,
-        transaction: t
-      });
-
-      if (existingDevice) {
-        // Convert both to numbers to ensure proper comparison
-        const existingUserId = parseInt(existingDevice.userId);
-        const currentUserId = parseInt(userId);
-        
-        if (existingUserId === currentUserId) {
-          // Same user, same token - just update last used and device info
-          await existingDevice.update({
-            lastUsed: new Date(),
-            deviceInfo: deviceInfo || existingDevice.deviceInfo,
-            isActive: true
-          }, { transaction: t });
-          
-          await t.commit();
-          return res.json({ 
-            success: true, 
-            message: 'Device token updated successfully',
-            deviceId: existingDevice.id
-          });
-        } else {
-          // Token moved to different user (new phone given to someone else)
-          // Deactivate old association and create new one
-          await existingDevice.update({ isActive: false }, { transaction: t });
-          
-          const newDevice = await tables.UserDevices.create({
-            userId,
-            expoPushToken,
-            deviceInfo,
-            isActive: true,
-            lastUsed: new Date()
-          }, { transaction: t });
-          
-          await t.commit();
-          return res.json({ 
-            success: true, 
-            message: 'Device transferred to new user successfully',
-            deviceId: newDevice.id
-          });
-        }
-      } else {
-        // New token - create new device record
-        const newDevice = await tables.UserDevices.create({
+        defaults: {
           userId,
           expoPushToken,
           deviceInfo,
           isActive: true,
           lastUsed: new Date()
-        }, { transaction: t });
+        }
+      });
 
-        await t.commit();
+      // If device exists but belongs to different user, transfer it
+      if (!created && parseInt(device.userId) !== parseInt(userId)) {
+        // Update the existing device to the new user instead of creating a new one
+        await device.update({
+          userId,
+          deviceInfo,
+          isActive: true,
+          lastUsed: new Date()
+        });
+        
         return res.json({ 
           success: true, 
-          message: 'Device registered successfully',
-          deviceId: newDevice.id
+          message: 'Device transferred to new user successfully',
+          deviceId: device.id
         });
       }
+
+      // Update existing device for same user or return newly created device
+      if (!created) {
+        await device.update({
+          lastUsed: new Date(),
+          deviceInfo: deviceInfo || device.deviceInfo,
+          isActive: true
+        });
+      }
+
+      return res.json({ 
+        success: true, 
+        message: created ? 'Device registered successfully' : 'Device token updated successfully',
+        deviceId: device.id
+      });
+
     } catch (error) {
-        try {
-            if (!t.finished) await t.rollback();
-        } catch (error) {
-            console.error('Error rolling back transaction:', error);
-        }
       console.error('Error registering device:', error);
       
-      // If it's a unique constraint error, it means race condition occurred
+      // Handle race condition by trying to find and update existing device
       if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(409).json({ 
-          error: 'Device registration conflict. Please try again.',
-          code: 'REGISTRATION_CONFLICT'
-        });
+        try {
+          const existingDevice = await tables.UserDevices.findOne({
+            where: { expoPushToken: req.body.expoPushToken }
+          });
+          
+          if (existingDevice && parseInt(existingDevice.userId) === parseInt(req.user.id)) {
+            await existingDevice.update({
+              lastUsed: new Date(),
+              deviceInfo: req.body.deviceInfo || existingDevice.deviceInfo,
+              isActive: true
+            });
+            
+            return res.json({ 
+              success: true, 
+              message: 'Device token updated successfully',
+              deviceId: existingDevice.id
+            });
+          }
+        } catch (fallbackError) {
+          console.error('Fallback update failed:', fallbackError);
+        }
       }
       
-      res.status(500).json({ error: 'Failed to register device' });
+      return res.status(500).json({ error: 'Failed to register device' });
     }
   }
 
