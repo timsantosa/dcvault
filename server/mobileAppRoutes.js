@@ -5,6 +5,7 @@ const { authenticateJWT, checkPermission } = require('./middlewares/mobileAuthMi
 const athleteRoutes = require('./mobileRoutes/athleteRoutes');
 const authRoutes = require('./mobileRoutes/authRoutes');
 const permissionRoutes = require('./mobileRoutes/permissionRoutes');
+const userRoutes = require('./mobileRoutes/userRoutes');
 const { getMobileUserInfo } = require('./controllers/authController');
 const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
 const { verifyJump, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
@@ -45,4 +46,5 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.get('/mobileapp/user/jumps/unverified', checkPermission('verify_jumps'), (req, res) => getUnverifiedMeetJumps(req, res, db));
 
   app.use('/mobileapp/user/permissions', checkPermission('manage_roles'), permissionRoutes(db));
+  app.use('/mobileapp/user/userData', checkPermission('manage_roles'), userRoutes(db));
 }

@@ -13,6 +13,9 @@ async function createProfile(req, res, db) {
       return res.status(400).json({ ok: false, message: 'User ID is required for creating a profile' });
     }
 
+    // Handle -1 as null userId for standalone profiles
+    const actualUserId = userIdToCreateFor === '-1' ? null : userIdToCreateFor;
+
     // Check for required fields
     if (!newProfileData || !newProfileData.firstName || !newProfileData.lastName || !newProfileData.dob || !newProfileData.gender) {
       return res.status(400).json({ ok: false, message: 'Missing required fields' });
@@ -21,7 +24,7 @@ async function createProfile(req, res, db) {
     // Check if there's already a profile with the same first name, last name, and birthday for this user
     const existingProfile = await db.tables.AthleteProfiles.findOne({
       where: {
-        userId: userIdToCreateFor,
+        userId: actualUserId,
         firstName: newProfileData.firstName,
         lastName: newProfileData.lastName,
         dob: newProfileData.dob
@@ -57,7 +60,7 @@ async function createProfile(req, res, db) {
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
       alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false,
-      userId: userIdToCreateFor
+      userId: actualUserId
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {

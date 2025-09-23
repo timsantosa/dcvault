@@ -164,7 +164,7 @@ columns.athleteProfiles = {
   alwaysActiveOverride: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false, }, //ALTER TABLE athleteProfiles CHANGE COLUMN isActiveMember alwaysActiveOverride BOOLEAN NOT NULL DEFAULT FALSE;
   userId: {
     type: Sequelize.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: tables.users,
       key: 'id',
