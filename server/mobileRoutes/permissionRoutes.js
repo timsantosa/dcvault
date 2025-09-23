@@ -13,8 +13,7 @@ const {
   createRole,
   deleteRole,
   getAllRoles, 
-  getAllPermissions, 
-  getUserById
+  getAllPermissions
 } = require('../controllers/permissionsController');
 
 const permissionRoutes = (db) => {
@@ -50,9 +49,6 @@ const permissionRoutes = (db) => {
 
   router.route('/role/:roleId/users')
     .get((req, res) => getAllUsersWithRole(req, res, db));
-
-  router.route('/user/:userId')
-    .get((req, res) => getUserById(req, res, db));
 
   return router;
 };
