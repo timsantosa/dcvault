@@ -51,8 +51,8 @@ async function createProfile(req, res, db) {
     }
 
     let athleteProfileData = {
-      firstName: newProfileData.firstName,
-      lastName: newProfileData.lastName,
+      firstName: newProfileData.firstName.trim(),
+      lastName: newProfileData.lastName.trim(),
       dob: newProfileData.dob,
       nationality: newProfileData.nationality ?? 'US',
       height: newProfileData.height,
@@ -113,8 +113,8 @@ async function updateProfile(req, res, db) {
     }
 
     let athleteProfileData = {
-      firstName: newProfileData.firstName,
-      lastName: newProfileData.lastName,
+      firstName: newProfileData.firstName.trim(),
+      lastName: newProfileData.lastName.trim(),
       dob: newProfileData.dob,
       nationality: newProfileData.nationality ?? 'US',
       height: newProfileData.height,

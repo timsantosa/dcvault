@@ -662,6 +662,7 @@ const syncTables = (schema, force) => {
   tables.Sites.belongsTo(tables.Sites, {as: 'address'})
 
   tables.Athletes.belongsTo(tables.Users, {as: 'user'})
+  tables.Users.hasMany(tables.Athletes, {as: 'athletes', foreignKey: 'userId'})
 
   tables.Rentals.belongsTo(tables.Athletes, {as: 'athlete'})
   tables.Rentals.belongsTo(tables.Poles, {as: 'pole'})
