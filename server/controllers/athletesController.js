@@ -2,6 +2,7 @@ const helpers = require('../lib/helpers');
 const rankingCache = require('./athleteRankingCache');
 const { getPersonalBest } = require('./jumpsController');
 const { getBestOfPersonalRecords, sortProfilesByPR } = require('../utils/rankingUtils');
+const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
 
 async function createProfile(req, res, db) {
   try {
@@ -158,7 +159,7 @@ const getProfile = async (req, res, db) => {
       'weight', 'profileImage', 'backgroundImage', 
       'gender', 'profileImageVerified', 'backgroundImageVerified',
       'alwaysActiveOverride', 'userId', 'athleteId'];
-    const userHasFullAccess = user.isAdmin || user.athleteProfileIds?.includes(athleteProfileId);
+    const userHasFullAccess = athleteProfileBelongsToUser(athleteProfileId, user) || user.permissions?.includes('view_contact_info');
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
     }
@@ -237,8 +238,12 @@ const getProfile = async (req, res, db) => {
       return;
     }
     if (userHasFullAccess) {
-      athleteProfile.contactInfo = foundAthlete.email;
-      athleteProfile.emrgencyContactInfo = foundAthlete.emergencyContactMDN;
+      athleteProfile.email = foundAthlete.email;
+      athleteProfile.notificationsEmail = foundAthlete.notifications;
+      athleteProfile.usatf = foundAthlete.usatf;
+      athleteProfile.emergencyContactMDN = foundAthlete.emergencyContactMDN;
+      athleteProfile.emergencyContactRelation = foundAthlete.emergencyContactRelation;
+      athleteProfile.emergencyContactName = foundAthlete.emergencyContactName;
     }
 
     res.json({ ok: true, athleteProfile });
