@@ -17,6 +17,15 @@ const getCloudinaryPublicId = (imageUrl) => {
   return parts[parts.length - 1].split(".")[0]; // Extracts "filename" from ".../profile_abc123.jpg"
 };
 
+// Function to delete an image from Cloudinary
+const deleteCloudinaryImage = async (imageUrl) => {
+  if (!imageUrl) return;
+  const publicId = getCloudinaryPublicId(imageUrl);
+  if (publicId) {
+    await cloudinary.uploader.destroy(publicId);
+  }
+};
+
 // Must be behind multer middleware
 async function uploadProfileImage(req, res, db) {
   try {
@@ -31,8 +40,7 @@ async function uploadProfileImage(req, res, db) {
 
     // Delete the old profile picture from Cloudinary
     if (athlete.profileImage) {
-      const oldPublicId = getCloudinaryPublicId(athlete.profileImage);
-      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+      await deleteCloudinaryImage(athlete.profileImage);
     }
 
     // Update the database with the new profile picture URL
@@ -68,8 +76,7 @@ async function uploadBackgroundImage(req, res, db) {
 
     // Delete old background image from Cloudinary
     if (athlete.backgroundImage) {
-      const oldPublicId = getCloudinaryPublicId(athlete.backgroundImage);
-      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+      await deleteCloudinaryImage(athlete.backgroundImage);
     }
 
     // Update the database
@@ -98,8 +105,7 @@ async function deleteProfilePicture(req, res, db) {
     if (!athlete) return res.status(404).json({ error: "Athlete not found" });
 
     if (athlete.profileImage) {
-      const oldPublicId = getCloudinaryPublicId(athlete.profileImage);
-      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+      await deleteCloudinaryImage(athlete.profileImage);
       athlete.profileImage = null;
       athlete.profileImageVerified = false;
       await athlete.save();
@@ -121,8 +127,7 @@ async function deleteBackgroundImage(req, res, db) {
     if (!athlete) return res.status(404).json({ error: "Athlete not found" });
 
     if (athlete.backgroundImage) {
-      const oldPublicId = getCloudinaryPublicId(athlete.backgroundImage);
-      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+      await deleteCloudinaryImage(athlete.backgroundImage);
       athlete.backgroundImage = null;
       athlete.backgroundImageVerified = false;
       await athlete.save();
@@ -198,8 +203,7 @@ async function uploadConversationImage(req, res, db) {
 
     // Delete the old conversation image from Cloudinary
     if (conversation.imageUrl) {
-      const oldPublicId = getCloudinaryPublicId(conversation.imageUrl);
-      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId); 
+      await deleteCloudinaryImage(conversation.imageUrl);
     }
 
     // Update the database with the new conversation image URL
@@ -226,8 +230,7 @@ async function deleteConversationImage(req, res, db) {
     if (!conversation) return res.status(404).json({ error: "Conversation not found" });
 
     if (conversation.imageUrl) {
-      const oldPublicId = getCloudinaryPublicId(conversation.imageUrl);
-      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+      await deleteCloudinaryImage(conversation.imageUrl);
       conversation.imageUrl = null;
       await conversation.save();
     }
@@ -247,5 +250,6 @@ module.exports = {
   verifyImage, 
   getAllUnverifiedImages,
   uploadConversationImage,
-  deleteConversationImage
+  deleteConversationImage,
+  deleteCloudinaryImage
 };
