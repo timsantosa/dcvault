@@ -183,4 +183,69 @@ async function getAllUnverifiedImages(req, res, db) {
   }
 }
 
-module.exports = { uploadProfileImage, uploadBackgroundImage, deleteProfilePicture, deleteBackgroundImage, verifyImage, getAllUnverifiedImages };
+async function uploadConversationImage(req, res, db) {
+  try {
+    const { conversationId } = req.params;
+    if (!conversationId) return res.status(400).json({ error: "Conversation ID is required" });
+
+    const newImageUrl = req.file.path;
+
+    // Fetch the existing conversation
+    const conversation = await db.tables.Conversations.findByPk(conversationId);
+    if (!conversation) { 
+      return res.status(404).json({ error: "Conversation not found" }); 
+    }
+
+    // Delete the old conversation image from Cloudinary
+    if (conversation.imageUrl) {
+      const oldPublicId = getCloudinaryPublicId(conversation.imageUrl);
+      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId); 
+    }
+
+    // Update the database with the new conversation image URL
+    conversation.imageUrl = newImageUrl;
+    await conversation.save();
+
+    res.json({
+      ok: true,
+      imageUrl: newImageUrl,
+      message: "Conversation image updated successfully."
+    });
+  } catch (error) {
+    console.error("Error updating conversation image:", error);
+    res.status(500).json({ error: "Failed to update conversation image" });
+  }
+}
+
+async function deleteConversationImage(req, res, db) {
+  try {
+    const { conversationId } = req.params;
+    if (!conversationId) return res.status(400).json({ error: "Conversation ID is required" });
+
+    const conversation = await db.tables.Conversations.findByPk(conversationId);
+    if (!conversation) return res.status(404).json({ error: "Conversation not found" });
+
+    if (conversation.imageUrl) {
+      const oldPublicId = getCloudinaryPublicId(conversation.imageUrl);
+      if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+      conversation.imageUrl = null;
+      await conversation.save();
+    }
+
+    res.json({ ok: true, message: "Conversation image deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting conversation image:", error);
+    res.status(500).json({ error: "Failed to delete conversation image" });
+  }
+}
+
+module.exports = { 
+  uploadProfileImage, 
+  uploadBackgroundImage, 
+  deleteProfilePicture, 
+  deleteBackgroundImage, 
+  verifyImage, 
+  getAllUnverifiedImages,
+  uploadConversationImage,
+  deleteConversationImage
+};

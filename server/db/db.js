@@ -438,6 +438,10 @@ columns.conversations = {
       key: 'id',
     },
   },
+  imageUrl: { //ALTER TABLE conversations ADD COLUMN imageUrl VARCHAR(255) NULL AFTER createdBy;
+    type: Sequelize.STRING,
+    allowNull: true, // null means use default logic (profile image for direct, no image for groups)
+  },
   settings: {
     type: Sequelize.JSON,
     allowNull: false,
