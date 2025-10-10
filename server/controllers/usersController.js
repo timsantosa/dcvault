@@ -1,18 +1,106 @@
+const { Op } = require('sequelize');
+
+
 async function getAllUsers(req, res, db) {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
+        const search = req.query.search;
+
+        let whereClause = {};
+        let includeClause = [];
+
+        // If search parameter is provided, search across user email/name and athlete names
+        if (search && search.trim()) {
+            const searchTerm = search.trim();
+            
+            // First, find user IDs that match the search criteria
+            const userSearchConditions = [
+                { email: { [Op.like]: `%${searchTerm}%` } },
+                { name: { [Op.like]: `%${searchTerm}%` } }
+            ];
+
+            // Find users that match directly
+            const directMatches = await db.tables.Users.findAll({
+                where: {
+                    [Op.or]: userSearchConditions
+                },
+                attributes: ['id']
+            });
+
+            // Find users through athlete matches
+            const athleteMatches = await db.tables.Users.findAll({
+                include: [{
+                    model: db.tables.Athletes,
+                    as: 'athletes',
+                    where: {
+                        [Op.or]: [
+                            { firstName: { [Op.like]: `%${searchTerm}%` } },
+                            { lastName: { [Op.like]: `%${searchTerm}%` } }
+                        ]
+                    },
+                    required: true
+                }],
+                attributes: ['id']
+            });
+
+            // Combine all matching user IDs
+            const matchingUserIds = [
+                ...directMatches.map(u => u.id),
+                ...athleteMatches.map(u => u.id)
+            ];
+
+            // Remove duplicates
+            const uniqueUserIds = [...new Set(matchingUserIds)];
+
+            if (uniqueUserIds.length === 0) {
+                // No matches found
+                return res.json({
+                    ok: true,
+                    message: 'No users found matching search criteria',
+                    users: [],
+                    pagination: {
+                        total: 0,
+                        page,
+                        limit,
+                        totalPages: 0
+                    }
+                });
+            }
+
+            // Search only within matching user IDs
+            whereClause = {
+                id: {
+                    [Op.in]: uniqueUserIds
+                }
+            };
+
+            // Include athletes for display
+            includeClause = [{
+                model: db.tables.Athletes,
+                as: 'athletes',
+                attributes: ['firstName', 'lastName'],
+                required: false
+            }];
+        }
 
         // Get total count for pagination
-        const total = await db.tables.Users.count();
+        const total = await db.tables.Users.count({
+            where: whereClause,
+            include: includeClause,
+            distinct: true
+        });
 
         // Get paginated users
         const users = await db.tables.Users.findAll({
+            where: whereClause,
+            include: includeClause,
             attributes: ['id', 'email', 'name'],
             limit,
             offset,
-            order: [['createdAt', 'DESC']]
+            order: [['id', 'DESC']],
+            distinct: true
         });
 
         res.json({

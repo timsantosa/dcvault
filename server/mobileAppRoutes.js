@@ -28,7 +28,7 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/log', jumpRoutes(db));
   app.use('/mobileapp/user/log', drillRoutes(db));
   app.use('/mobileapp/user/athlete', athleteRoutes(db));
-  app.use('/mobileapp/user/profile/image', imageUploadRoutes(db));
+  app.use('/mobileapp/user/images', imageUploadRoutes(db));
 
   app.use('/mobileapp/user/poles', poleRoutes(db));
   app.use('/mobileapp/user/meet-data', meetDataRoutes(db));

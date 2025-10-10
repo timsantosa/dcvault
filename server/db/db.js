@@ -438,6 +438,10 @@ columns.conversations = {
       key: 'id',
     },
   },
+  imageUrl: { //ALTER TABLE conversations ADD COLUMN imageUrl VARCHAR(255) NULL AFTER createdBy;
+    type: Sequelize.STRING,
+    allowNull: true, // null means use default logic (profile image for direct, no image for groups)
+  },
   settings: {
     type: Sequelize.JSON,
     allowNull: false,
@@ -662,6 +666,7 @@ const syncTables = (schema, force) => {
   tables.Sites.belongsTo(tables.Sites, {as: 'address'})
 
   tables.Athletes.belongsTo(tables.Users, {as: 'user'})
+  tables.Users.hasMany(tables.Athletes, {as: 'athletes', foreignKey: 'userId'})
 
   tables.Rentals.belongsTo(tables.Athletes, {as: 'athlete'})
   tables.Rentals.belongsTo(tables.Poles, {as: 'pole'})

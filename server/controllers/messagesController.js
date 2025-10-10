@@ -6,6 +6,7 @@ const {
   syncActiveAthleteParticipants
 } = require('../utils/messagesUtils');
 const NotificationUtils = require('../utils/notificationUtils');
+const { deleteCloudinaryImage } = require('./imageUploadController');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -45,7 +46,7 @@ async function getConversations(req, res, db) {
           include: [{
             model: db.tables.AthleteProfiles,
             as: 'athleteProfile',
-            attributes: ['id', 'firstName', 'lastName', 'profileImage']
+            attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified']
           }]
         },
         {
@@ -77,7 +78,7 @@ async function getConversations(req, res, db) {
           include: [{
             model: db.tables.AthleteProfiles,
             as: 'athleteProfile',
-            attributes: ['id', 'firstName', 'lastName', 'profileImage']
+            attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified']
           }]
         },
         {
@@ -127,9 +128,23 @@ async function getConversations(req, res, db) {
           }
         });
 
+        // Determine conversation image
+        let conversationImage = null;
+        if (conversation.type === 'direct') {
+          // For direct conversations, use the other participant's verified profile image
+          const otherParticipant = conversation.participants?.find(p => p.athleteProfileId !== parseInt(athleteProfileId));
+          if (otherParticipant?.athleteProfile?.profileImage && otherParticipant.athleteProfile.profileImageVerified) {
+            conversationImage = otherParticipant.athleteProfile.profileImage;
+          }
+        } else {
+          // For group/announcement conversations, use the custom imageUrl if set
+          conversationImage = conversation.imageUrl;
+        }
+
         return {
           ...conversation.toJSON(),
-          unreadCount
+          unreadCount,
+          imageUrl: conversationImage
         };
       })
     );
@@ -230,6 +245,22 @@ async function getConversation(req, res, db) {
     const totalMessages = await db.tables.Messages.count({
       where: { conversationId }
     });
+
+    // Determine conversation image
+    let conversationImage = null;
+    if (conversation.type === 'direct') {
+      // For direct conversations, use the other participant's verified profile image
+      const otherParticipant = conversation.participants?.find(p => p.athleteProfileId !== parseInt(athleteProfileId));
+      if (otherParticipant?.athleteProfile?.profileImage && otherParticipant.athleteProfile.profileImageVerified) {
+        conversationImage = otherParticipant.athleteProfile.profileImage;
+      }
+    } else {
+      // For group/announcement conversations, use the custom imageUrl if set
+      conversationImage = conversation.imageUrl;
+    }
+
+    // Add imageUrl to conversation data
+    conversation.dataValues.imageUrl = conversationImage;
 
     res.json({ 
       ok: true, 
@@ -875,6 +906,17 @@ async function deleteConversation(req, res, db) {
 
     if (!participant) {
       return res.status(403).json({ ok: false, message: 'Not authorized to delete this conversation' });
+    }
+
+    // Get the conversation to check for image before deletion
+    const conversation = await db.tables.Conversations.findByPk(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ ok: false, message: 'Conversation not found' });
+    }
+
+    // Delete the conversation image from Cloudinary if it exists
+    if (conversation.imageUrl) {
+      await deleteCloudinaryImage(conversation.imageUrl);
     }
 
     // Start a transaction
