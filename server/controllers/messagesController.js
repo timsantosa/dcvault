@@ -235,7 +235,7 @@ async function getConversation(req, res, db) {
         include: [{
           model: db.tables.AthleteProfiles,
           as: 'athleteProfile',
-          attributes: ['id', 'firstName', 'lastName', 'profileImage']
+          attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified']
         }]
       });
       conversation.dataValues.participants = participants;
@@ -250,8 +250,8 @@ async function getConversation(req, res, db) {
     let conversationImage = null;
     if (conversation.type === 'direct') {
       // For direct conversations, use the other participant's verified profile image
-      const otherParticipant = conversation.participants?.find(p => p.athleteProfileId !== parseInt(athleteProfileId));
-      if (otherParticipant?.athleteProfile?.profileImage && otherParticipant.athleteProfile.profileImageVerified) {
+      const otherParticipant = conversation?.dataValues?.participants?.find(p => p.athleteProfileId !== parseInt(athleteProfileId));
+      if (otherParticipant?.athleteProfile?.profileImage && otherParticipant?.athleteProfile?.profileImageVerified) {
         conversationImage = otherParticipant.athleteProfile.profileImage;
       }
     } else {

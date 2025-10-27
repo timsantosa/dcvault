@@ -102,7 +102,10 @@ function checkOwnAthleteProfile(req, res, next) {
 
 function checkOwnAthleteProfileOrPermission(req, res, next, permission) {
   const user = req.user;
-  const athleteProfileId = parseInt(req.query.athleteProfileId);
+  let athleteProfileId = parseInt(req.query.athleteProfileId);
+  if (isNaN(athleteProfileId) && req.body?.athleteProfileId) {
+    athleteProfileId = parseInt(req.body.athleteProfileId);
+  }
 
   if (!user || !athleteProfileId || !isValidId(athleteProfileId)) {
     return res.status(400).json({ ok: false, message: 'Bad request' });
