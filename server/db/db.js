@@ -256,6 +256,30 @@ columns.personalRecords = {
   },
 };
 
+columns.favoriteJumps = {
+  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, },
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+  },
+  jumpId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.jumps,
+      key: 'id',
+    },
+  },
+  stepNum: { 
+    type: Sequelize.INTEGER, 
+    allowNull: false,
+  },
+};
+
 // Mobile Permissions
 columns.roles = {
   roleName: {
@@ -569,6 +593,16 @@ const syncTables = (schema, force) => {
     ]
   }); // ALTER TABLE personalRecords ADD CONSTRAINT unique_step_per_athlete UNIQUE (athleteProfileId, stepNum);
 
+  tables.FavoriteJumps = schema.define('favoriteJump', columns.favoriteJumps, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['athleteProfileId', 'stepNum'],
+        name: 'unique_favorite_step_per_athlete'
+      }
+    ]
+  });
+
   // User Devices table
   tables.UserDevices = schema.define('userDevice', columns.userDevices, {
     indexes: [
@@ -694,6 +728,13 @@ const syncTables = (schema, force) => {
 
   tables.PersonalRecords.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
   tables.AthleteProfiles.hasMany(tables.PersonalRecords, { as: 'personalRecords', foreignKey: 'athleteProfileId' })
+
+  // Favorite jumps associations
+  tables.FavoriteJumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
+  tables.AthleteProfiles.hasMany(tables.FavoriteJumps, { as: 'favoriteJumps', foreignKey: 'athleteProfileId' })
+
+  tables.FavoriteJumps.belongsTo(tables.Jumps, { as: 'jump', foreignKey: 'jumpId' })
+  tables.Jumps.hasOne(tables.FavoriteJumps, { as: 'favoriteJump', foreignKey: 'jumpId' })
 
   // Mobile App permissions
   tables.Users.belongsToMany(tables.Roles, { through: tables.User_Roles, foreignKey: 'userId' });

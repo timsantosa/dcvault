@@ -131,7 +131,7 @@ class NotificationUtils {
 
       // Build notification title
       const title = conversationName ? conversationName : senderName;
-      const body = `${conversation.type !== 'direct' && `${senderName}: `}${messageContent.substring(0, 100)}${messageContent.length > 100 ? '...' : ''}`;
+      const body = `${conversation.type !== 'direct' ? `${senderName}: ` : ''}${messageContent.substring(0, 100)}${messageContent.length > 100 ? '...' : ''}`;
 
       // Send notifications with badge counts
       const participantIds = participants.map(p => p.athleteProfileId);

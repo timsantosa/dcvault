@@ -198,7 +198,13 @@ const getJump = async (req, res, db) => {
       return res.status(404).json({ ok: false, message: 'Jump not found.' });
     }
 
+    // Check if this jump is favorited
+    const favoriteJump = await db.tables.FavoriteJumps.findOne({
+      where: { jumpId: jumpId }
+    });
+
     const jump = mapDbRowToJump(jumpRow);
+    jump.isFavorite = !!favoriteJump;
 
     res.json({ ok: true, jump });
   } catch (error) {
@@ -236,6 +242,17 @@ const deleteJump = async (req, res, db) => {
       // If it was a PR, delete the PR record first
       if (personalRecord) {
         await personalRecord.destroy({ transaction });
+      }
+
+      // Check if this jump is favorited
+      const favoriteJump = await db.tables.FavoriteJumps.findOne({
+        where: { jumpId, athleteProfileId },
+        transaction
+      });
+
+      // If it was a favorite, delete the favorite record
+      if (favoriteJump) {
+        await favoriteJump.destroy({ transaction });
       }
 
       // Then delete the jump
@@ -290,10 +307,22 @@ const fetchJumps = async (req, res, db) => {
       ],
     });
 
+    // Fetch favorite jumps for the athlete
+    const favoriteJumps = await db.tables.FavoriteJumps.findAll({
+      where: { athleteProfileId },
+      attributes: ['jumpId', 'stepNum'],
+    });
+
     // Create a map of PR jump IDs for quick lookup
     const prMap = new Map();
     personalRecords.forEach(pr => {
       prMap.set(pr.stepNum, pr.jumpId);
+    });
+
+    // Create a map of favorite jump IDs for quick lookup
+    const favoriteMap = new Map();
+    favoriteJumps.forEach(fav => {
+      favoriteMap.set(fav.jumpId, fav.stepNum);
     });
 
     // Find the overall PR (highest height among all PRs)
@@ -320,6 +349,7 @@ const fetchJumps = async (req, res, db) => {
       ...jump,
       isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
       isPr: jump.id === overallPrJumpId,
+      isFavorite: favoriteMap.has(jump.id),
     })));
 
     res.json({
@@ -556,6 +586,133 @@ async function getLargestPole(athleteProfileId, db) {
   };
 }
 
+async function pinOrUnpinJump(req, res, db) {
+  try {
+    const { athleteProfileId, jumpId, stepNum, pin } = req.body;
+
+    // Validate required fields
+    if (!athleteProfileId || !stepNum || !jumpId || pin === undefined) {
+      return res.status(400).json({ ok: false, message: 'Missing required attributes.' });
+    }
+
+    // If pin is true, pin the jump, otherwise unpin any jump of this step.
+    if (pin) {
+      // First, verify the jump exists and belongs to the athlete
+      const jump = await db.tables.Jumps.findOne({
+        where: { 
+          id: jumpId, 
+          athleteProfileId: athleteProfileId,
+          stepNum: stepNum // Ensure the jump matches the step number
+        }
+      });
+
+      if (!jump) {
+        return res.status(404).json({ ok: false, message: 'Jump not found or does not match the specified step number.' });
+      }
+
+      // Check if it's a practice jump (only practice jumps can be favorited)
+      if (jump.setting !== 'Practice') {
+        return res.status(400).json({ ok: false, message: 'Only practice jumps can be favorited.' });
+      }
+
+      // Start transaction only for the destructive/creative operations
+      const transaction = await db.tables.Jumps.sequelize.transaction();
+
+      try {
+        // Remove any existing favorite for this step number
+        await db.tables.FavoriteJumps.destroy({
+          where: { athleteProfileId, stepNum },
+          transaction
+        });
+
+        // Create new favorite
+        const favoriteJump = await db.tables.FavoriteJumps.create({
+          athleteProfileId,
+          jumpId,
+          stepNum
+        }, { transaction });
+
+        // Commit the transaction
+        await transaction.commit();
+
+        res.json({
+          ok: true,
+          message: 'Jump pinned as favorite successfully.',
+          favoriteJump: {
+            id: favoriteJump.id,
+            jumpId: favoriteJump.jumpId,
+            stepNum: favoriteJump.stepNum
+          }
+        });
+      } catch (error) {
+        // If anything fails, rollback the transaction
+        await transaction.rollback();
+        throw error;
+      }
+    } else {
+      // Unpin any existing favorite for this step number
+      const deletedCount = await db.tables.FavoriteJumps.destroy({
+        where: { athleteProfileId, stepNum }
+      });
+
+      if (deletedCount > 0) {
+        res.json({
+          ok: true,
+          message: 'Jump unpinned successfully.'
+        });
+      } else {
+        res.json({
+          ok: true,
+          message: 'No favorite jump found for this step number.'
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error in pinOrUnpinJump:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error.' });
+  }
+}
+
+async function getFavoriteJumps(req, res, db) {
+  try {
+    const { athleteProfileId } = req.query;
+
+    if (!athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Athlete ID is required.' });
+    }
+
+    const favoriteJumps = await db.tables.FavoriteJumps.findAll({
+      where: { athleteProfileId },
+      include: [
+        {
+          model: db.tables.Jumps,
+          as: 'jump',
+          attributes: ['id', 'date', 'stepNum', 'heightInches', 'poleLengthInches', 'poleWeight', 'poleBrand', 'notes', 'videoLink', 'softMetrics']
+        }
+      ],
+      order: [['stepNum', 'ASC']]
+    });
+
+    const formattedFavorites = favoriteJumps.map(fav => {
+      const jump = mapDbRowToJump(fav.jump);  
+      jump.isFavorite = true;
+      return {
+        id: fav.id,
+        stepNum: fav.stepNum,
+        jump: jump,
+      }
+    });
+
+    res.json({
+      ok: true,
+      favoriteJumps: formattedFavorites
+    });
+  } catch (error) {
+    console.error('Error in getFavoriteJumps:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error.' });
+  }
+}
+
 
 module.exports = {
   addOrUpdateJump,
@@ -566,6 +723,8 @@ module.exports = {
   // populatePRsForAthlete,
   getUnverifiedMeetJumps,
   getPersonalBest,
+  pinOrUnpinJump,
+  getFavoriteJumps,
   // getPersonalBests,
   // getLargestPole,
 }
