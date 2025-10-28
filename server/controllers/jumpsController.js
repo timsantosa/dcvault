@@ -615,27 +615,40 @@ async function pinOrUnpinJump(req, res, db) {
         return res.status(400).json({ ok: false, message: 'Only practice jumps can be favorited.' });
       }
 
-      // Remove any existing favorite for this step number
-      await db.tables.FavoriteJumps.destroy({
-        where: { athleteProfileId, stepNum }
-      });
+      // Start transaction only for the destructive/creative operations
+      const transaction = await db.tables.Jumps.sequelize.transaction();
 
-      // Create new favorite
-      const favoriteJump = await db.tables.FavoriteJumps.create({
-        athleteProfileId,
-        jumpId,
-        stepNum
-      });
+      try {
+        // Remove any existing favorite for this step number
+        await db.tables.FavoriteJumps.destroy({
+          where: { athleteProfileId, stepNum },
+          transaction
+        });
 
-      res.json({
-        ok: true,
-        message: 'Jump pinned as favorite successfully.',
-        favoriteJump: {
-          id: favoriteJump.id,
-          jumpId: favoriteJump.jumpId,
-          stepNum: favoriteJump.stepNum
-        }
-      });
+        // Create new favorite
+        const favoriteJump = await db.tables.FavoriteJumps.create({
+          athleteProfileId,
+          jumpId,
+          stepNum
+        }, { transaction });
+
+        // Commit the transaction
+        await transaction.commit();
+
+        res.json({
+          ok: true,
+          message: 'Jump pinned as favorite successfully.',
+          favoriteJump: {
+            id: favoriteJump.id,
+            jumpId: favoriteJump.jumpId,
+            stepNum: favoriteJump.stepNum
+          }
+        });
+      } catch (error) {
+        // If anything fails, rollback the transaction
+        await transaction.rollback();
+        throw error;
+      }
     } else {
       // Unpin any existing favorite for this step number
       const deletedCount = await db.tables.FavoriteJumps.destroy({
