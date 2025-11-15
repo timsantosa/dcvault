@@ -10,6 +10,13 @@ const jumpRoutes = (db) => {
     checkOwnAthleteProfileOrPermission(req, res, next, 'view_others_jumps');
   }
 
+  const checkViewJumpsOrMeetsRequest = (req, res, next) => {
+    if (req.query?.setting === 'meet' || req.query?.setting === 'Meet') {
+      return next();
+    }
+    checkOwnAthleteProfileOrPermission(req, res, next, 'view_others_jumps');
+  }
+
   const checkJumpEditPermission = (req, res, next) => {
     checkOwnAthleteProfileOrPermission(req, res, next, 'edit_others_jumps');
   }
@@ -24,7 +31,7 @@ const jumpRoutes = (db) => {
     .put(checkJumpEditPermission, (req, res) => addOrUpdateJump(req, res, db))
     .delete(checkJumpEditPermission, (req, res) => deleteJump(req, res, db));
     
-  router.get('/jumps', checkJumpViewPermission, (req, res) => fetchJumps(req, res, db));
+  router.get('/jumps', checkViewJumpsOrMeetsRequest, (req, res) => fetchJumps(req, res, db));
 
   // Favorite jumps routes
   router.post('/favorite-jump', checkJumpEditPermission, (req, res) => pinOrUnpinJump(req, res, db));
