@@ -130,6 +130,7 @@ const getDrillTypes = async (req, res, db) => {
   try {
     const drillTypes = await db.tables.DrillTypes.findAll({
       attributes: ['name'],
+      order: [['id', 'ASC']],
       raw: true
     });
 

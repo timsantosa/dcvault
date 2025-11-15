@@ -4,14 +4,17 @@ const getAllMeetInfoOptions = async (req, res) => {
   try {
     const championshipTypes = await tables.ChampionshipTypes.findAll({
       attributes: ['name'],
+      order: [['id', 'ASC']],
       raw: true
     });
     const divisionTypes = await tables.DivisionTypes.findAll({
       attributes: ['name'],
+      order: [['id', 'ASC']],
       raw: true
     });
     const recordTypes = await tables.RecordTypes.findAll({
       attributes: ['name'],
+      order: [['id', 'ASC']],
       raw: true
     });
 
@@ -37,6 +40,7 @@ const getChampionshipTypes = async (req, res) => {
   try {
     const championshipTypes = await tables.ChampionshipTypes.findAll({
       attributes: ['name'],
+      order: [['id', 'ASC']],
       raw: true
     });
     res.json({
@@ -57,6 +61,7 @@ const getDivisionTypes = async (req, res) => {
   try {
     const divisionTypes = await tables.DivisionTypes.findAll({
       attributes: ['name'],
+      order: [['id', 'ASC']],
       raw: true
     });
     res.json({
@@ -77,6 +82,7 @@ const getRecordTypes = async (req, res) => {
   try {
     const recordTypes = await tables.RecordTypes.findAll({
       attributes: ['name'],
+      order: [['id', 'ASC']],
       raw: true
     });
     res.json({
