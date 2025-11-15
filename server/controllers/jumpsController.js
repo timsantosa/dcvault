@@ -281,7 +281,8 @@ const deleteJump = async (req, res, db) => {
 
 const fetchJumps = async (req, res, db) => {
   try {
-    const { athleteProfileId, stepNum, setting, medalType, page = 1, pageSize } = req.query;
+    const { athleteProfileId, stepNum, medalType, page = 1, pageSize } = req.query;
+    let setting = req.query.setting;
 
     if (!athleteProfileId) {
       console.error("No athlete id")
@@ -750,7 +751,7 @@ async function getTopMeetJumps(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Athlete ID is required.' });
     }
 
-    const limit = parseInt(howMany, 10);
+    const limit = Math.min(parseInt(howMany,10), 100);
     if (isNaN(limit) || limit <= 0) {
       return res.status(400).json({ ok: false, message: 'Invalid howMany parameter.' });
     }
@@ -806,7 +807,7 @@ async function getTopMeetJumps(req, res, db) {
       jumps: formattedJumps,
     });
   } catch (error) {
-    console.error('Error in getTopJumps:', error);
+    console.error('Error in getTopMeetJumps:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
   }
 }
