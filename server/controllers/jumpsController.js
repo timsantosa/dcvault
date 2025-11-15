@@ -281,7 +281,8 @@ const deleteJump = async (req, res, db) => {
 
 const fetchJumps = async (req, res, db) => {
   try {
-    const { athleteProfileId, stepNum, page = 1, pageSize } = req.query;
+    const { athleteProfileId, stepNum, medalType, page = 1, pageSize } = req.query;
+    let setting = req.query.setting;
 
     if (!athleteProfileId) {
       console.error("No athlete id")
@@ -292,6 +293,36 @@ const fetchJumps = async (req, res, db) => {
     const where = { athleteProfileId };
     if (stepNum) {
       where.stepNum = stepNum;
+    }
+    if (setting) {
+      if (setting === 'meet') {
+        setting = 'Meet';
+      } else if (setting === 'practice') {
+        setting = 'Practice';
+      } 
+      if (setting === 'Meet' || setting === 'Practice') {
+        where.setting = setting;
+      } else {
+        return res.status(400).json({ ok: false, message: 'Invalid setting.' });
+      }
+    }
+    if (medalType) {
+      // where meetType is not null and not empty (championship)
+      where.meetType = {
+        [db.tables.schema.Sequelize.Op.and]: [
+          { [db.tables.schema.Sequelize.Op.ne]: null }, // meetType is not null
+          { [db.tables.schema.Sequelize.Op.ne]: '' }    // meetType is not empty string
+        ]
+      };
+      if (medalType === 'gold') {
+        where.placement = 1;
+      } else if (medalType === 'silver') {
+        where.placement = 2;
+      } else if (medalType === 'bronze') {
+        where.placement = 3;
+      } else {
+        return res.status(400).json({ ok: false, message: 'Invalid medal type.' });
+      }
     }
 
     // Fetch PRs for the athlete with jump data included
@@ -387,7 +418,7 @@ async function verifyJump(req, res, db) {
       jump.verified = true;
       await jump.save();
 
-      checkIfJumpIsStepPr(jump, db);
+      await checkIfJumpIsStepPr(jump, db);
 
       message = 'Jump verified successfully.';
     } else {
@@ -713,6 +744,74 @@ async function getFavoriteJumps(req, res, db) {
   }
 }
 
+async function getTopMeetJumps(req, res, db) {
+  try {
+    const { athleteProfileId, howMany = 5 } = req.query;
+    if (!athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Athlete ID is required.' });
+    }
+
+    const limit = Math.min(parseInt(howMany,10), 100);
+    if (isNaN(limit) || limit <= 0) {
+      return res.status(400).json({ ok: false, message: 'Invalid howMany parameter.' });
+    }
+
+    // Fetch PRs for the athlete with jump data included
+    const personalRecords = await db.tables.PersonalRecords.findAll({
+      where: { athleteProfileId },
+      attributes: ['stepNum', 'jumpId'],
+      include: [
+        {
+          model: db.tables.Jumps,
+          as: 'jump',
+          attributes: ['id', 'heightInches'],
+        },
+      ],
+    });
+
+    // Create a map of PR jump IDs for quick lookup
+    const prMap = new Map();
+    personalRecords.forEach(pr => {
+      prMap.set(pr.stepNum, pr.jumpId);
+    });
+
+    // Find the overall PR (highest height among all PRs)
+    const bestPr = getBestOfPersonalRecords(personalRecords);
+    const overallPrJumpId = bestPr.jumpId;
+
+    // Get the top jumps by height, ordered by height descending, then by date descending
+    // Only include Meet jumps
+    const jumps = await db.tables.Jumps.findAll({
+      where: {
+        athleteProfileId,
+        setting: 'Meet',
+        heightInches: {
+          [db.tables.schema.Sequelize.Op.ne]: null, // Only get jumps with a height
+        },
+      },
+      order: [
+        ['heightInches', 'DESC'],
+        ['date', 'DESC'],
+      ],
+      limit,
+    });
+
+    const formattedJumps = jumps.map(mapDbRowToJump).map((jump => ({
+      ...jump,
+      isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
+      isPr: jump.id === overallPrJumpId,
+    })));
+
+    res.json({
+      ok: true,
+      jumps: formattedJumps,
+    });
+  } catch (error) {
+    console.error('Error in getTopMeetJumps:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error.' });
+  }
+}
+
 
 module.exports = {
   addOrUpdateJump,
@@ -725,6 +824,7 @@ module.exports = {
   getPersonalBest,
   pinOrUnpinJump,
   getFavoriteJumps,
+  getTopMeetJumps,
   // getPersonalBests,
   // getLargestPole,
 }
