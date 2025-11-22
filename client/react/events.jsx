@@ -29,6 +29,41 @@ class Events extends React.Component {
   render () {
     let contents = [
       {
+        date: new Date('June 27, 2026'),
+        partial: (<div className='event-block' id='27JUN2026'>
+            <p className='event-block-title'><span className='red-text'>2026</span> POLE VAULT <span className='red-text'>Championships</span></p>
+            <p className='event-block-info'>
+              <span className='event-block-date'>June 26th-27th, 2026</span>
+              <br></br>
+              <span className='event-block-date'>2200 East Capitol Street NE</span></p>
+
+            <span className='event-block-details-header'>Event Info</span>
+            <ul className='event-block-details'>
+                <li><a style={{color: '#C0282D'}} href='https://polevaultchampionships.com'>PoleVaultChampionships.com</a></li>
+                <li>Friday + Saturday, June 26th-27th 2026</li>
+            </ul>
+
+        </div>)
+      },
+      {
+        date: new Date('January 25, 2026'),
+        partial: (<div className='event-block' id='25JAN2026'>
+            <p className='event-block-title'><span className='red-text'>FREE</span> POLE VAULT <span className='red-text'>CLINIC</span> at Georgetown Prep</p>
+            <p className='event-block-info'>
+              <span className='event-block-date'>January 25, 2026</span>
+              <br></br>
+              <span className='event-block-date'>10900 Rockville Pike - North Bethesda, MD</span></p>
+
+            <span className='event-block-details-header'>Event Info</span>
+            <ul className='event-block-details'>
+                <li>Hosted by <span className='red-text'>DC Vault</span></li>
+                <li>Schedule: 9:45am-12pm</li>
+                <li>Register:Email DCVault@DCVault.org</li>
+            </ul>
+
+        </div>)
+      },
+      {
         date: new Date('August 09, 2025'),
         partial: (<div className='event-block' id='08AUG2025'>
         <p className='event-block-title'>2025 FLY-KIDS <span className='red-text'>SUMMER</span> CAMPS</p>

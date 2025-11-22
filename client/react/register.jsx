@@ -522,6 +522,12 @@ class SelectPackage extends React.Component {
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
+                    <input type='radio' name='membership' value='8classes' checked={this.state.checkedMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
+                    <span>8 Classes ($425)</span>
+                  </label>
+                </div>
+                <div style={{display: 'block'}}>
+                  <label>
                     <input type='radio' name='membership' value='15classes' checked={this.state.checkedMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
                     <span>15 Classes ($575)</span>
                   </label>
@@ -563,7 +569,7 @@ class SelectPackage extends React.Component {
             <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedGroup === 'fly-kids')? 'block' : 'none'}}>
               <label><span>Fly-Kids Options</span></label>
               <div>
-                <span>Check back next Summer 2023 for Fly-Kids Summer Camp!</span>
+                <span>Check back next Summer 2026 for Fly-Kids Summer Camp!</span>
               </div>
               <div className='form-radio-buttons'>
                 <div style={{display: 'block'}}>
@@ -1173,6 +1179,8 @@ class Payment extends React.Component {
     } else if (group === 'allages') {
       if(membership === '4classes'){
         price = 250
+      }else if (membership === '8classes'){
+        price = 425
       }else if (membership === '15classes'){
         price = 575
       }else if (membership === '30classes'){
