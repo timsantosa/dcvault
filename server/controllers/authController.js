@@ -55,6 +55,7 @@ async function generateMobileUser(user, db) {
 
   return {
     id: user.id,
+    email: user.email,
     isAdmin: user.isAdmin,
     verified: user.verified,
     roles: roleNames,

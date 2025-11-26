@@ -200,8 +200,130 @@ async function getUserById(req, res, db) {
     }
 }
 
+async function deleteUser(req, res, db) {
+    try {
+        const { userId } = req.params;
+        const requestingUserId = req.user?.id;
+
+        if (!userId) {
+            return res.status(400).json({ ok: false, message: 'Missing userId' });
+        }
+
+        const userIdNum = parseInt(userId);
+        if (isNaN(userIdNum)) {
+            return res.status(400).json({ ok: false, message: 'Invalid userId' });
+        }
+
+        // Check if the user exists
+        const user = await db.tables.Users.findByPk(userIdNum, {
+            attributes: ['id', 'addressId']
+        });
+
+        if (!user) {
+            return res.status(404).json({ ok: false, message: 'User not found' });
+        }
+
+        // Use a transaction to ensure all deletions happen atomically
+        const transaction = await db.tables.schema.transaction();
+
+        try {
+            // 1. Delete MobileRefreshTokens
+            await db.tables.MobileRefreshTokens.destroy({
+                where: { userId: userIdNum },
+                transaction
+            });
+
+            // 2. Delete UserDevices
+            await db.tables.UserDevices.destroy({
+                where: { userId: userIdNum },
+                transaction
+            });
+
+            // 3. Delete User_Roles entries
+            await db.tables.User_Roles.destroy({
+                where: { userId: userIdNum },
+                transaction
+            });
+
+            // 4. Delete User_Permissions entries
+            await db.tables.User_Permissions.destroy({
+                where: { userId: userIdNum },
+                transaction
+            });
+
+            // 5. Handle Address - delete if only used by this user
+            if (user.addressId) {
+                const addressUsageCount = await db.tables.Users.count({
+                    where: {
+                        addressId: user.addressId,
+                        id: { [Op.ne]: userIdNum }
+                    },
+                    transaction
+                });
+
+                if (addressUsageCount === 0) {
+                    await db.tables.Addresses.destroy({
+                        where: { id: user.addressId },
+                        transaction
+                    });
+                }
+            }
+
+            // 6. Null out userId in preserved business records
+            await db.tables.Athletes.update(
+                { userId: null },
+                { where: { userId: userIdNum }, transaction }
+            );
+
+            await db.tables.AthleteProfiles.update(
+                { userId: null },
+                { where: { userId: userIdNum }, transaction }
+            );
+
+            await db.tables.Purchases.update(
+                { userId: null },
+                { where: { userId: userIdNum }, transaction }
+            );
+
+            await db.tables.Discounts.update(
+                { userId: null },
+                { where: { userId: userIdNum }, transaction }
+            );
+
+            // 7. Finally, delete the User record
+            await db.tables.Users.destroy({
+                where: { id: userIdNum },
+                transaction
+            });
+
+            // Commit the transaction
+            await transaction.commit();
+
+            console.log(`User ${userIdNum} deleted successfully`);
+            return res.status(200).json({
+                ok: true,
+                message: 'User account deleted successfully'
+            });
+
+        } catch (error) {
+            // Rollback the transaction if any error occurs
+            await transaction.rollback();
+            throw error;
+        }
+
+    } catch (error) {
+        console.error('Error in deleteUser:', error);
+        return res.status(500).json({
+            ok: false,
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     getAllUsers,
     getAllUsersWithRole,
-    getUserById
+    getUserById,
+    deleteUser
 };

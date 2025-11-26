@@ -1,11 +1,12 @@
 const config = require('./config/config');
 const jwt = require('jwt-simple');
 const jumpRoutes = require('./mobileRoutes/jumpRoutes');
-const { authenticateJWT, checkPermission } = require('./middlewares/mobileAuthMiddleware');
+const { authenticateJWT, checkPermission, checkOwnUserOrPermission } = require('./middlewares/mobileAuthMiddleware');
 const athleteRoutes = require('./mobileRoutes/athleteRoutes');
 const authRoutes = require('./mobileRoutes/authRoutes');
 const permissionRoutes = require('./mobileRoutes/permissionRoutes');
 const userRoutes = require('./mobileRoutes/userRoutes');
+const { deleteUser } = require('./controllers/usersController');
 const { getMobileUserInfo } = require('./controllers/authController');
 const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
 const { verifyJump, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
@@ -38,6 +39,13 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.get('/mobileapp/user/info', async (req, res) => {
     getMobileUserInfo(req, res, db);
   });
+
+  // Account deletion - users can delete their own account, admins with manage_roles can delete any account
+  app.delete('/mobileapp/user/users/:userId', (req, res, next) => {
+    // Adapt checkOwnUserOrPermission to work with params instead of query
+    req.query.userId = req.params.userId;
+    checkOwnUserOrPermission(req, res, next, 'delete_users');
+  }, (req, res) => deleteUser(req, res, db));
 
   app.use('/mobileapp/user/drillTypes', drillTypeRoutes(db));
 
