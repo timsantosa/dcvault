@@ -2,7 +2,7 @@ const express = require('express');
 const {
   getAllUsers,
   getAllUsersWithRole,
-  getUserById
+  getUserById,
 } = require('../controllers/usersController');
 
 const userRoutes = (db) => {
