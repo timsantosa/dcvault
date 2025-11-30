@@ -471,20 +471,21 @@ const getRankedProfiles = async (req, res, db) => {
         }
       });
 
+      // TODO: maybe get rid of this map and instead find distinct latest purchases for each athlete in sql?
       // Create a map of athleteId to active status
+      // Group by athleteId and keep only the latest purchase for each athlete
+      const latestPurchasesByAthlete = new Map();
       purchases.forEach(purchase => {
-        const purchaseYear = new Date(purchase.createdAt).getFullYear();
-        let isActive = false;
-
-        // Special handling for winter quarter which spans years
-        if (currentQuarter === 'winter') {
-          isActive = purchaseYear === currentYear || purchaseYear + 1 === currentYear;
-        } else {
-          isActive = purchaseYear === currentYear;
+        const existing = latestPurchasesByAthlete.get(purchase.athleteId);
+        if (!existing || new Date(purchase.createdAt) > new Date(existing.createdAt)) {
+          latestPurchasesByAthlete.set(purchase.athleteId, purchase);
         }
+      });
 
-        if (isActive) {
-          athleteActiveStatus.set(purchase.athleteId, true);
+      // Check if each latest purchase is active for current year
+      latestPurchasesByAthlete.forEach((purchase, athleteId) => {
+        if (isPurchaseActiveForCurrentYear(purchase, currentQuarter, currentYear)) {
+          athleteActiveStatus.set(athleteId, true);
         }
       });
     }
@@ -750,6 +751,18 @@ async function getRegisteredAthlete(req, res, db) {
   }
 }
 
+// Helper function to check if a purchase is active for the current year/quarter
+function isPurchaseActiveForCurrentYear(purchase, currentQuarter, currentYear) {
+  const purchaseYear = new Date(purchase.createdAt).getFullYear();
+  
+  // Special handling for winter quarter which spans years
+  if (currentQuarter === 'winter') {
+    return purchaseYear === currentYear || purchaseYear + 1 === currentYear;
+  }
+  
+  return purchaseYear === currentYear;
+}
+
 // TODO: this will change once we are counting classes.
 async function isAthleteProfileActive(athleteProfile, db) {
   // If marked as always active, return true
@@ -766,12 +779,13 @@ async function isAthleteProfileActive(athleteProfile, db) {
   const currentQuarter = helpers.getCurrentQuarter();
   const currentYear = new Date().getFullYear();
 
-  // Check for active purchase
+  // Check for active purchase - get the latest one for this quarter
   const activePurchase = await db.tables.Purchases.findOne({
     where: {
       athleteId: athleteProfile.athleteId,
       quarter: currentQuarter
-    }
+    },
+    order: [['createdAt', 'DESC']] // Get the most recent purchase
   });
 
   if (!activePurchase) {
@@ -779,14 +793,7 @@ async function isAthleteProfileActive(athleteProfile, db) {
   }
 
   // Check if purchase is for current year
-  const purchaseYear = new Date(activePurchase.createdAt).getFullYear();
-  
-  // Special handling for winter quarter which spans years
-  if (currentQuarter === 'winter') {
-    return purchaseYear === currentYear || purchaseYear + 1 === currentYear;
-  }
-  
-  return purchaseYear === currentYear;
+  return isPurchaseActiveForCurrentYear(activePurchase, currentQuarter, currentYear);
 }
 
 // Helper function to get medal counts for multiple athlete profiles
