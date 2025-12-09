@@ -1,3 +1,5 @@
+const helpers = require('../lib/helpers');
+
 /**
  * Get the best personal record from a collection of personal records
  * @param {Array} personalRecords - Array of personal record objects with jump data
@@ -46,14 +48,79 @@ function sortProfilesByPR(profiles) {
       pr.jump && pr.jump.heightInches === bPr.heightInches
     );
     
+    // If both athletes have no PRs (heightInches = 0 and no actual jumps),
+    // sort by ID (creation order) for deterministic ordering
+    if (aBestJumps.length === 0 && bBestJumps.length === 0) {
+      return a.id - b.id;
+    }
+    
+    // If one has jumps and the other doesn't, the one with jumps wins
+    if (aBestJumps.length === 0) return 1;
+    if (bBestJumps.length === 0) return -1;
+    
     const aEarliestDate = Math.min(...aBestJumps.map(pr => new Date(pr.jump.date)));
     const bEarliestDate = Math.min(...bBestJumps.map(pr => new Date(pr.jump.date)));
     
-    return aEarliestDate - bEarliestDate;
+    // If dates are equal, fall back to ID for deterministic ordering
+    const dateDiff = aEarliestDate - bEarliestDate;
+    return dateDiff !== 0 ? dateDiff : a.id - b.id;
   });
+}
+
+// TODO: this will change once we are counting classes.
+async function isAthleteProfileActive(athleteProfile, db) {
+  // If marked as always active, return true
+  if (athleteProfile.alwaysActiveOverride) {
+    return true;
+  }
+
+  // If no associated athlete, return false
+  if (!athleteProfile.athleteId) {
+    return false;
+  }
+
+  // Get current quarter info
+  const currentQuarter = helpers.getCurrentQuarter();
+  const currentYear = new Date().getFullYear();
+
+  // Check for active purchase - get the latest one for this quarter
+  const activePurchase = await db.tables.Purchases.findOne({
+    where: {
+      athleteId: athleteProfile.athleteId,
+      quarter: currentQuarter
+    },
+    order: [['createdAt', 'DESC']] // Get the most recent purchase
+  });
+
+  if (!activePurchase) {
+    return false;
+  }
+
+  // Check if purchase is for current year
+  return isPurchaseActiveForCurrentYear(activePurchase, currentQuarter, currentYear);
+}
+
+/**
+ * Helper function to check if a purchase is active for the current year/quarter
+ * @param {Object} purchase - Purchase object
+ * @param {string} currentQuarter - Current quarter ('winter', 'spring', 'summer', 'fall')
+ * @param {number} currentYear - Current year
+ * @returns {boolean} Whether the purchase is active for the current year
+ */
+function isPurchaseActiveForCurrentYear(purchase, currentQuarter, currentYear) {
+  const purchaseYear = new Date(purchase.createdAt).getFullYear();
+  
+  // Special handling for winter quarter which spans years
+  if (currentQuarter === 'winter') {
+    return purchaseYear === currentYear || purchaseYear + 1 === currentYear;
+  }
+  
+  return purchaseYear === currentYear;
 }
 
 module.exports = {
   getBestOfPersonalRecords,
   sortProfilesByPR,
+  isAthleteProfileActive,
+  isPurchaseActiveForCurrentYear,
 };

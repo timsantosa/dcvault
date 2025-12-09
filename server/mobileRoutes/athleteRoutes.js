@@ -8,7 +8,8 @@ const {
   getProfiles,
   getRegisteredAthletesForUser,
   getMedalCountsForProfile,
-  getRegisteredAthlete
+  getRegisteredAthlete,
+  refreshRankingCache
 } = require('../controllers/athletesController');
 const {
   checkPermission,
@@ -63,6 +64,7 @@ const athleteRoutes = (db) => {
 
   router.get('/user/registered', checkManageRolesPermission, (req, res) => getRegisteredAthletesForUser(req, res, db));
   router.get('/medals', checkPermission('view_profiles'), (req, res) => getMedalCountsForProfile(req, res, db));
+  router.post('/rankings/refresh', checkPermission('refresh_ranking_cache'), (req, res) => refreshRankingCache(req, res, db));
 
   // TODO: Add permission check
   router.get('/registered', (req, res) => getRegisteredAthlete(req, res, db));

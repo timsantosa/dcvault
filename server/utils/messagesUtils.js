@@ -1,4 +1,4 @@
-const { isAthleteProfileActive } = require('../controllers/athletesController');
+const { isAthleteProfileActive } = require('./rankingUtils');
 const { Op } = require('sequelize');
 
 /**

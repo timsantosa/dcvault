@@ -295,13 +295,11 @@ const fetchJumps = async (req, res, db) => {
       where.stepNum = stepNum;
     }
     if (setting) {
-      if (setting === 'meet') {
-        setting = 'Meet';
-      } else if (setting === 'practice') {
-        setting = 'Practice';
-      } 
-      if (setting === 'Meet' || setting === 'Practice') {
-        where.setting = setting;
+      if (setting === 'meet' || setting === 'Meet') {
+        where.setting = 'Meet';
+        where.verified = true;
+      } else if (setting === 'practice' || setting === 'Practice') {
+        where.setting = 'Practice';
       } else {
         return res.status(400).json({ ok: false, message: 'Invalid setting.' });
       }
@@ -784,6 +782,7 @@ async function getTopMeetJumps(req, res, db) {
     const jumps = await db.tables.Jumps.findAll({
       where: {
         athleteProfileId,
+        verified: true,
         setting: 'Meet',
         heightInches: {
           [db.tables.schema.Sequelize.Op.ne]: null, // Only get jumps with a height

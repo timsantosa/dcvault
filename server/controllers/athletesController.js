@@ -1,8 +1,9 @@
 const helpers = require('../lib/helpers');
 const rankingCache = require('./athleteRankingCache');
 const { getPersonalBest } = require('./jumpsController');
-const { getBestOfPersonalRecords, sortProfilesByPR } = require('../utils/rankingUtils');
+const { getBestOfPersonalRecords, sortProfilesByPR, isAthleteProfileActive, isPurchaseActiveForCurrentYear } = require('../utils/rankingUtils');
 const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
+const NotificationUtils = require('../utils/notificationUtils');
 
 async function createProfile(req, res, db) {
   try {
@@ -22,13 +23,21 @@ async function createProfile(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Missing required fields' });
     }
 
-    // Check if there's already a profile with the same first name, last name, and birthday for this user
+    // Check if there's already a profile with the same first name, last name, and birthday for this user (case-insensitive for names)
     const existingProfile = await db.tables.AthleteProfiles.findOne({
       where: {
-        userId: actualUserId,
-        firstName: newProfileData.firstName,
-        lastName: newProfileData.lastName,
-        dob: newProfileData.dob
+        // userId: actualUserId, // TODO: Should we check for the same user?
+        dob: newProfileData.dob,
+        [db.tables.schema.Sequelize.Op.and]: [
+          db.tables.schema.Sequelize.where(
+            db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
+            (newProfileData.firstName || '').toLowerCase()
+          ),
+          db.tables.schema.Sequelize.where(
+            db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
+            (newProfileData.lastName || '').toLowerCase()
+          )
+        ]
       }
     });
 
@@ -60,7 +69,7 @@ async function createProfile(req, res, db) {
       weight: newProfileData.weight,
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
-      alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false,
+      alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false, // TODO: This is flawed logic, should be removed.
       userId: actualUserId
     }
 
@@ -70,6 +79,20 @@ async function createProfile(req, res, db) {
 
     const newProfile = await db.tables.AthleteProfiles.create(athleteProfileData);
     console.log(`Profile created successfully with id ${newProfile.id}`);
+    
+    // Notify users with manage_roles permission about the new profile
+    try {
+      const profileName = `${newProfile.firstName} ${newProfile.lastName}`;
+      await NotificationUtils.notifyAdminsOfNewProfile(
+        newProfile.id,
+        userSendingRequest.id,
+        profileName
+      );
+    } catch (notificationError) {
+      // Log error but don't fail profile creation if notification fails
+      console.error('Error sending notification for new profile:', notificationError);
+    }
+    
     return res.status(201).json({ ok: true, message: "Profile Created", athleteProfileId: newProfile.id });
 
   } catch (error) {
@@ -122,7 +145,7 @@ async function updateProfile(req, res, db) {
       weight: newProfileData.weight,
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
-      alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false,
+      alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false, // TODO: This is flawed logic, should be removed.
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
@@ -170,6 +193,11 @@ const getProfile = async (req, res, db) => {
 
     if (!profile) {
       return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
+    }
+
+    // Before checking if profile is active, try to auto assign an athleteId if it doesn't have one
+    if (!profile.athleteId) {
+      await autoAssignAthleteId(profile, db);
     }
 
     const isActiveMember = await isAthleteProfileActive(profile, db);
@@ -751,49 +779,71 @@ async function getRegisteredAthlete(req, res, db) {
   }
 }
 
-// Helper function to check if a purchase is active for the current year/quarter
-function isPurchaseActiveForCurrentYear(purchase, currentQuarter, currentYear) {
-  const purchaseYear = new Date(purchase.createdAt).getFullYear();
-  
-  // Special handling for winter quarter which spans years
-  if (currentQuarter === 'winter') {
-    return purchaseYear === currentYear || purchaseYear + 1 === currentYear;
-  }
-  
-  return purchaseYear === currentYear;
-}
 
-// TODO: this will change once we are counting classes.
-async function isAthleteProfileActive(athleteProfile, db) {
-  // If marked as always active, return true
-  if (athleteProfile.alwaysActiveOverride) {
-    return true;
+/**
+ * Auto-assigns an athleteId to a profile if it doesn't have one.
+ * Matches by userId, firstName, lastName, and dob to find a suitable athlete.
+ * @param {Object} profile - The athlete profile to assign an athleteId to
+ * @param {Object} db - Database connection object
+ * @returns {Promise<Object>} - The updated profile (or original if no match found)
+ */
+async function autoAssignAthleteId(profile, db) {
+  // Only proceed if profile has userId but no athleteId
+  if (!profile.userId || profile.athleteId) {
+    return profile;
   }
 
-  // If no associated athlete, return false
-  if (!athleteProfile.athleteId) {
-    return false;
+  try {
+    // Find athletes with matching userId, firstName (case-insensitive), lastName (case-insensitive), and dob
+    const matchingAthletes = await db.tables.Athletes.findAll({
+      where: {
+        userId: profile.userId,
+        dob: profile.dob,
+        [db.tables.schema.Sequelize.Op.and]: [
+          db.tables.schema.Sequelize.where(
+            db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
+            (profile.firstName || '').toLowerCase()
+          ),
+          db.tables.schema.Sequelize.where(
+            db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
+            (profile.lastName || '').toLowerCase()
+          )
+        ]
+      }
+    });
+
+    if (matchingAthletes.length === 0) {
+      return profile;
+    }
+
+    // Check which athletes are already associated with other profiles
+    const usedAthleteIds = await db.tables.AthleteProfiles.findAll({
+      where: {
+        athleteId: { [db.tables.schema.Sequelize.Op.not]: null },
+        id: { [db.tables.schema.Sequelize.Op.ne]: profile.id } // Exclude current profile
+      },
+      attributes: ['athleteId']
+    });
+
+    const usedIds = new Set(usedAthleteIds.map(p => p.athleteId));
+
+    // Find the first available athlete that matches
+    const availableAthlete = matchingAthletes.find(athlete => !usedIds.has(athlete.id));
+
+    if (availableAthlete) {
+      // Update the profile with the athleteId
+      await profile.update({ athleteId: availableAthlete.id });
+      console.log(`Auto-assigned athleteId ${availableAthlete.id} to profile ${profile.id}`);
+      // Reload to get updated data
+      await profile.reload();
+    }
+
+    return profile;
+  } catch (error) {
+    console.error('Error in autoAssignAthleteId:', error);
+    // Return original profile if there's an error
+    return profile;
   }
-
-  // Get current quarter info
-  const currentQuarter = helpers.getCurrentQuarter();
-  const currentYear = new Date().getFullYear();
-
-  // Check for active purchase - get the latest one for this quarter
-  const activePurchase = await db.tables.Purchases.findOne({
-    where: {
-      athleteId: athleteProfile.athleteId,
-      quarter: currentQuarter
-    },
-    order: [['createdAt', 'DESC']] // Get the most recent purchase
-  });
-
-  if (!activePurchase) {
-    return false;
-  }
-
-  // Check if purchase is for current year
-  return isPurchaseActiveForCurrentYear(activePurchase, currentQuarter, currentYear);
 }
 
 // Helper function to get medal counts for multiple athlete profiles
@@ -854,6 +904,23 @@ async function getMedalCountsForProfiles(athleteProfileIds, db) {
   return medalCountsMap;
 }
 
+const refreshRankingCache = async (req, res, db) => {
+  try {
+    await rankingCache.regenerateAllRankings();
+    return res.status(200).json({ 
+      ok: true, 
+      message: 'Ranking cache refreshed successfully' 
+    });
+  } catch (error) {
+    console.error('Error refreshing ranking cache:', error);
+    return res.status(500).json({ 
+      ok: false, 
+      message: 'Failed to refresh ranking cache', 
+      error: error.message 
+    });
+  }
+};
+
 module.exports = {
   createProfile,
   updateProfile,
@@ -863,7 +930,7 @@ module.exports = {
   getProfiles,
   getRegisteredAthletesForUser,
   getMedalCountsForProfile,
-  isAthleteProfileActive,
   getRegisteredAthlete,
   getMedalCountsForProfiles,
+  refreshRankingCache,
 };

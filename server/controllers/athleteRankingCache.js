@@ -1,5 +1,5 @@
 const db = require('../db/db');
-const { getBestOfPersonalRecords, sortProfilesByPR } = require('../utils/rankingUtils');
+const { getBestOfPersonalRecords, sortProfilesByPR, isAthleteProfileActive } = require('../utils/rankingUtils');
 
 class RankingCache {
     constructor() {
@@ -39,7 +39,7 @@ class RankingCache {
             // Filter for active members and create rankings
             const activeProfiles = await Promise.all(
                 results.map(async (profile) => {
-                    const isActive = await require('./athletesController').isAthleteProfileActive(profile, db);
+                    const isActive = await isAthleteProfileActive(profile, db);
                     return isActive ? profile : null;
                 })
             );
