@@ -43,6 +43,7 @@ const addOrUpdateJump = async (req, res, db) => {
       poleWeight: hardMetrics?.pole?.weight,
       poleBrand: validatePoleBrand(hardMetrics?.pole?.brand),
       poleFlex: hardMetrics?.pole?.flex,
+      poleId: hardMetrics?.pole?.id,
       heightInches: hardMetrics?.height?.inches,
       heightIsBar: hardMetrics?.height?.isBar,
       standardsInches: hardMetrics?.height?.standardsInches,
@@ -882,6 +883,7 @@ function mapDbRowToJump(dbRow) {
         actualTakeOffInches: dbRow.actualTakeOffInches ?? undefined,
       },
       pole: {
+        id: dbRow.poleId,
         lengthInches: dbRow.poleLengthInches,
         weight: dbRow.poleWeight,
         brand: dbRow.poleBrand,
