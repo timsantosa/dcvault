@@ -34,6 +34,7 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'view_contact_info', permissionName: 'View Contact Info', description: "Allows user to view contact info and emrgency contact info for athletes." },
         { permissionKey: 'delete_users', permissionName: 'Delete Users', description: "Allows user to delete other users." },
         { permissionKey: 'refresh_ranking_cache', permissionName: 'Refresh Ranking Cache', description: "Allows user to refresh the athlete profile ranking cache." },
+        { permissionKey: 'view_favorite_poles', permissionName: 'View Favorite Poles', description: "Allows user to request pinned jump pole data for athlete profiles." },
       ];
   
       for (const perm of permissions) {
