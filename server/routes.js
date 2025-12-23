@@ -758,7 +758,7 @@ module.exports = (app, db) => {
       } catch (e) {
       }
       db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((existingUser) => {
-        if (!user) {
+        if (!existingUser) {
           res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}))
         } else {
           let newPassword = req.body.newInfo.password ? bcrypt.hashSync(req.body.newInfo.password) : user.password
