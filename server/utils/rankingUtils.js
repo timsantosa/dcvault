@@ -118,9 +118,122 @@ function isPurchaseActiveForCurrentYear(purchase, currentQuarter, currentYear) {
   return purchaseYear === currentYear;
 }
 
+/**
+ * Get the earliest date for the best PR height
+ * @param {Array} personalRecords - Array of personal record objects with jump data
+ * @param {number} bestHeight - The best height in inches
+ * @returns {Date|null} The earliest date for the best height, or null if no jumps
+ */
+function getEarliestDateForBestHeight(personalRecords, bestHeight) {
+  if (!personalRecords || personalRecords.length === 0 || bestHeight === 0) {
+    return null;
+  }
+
+  const bestJumps = personalRecords.filter(pr => 
+    pr.jump && pr.jump.heightInches === bestHeight
+  );
+
+  if (bestJumps.length === 0) {
+    return null;
+  }
+
+  const dates = bestJumps.map(pr => new Date(pr.jump.date));
+  return new Date(Math.min(...dates));
+}
+
+/**
+ * Check if two profiles should be tied (same PR height and same date)
+ * @param {Object} profile1 - First athlete profile
+ * @param {Object} profile2 - Second athlete profile
+ * @returns {boolean} Whether the profiles should be tied
+ */
+function shouldProfilesBeTied(profile1, profile2) {
+  const pr1 = getBestOfPersonalRecords(profile1.personalRecords);
+  const pr2 = getBestOfPersonalRecords(profile2.personalRecords);
+
+  // If heights are different, they're not tied
+  if (pr1.heightInches !== pr2.heightInches) {
+    return false;
+  }
+
+  // If both have no PR (heightInches = 0 and no actual jumps), they are tied
+  const bestJumps1 = profile1.personalRecords?.filter(pr => 
+    pr.jump && pr.jump.heightInches === pr1.heightInches
+  ) || [];
+  const bestJumps2 = profile2.personalRecords?.filter(pr => 
+    pr.jump && pr.jump.heightInches === pr2.heightInches
+  ) || [];
+
+  if (bestJumps1.length === 0 && bestJumps2.length === 0) {
+    return true;
+  }
+
+  // If one has jumps and the other doesn't, they're not tied
+  if (bestJumps1.length === 0 || bestJumps2.length === 0) {
+    return false;
+  }
+
+  // Get the earliest date for each profile's best height
+  const date1 = getEarliestDateForBestHeight(profile1.personalRecords, pr1.heightInches);
+  const date2 = getEarliestDateForBestHeight(profile2.personalRecords, pr2.heightInches);
+
+  // If either date is null, they're not tied
+  if (!date1 || !date2) {
+    return false;
+  }
+
+  // Compare dates (same day = tied)
+  // Compare year, month, and day (ignore time)
+  return date1.getFullYear() === date2.getFullYear() &&
+         date1.getMonth() === date2.getMonth() &&
+         date1.getDate() === date2.getDate();
+}
+
+/**
+ * Assign ranks to sorted profiles, allowing ties for same PR height and date
+ * @param {Array} sortedProfiles - Array of athlete profiles sorted by PR
+ * @returns {Map} Map of profile ID to rank
+ */
+function assignRanksWithTies(sortedProfiles) {
+  const rankings = new Map();
+  
+  if (sortedProfiles.length === 0) {
+    return rankings;
+  }
+
+  let currentRank = 1;
+  
+  for (let i = 0; i < sortedProfiles.length; i++) {
+    const profile = sortedProfiles[i];
+    
+    // If this is the first profile, assign rank 1
+    if (i === 0) {
+      rankings.set(profile.id, currentRank);
+      continue;
+    }
+
+    const previousProfile = sortedProfiles[i - 1];
+    
+    // Check if this profile should be tied with the previous one
+    if (shouldProfilesBeTied(previousProfile, profile)) {
+      // Same rank as previous
+      rankings.set(profile.id, currentRank);
+    } else {
+      // New rank group - rank is the number of profiles before this one + 1
+      // This correctly handles skipping (e.g., if 2 tie for 1st, next is 3rd)
+      currentRank = i + 1;
+      rankings.set(profile.id, currentRank);
+    }
+  }
+
+  return rankings;
+}
+
 module.exports = {
   getBestOfPersonalRecords,
   sortProfilesByPR,
   isAthleteProfileActive,
   isPurchaseActiveForCurrentYear,
+  shouldProfilesBeTied,
+  assignRanksWithTies,
 };

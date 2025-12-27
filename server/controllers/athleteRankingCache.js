@@ -1,5 +1,5 @@
 const db = require('../db/db');
-const { getBestOfPersonalRecords, sortProfilesByPR, isAthleteProfileActive } = require('../utils/rankingUtils');
+const { getBestOfPersonalRecords, sortProfilesByPR, isAthleteProfileActive, assignRanksWithTies } = require('../utils/rankingUtils');
 
 class RankingCache {
     constructor() {
@@ -49,7 +49,10 @@ class RankingCache {
             // Sort using the same logic as getRankedAthleteProfiles
             sortProfilesByPR(filteredProfiles);
 
-            const rankingList = filteredProfiles.map((athlete, index) => {
+            // Assign ranks with ties
+            const rankings = assignRanksWithTies(filteredProfiles);
+
+            const rankingList = filteredProfiles.map((athlete) => {
                 // Get the best PR using the helper function
                 const bestPr = getBestOfPersonalRecords(athlete.personalRecords);
 
@@ -57,7 +60,7 @@ class RankingCache {
                     athleteProfileId: athlete.id,
                     jumpId: bestPr.jumpId,
                     bestHeight: bestPr.heightInches,
-                    rank: index + 1,
+                    rank: rankings.get(athlete.id) || 1,
                 };
             });
 
@@ -69,7 +72,10 @@ class RankingCache {
             // Sort using the same logic as getRankedAthleteProfiles
             sortProfilesByPR(results);
 
-            const rankingList = results.map((athlete, index) => {
+            // Assign ranks with ties
+            const rankings = assignRanksWithTies(results);
+
+            const rankingList = results.map((athlete) => {
                 // Get the best PR using the helper function
                 const bestPr = getBestOfPersonalRecords(athlete.personalRecords);
 
@@ -77,7 +83,7 @@ class RankingCache {
                     athleteProfileId: athlete.id,
                     jumpId: bestPr.jumpId,
                     bestHeight: bestPr.heightInches,
-                    rank: index + 1,
+                    rank: rankings.get(athlete.id) || 1,
                 };
             });
 

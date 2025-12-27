@@ -1,7 +1,7 @@
 const helpers = require('../lib/helpers');
 const rankingCache = require('./athleteRankingCache');
 const { getPersonalBest } = require('./jumpsController');
-const { getBestOfPersonalRecords, sortProfilesByPR, isAthleteProfileActive, isPurchaseActiveForCurrentYear } = require('../utils/rankingUtils');
+const { getBestOfPersonalRecords, sortProfilesByPR, isAthleteProfileActive, isPurchaseActiveForCurrentYear, assignRanksWithTies } = require('../utils/rankingUtils');
 const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
 const NotificationUtils = require('../utils/notificationUtils');
 
@@ -585,11 +585,8 @@ const getRankedProfiles = async (req, res, db) => {
     // Sort the profiles in JavaScript to avoid MySQL 5.7 compatibility issues
     sortProfilesByPR(allProfilesForRanking);
 
-    // Calculate global rankings
-    const globalRankings = new Map();
-    allProfilesForRanking.forEach((profile, index) => {
-      globalRankings.set(profile.id, index + 1);
-    });
+    // Calculate global rankings with ties
+    const globalRankings = assignRanksWithTies(allProfilesForRanking);
 
     // Now get the profiles that match search criteria (if any)
     const { count: totalCount, rows: profilesWithPRs } = await db.tables.AthleteProfiles.findAndCountAll({
