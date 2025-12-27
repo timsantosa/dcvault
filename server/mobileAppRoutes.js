@@ -9,7 +9,7 @@ const userRoutes = require('./mobileRoutes/userRoutes');
 const { deleteUser } = require('./controllers/usersController');
 const { getMobileUserInfo } = require('./controllers/authController');
 const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
-const { verifyJump, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
+const { verifyJump, rejectJumpVerification, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
 const poleRoutes = require('./mobileRoutes/poleRoutes');
 const meetDataRoutes = require('./mobileRoutes/meetDataRoutes');
 const drillTypeRoutes = require('./mobileRoutes/drillTypeRoutes');
@@ -51,6 +51,7 @@ module.exports = function addMobileAppRoutes(app, db) {
 
   // Admin routes
   app.post('/mobileapp/user/jump/verify', checkPermission('verify_jumps'), (req, res) => verifyJump(req, res, db));
+  app.post('/mobileapp/user/jump/reject', checkPermission('verify_jumps'), (req, res) => rejectJumpVerification(req, res, db));
   app.get('/mobileapp/user/jumps/unverified', checkPermission('verify_jumps'), (req, res) => getUnverifiedMeetJumps(req, res, db));
 
   app.use('/mobileapp/user/permissions', checkPermission('manage_roles'), permissionRoutes(db));

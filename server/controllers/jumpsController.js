@@ -4,15 +4,16 @@ const rankingCache = require("./athleteRankingCache");
 const { validatePoleBrand } = require("../utils/poleBrandValidation");
 const { getBestOfPersonalRecords } = require("../utils/rankingUtils");
 const NotificationUtils = require("../utils/notificationUtils");
+const { getOrCreateDirectConversation, sendMessageInConversation } = require("../utils/messagesUtils");
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
   try {
-    const athleteProfileId = req.query.athleteProfileId;
+    const athleteProfileId = parseInt(req.query.athleteProfileId);
     const { id, date, hardMetrics, meetInfo, softMetrics, notes, videoLink } = req.body.jump;
 
     // Validate required fields
-    if (!athleteProfileId || !date) {
+    if (!athleteProfileId || isNaN(athleteProfileId) || !date) {
       return res.status(400).json({ ok: false, message: 'Athlete ID and Date are required.' });
     }
     if (hardMetrics.setting === "Meet") {
@@ -74,6 +75,13 @@ const addOrUpdateJump = async (req, res, db) => {
       
       if (!originalJump) {
         return res.status(404).json({ ok: false, message: 'Jump not found.' });
+      }
+
+      // If this is an update by the athlete who owns the jump, remove from rejected jumps table
+      if (originalJump.athleteProfileId === athleteProfileId) {
+        await db.tables.RejectedJumps.destroy({
+          where: { jumpId }
+        });
       }
 
       if (!originalJump.verified) {
@@ -204,8 +212,11 @@ const getJump = async (req, res, db) => {
       where: { jumpId: jumpId }
     });
 
-    const jump = mapDbRowToJump(jumpRow);
+    let jump = mapDbRowToJump(jumpRow);
     jump.isFavorite = !!favoriteJump;
+
+    // Add rejection info
+    jump = await addRejectionInfoToJumps(jump, db);
 
     res.json({ ok: true, jump });
   } catch (error) {
@@ -382,6 +393,9 @@ const fetchJumps = async (req, res, db) => {
       isFavorite: favoriteMap.has(jump.id),
     })));
 
+    // Add rejection info to all jumps
+    returnedJumps = await addRejectionInfoToJumps(returnedJumps, db);
+
     res.json({
       ok: true,
       jumps: returnedJumps,
@@ -419,6 +433,8 @@ async function verifyJump(req, res, db) {
 
       await checkIfJumpIsStepPr(jump, db);
 
+      // Send notification that jump was verified.
+
       message = 'Jump verified successfully.';
     } else {
       jump.verified = false;
@@ -435,6 +451,107 @@ async function verifyJump(req, res, db) {
     res.json({ ok: true, message, jump });
   } catch (error) {
     console.error('Error verifying jump:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error.' });
+  }
+}
+
+async function rejectJumpVerification(req, res, db) {
+  try {
+    const { jumpId, message } = req.body;
+    const { athleteProfileId: adminAthleteProfileIdString } = req.query;
+    const adminAthleteProfileId = parseInt(adminAthleteProfileIdString);
+
+    // Validate required fields
+    if (!jumpId || !message || !adminAthleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Jump ID, message, and admin athlete profile ID are required.' });
+    }
+
+    // Find the jump
+    const jump = await db.tables.Jumps.findByPk(jumpId);
+
+    if (!jump) {
+      return res.status(404).json({ ok: false, message: 'Jump not found.' });
+    }
+
+    // Only allow rejecting unverified jumps
+    if (jump.verified) {
+      return res.status(400).json({ ok: false, message: 'Cannot reject a verified jump. Please unverify it first.' });
+    }
+
+    // Start a transaction
+    const transaction = await db.tables.Jumps.sequelize.transaction();
+
+    try {
+      // Get or create a direct conversation between admin and athlete
+      const conversationId = await getOrCreateDirectConversation(adminAthleteProfileId, jump.athleteProfileId, db, transaction);
+
+      // Send the rejection message using the messaging utility
+      const rejectionMessage = await sendMessageInConversation(
+        conversationId,
+        adminAthleteProfileId,
+        "Your jump was rejected for the following reason: \n" + message,
+        db,
+        { transaction }
+      );
+
+      // Check if jump is already rejected
+      const existingRejection = await db.tables.RejectedJumps.findOne({
+        where: { jumpId },
+        transaction
+      });
+
+      if (existingRejection) {
+        // Update the existing rejection with the new message
+        await existingRejection.update({
+          messageId: rejectionMessage.id,
+          rejectedBy: adminAthleteProfileId,
+        }, { transaction });
+      } else {
+        // Create a new rejection record
+        await db.tables.RejectedJumps.create({
+          jumpId,
+          athleteProfileId: jump.athleteProfileId,
+          messageId: rejectionMessage.id,
+          rejectedBy: adminAthleteProfileId,
+        }, { transaction });
+      }
+
+      // Commit the transaction
+      await transaction.commit();
+
+      // Send additional push notification about jump rejection (beyond the message notification)
+      try {
+        const adminProfile = await db.tables.AthleteProfiles.findByPk(adminAthleteProfileId);
+        const adminName = `${adminProfile.firstName} ${adminProfile.lastName}`;
+        
+        await NotificationUtils.sendNotificationToAthleteProfiles(
+          [jump.athleteProfileId],
+          'Jump Rejected',
+          `${adminName} has requested changes to your jump`,
+          {
+            type: 'jump_rejection',
+            jumpId,
+            conversationId,
+          }
+        );
+      } catch (notificationError) {
+        console.error('Error sending jump rejection notification:', notificationError);
+        // Don't fail the rejection if notification fails
+      }
+
+      res.json({ 
+        ok: true, 
+        message: 'Jump rejected successfully.',
+        conversationId,
+        rejectionMessage
+      });
+    } catch (error) {
+      // If anything fails, rollback the transaction
+      await transaction.rollback();
+      throw error;
+    }
+  } catch (error) {
+    console.error('Error rejecting jump:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
   }
 }
@@ -552,6 +669,16 @@ async function getUnverifiedMeetJumps(req, res, db) {
         },
       }
     });
+
+    // Add rejection info to all jumps
+    const allJumps = returnedJumps.map(item => item.jump);
+    const jumpsWithRejection = await addRejectionInfoToJumps(allJumps, db);
+    
+    returnedJumps = returnedJumps.map((item, index) => ({
+      ...item,
+      jump: jumpsWithRejection[index]
+    }));
+
     res.json({
       ok: true,
       unverifiedJumps: returnedJumps,
@@ -819,6 +946,7 @@ module.exports = {
   deleteJump,
   fetchJumps,
   verifyJump,
+  rejectJumpVerification,
   // populatePRsForAthlete,
   getUnverifiedMeetJumps,
   getPersonalBest,
@@ -832,6 +960,63 @@ module.exports = {
 
 
 // Helpers
+
+async function getRejectionInfo(jumpIds, db) {
+  // Accept single jumpId or array of jumpIds
+  const ids = Array.isArray(jumpIds) ? jumpIds : [jumpIds];
+  
+  if (ids.length === 0) {
+    return new Map();
+  }
+
+  const rejections = await db.tables.RejectedJumps.findAll({
+    where: { jumpId: ids },
+    include: [{
+      model: db.tables.Messages,
+      as: 'message',
+      attributes: ['id', 'content', 'createdAt'],
+    }]
+  });
+  
+  // Return a map: jumpId -> rejection info
+  return new Map(rejections.map(r => [r.jumpId, {
+    messageId: r.messageId,
+    message: r.message?.content,
+    rejectedAt: r.createdAt,
+    rejectedBy: r.rejectedBy
+  }]));
+}
+
+/**
+ * Adds rejection info to a single jump or array of jumps
+ * @param {Object|Array} jumps - Single jump object or array of jump objects
+ * @param {Object} db - Database instance
+ * @returns {Object|Array} - Jump(s) with rejection info added
+ */
+async function addRejectionInfoToJumps(jumps, db) {
+  const isArray = Array.isArray(jumps);
+  const jumpArray = isArray ? jumps : [jumps];
+  
+  if (jumpArray.length === 0) {
+    return isArray ? [] : null;
+  }
+
+  // Get rejection info for all jumps at once
+  const jumpIds = jumpArray.map(j => j.id);
+  const rejectionMap = await getRejectionInfo(jumpIds, db);
+
+  const jumpsWithRejection = jumpArray.map(jump => {
+    const rejectionInfo = rejectionMap.get(jump.id);
+    return {
+      ...jump,
+      isRejected: !!rejectionInfo,
+      rejectionMessage: rejectionInfo?.message,
+      rejectedAt: rejectionInfo?.rejectedAt,
+    };
+  });
+
+  return isArray ? jumpsWithRejection : jumpsWithRejection[0];
+}
 
 // async function getPrJumps(athleteProfileId) {
 //   const prJumps = await db.tables.PrRecords.findAll({
