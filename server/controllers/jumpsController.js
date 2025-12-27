@@ -434,6 +434,22 @@ async function verifyJump(req, res, db) {
       await checkIfJumpIsStepPr(jump, db);
 
       // Send notification that jump was verified.
+      try {
+        await NotificationUtils.sendNotificationToAthleteProfiles(
+          [jump.athleteProfileId],
+          'Jump Verified',
+          'Your jump has been verified',
+          {
+            type: 'jump_verification',
+            jumpId,
+          }
+        );
+      } catch (notificationError) {
+        console.error('Error sending jump verification notification:', notificationError);
+        // Don't fail the verification if notification fails
+      }
+
+      // TODO: If notifyOthers is true, notify other athletes of whatever reason they were notified (New PR, New Record, New Medal, etc.).
 
       message = 'Jump verified successfully.';
     } else {
