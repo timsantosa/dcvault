@@ -1,3 +1,5 @@
+const { isAthleteProfileActive } = require('../utils/rankingUtils');
+
 const getPoles = async (req, res, db) => {
   try {
     const poles = await db.tables.Poles.findAll({
@@ -31,7 +33,7 @@ const getPoles = async (req, res, db) => {
 
 const getPinnedPolesPerProfile = async (req, res, db) => {
   try {
-    const { lefts, athleteProfileIds } = req.query;
+    const { lefts, athleteProfileIds, activeProfiles } = req.query;
 
     // Parse lefts (step numbers) - default to 1-10 if not provided
     let stepNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -42,23 +44,48 @@ const getPinnedPolesPerProfile = async (req, res, db) => {
       }
     }
 
-    // Build where clause for FavoriteJumps
-    const whereClause = {
-      stepNum: {
-        [db.tables.schema.Sequelize.Op.in]: stepNums
-      }
-    };
-
-    // If athleteProfileIds is provided, filter by them
+    // Determine which profiles to include
+    let profileIdsToInclude = null;
+    
     if (athleteProfileIds) {
+      // If specific IDs are provided, use them
       const ids = athleteProfileIds.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
       if (ids.length === 0) {
         return res.status(400).json({ ok: false, message: 'Invalid athleteProfileIds parameter.' });
       }
-      whereClause.athleteProfileId = {
-        [db.tables.schema.Sequelize.Op.in]: ids
-      };
+      profileIdsToInclude = ids;
+    } else {
+      
+      // Fetch all profiles first
+      const allProfiles = await db.tables.AthleteProfiles.findAll({
+        attributes: ['id', 'firstName', 'lastName', 'alwaysActiveOverride', 'athleteId']
+      });
+
+      // If activeProfiles is true, filter to only active profiles
+      if (activeProfiles === 'true') {
+        const activeProfileIds = [];
+        for (const profile of allProfiles) {
+          const isActive = await isAthleteProfileActive(profile, db);
+          if (isActive) {
+            activeProfileIds.push(profile.id);
+          }
+        }
+        profileIdsToInclude = activeProfileIds;
+      } else {
+        // Include all profiles
+        profileIdsToInclude = allProfiles.map(p => p.id);
+      }
     }
+
+    // Build where clause for FavoriteJumps
+    const whereClause = {
+      stepNum: {
+        [db.tables.schema.Sequelize.Op.in]: stepNums
+      },
+      athleteProfileId: {
+        [db.tables.schema.Sequelize.Op.in]: profileIdsToInclude
+      }
+    };
 
     // Query FavoriteJumps with includes for Jumps (pole data) and AthleteProfiles
     const favoriteJumps = await db.tables.FavoriteJumps.findAll({
@@ -89,26 +116,36 @@ const getPinnedPolesPerProfile = async (req, res, db) => {
       ]
     });
 
-    // Group by athlete profile and structure the response
-    const profilesMap = new Map();
+    // Get all profiles that should be included (to ensure we return all, even without pinned jumps)
+    const allProfilesToReturn = await db.tables.AthleteProfiles.findAll({
+      where: {
+        id: {
+          [db.tables.schema.Sequelize.Op.in]: profileIdsToInclude
+        }
+      },
+      attributes: ['id', 'firstName', 'lastName']
+    });
 
+    // Initialize profilesMap with all profiles (empty poles object)
+    const profilesMap = new Map();
+    allProfilesToReturn.forEach(profile => {
+      profilesMap.set(profile.id, {
+        id: profile.id,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        poles: {}
+      });
+    });
+
+    // Populate poles data from favoriteJumps
     favoriteJumps.forEach(fav => {
       const profileId = fav.athleteProfileId;
       const stepNum = fav.stepNum;
       
-      if (!profilesMap.has(profileId)) {
-        profilesMap.set(profileId, {
-          id: fav.athleteProfile.id,
-          firstName: fav.athleteProfile.firstName,
-          lastName: fav.athleteProfile.lastName,
-          poles: {}
-        });
-      }
-
       const profile = profilesMap.get(profileId);
       
       // Add pole data for this step number
-      if (fav.jump) {
+      if (profile && fav.jump) {
         profile.poles[stepNum] = {
           poleId: fav.jump.poleId,
           poleLengthInches: fav.jump.poleLengthInches,
@@ -120,8 +157,12 @@ const getPinnedPolesPerProfile = async (req, res, db) => {
       }
     });
 
-    // Convert map to array
-    const profiles = Array.from(profilesMap.values());
+    // Convert map to array and sort alphabetically by first name
+    const profiles = Array.from(profilesMap.values()).sort((a, b) => {
+      const firstNameA = (a.firstName || '').toLowerCase();
+      const firstNameB = (b.firstName || '').toLowerCase();
+      return firstNameA.localeCompare(firstNameB);
+    });
 
     res.json({
       ok: true,
