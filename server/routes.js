@@ -747,31 +747,43 @@ module.exports = (app, db) => {
     }
   })
 
-  app.post('/users/update', (req, res) => {
-    if (!req.body.token) {
-      res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}))
-    } else {
-      let token = req.body.token
+  app.post('/users/update', async (req, res) => {
+    try {
+      if (!req.body.token) {
+        return res.status(403).send(JSON.stringify({ok: false, message: 'bad or no token'}))
+      }
+
       let user = null
       try {
-        user = jwt.decode(token, config.auth.secret)
+        user = jwt.decode(req.body.token, config.auth.secret)
       } catch (e) {
+        return res.status(403).send(JSON.stringify({ok: false, message: 'invalid token'}))
       }
-      db.tables.Users.findOne({where: {email: user.email, password: user.password}}).then((existingUser) => {
-        if (!user) {
-          res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}))
-        } else {
-          let newPassword = req.body.newInfo.password ? bcrypt.hashSync(req.body.newInfo.password) : user.password
-          let newName = req.body.newInfo.name ? req.body.newInfo.name : user.name
-          existingUser.update({
-            password: newPassword,
-            name: newName
-          }).then((user) => {
-            let token = jwt.encode(user, config.auth.secret)
-            res.send(JSON.stringify({ok: true, message: 'user profile updated', token: token}))
-          })
-        }
+
+      if (!user || !user.email || !user.password) {
+        return res.status(403).send(JSON.stringify({ok: false, message: 'invalid token data'}))
+      }
+
+      const existingUser = await db.tables.Users.findOne({where: {email: user.email, password: user.password}})
+      
+      if (!existingUser) {
+        return res.status(403).send(JSON.stringify({ok: false, message: 'user does not exist'}))
+      }
+
+      const newPassword = req.body.newInfo?.password ? bcrypt.hashSync(req.body.newInfo.password) : user.password
+      const newName = req.body.newInfo?.name ? req.body.newInfo.name : user.name
+
+      const updatedUser = await existingUser.update({
+        password: newPassword,
+        name: newName
       })
+
+      const token = jwt.encode(updatedUser, config.auth.secret)
+      res.send(JSON.stringify({ok: true, message: 'user profile updated', token: token}))
+
+    } catch (error) {
+      console.error('Error in /users/update:', error)
+      res.status(500).send(JSON.stringify({ok: false, message: 'Internal server error'}))
     }
   })
 
