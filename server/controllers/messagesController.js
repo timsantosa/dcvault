@@ -3,7 +3,9 @@ const {
   canSendAnnouncements, 
   getOrCreateAnnouncementConversation,
   syncAllAthleteParticipants,
-  syncActiveAthleteParticipants
+  syncActiveAthleteParticipants,
+  getOrCreateDirectConversation,
+  sendMessageInConversation
 } = require('../utils/messagesUtils');
 const NotificationUtils = require('../utils/notificationUtils');
 const { deleteCloudinaryImage } = require('./imageUploadController');
@@ -303,37 +305,22 @@ async function createConversation(req, res, db) {
 
     // For direct conversations, check if one already exists between these participants
     if (type === 'direct' && participantIds.length === 1) {
-      // First, get all direct conversations that include the target participant
-      // This is the optimization - there will be far fewer conversations with this participant
-      const conversationsWithTargetParticipant = await db.tables.Conversations.findAll({
-        where: { type: 'direct' },
+      const existingConversationId = await getOrCreateDirectConversation(
+        athleteProfileId, 
+        participantIds[0], 
+        db
+      );
+      
+      // If we got an existing conversation, return it
+      const conversation = await db.tables.Conversations.findByPk(existingConversationId, {
         include: [{
           model: db.tables.ConversationParticipants,
           as: 'participants',
-          where: {
-            athleteProfileId: participantIds[0]
-          }
+          attributes: ['athleteProfileId']
         }]
       });
-
-      // For each conversation, check if it also includes the current user and has exactly 2 participants
-      for (const conversation of conversationsWithTargetParticipant) {
-        // Get all participants for this conversation
-        const allParticipants = await db.tables.ConversationParticipants.findAll({
-          where: { conversationId: conversation.id },
-          attributes: ['athleteProfileId']
-        });
-
-        const participantIds = allParticipants.map(p => p.athleteProfileId);
-        
-        // Check if this is a direct conversation between exactly these two users
-        if (participantIds.length === 2 && 
-            participantIds.includes(athleteProfileId) && 
-            participantIds.includes(participantIds[0])) {
-          conversation.participants = allParticipants;
-          return res.json({ ok: true, conversation });
-        }
-      }
+      
+      return res.json({ ok: true, conversation });
     }
 
     // Start a transaction using the Conversations model's sequelize instance
@@ -570,15 +557,44 @@ async function sendMessage(req, res, db) {
       }
     }
 
-    // Create the message
-    const message = await db.tables.Messages.create({
+    // Create custom notification handler for reactions
+    const customNotificationHandler = type === 'reaction' && parentMessageId ? async (message, conversation, db) => {
+      // For reactions, notify the original message sender (if different from reaction sender)
+      const originalMessage = await db.tables.Messages.findByPk(parentMessageId);
+      if (originalMessage && originalMessage.senderId !== athleteProfileId) {
+        const reacterProfile = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
+        const reacterName = `${reacterProfile.firstName} ${reacterProfile.lastName}`;
+        
+        const title = conversation.name || 'New Reaction';
+        const body = `${reacterName} ${content}d to your message: ${originalMessage.content}`;
+        const data = {
+          type: 'reaction',
+          conversationId,
+          originalMessageId: parentMessageId,
+          reacterName
+        };
+        await NotificationUtils.sendNotificationToAthleteProfiles(
+          [originalMessage.senderId],
+          title,
+          body,
+          data
+        );
+      }
+    } : undefined;
+
+    // Create the message using the helper function
+    const message = await sendMessageInConversation(
       conversationId,
-      senderId: athleteProfileId,
+      athleteProfileId,
       content,
-      type,
-      parentMessageId,
-      attachments
-    });
+      db,
+      {
+        type,
+        parentMessageId,
+        attachments,
+        customNotificationHandler
+      }
+    );
 
     // Get the full message with sender info
     const fullMessage = await db.tables.Messages.findOne({
@@ -589,43 +605,6 @@ async function sendMessage(req, res, db) {
         attributes: ['id', 'firstName', 'lastName']
       }]
     });
-
-    // Send push notifications to participants (but not the sender)
-    try {
-      if (type === 'text' || type === 'attachment') {
-        // For regular messages, notify all participants except sender
-        await NotificationUtils.notifyMessageRecipients(
-          conversationId, 
-          athleteProfileId, 
-          content || 'Sent an attachment' // TODO: Move attachment to a separate case.
-        );
-      } else if (type === 'reaction' && parentMessageId) {
-        // For reactions, notify the original message sender (if different from reaction sender)
-        const originalMessage = await db.tables.Messages.findByPk(parentMessageId);
-        if (originalMessage && originalMessage.senderId !== athleteProfileId) {
-          const reacterProfile = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
-          const reacterName = `${reacterProfile.firstName} ${reacterProfile.lastName}`;
-          
-          const title = participant.conversation.name || 'New Reaction';
-          const body = `${reacterName} ${content}d to your message: ${originalMessage.content}`;
-          const data = {
-            type: 'reaction',
-            conversationId,
-            originalMessageId: parentMessageId,
-            reacterName
-          };
-          await NotificationUtils.sendNotificationToAthleteProfiles(
-            [originalMessage.senderId],
-            title,
-            body,
-            data
-          );
-        }
-      }
-    } catch (notificationError) {
-      console.error('Error sending push notification for message:', notificationError);
-      // Don't fail the message send if notification fails
-    }
     
     res.json({ ok: true, message: fullMessage });
   } catch (error) {

@@ -162,15 +162,17 @@ class NotificationUtils {
   }
 
   /**
-   * Send notification when jump needs verification
-   * @param {number} jumpId - The jump ID
-   * @param {number} athleteProfileId - The athlete profile ID
-   * @returns {Object} Result with success status
+   * Helper function to send notifications to users with a specific permission
+   * @param {string} permissionKey - The permission key to check for
+   * @param {string} title - Notification title
+   * @param {string} body - Notification body
+   * @param {Object} data - Additional data to send with notification
+   * @returns {Object} Result with success status and notified device count
    */
-  static async notifyAdminsOfPendingJump(jumpId, athleteProfileId) {
+  static async sendNotificationToUsersWithPermission(permissionKey, title, body, data = {}) {
     try {
-      // Get users with verify_jumps permission
-      const admins = await tables.Users.findAll({
+      // Get users with the specified permission
+      const users = await tables.Users.findAll({
         include: [
           {
             model: tables.UserDevices,
@@ -180,31 +182,25 @@ class NotificationUtils {
           },
           {
             model: tables.Permissions,
-            where: { permissionKey: 'verify_jumps' },
+            where: { permissionKey },
             through: { attributes: [] } // Don't include junction table data
           }
         ]
       });
 
-      // Get athlete info
-      const athleteProfile = await tables.AthleteProfiles.findByPk(athleteProfileId);
-      const athleteName = `${athleteProfile.firstName} ${athleteProfile.lastName}`;
-
       const messages = [];
-      admins.forEach(admin => {
-        if (admin.devices) {
-          admin.devices.forEach(device => {
+      users.forEach(user => {
+        if (user.devices) {
+          user.devices.forEach(device => {
             if (Expo.isExpoPushToken(device.expoPushToken)) {
               messages.push({
                 to: device.expoPushToken,
                 sound: 'default',
-                title: 'Jump Verification Needed',
-                body: `${athleteName} submitted a jump for verification`,
+                title,
+                body,
                 data: {
-                  type: 'jump_verification',
-                  jumpId,
-                  athleteProfileId,
-                  athleteName
+                  ...data,
+                  userId: user.id
                 }
               });
             }
@@ -218,7 +214,67 @@ class NotificationUtils {
 
       return { success: true, notifiedDevices: messages.length };
     } catch (error) {
+      console.error(`Error notifying users with permission ${permissionKey}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Send notification when jump needs verification
+   * @param {number} jumpId - The jump ID
+   * @param {number} athleteProfileId - The athlete profile ID
+   * @returns {Object} Result with success status
+   */
+  static async notifyAdminsOfPendingJump(jumpId, athleteProfileId) {
+    try {
+      // Get athlete info
+      const athleteProfile = await tables.AthleteProfiles.findByPk(athleteProfileId);
+      const athleteName = `${athleteProfile.firstName} ${athleteProfile.lastName}`;
+
+      return await this.sendNotificationToUsersWithPermission(
+        'verify_jumps',
+        'Jump Verification Needed',
+        `${athleteName} submitted a jump for verification`,
+        {
+          type: 'jump_verification',
+          jumpId,
+          athleteProfileId,
+          athleteName
+        }
+      );
+    } catch (error) {
       console.error('Error notifying admins of pending jump:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Send notification when a new athlete profile is created
+   * @param {number} athleteProfileId - The newly created athlete profile ID
+   * @param {number} creatorUserId - The user ID who created the profile
+   * @param {string} profileName - The name of the new profile (firstName + lastName)
+   * @returns {Object} Result with success status
+   */
+  static async notifyAdminsOfNewProfile(athleteProfileId, creatorUserId, profileName) {
+    try {
+      // Get creator user info
+      const creator = await tables.Users.findByPk(creatorUserId);
+      const creatorName = creator?.name || creator?.email || 'Unknown User';
+
+      return await this.sendNotificationToUsersWithPermission(
+        'manage_roles',
+        'New Profile Created',
+        `${creatorName} created a new profile: ${profileName}`,
+        {
+          type: 'profile_created',
+          athleteProfileId,
+          creatorUserId,
+          creatorName,
+          profileName
+        }
+      );
+    } catch (error) {
+      console.error('Error notifying admins of new profile:', error);
       throw error;
     }
   }

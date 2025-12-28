@@ -1,4 +1,4 @@
-const { isAthleteProfileActive } = require('../controllers/athletesController');
+const { isAthleteProfileActive } = require('./rankingUtils');
 const { Op } = require('sequelize');
 
 /**
@@ -200,9 +200,134 @@ async function getOrCreateAnnouncementConversation(type, creatorId, db) {
   }
 }
 
+/**
+ * Gets or creates a direct conversation between two users
+ * @param {number} senderId - First user's athlete profile ID
+ * @param {number} receiverId - Second user's athlete profile ID
+ * @param {Object} db - Database instance
+ * @param {Object} transaction - Optional transaction object
+ * @returns {number} - The conversation ID
+ */
+async function getOrCreateDirectConversation(senderId, receiverId, db, transaction) {
+  // First, get all direct conversations that include the recipient (will be faster than finding all conversations with the sender)
+  const conversationsWithProfile1 = await db.tables.Conversations.findAll({
+    where: { type: 'direct' },
+    include: [{
+      model: db.tables.ConversationParticipants,
+      as: 'participants',
+      where: {
+        athleteProfileId: receiverId
+      }
+    }],
+    transaction
+  });
+
+  // For each conversation, check if it also includes the sender and has exactly 2 participants
+  for (const conversation of conversationsWithProfile1) {
+    // Get all participants for this conversation
+    const allParticipants = await db.tables.ConversationParticipants.findAll({
+      where: { conversationId: conversation.id },
+      attributes: ['athleteProfileId'],
+      transaction
+    });
+
+    const participantIds = allParticipants.map(p => p.athleteProfileId);
+    
+    // Check if this is a direct conversation between exactly these two users
+    if (participantIds.length === 2 && 
+        participantIds.includes(senderId) && 
+        participantIds.includes(receiverId)) {
+      return conversation.id;
+    }
+  }
+
+  // No existing conversation found, create a new one
+  const conversation = await db.tables.Conversations.create({
+    name: null, // Direct messages don't need a name
+    type: 'direct',
+    createdBy: senderId,
+    settings: { canSendMessages: true, canReact: true }
+  }, { transaction });
+
+  // Add both participants
+  await db.tables.ConversationParticipants.bulkCreate([
+    { conversationId: conversation.id, athleteProfileId: senderId, role: 'admin' },
+    { conversationId: conversation.id, athleteProfileId: receiverId, role: 'member' }
+  ], { 
+    transaction,
+    ignoreDuplicates: true 
+  });
+
+  return conversation.id;
+}
+
+/**
+ * Sends a message in a conversation (without HTTP response handling)
+ * @param {number} conversationId - Conversation ID
+ * @param {number} senderId - Sender's athlete profile ID
+ * @param {string} content - Message content
+ * @param {Object} db - Database instance
+ * @param {Object} options - Optional parameters
+ * @param {Object} options.transaction - Transaction object
+ * @param {string} options.type - Message type (default: 'text')
+ * @param {Object} options.attachments - Message attachments
+ * @param {number} options.parentMessageId - Parent message ID for reactions/replies
+ * @param {boolean} options.skipNotification - Skip sending push notification
+ * @param {Function} options.customNotificationHandler - Custom function to handle notifications (receives message, conversation, db)
+ * @returns {Object} - The created message
+ */
+async function sendMessageInConversation(conversationId, senderId, content, db, options = {}) {
+  const { 
+    transaction, 
+    type = 'text', 
+    attachments, 
+    parentMessageId,
+    skipNotification = false,
+    customNotificationHandler
+  } = options;
+
+  // Create the message
+  const message = await db.tables.Messages.create({
+    conversationId,
+    senderId,
+    content,
+    type,
+    parentMessageId,
+    attachments
+  }, { transaction });
+
+  // Send push notifications if not skipped
+  if (!skipNotification) {
+    try {
+      const NotificationUtils = require('./notificationUtils');
+      
+      // Use custom notification handler if provided
+      if (customNotificationHandler) {
+        const conversation = await db.tables.Conversations.findByPk(conversationId);
+        await customNotificationHandler(message, conversation, db);
+      } else if (type === 'text' || type === 'attachment') {
+        // Default notification for text/attachment messages
+        await NotificationUtils.notifyMessageRecipients(
+          conversationId, 
+          senderId, 
+          content || 'Sent an attachment'
+        );
+      }
+      // Reactions are handled by customNotificationHandler in the controller
+    } catch (notificationError) {
+      console.error('Error sending push notification for message:', notificationError);
+      // Don't fail the message send if notification fails
+    }
+  }
+
+  return message;
+}
+
 module.exports = {
   syncAllAthleteParticipants,
   syncActiveAthleteParticipants,
   canSendAnnouncements,
-  getOrCreateAnnouncementConversation
+  getOrCreateAnnouncementConversation,
+  getOrCreateDirectConversation,
+  sendMessageInConversation
 };

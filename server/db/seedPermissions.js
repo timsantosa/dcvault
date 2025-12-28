@@ -33,6 +33,8 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'can_send_announcements', permissionName: 'Can Send Announcements', description: "Allows user to send announcements to all athletes or active athletes." },
         { permissionKey: 'view_contact_info', permissionName: 'View Contact Info', description: "Allows user to view contact info and emrgency contact info for athletes." },
         { permissionKey: 'delete_users', permissionName: 'Delete Users', description: "Allows user to delete other users." },
+        { permissionKey: 'refresh_ranking_cache', permissionName: 'Refresh Ranking Cache', description: "Allows user to refresh the athlete profile ranking cache." },
+        { permissionKey: 'view_favorite_poles', permissionName: 'View Favorite Poles', description: "Allows user to request pinned jump pole data for athlete profiles." },
       ];
   
       for (const perm of permissions) {
@@ -48,7 +50,7 @@ async function seedRolesAndPermissions(db) {
       });
   
       const basePermissions = await db.tables.Permissions.findAll({
-        where: { permissionKey: ['view_profiles', 'access_mobile_app'] }
+        where: { permissionKey: ['view_profiles', 'access_mobile_app', 'create_athlete_profiles'] }
       });
   
       // Assign to Admin Role

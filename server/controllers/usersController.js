@@ -9,7 +9,6 @@ async function getAllUsers(req, res, db) {
         const search = req.query.search;
 
         let whereClause = {};
-        let includeClause = [];
 
         // If search parameter is provided, search across user email/name and athlete names
         if (search && search.trim()) {
@@ -75,15 +74,15 @@ async function getAllUsers(req, res, db) {
                     [Op.in]: uniqueUserIds
                 }
             };
-
-            // Include athletes for display
-            includeClause = [{
-                model: db.tables.Athletes,
-                as: 'athletes',
-                attributes: ['firstName', 'lastName'],
-                required: false
-            }];
         }
+
+        // Always include athletes for display
+        const includeClause = [{
+            model: db.tables.Athletes,
+            as: 'athletes',
+            attributes: ['firstName', 'lastName'],
+            required: false
+        }];
 
         // Get total count for pagination
         const total = await db.tables.Users.count({
@@ -103,10 +102,29 @@ async function getAllUsers(req, res, db) {
             distinct: true
         });
 
+        // Transform users to use athlete names when user name is null or empty
+        const transformedUsers = users.map(user => {
+            const userData = user.toJSON();
+            
+            // If user's name is null or empty, use athlete's name
+            if (!userData.name || userData.name.trim() === '') {
+                if (userData.athletes && userData.athletes.length > 0) {
+                    // Use the first athlete's combined first and last name
+                    const firstAthlete = userData.athletes[0];
+                    const athleteName = `${firstAthlete.firstName || ''} ${firstAthlete.lastName || ''}`.trim();
+                    if (athleteName) {
+                        userData.name = athleteName;
+                    }
+                }
+            }
+            
+            return userData;
+        });
+
         res.json({
             ok: true,
             message: 'Successfully retrieved users',
-            users,
+            users: transformedUsers,
             pagination: {
                 total,
                 page,

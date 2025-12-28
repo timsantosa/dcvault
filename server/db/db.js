@@ -408,6 +408,44 @@ columns.drills = {
   videoLink: Sequelize.STRING,
 };
 
+// Rejected Jumps
+columns.rejectedJumps = {
+  jumpId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    unique: true,
+    references: {
+      model: tables.jumps,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+  },
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+  },
+  messageId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.messages,
+      key: 'id',
+    },
+  },
+  rejectedBy: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+  },
+};
+
 // User Devices for Push Notifications
 columns.userDevices = {
   userId: {
@@ -694,6 +732,21 @@ const syncTables = (schema, force) => {
   tables.DrillTypes = schema.define('drillType', columns.drillTypes);
   tables.Drills = schema.define('drill', columns.drills);
 
+  // Rejected Jumps
+  tables.RejectedJumps = schema.define('rejectedJump', columns.rejectedJumps, {
+    indexes: [
+      {
+        fields: ['jumpId'],
+        unique: true,
+        name: 'rejected_jumps_jump_unique'
+      },
+      {
+        fields: ['athleteProfileId'],
+        name: 'rejected_jumps_athlete'
+      }
+    ]
+  });
+
   // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
@@ -788,6 +841,19 @@ const syncTables = (schema, force) => {
 
   tables.Messages.belongsTo(tables.Messages, { as: 'parentMessage', foreignKey: 'parentMessageId' });
   tables.Messages.hasMany(tables.Messages, { as: 'replies', foreignKey: 'parentMessageId' });
+
+  // Rejected Jumps associations
+  tables.RejectedJumps.belongsTo(tables.Jumps, { as: 'jump', foreignKey: 'jumpId' });
+  tables.Jumps.hasOne(tables.RejectedJumps, { as: 'rejection', foreignKey: 'jumpId' });
+
+  tables.RejectedJumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
+  tables.AthleteProfiles.hasMany(tables.RejectedJumps, { as: 'rejectedJumps', foreignKey: 'athleteProfileId' });
+
+  tables.RejectedJumps.belongsTo(tables.AthleteProfiles, { as: 'rejector', foreignKey: 'rejectedBy' });
+  tables.AthleteProfiles.hasMany(tables.RejectedJumps, { as: 'rejectedOthersJumps', foreignKey: 'rejectedBy' });
+
+  tables.RejectedJumps.belongsTo(tables.Messages, { as: 'message', foreignKey: 'messageId' });
+  tables.Messages.hasOne(tables.RejectedJumps, { as: 'jumpRejection', foreignKey: 'messageId' });
 
   tables.schema = schema;
   return schema.sync({ force: force })
