@@ -77,6 +77,14 @@ const getPinnedPolesPerProfile = async (req, res, db) => {
       }
     }
 
+    // Handle empty profileIdsToInclude to avoid MySQL 5.7 issues with Op.in on empty arrays
+    if (!profileIdsToInclude || profileIdsToInclude.length === 0) {
+      return res.json({
+        ok: true,
+        profiles: []
+      });
+    }
+
     // Build where clause for FavoriteJumps
     const whereClause = {
       stepNum: {
