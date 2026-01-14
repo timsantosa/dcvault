@@ -384,7 +384,8 @@ columns.drills = {
   // Flattened run metrics
   runStepNum: Sequelize.INTEGER,
   runDistanceInches: Sequelize.FLOAT,
-  runTakeOffInches: Sequelize.FLOAT,
+  targetTakeOffInches: Sequelize.FLOAT,
+  actualTakeOffInches: Sequelize.FLOAT,
   // Flattened pole metrics
   poleId: {
     type: Sequelize.INTEGER,
