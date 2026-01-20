@@ -20,6 +20,7 @@ const addOrUpdateDrill = async (req, res, db) => {
       runDistanceInches: hardMetrics.run?.distanceInches,
       targetTakeOffInches: hardMetrics.run?.targetTakeOffInches,
       actualTakeOffInches: hardMetrics.run?.actualTakeOffInches,
+      spikes: hardMetrics.run?.spikes,
       // Flattened pole metrics
       poleId: hardMetrics.pole?.id,
       poleLengthInches: hardMetrics.pole?.lengthInches,
@@ -70,7 +71,13 @@ const getDrill = async (req, res, db) => {
       return res.status(404).json({ ok: false, message: 'Drill not found.' });
     }
 
-    const drill = mapDbRowToDrill(drillRow);
+    // Check if this drill is favorited
+    const favoriteDrill = await db.tables.FavoriteDrills.findOne({
+      where: { drillId: drillId }
+    });
+
+    let drill = mapDbRowToDrill(drillRow);
+    drill.isFavorite = !!favoriteDrill;
 
     res.json({ ok: true, drill });
   } catch (error) {
@@ -87,15 +94,40 @@ const deleteDrill = async (req, res, db) => {
       return res.status(400).json({ ok: false, message: 'Missing drill ID or athlete profile id' });
     }
 
+    // Check if drill exists before starting transaction
     const drill = await db.tables.Drills.findByPk(drillId);
 
     if (!drill) {
       return res.status(404).json({ ok: false, message: 'Drill not found.' });
     }
 
-    await drill.destroy();
+    // Start a transaction using the Drills model's sequelize instance
+    const transaction = await db.tables.Drills.sequelize.transaction();
 
-    res.json({ ok: true, message: 'Drill deletion successful.' });
+    try {
+      // Check if this drill is favorited
+      const favoriteDrill = await db.tables.FavoriteDrills.findOne({
+        where: { drillId, athleteProfileId },
+        transaction
+      });
+
+      // If it was a favorite, delete the favorite record
+      if (favoriteDrill) {
+        await favoriteDrill.destroy({ transaction });
+      }
+
+      // Then delete the drill
+      await drill.destroy({ transaction });
+
+      // Commit the transaction
+      await transaction.commit();
+
+      res.json({ ok: true, message: 'Drill deletion successful.' });
+    } catch (error) {
+      // If anything fails, rollback the transaction
+      await transaction.rollback();
+      throw error;
+    }
   } catch (error) {
     console.error('Error in deleteDrill:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
@@ -110,12 +142,27 @@ const fetchDrills = async (req, res, db) => {
       return res.status(400).json({ ok: false, message: 'Athlete ID is required.' });
     }
 
+    // Fetch favorite drills for the athlete
+    const favoriteDrills = await db.tables.FavoriteDrills.findAll({
+      where: { athleteProfileId },
+      attributes: ['drillId'],
+    });
+
+    // Create a map of favorite drill IDs for quick lookup
+    const favoriteMap = new Map();
+    favoriteDrills.forEach(fav => {
+      favoriteMap.set(fav.drillId, true);
+    });
+
     const drills = await db.tables.Drills.findAll({
       where: { athleteProfileId },
       order: [['date', 'DESC']], // Most recent first
     });
 
-    const returnedDrills = drills.map(mapDbRowToDrill);
+    const returnedDrills = drills.map(mapDbRowToDrill).map((drill => ({
+      ...drill,
+      isFavorite: favoriteMap.has(drill.id),
+    })));
 
     res.json({
       ok: true,
@@ -123,6 +170,88 @@ const fetchDrills = async (req, res, db) => {
     });
   } catch (error) {
     console.error('Error in fetchDrills:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error.' });
+  }
+};
+
+const pinOrUnpinDrill = async (req, res, db) => {
+  try {
+    const { athleteProfileId, drillId, drillType, pin } = req.body;
+
+    // Validate required fields
+    if (!athleteProfileId || !drillType || !drillId || pin === undefined) {
+      return res.status(400).json({ ok: false, message: 'Missing required attributes.' });
+    }
+
+    // If pin is true, pin the drill, otherwise unpin any drill of this type.
+    if (pin) {
+      // First, verify the drill exists and belongs to the athlete
+      const drill = await db.tables.Drills.findOne({
+        where: { 
+          id: drillId, 
+          athleteProfileId: athleteProfileId,
+          drillType: drillType // Ensure the drill matches the drill type
+        }
+      });
+
+      if (!drill) {
+        return res.status(404).json({ ok: false, message: 'Drill not found or does not match the specified drill type.' });
+      }
+
+      // Start transaction only for the destructive/creative operations
+      const transaction = await db.tables.Drills.sequelize.transaction();
+
+      try {
+        // Remove any existing favorite for this drill type
+        await db.tables.FavoriteDrills.destroy({
+          where: { athleteProfileId, drillType },
+          transaction
+        });
+
+        // Create new favorite
+        const favoriteDrill = await db.tables.FavoriteDrills.create({
+          athleteProfileId,
+          drillId,
+          drillType
+        }, { transaction });
+
+        // Commit the transaction
+        await transaction.commit();
+
+        res.json({
+          ok: true,
+          message: 'Drill pinned as favorite successfully.',
+          favoriteDrill: {
+            id: favoriteDrill.id,
+            drillId: favoriteDrill.drillId,
+            drillType: favoriteDrill.drillType
+          }
+        });
+      } catch (error) {
+        // If anything fails, rollback the transaction
+        await transaction.rollback();
+        throw error;
+      }
+    } else {
+      // Unpin any existing favorite for this drill type
+      const deletedCount = await db.tables.FavoriteDrills.destroy({
+        where: { athleteProfileId, drillType }
+      });
+
+      if (deletedCount > 0) {
+        res.json({
+          ok: true,
+          message: 'Drill unpinned successfully.'
+        });
+      } else {
+        res.json({
+          ok: true,
+          message: 'No favorite drill found for this drill type.'
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error in pinOrUnpinDrill:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
   }
 };
@@ -198,6 +327,7 @@ function mapDbRowToDrill(dbRow) {
         distanceInches: dbRow.runDistanceInches,
         targetTakeOffInches: dbRow.targetTakeOffInches,
         actualTakeOffInches: dbRow.actualTakeOffInches ?? undefined,
+        spikes: dbRow.spikes ?? undefined,
       },
       pole: {
         id: dbRow.poleId,
@@ -222,6 +352,7 @@ module.exports = {
   getDrill,
   deleteDrill,
   fetchDrills,
+  pinOrUnpinDrill,
   getDrillTypes,
   setDrillTypes,
 };

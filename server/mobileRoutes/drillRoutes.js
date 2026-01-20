@@ -1,5 +1,5 @@
 const express = require('express');
-const { getDrill, addOrUpdateDrill, deleteDrill, fetchDrills } = require('../controllers/drillsController');
+const { getDrill, addOrUpdateDrill, deleteDrill, fetchDrills, pinOrUnpinDrill } = require('../controllers/drillsController');
 const { checkOwnAthleteProfileOrPermission } = require('../middlewares/mobileAuthMiddleware');
 
 const drillRoutes = (db) => {
@@ -22,6 +22,9 @@ const drillRoutes = (db) => {
     .delete(checkDrillEditPermission, (req, res) => deleteDrill(req, res, db));
     
   router.get('/drills', checkDrillViewPermission, (req, res) => fetchDrills(req, res, db));
+
+  // Pin/unpin drill route
+  router.post('/favorite-drill', checkDrillEditPermission, (req, res) => pinOrUnpinDrill(req, res, db));
 
   return router;
 };

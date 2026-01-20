@@ -204,6 +204,7 @@ columns.jumps = {
   midMarkInches: Sequelize.FLOAT,
   targetTakeOffInches: Sequelize.FLOAT,
   actualTakeOffInches: Sequelize.FLOAT,
+  spikes: { type: Sequelize.BOOLEAN, allowNull: true },
   poleId: Sequelize.INTEGER, // TODO: add to db, add relationship
   poleLengthInches: Sequelize.FLOAT,
   poleWeight: Sequelize.FLOAT,
@@ -276,6 +277,30 @@ columns.favoriteJumps = {
   },
   stepNum: { 
     type: Sequelize.INTEGER, 
+    allowNull: false,
+  },
+};
+
+columns.favoriteDrills = {
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+  },
+  drillId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.drills,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+  },
+  drillType: { 
+    type: Sequelize.STRING, 
     allowNull: false,
   },
 };
@@ -386,6 +411,7 @@ columns.drills = {
   runDistanceInches: Sequelize.FLOAT,
   targetTakeOffInches: Sequelize.FLOAT,
   actualTakeOffInches: Sequelize.FLOAT,
+  spikes: { type: Sequelize.BOOLEAN, allowNull: true },
   // Flattened pole metrics
   poleId: {
     type: Sequelize.INTEGER,
@@ -642,6 +668,16 @@ const syncTables = (schema, force) => {
     ]
   });
 
+  tables.FavoriteDrills = schema.define('favoriteDrill', columns.favoriteDrills, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['athleteProfileId', 'drillType'],
+        name: 'unique_favorite_drill_type_per_athlete'
+      }
+    ]
+  });
+
   // User Devices table
   tables.UserDevices = schema.define('userDevice', columns.userDevices, {
     indexes: [
@@ -789,6 +825,13 @@ const syncTables = (schema, force) => {
 
   tables.FavoriteJumps.belongsTo(tables.Jumps, { as: 'jump', foreignKey: 'jumpId' })
   tables.Jumps.hasOne(tables.FavoriteJumps, { as: 'favoriteJump', foreignKey: 'jumpId' })
+
+  // Favorite drills associations
+  tables.FavoriteDrills.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
+  tables.AthleteProfiles.hasMany(tables.FavoriteDrills, { as: 'favoriteDrills', foreignKey: 'athleteProfileId' })
+
+  tables.FavoriteDrills.belongsTo(tables.Drills, { as: 'drill', foreignKey: 'drillId' })
+  tables.Drills.hasOne(tables.FavoriteDrills, { as: 'favoriteDrill', foreignKey: 'drillId' })
 
   // Mobile App permissions
   tables.Users.belongsToMany(tables.Roles, { through: tables.User_Roles, foreignKey: 'userId' });
