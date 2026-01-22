@@ -36,7 +36,7 @@ async function syncAllAthleteParticipants(conversationId, db) {
       const newParticipants = toAdd.map(athleteProfileId => ({
         conversationId,
         athleteProfileId,
-        role: 'readonly'
+        role: 'member'
       }));
 
       await db.tables.ConversationParticipants.bulkCreate(newParticipants, {
@@ -106,7 +106,7 @@ async function syncActiveAthleteParticipants(conversationId, db) {
       const newParticipants = toAdd.map(athleteProfileId => ({
         conversationId,
         athleteProfileId,
-        role: 'readonly'
+        role: 'member'
       }));
 
       await db.tables.ConversationParticipants.bulkCreate(newParticipants, {
@@ -121,7 +121,7 @@ async function syncActiveAthleteParticipants(conversationId, db) {
         where: {
           conversationId,
           athleteProfileId: toRemove,
-          role: 'readonly'
+          role: { [Op.ne]: 'admin' }
         },
         transaction
       });
