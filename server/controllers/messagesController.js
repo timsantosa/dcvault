@@ -541,9 +541,10 @@ async function sendMessage(req, res, db) {
 
     // If this is an announcement conversation and user has announcement permissions, sync participants
     if (participant.conversation.type === 'announcement_all' || participant.conversation.type === 'announcement_active') {
-      if (!canSendAnnouncements(req.user)) {
-        return res.status(403).json({ ok: false, message: 'Not authorized to send announcement messages' });
-      }
+      // It was decided to allow other members to send messages/reactions in announcement channels if the conversation settings allow it.
+      // if (!canSendAnnouncements(req.user)) {
+      //   return res.status(403).json({ ok: false, message: 'Not authorized to send announcement messages' });
+      // }
 
       try {
         if (participant.conversation.type === 'announcement_all') {
