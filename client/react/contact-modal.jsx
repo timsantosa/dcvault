@@ -25,7 +25,7 @@ class ContactModal extends React.Component {
       this.setState({errorText: 'Please fill in all fields'})
     } else {
       // body = 'User Full Name: ' + name + '\n\nMessage:\n' + body;
-      let recipients = ['dcvault@dcvault.org','lrose@dcvault.org']
+      let recipients = ['dcvault@dcvault.org']
       if (subject === 'technical') {
         recipients.push('it@dcvault.org')
       }

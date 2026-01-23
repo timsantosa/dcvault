@@ -46,11 +46,11 @@ class Events extends React.Component {
         </div>)
       },
       {
-        date: new Date('January 25, 2026'),
-        partial: (<div className='event-block' id='25JAN2026'>
+        date: new Date('February 1, 2026'),
+        partial: (<div className='event-block' id='1FEB2026'>
             <p className='event-block-title'><span className='red-text'>FREE</span> POLE VAULT <span className='red-text'>CLINIC</span> at Georgetown Prep</p>
             <p className='event-block-info'>
-              <span className='event-block-date'>January 25, 2026</span>
+              <span className='event-block-date'>February 1, 2026</span>
               <br></br>
               <span className='event-block-date'>10900 Rockville Pike - North Bethesda, MD</span></p>
 

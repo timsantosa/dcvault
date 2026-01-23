@@ -119,7 +119,7 @@ module.exports.sendConfirmationEmails = (email,athleteInfo) => {
       <h3>SPIKES</h3>\
       <p>Spikes are not used during practice sessions unless it is raining and the coaching staff allows it for traction. Absolutely no spikes longer than 1/8” are permitted at the DC Vault Home Training Facility located at 2100 East Capitol street NE, DC!</p>\
       <h3>CONTACT</h3>\
-      <p>If you have any questions that have not been answered, please email our administrative assistant, Lauren, at <a href="mailto:lrose@dcvault.org">LRose@DCVault.org</a>\
+      <p>If you have any questions that have not been answered, please email us, at <a href="mailto:dcvault@dcvault.org">dcvault@dcvault.org</a>\
       <p>Again, thank you for joining us, and we look forward to seeing you soon.</p>',
     attachments: [
       {
