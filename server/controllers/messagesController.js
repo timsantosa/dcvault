@@ -224,8 +224,8 @@ async function getConversation(req, res, db) {
     }
 
     // Handle participants based on conversation type
-    if (conversation.type === 'announcement_all' || conversation.type === 'announcement_active') {
-      // For announcement conversations, use the participant info we already fetched
+    if (conversation.type === 'announcement_all') {
+      // For all member announcement conversations, we don't want to include all the participants because it would be too many.
       conversation.dataValues.participants = [participant];
       conversation.dataValues.participantCount = await db.tables.ConversationParticipants.count({
         where: { conversationId }

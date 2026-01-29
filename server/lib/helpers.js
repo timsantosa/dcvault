@@ -324,6 +324,29 @@ module.exports.calculateAge = (dobString) => {
   return age;
 }
 
+/**
+ * Returns equivalent dob strings in both DB formats (YYYY-MM-DD and MM/DD/YYYY)
+ * so queries can match athletes regardless of which format is stored.
+ * @param {string} dobString - Date string in either MM/DD/YYYY or YYYY-MM-DD
+ * @returns {string[]} - Array of variants (includes original + normalized forms), deduplicated
+ */
+module.exports.getDobMatchVariants = (dobString) => {
+  if (!dobString || typeof dobString !== 'string') {
+    return [];
+  }
+  const trimmed = dobString.trim();
+  const d = new Date(trimmed);
+  if (Number.isNaN(d.getTime())) {
+    return [trimmed];
+  }
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const iso = `${y}-${m}-${day}`;
+  const us = `${m}/${day}/${y}`;
+  return [...new Set([trimmed, iso, us])];
+};
+
 module.exports.isValidId = (id) => {
   return typeof id === 'number' && Number.isInteger(id) && isFinite(id);
 }
@@ -341,6 +364,7 @@ module.exports = {
   randString: module.exports.randString,
   sendWithReplyTo: module.exports.sendWithReplyTo,
   calculateAge: module.exports.calculateAge,
+  getDobMatchVariants: module.exports.getDobMatchVariants,
   isValidId: module.exports.isValidId,
 };
 

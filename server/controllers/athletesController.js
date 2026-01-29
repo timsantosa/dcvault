@@ -106,6 +106,9 @@ async function updateProfile(req, res, db) {
     const userSendingRequest = req.user;
     const newProfileData = req.body.athleteProfile;
     const athleteProfileIdToUpdate = parseInt(req.query.athleteProfileId);
+    const userId = newProfileData.userId;
+    // Handle -1 as null userId for standalone profiles
+    const newUserId = userId === '-1' ? null : userId;
 
     if (!athleteProfileIdToUpdate) {
       return res.status(400).json({ ok: false, message: 'Athlete profile ID is required for updating a profile' });
@@ -145,11 +148,15 @@ async function updateProfile(req, res, db) {
       weight: newProfileData.weight,
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
-      alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false, // TODO: This is flawed logic, should be removed.
+      userId: newUserId,
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
       athleteProfileData.alwaysActiveOverride = newProfileData.alwaysActiveOverride;
+    }
+
+    if (userSendingRequest.permissions?.includes('edit_others_profiles')) {
+      athleteProfileData.userId = newProfileData.userId;
     }
 
     // Update existing profile
@@ -792,10 +799,14 @@ async function autoAssignAthleteId(profile, db) {
 
   try {
     // Find athletes with matching userId, firstName (case-insensitive), lastName (case-insensitive), and dob
+    // dob can be stored as MM/DD/YYYY or YYYY-MM-DD, so match against both formats
+    const dobVariants = helpers.getDobMatchVariants(profile.dob);
     const matchingAthletes = await db.tables.Athletes.findAll({
       where: {
         userId: profile.userId,
-        dob: profile.dob,
+        ...(dobVariants.length > 0
+          ? { dob: { [db.tables.schema.Sequelize.Op.in]: dobVariants } }
+          : { dob: profile.dob }),
         [db.tables.schema.Sequelize.Op.and]: [
           db.tables.schema.Sequelize.where(
             db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
