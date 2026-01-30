@@ -575,19 +575,19 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='2classes' checked={this.state.checkedFKMembership === '2classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>2 Classes ($100)</span>
+                    <span>2 Classes ($60)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='fkmembership' value='4classes' checked={this.state.checkedFKMembership === '4classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>4 Classes ($150)</span>
+                    <input type='radio' name='fkmembership' value='4classes' checked={this.state.checkedFKMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
+                    <span>8 Classes ($200)</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='15classes' checked={this.state.checkedFKMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>15 Classes ($475)</span>
+                    <span>15 Classes ($300)</span>
                   </label>
                 </div>
               </div>
@@ -1148,14 +1148,14 @@ class Payment extends React.Component {
     // if the membership is fly kids then check the membership
     // Then assign it to the props data for membership so it will reflect under "membership in the database"
     if(group === 'fly-kids'){
-      if(fkmembership === '4classes'){
-        price = 150
+      if(fkmembership === '8classes'){
+        price = 200
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === '2classes') {
-        price = 100
+        price = 60
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === '15classes') {
-        price = 475
+        price = 300
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === 'summercamp') {
         price = 350
