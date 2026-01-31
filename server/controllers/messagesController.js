@@ -833,10 +833,21 @@ async function getUnreadCounts(req, res, db) {
           where: {
             conversationId,
             senderId: { [Op.ne]: parseInt(athleteProfileId) }, // Don't count own messages
+            // Exclude reactions unless they are reactions to a message from the requester
+            [Op.or]: [
+              { type: { [Op.ne]: 'reaction' } },
+              { type: 'reaction', '$parentMessage.senderId$': parseInt(athleteProfileId) }
+            ],
             ...(lastReadAt ? {
               createdAt: { [Op.gt]: lastReadAt }
             } : {}) // If never read, count all messages from others
-          }
+          },
+          include: [{
+            model: db.tables.Messages,
+            as: 'parentMessage',
+            attributes: [],
+            required: false // LEFT JOIN so non-reaction messages are still counted
+          }]
         });
 
         return {

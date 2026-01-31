@@ -236,6 +236,10 @@ const getProfile = async (req, res, db) => {
     const medalCountsMap = await getMedalCountsForProfiles([profile.id], db);
     const medalCounts = medalCountsMap.get(profile.id) || { gold: 0, silver: 0, bronze: 0 };
 
+    // Get record counts by record type for this profile
+    const recordCountsMap = await getRecordCountsForProfiles([profile.id], db);
+    const recordCounts = recordCountsMap.get(profile.id) || [];
+
     const athleteProfile = {
       id: profile.id,
       firstName: profile.firstName,
@@ -256,6 +260,7 @@ const getProfile = async (req, res, db) => {
           weight: largestPole.jump.poleWeight,
         } : undefined,
         medalCounts,
+        recordCounts,
       },
       isActiveMember,
       userId: profile.userId,
@@ -854,6 +859,56 @@ async function autoAssignAthleteId(profile, db) {
   }
 }
 
+// Helper function to get record counts by record type for multiple athlete profiles.
+// recordType column can contain multiple comma-separated types per jump; we split and count each.
+// Returns Map<profileId, Array<{ recordType: string, count: number }>>.
+async function getRecordCountsForProfiles(athleteProfileIds, db) {
+  if (!athleteProfileIds || athleteProfileIds.length === 0) {
+    return new Map();
+  }
+
+  const rows = await db.tables.Jumps.findAll({
+    where: {
+      athleteProfileId: { [db.tables.schema.Sequelize.Op.in]: athleteProfileIds },
+      recordType: {
+        [db.tables.schema.Sequelize.Op.and]: [
+          { [db.tables.schema.Sequelize.Op.ne]: null },
+          { [db.tables.schema.Sequelize.Op.ne]: '' }
+        ]
+      },
+      verified: true
+    },
+    attributes: ['athleteProfileId', 'recordType']
+  });
+
+  // Count per profile: type name -> count (object). recordType column holds comma-separated types.
+  const countsByProfile = new Map();
+  athleteProfileIds.forEach(id => {
+    countsByProfile.set(id, {});
+  });
+
+  rows.forEach(row => {
+    const profileId = row.athleteProfileId;
+    const recordTypesStr = row.recordType;
+    if (!recordTypesStr || typeof recordTypesStr !== 'string') return;
+    const types = recordTypesStr.split(',').map(s => s.trim()).filter(Boolean);
+    const counts = countsByProfile.get(profileId) || {};
+    types.forEach(type => {
+      counts[type] = (counts[type] || 0) + 1;
+    });
+    countsByProfile.set(profileId, counts);
+  });
+
+  // Convert to array format per profile
+  const recordCountsMap = new Map();
+  countsByProfile.forEach((counts, profileId) => {
+    const list = Object.entries(counts).map(([recordType, count]) => ({ recordType, count }));
+    recordCountsMap.set(profileId, list);
+  });
+
+  return recordCountsMap;
+}
+
 // Helper function to get medal counts for multiple athlete profiles
 async function getMedalCountsForProfiles(athleteProfileIds, db) {
   if (!athleteProfileIds || athleteProfileIds.length === 0) {
@@ -940,5 +995,6 @@ module.exports = {
   getMedalCountsForProfile,
   getRegisteredAthlete,
   getMedalCountsForProfiles,
+  getRecordCountsForProfiles,
   refreshRankingCache,
 };

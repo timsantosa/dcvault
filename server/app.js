@@ -7,7 +7,16 @@ const config = require('./config/config')
 const { seedRolesAndPermissions } = require('./db/seedPermissions')
 
 // Initialize database
-var schema = new Sequelize(config.db.name, config.db.user, config.db.pass, {logging: false, host: 'localhost', dialect: 'mysql', dialectOptions: {insecureAuth: true}})
+var schema = new Sequelize(config.db.name, config.db.user, config.db.pass, {
+  logging: false,
+  host: 'localhost',
+  dialect: 'mysql',
+  charset: 'utf8mb4',
+  dialectOptions: {
+    insecureAuth: true,
+    charset: 'utf8mb4'
+  }
+})
 db.syncTables(schema).then(() => {
   console.log('DB Initialized');
   seedRolesAndPermissions(db);

@@ -223,7 +223,7 @@ columns.jumps = {
   meetType: Sequelize.STRING,
   division: Sequelize.STRING,
   placement: Sequelize.INTEGER,
-  recordType: Sequelize.STRING,
+  recordType: Sequelize.STRING, // comma-separated list of record type names (stored as "Type A, Type B")
   meetEventDetails: Sequelize.JSON, // Stores the rest of MeetInfo object as JSON since we probably don't need to query on these values
 
   // Other fields
