@@ -384,6 +384,35 @@ columns.recordTypes = {
   }
 };
 
+// Meet entities (facilities, organizations, meet names) — populated on jump verification
+columns.facilities = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  },
+  address: {
+    type: Sequelize.JSON,
+    allowNull: true
+  }
+};
+
+columns.hostingOrganizations = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+};
+
+columns.meetNames = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+};
+
 columns.drillTypes = {
   name: {
     type: Sequelize.STRING,
@@ -766,6 +795,9 @@ const syncTables = (schema, force) => {
   tables.ChampionshipTypes = schema.define('championshipType', columns.championshipTypes);
   tables.DivisionTypes = schema.define('divisionType', columns.divisionTypes);
   tables.RecordTypes = schema.define('recordType', columns.recordTypes);
+  tables.Facilities = schema.define('facility', columns.facilities);
+  tables.HostingOrganizations = schema.define('hostingOrganization', columns.hostingOrganizations);
+  tables.MeetNames = schema.define('meetName', columns.meetNames);
   tables.DrillTypes = schema.define('drillType', columns.drillTypes);
   tables.Drills = schema.define('drill', columns.drills);
 

@@ -12,6 +12,7 @@ const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
 const { verifyJump, rejectJumpVerification, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
 const poleRoutes = require('./mobileRoutes/poleRoutes');
 const meetDataRoutes = require('./mobileRoutes/meetDataRoutes');
+const meetEntityRoutes = require('./mobileRoutes/meetEntityRoutes');
 const drillTypeRoutes = require('./mobileRoutes/drillTypeRoutes');
 const drillRoutes = require('./mobileRoutes/drillRoutes');
 const messageRoutes = require('./mobileRoutes/messageRoutes');
@@ -33,6 +34,7 @@ module.exports = function addMobileAppRoutes(app, db) {
 
   app.use('/mobileapp/user/poles', poleRoutes(db));
   app.use('/mobileapp/user/meet-data', meetDataRoutes(db));
+  app.use('/mobileapp/user/meet-entities', meetEntityRoutes(db));
   app.use('/mobileapp/user/messaging', messageRoutes(db));
   app.use('/mobileapp/user/notifications', notificationRoutes(db));
   

@@ -410,6 +410,53 @@ const fetchJumps = async (req, res, db) => {
   }
 };
 
+function normalizeAddress(location) {
+  if (!location || typeof location !== 'object') return null;
+  const addr = {
+    line1: location.line1 ?? null,
+    line2: location.line2 ?? null,
+    city: location.city ?? null,
+    state: location.state ?? null,
+    country: location.country ?? null,
+    zip: location.zip ?? null
+  };
+  return Object.values(addr).every(v => v == null) ? null : addr;
+}
+
+async function upsertMeetEntitiesFromJump(jump, db) {
+  if (jump.setting !== 'Meet' || !jump.meetEventDetails) return;
+  const details = jump.meetEventDetails;
+
+  try {
+    if (details.facility && String(details.facility).trim()) {
+      const name = String(details.facility).trim();
+      const address = normalizeAddress(details.location);
+      const existing = await db.tables.Facilities.findOne({ where: { name } });
+      if (existing) {
+        await existing.update({ address: address != null ? address : existing.address });
+      } else {
+        await db.tables.Facilities.create({ name, address });
+      }
+    }
+    if (details.organization && String(details.organization).trim()) {
+      const name = String(details.organization).trim();
+      const existing = await db.tables.HostingOrganizations.findOne({ where: { name } });
+      if (!existing) {
+        await db.tables.HostingOrganizations.create({ name });
+      }
+    }
+    if (details.meetName && String(details.meetName).trim()) {
+      const name = String(details.meetName).trim();
+      const existing = await db.tables.MeetNames.findOne({ where: { name } });
+      if (!existing) {
+        await db.tables.MeetNames.create({ name });
+      }
+    }
+  } catch (err) {
+    console.error('Error upserting meet entities from jump:', err);
+  }
+}
+
 async function verifyJump(req, res, db) {
   const { jumpId, verify } = req.body;
 
@@ -431,6 +478,8 @@ async function verifyJump(req, res, db) {
       // Mark jump as verified
       jump.verified = true;
       await jump.save();
+
+      await upsertMeetEntitiesFromJump(jump, db);
 
       await checkIfJumpIsStepPr(jump, db);
 
