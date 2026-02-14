@@ -336,40 +336,19 @@ const fetchJumps = async (req, res, db) => {
       }
     }
 
-    // Fetch PRs for the athlete with jump data included
-    const personalRecords = await db.tables.PersonalRecords.findAll({
-      where: { athleteProfileId },
-      attributes: ['stepNum', 'jumpId'],
-      include: [
-        {
-          model: db.tables.Jumps,
-          as: 'jump',
-          attributes: ['id', 'heightInches'],
-        },
-      ],
-    });
+    // Fetch PRs and favorite jumps in parallel
+    const [{ prMap, overallPrJumpId }, favoriteJumps] = await Promise.all([
+      getMeetJumpsPrInfo(db, athleteProfileId),
+      db.tables.FavoriteJumps.findAll({
+        where: { athleteProfileId },
+        attributes: ['jumpId', 'stepNum'],
+      }),
+    ]);
 
-    // Fetch favorite jumps for the athlete
-    const favoriteJumps = await db.tables.FavoriteJumps.findAll({
-      where: { athleteProfileId },
-      attributes: ['jumpId', 'stepNum'],
-    });
-
-    // Create a map of PR jump IDs for quick lookup
-    const prMap = new Map();
-    personalRecords.forEach(pr => {
-      prMap.set(pr.stepNum, pr.jumpId);
-    });
-
-    // Create a map of favorite jump IDs for quick lookup
     const favoriteMap = new Map();
     favoriteJumps.forEach(fav => {
       favoriteMap.set(fav.jumpId, fav.stepNum);
     });
-
-    // Find the overall PR (highest height among all PRs)
-    const bestPr = getBestOfPersonalRecords(personalRecords);
-    const overallPrJumpId = bestPr.jumpId;
 
     let limit = null;
     let offset = null;
@@ -387,12 +366,8 @@ const fetchJumps = async (req, res, db) => {
       offset,
     });
 
-    let returnedJumps = jumps.map(mapDbRowToJump).map((jump => ({
-      ...jump,
-      isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
-      isPr: jump.id === overallPrJumpId,
-      isFavorite: favoriteMap.has(jump.id),
-    })));
+    let returnedJumps = formatJumpsWithPrFlags(jumps, prMap, overallPrJumpId)
+      .map(jump => ({ ...jump, isFavorite: favoriteMap.has(jump.id) }));
 
     // Add rejection info to all jumps
     returnedJumps = await addRejectionInfoToJumps(returnedJumps, db);
@@ -943,64 +918,53 @@ async function getTopMeetJumps(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Athlete ID is required.' });
     }
 
-    const limit = Math.min(parseInt(howMany,10), 100);
+    const limit = Math.min(parseInt(howMany, 10), 100);
     if (isNaN(limit) || limit <= 0) {
       return res.status(400).json({ ok: false, message: 'Invalid howMany parameter.' });
     }
 
-    // Fetch PRs for the athlete with jump data included
-    const personalRecords = await db.tables.PersonalRecords.findAll({
-      where: { athleteProfileId },
-      attributes: ['stepNum', 'jumpId'],
-      include: [
-        {
-          model: db.tables.Jumps,
-          as: 'jump',
-          attributes: ['id', 'heightInches'],
-        },
-      ],
-    });
-
-    // Create a map of PR jump IDs for quick lookup
-    const prMap = new Map();
-    personalRecords.forEach(pr => {
-      prMap.set(pr.stepNum, pr.jumpId);
-    });
-
-    // Find the overall PR (highest height among all PRs)
-    const bestPr = getBestOfPersonalRecords(personalRecords);
-    const overallPrJumpId = bestPr.jumpId;
-
-    // Get the top jumps by height, ordered by height descending, then by date descending
-    // Only include Meet jumps
-    const jumps = await db.tables.Jumps.findAll({
-      where: {
-        athleteProfileId,
-        verified: true,
-        setting: 'Meet',
-        heightInches: {
-          [db.tables.schema.Sequelize.Op.ne]: null, // Only get jumps with a height
-        },
-      },
-      order: [
-        ['heightInches', 'DESC'],
-        ['date', 'DESC'],
-      ],
-      limit,
-    });
-
-    const formattedJumps = jumps.map(mapDbRowToJump).map((jump => ({
-      ...jump,
-      isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
-      isPr: jump.id === overallPrJumpId,
-    })));
+    const { prMap, overallPrJumpId } = await getMeetJumpsPrInfo(db, athleteProfileId);
+    const jumpRows = await fetchVerifiedMeetJumps(db, athleteProfileId, { limit });
+    const jumps = formatJumpsWithPrFlags(jumpRows, prMap, overallPrJumpId);
 
     res.json({
       ok: true,
-      jumps: formattedJumps,
+      jumps,
     });
   } catch (error) {
     console.error('Error in getTopMeetJumps:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error.' });
+  }
+}
+
+async function getTopIndoorOutdoorMeetJumps(req, res, db) {
+  try {
+    const { athleteProfileId } = req.query;
+    if (!athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Athlete ID is required.' });
+    }
+
+    const { prMap, overallPrJumpId } = await getMeetJumpsPrInfo(db, athleteProfileId);
+
+    const [indoorRows, outdoorRows] = await Promise.all([
+      fetchVerifiedMeetJumps(db, athleteProfileId, { facilitySetting: 'Indoor', limit: 1 }),
+      fetchVerifiedMeetJumps(db, athleteProfileId, { facilitySetting: 'Outdoor', limit: 1 }),
+    ]);
+
+    const indoorJump = indoorRows.length > 0
+      ? formatJumpsWithPrFlags(indoorRows, prMap, overallPrJumpId)[0]
+      : null;
+    const outdoorJump = outdoorRows.length > 0
+      ? formatJumpsWithPrFlags(outdoorRows, prMap, overallPrJumpId)[0]
+      : null;
+
+    res.json({
+      ok: true,
+      indoorJump,
+      outdoorJump,
+    });
+  } catch (error) {
+    console.error('Error in getTopIndoorOutdoorMeetJumps:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
   }
 }
@@ -1019,6 +983,7 @@ module.exports = {
   pinOrUnpinJump,
   getFavoriteJumps,
   getTopMeetJumps,
+  getTopIndoorOutdoorMeetJumps,
   // getPersonalBests,
   // getLargestPole,
 }
@@ -1171,4 +1136,78 @@ function mapDbRowToJump(dbRow) {
     videoLink: dbRow.videoLink || undefined,
     verified: dbRow.verified,
   };
+}
+
+/**
+ * Fetches PR info for an athlete for use when formatting meet jumps (step PR map and overall PR jump id).
+ * @param {Object} db - Database instance
+ * @param {number} athleteProfileId - Athlete profile id
+ * @returns {Promise<{ prMap: Map<number, number>, overallPrJumpId: number|null }>}
+ */
+async function getMeetJumpsPrInfo(db, athleteProfileId) {
+  const personalRecords = await db.tables.PersonalRecords.findAll({
+    where: { athleteProfileId },
+    attributes: ['stepNum', 'jumpId'],
+    include: [
+      {
+        model: db.tables.Jumps,
+        as: 'jump',
+        attributes: ['id', 'heightInches'],
+      },
+    ],
+  });
+  const prMap = new Map();
+  personalRecords.forEach(pr => {
+    prMap.set(pr.stepNum, pr.jumpId);
+  });
+  const bestPr = getBestOfPersonalRecords(personalRecords);
+  return { prMap, overallPrJumpId: bestPr.jumpId };
+}
+
+/**
+ * Fetches verified meet jumps for an athlete, optionally filtered by facility setting.
+ * @param {Object} db - Database instance
+ * @param {number} athleteProfileId - Athlete profile id
+ * @param {{ limit?: number, facilitySetting?: 'Indoor'|'Outdoor' }} options - Optional limit and facilitySetting filter
+ * @returns {Promise<Array>} Raw jump rows
+ */
+async function fetchVerifiedMeetJumps(db, athleteProfileId, options = {}) {
+  const { limit, facilitySetting } = options;
+  const where = {
+    athleteProfileId,
+    verified: true,
+    setting: 'Meet',
+    heightInches: {
+      [db.tables.schema.Sequelize.Op.ne]: null,
+    },
+  };
+  if (facilitySetting) {
+    where.facilitySetting = facilitySetting;
+  }
+  const findOptions = {
+    where,
+    order: [
+      ['heightInches', 'DESC'],
+      ['date', 'DESC'],
+    ],
+  };
+  if (limit != null) {
+    findOptions.limit = limit;
+  }
+  return db.tables.Jumps.findAll(findOptions);
+}
+
+/**
+ * Maps raw jump rows to API format and adds isStepPr / isPr flags.
+ * @param {Array} jumpRows - Raw jump rows from DB
+ * @param {Map<number, number>} prMap - Step number -> PR jump id
+ * @param {number|null} overallPrJumpId - Overall PR jump id
+ * @returns {Array} Formatted jumps with isStepPr and isPr
+ */
+function formatJumpsWithPrFlags(jumpRows, prMap, overallPrJumpId) {
+  return jumpRows.map(mapDbRowToJump).map(jump => ({
+    ...jump,
+    isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
+    isPr: jump.id === overallPrJumpId,
+  }));
 }
