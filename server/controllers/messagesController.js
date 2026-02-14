@@ -1,6 +1,6 @@
 const { literal, Op } = require('sequelize');
-const { 
-  canSendAnnouncements, 
+const {
+  canSendAnnouncements,
   getOrCreateAnnouncementConversation,
   syncAllAthleteParticipants,
   syncActiveAthleteParticipants,
@@ -9,6 +9,7 @@ const {
 } = require('../utils/messagesUtils');
 const NotificationUtils = require('../utils/notificationUtils');
 const { deleteCloudinaryImage } = require('./imageUploadController');
+const cloudinary = require('./cloudinaryConfig');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -484,6 +485,111 @@ async function updateConversation(req, res, db) {
   }
 }
 
+// Helper: map mimetype to Cloudinary resource_type
+function getCloudinaryResourceType(mimetype) {
+  if (!mimetype) return 'raw';
+  if (mimetype.startsWith('image/')) return 'image';
+  if (mimetype.startsWith('video/')) return 'video';
+  return 'raw';
+}
+
+// Upload message attachments (returns attachment metadata for use in send message)
+async function uploadMessageAttachment(req, res, db) {
+  try {
+    const { conversationId } = req.params;
+    const { athleteProfileId } = req.query;
+    const files = req.files;
+
+    if (!conversationId || !athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+    if (!files || files.length === 0) {
+      return res.status(400).json({ ok: false, message: 'At least one file is required' });
+    }
+
+    const participant = await db.tables.ConversationParticipants.findOne({
+      where: { conversationId, athleteProfileId },
+      include: [{ model: db.tables.Conversations, as: 'conversation' }]
+    });
+    if (!participant) {
+      return res.status(403).json({ ok: false, message: 'Not authorized to send messages in this conversation' });
+    }
+    const canSend = participant.role === 'admin' ||
+      (participant.role === 'member' && participant.conversation.settings.canSendMessages);
+    if (!canSend) {
+      return res.status(403).json({ ok: false, message: 'Not authorized to send messages' });
+    }
+
+    const attachments = [];
+    for (const file of files) {
+      const resourceType = getCloudinaryResourceType(file.mimetype);
+      const dataUri = `data:${file.mimetype || 'application/octet-stream'};base64,${file.buffer.toString('base64')}`;
+      try {
+        const result = await cloudinary.uploader.upload(dataUri, {
+          resource_type: resourceType,
+          folder: 'message_attachments'
+        });
+        attachments.push({
+          url: result.secure_url,
+          filename: file.originalname,
+          mimeType: file.mimetype,
+          size: file.size,
+          publicId: result.public_id,
+          resourceType
+        });
+      } catch (uploadErr) {
+        console.error('Cloudinary upload error:', uploadErr);
+        return res.status(502).json({ ok: false, message: 'Failed to upload file to storage' });
+      }
+    }
+
+    res.json({ ok: true, attachments });
+  } catch (error) {
+    console.error('Error uploading message attachment:', error);
+    res.status(500).json({ ok: false, message: 'Failed to upload attachment' });
+  }
+}
+
+// Delete an orphaned attachment from Cloudinary (e.g. user removed from compose before send)
+async function deleteMessageAttachment(req, res, db) {
+  try {
+    const { conversationId } = req.params;
+    const { athleteProfileId } = req.query;
+    const { publicId, resourceType } = req.body || {};
+
+    if (!conversationId || !athleteProfileId || !publicId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters (publicId in body, athleteProfileId in query)' });
+    }
+
+    const participant = await db.tables.ConversationParticipants.findOne({
+      where: { conversationId, athleteProfileId },
+      include: [{ model: db.tables.Conversations, as: 'conversation' }]
+    });
+    if (!participant) {
+      return res.status(403).json({ ok: false, message: 'Not authorized' });
+    }
+    const canSend = participant.role === 'admin' ||
+      (participant.role === 'member' && participant.conversation.settings.canSendMessages);
+    if (!canSend) {
+      return res.status(403).json({ ok: false, message: 'Not authorized' });
+    }
+
+    try {
+      await cloudinary.uploader.destroy(publicId, { resource_type: resourceType || 'image' });
+    } catch (destroyErr) {
+      if (destroyErr?.error?.http_code === 404) {
+        return res.json({ ok: true });
+      }
+      console.error('Cloudinary destroy error:', destroyErr);
+      return res.status(502).json({ ok: false, message: 'Failed to delete attachment from storage' });
+    }
+    res.json({ ok: true });
+  } catch (error) {
+    console.error('Error deleting message attachment:', error);
+    res.status(500).json({ ok: false, message: 'Failed to delete attachment' });
+  }
+}
+
 // Send a message
 async function sendMessage(req, res, db) {
   try {
@@ -491,8 +597,17 @@ async function sendMessage(req, res, db) {
     const { content, type = 'text', parentMessageId, attachments } = req.body;
     const { athleteProfileId } = req.query;
 
-    if (!conversationId || !athleteProfileId || (type === 'text' && !content) || (type === 'reaction' && !parentMessageId)) {
+    if (!conversationId || !athleteProfileId) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+    if (type === 'text' && !content) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+    if (type === 'reaction' && !parentMessageId) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+    if (type === 'attachment' && (!attachments || !Array.isArray(attachments) || attachments.length === 0)) {
+      return res.status(400).json({ ok: false, message: 'Attachments required for attachment message' });
     }
 
     // If it's a reaction, check if the parent message exists and replace any reactions from the same sender
@@ -530,9 +645,10 @@ async function sendMessage(req, res, db) {
     }
 
     // Check permissions
-    const canSend = participant.role === 'admin' || 
-                   (participant.role === 'member' && 
+    const canSend = participant.role === 'admin' ||
+                   (participant.role === 'member' &&
                     ((type === 'text' && participant.conversation.settings.canSendMessages) ||
+                     (type === 'attachment' && participant.conversation.settings.canSendMessages) ||
                      (type === 'reaction' && participant.conversation.settings.canReact)));
     
     if (!canSend) {
@@ -792,7 +908,22 @@ async function deleteMessage(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Message is too old to delete' });
     }
 
-    // Delete the message
+    // Delete attachment assets from Cloudinary before removing the message
+    if (message.attachments && Array.isArray(message.attachments) && message.attachments.length > 0) {
+      for (const att of message.attachments) {
+        if (att.publicId) {
+          try {
+            await cloudinary.uploader.destroy(att.publicId, {
+              resource_type: att.resourceType || 'image'
+            });
+          } catch (destroyErr) {
+            console.error('Error deleting attachment from Cloudinary:', att.publicId, destroyErr);
+            // Continue; do not block message deletion
+          }
+        }
+      }
+    }
+
     await message.destroy();
 
     // TODO: Send notification to conversation participants about deleted message
@@ -960,5 +1091,7 @@ module.exports = {
   removeParticipant,
   deleteMessage,
   deleteConversation,
-  getUnreadCounts
+  getUnreadCounts,
+  uploadMessageAttachment,
+  deleteMessageAttachment
 }; 
