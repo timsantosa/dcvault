@@ -114,8 +114,23 @@ const addOrUpdateJump = async (req, res, db) => {
     
     const verified = !needsVerification;
 
-    // Upsert jump
-    const [jumpRow, created] = await db.tables.Jumps.upsert({
+    // Resolve vaultAssociationId: explicit null/'' = unassociate; omitted = default from profile; otherwise use id
+    let vaultAssociationId;
+    if (req.body.jump && 'vaultAssociationId' in req.body.jump) {
+      const raw = req.body.jump.vaultAssociationId;
+      if (raw === null || raw === '') {
+        vaultAssociationId = null;
+      } else {
+        const parsed = parseInt(raw, 10);
+        vaultAssociationId = Number.isNaN(parsed) ? null : parsed;
+      }
+    } else {
+      const profile = await db.tables.AthleteProfiles.findByPk(athleteProfileId, { attributes: ['vaultAssociationId'] });
+      vaultAssociationId = profile?.vaultAssociationId ?? null;
+    }
+
+    // Upsert jump (vaultAssociationId always set so we can unassociate with null)
+    const upsertPayload = {
       id: jumpId,
       athleteProfileId,
       date,
@@ -125,7 +140,9 @@ const addOrUpdateJump = async (req, res, db) => {
       softMetrics,
       ...flattenedMeetInfo,
       verified,
-    });
+      vaultAssociationId,
+    };
+    const [jumpRow, created] = await db.tables.Jumps.upsert(upsertPayload);
 
     // If we're updating a verified PR and it needs re-verification, we need to recalculate PRs
     if (jumpId && wasPr && needsVerification) {
@@ -148,7 +165,11 @@ const addOrUpdateJump = async (req, res, db) => {
       }
     }
 
-    const jump = mapDbRowToJump(jumpRow);
+    // Re-fetch with vaultAssociation for response
+    const jumpWithVaultAssociation = await db.tables.Jumps.findByPk(jumpRow.id, {
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
+    });
+    const jump = mapDbRowToJump(jumpWithVaultAssociation);
 
     res.json({
       ok: true,
@@ -202,7 +223,9 @@ const getJump = async (req, res, db) => {
       return res.status(400).json({ ok: false, message: 'Jump ID is required.' });
     }
 
-    const jumpRow = await db.tables.Jumps.findByPk(jumpId);
+    const jumpRow = await db.tables.Jumps.findByPk(jumpId, {
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
+    });
 
     if (!jumpRow) {
       return res.status(404).json({ ok: false, message: 'Jump not found.' });
@@ -364,6 +387,7 @@ const fetchJumps = async (req, res, db) => {
       order: [['date', 'DESC']], // Most recent first
       limit,
       offset,
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
 
     let returnedJumps = formatJumpsWithPrFlags(jumps, prMap, overallPrJumpId)
@@ -489,7 +513,11 @@ async function verifyJump(req, res, db) {
     // Reorder ranks for that gender. Can probably be done asyncronusly if needed
     await rankingCache.regenerateAllRankings();
 
-    res.json({ ok: true, message, jump });
+    const jumpWithVaultAssociation = await db.tables.Jumps.findByPk(jumpId, {
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
+    });
+    const mappedJump = mapDbRowToJump(jumpWithVaultAssociation);
+    res.json({ ok: true, message, jump: mappedJump });
   } catch (error) {
     console.error('Error verifying jump:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
@@ -683,19 +711,13 @@ async function getUnverifiedMeetJumps(req, res, db) {
         setting: 'Meet',
         verified: false,
       },
-      // attributes: [
-      //   'id', 'stepNum', 'heightInches', 'poleLengthInches', 'poleWeight', 'meetType',
-      //   'division',
-      //   'placement',
-      //   'recordType',
-      //   'meetEventDetails', 'date',
-      // ],
       include: [
         {
           model: db.tables.AthleteProfiles,
           as: 'athleteProfile',
           attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified'],
         },
+        { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
       ],
       order: [['date', 'ASC']], // Earlier dates should be first
     });
@@ -885,7 +907,8 @@ async function getFavoriteJumps(req, res, db) {
         {
           model: db.tables.Jumps,
           as: 'jump',
-          attributes: ['id', 'date', 'stepNum', 'heightInches', 'poleLengthInches', 'poleWeight', 'poleBrand', 'notes', 'videoLink', 'softMetrics']
+          attributes: ['id', 'date', 'stepNum', 'heightInches', 'poleLengthInches', 'poleWeight', 'poleBrand', 'notes', 'videoLink', 'softMetrics', 'vaultAssociationId'],
+          include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
         }
       ],
       order: [['stepNum', 'ASC']]
@@ -1135,6 +1158,8 @@ function mapDbRowToJump(dbRow) {
     notes: dbRow.notes || undefined,
     videoLink: dbRow.videoLink || undefined,
     verified: dbRow.verified,
+    vaultAssociationId: dbRow.vaultAssociationId ?? undefined,
+    vaultAssociation: dbRow.vaultAssociation ? { id: dbRow.vaultAssociation.id, name: dbRow.vaultAssociation.name } : null,
   };
 }
 
@@ -1190,6 +1215,7 @@ async function fetchVerifiedMeetJumps(db, athleteProfileId, options = {}) {
       ['heightInches', 'DESC'],
       ['date', 'DESC'],
     ],
+    include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
   };
   if (limit != null) {
     findOptions.limit = limit;

@@ -145,6 +145,9 @@ columns.addresses = {
   country: Sequelize.STRING
 }
 
+columns.vaultAssociations = {
+  name: { type: Sequelize.STRING, allowNull: false },
+}
 
 // Mobile app related tables
 columns.athleteProfiles = {
@@ -176,6 +179,14 @@ columns.athleteProfiles = {
     allowNull: true,
     references: {
       model: tables.athletes,
+      key: 'id',
+    },
+  },
+  vaultAssociationId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.VaultAssociations,
       key: 'id',
     },
   },
@@ -231,6 +242,14 @@ columns.jumps = {
   notes: Sequelize.TEXT,
   videoLink: Sequelize.STRING,
   verified: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false, },
+  vaultAssociationId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.VaultAssociations,
+      key: 'id',
+    },
+  },
 };
 
 columns.personalRecords = {
@@ -674,6 +693,9 @@ const syncTables = (schema, force) => {
   tables.EventAthletes = schema.define('eventAthlete', columns.eventAthletes)
   tables.EventPurchases = schema.define('eventPurchase', columns.eventPurchases)
 
+  // Vault associations (must be defined before AthleteProfiles and Jumps)
+  tables.VaultAssociations = schema.define('vaultAssociation', columns.vaultAssociations);
+
   // Mobile app specific
   tables.AthleteProfiles = schema.define('athleteProfile', columns.athleteProfiles);
   tables.Jumps = schema.define('jump', columns.jumps);
@@ -843,6 +865,11 @@ const syncTables = (schema, force) => {
 
   tables.Jumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
   tables.AthleteProfiles.hasMany(tables.Jumps, { as: 'jumps', foreignKey: 'athleteProfileId' })
+
+  tables.VaultAssociations.hasMany(tables.AthleteProfiles, { foreignKey: 'vaultAssociationId' })
+  tables.AthleteProfiles.belongsTo(tables.VaultAssociations, { as: 'vaultAssociation', foreignKey: 'vaultAssociationId' })
+  tables.VaultAssociations.hasMany(tables.Jumps, { foreignKey: 'vaultAssociationId' })
+  tables.Jumps.belongsTo(tables.VaultAssociations, { as: 'vaultAssociation', foreignKey: 'vaultAssociationId' })
 
   // A jump can only have one personal record, or none. A PR has to have at exactly 1 jump
   tables.PersonalRecords.belongsTo(tables.Jumps, { as: 'jump', foreignKey: 'jumpId' })

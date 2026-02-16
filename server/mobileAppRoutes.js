@@ -17,6 +17,7 @@ const drillTypeRoutes = require('./mobileRoutes/drillTypeRoutes');
 const drillRoutes = require('./mobileRoutes/drillRoutes');
 const messageRoutes = require('./mobileRoutes/messageRoutes');
 const notificationRoutes = require('./mobileRoutes/notificationRoutes');
+const vaultAssociationRoutes = require('./mobileRoutes/vaultAssociationRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -50,6 +51,7 @@ module.exports = function addMobileAppRoutes(app, db) {
   }, (req, res) => deleteUser(req, res, db));
 
   app.use('/mobileapp/user/drillTypes', drillTypeRoutes(db));
+  app.use('/mobileapp/user/vaultAssociations', vaultAssociationRoutes(db));
 
   // Admin routes
   app.post('/mobileapp/user/jump/verify', checkPermission('verify_jumps'), (req, res) => verifyJump(req, res, db));

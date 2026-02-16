@@ -70,7 +70,8 @@ async function createProfile(req, res, db) {
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
       alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false, // TODO: This is flawed logic, should be removed.
-      userId: actualUserId
+      userId: actualUserId,
+      vaultAssociationId: newProfileData.vaultAssociationId ?? null,
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
@@ -149,6 +150,7 @@ async function updateProfile(req, res, db) {
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
       userId: newUserId,
+      vaultAssociationId: newProfileData.vaultAssociationId ?? null,
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
@@ -188,7 +190,7 @@ const getProfile = async (req, res, db) => {
       'nationality', 'dob', 'height', 
       'weight', 'profileImage', 'backgroundImage', 
       'gender', 'profileImageVerified', 'backgroundImageVerified',
-      'alwaysActiveOverride', 'userId', 'athleteId'];
+      'alwaysActiveOverride', 'userId', 'athleteId', 'vaultAssociationId'];
     const userHasFullAccess = athleteProfileBelongsToUser(athleteProfileId, user) || user.permissions?.includes('view_contact_info');
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
@@ -196,6 +198,7 @@ const getProfile = async (req, res, db) => {
 
     const profile = await db.tables.AthleteProfiles.findByPk(athleteProfileId, {
       attributes: attributes,
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
 
     if (!profile) {
@@ -266,6 +269,8 @@ const getProfile = async (req, res, db) => {
       userId: profile.userId,
       athleteId: profile.athleteId,
       alwaysActiveOverride: profile.alwaysActiveOverride, // Only used for editing profile.
+      vaultAssociationId: profile.vaultAssociationId ?? undefined,
+      vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
     };
 
     // Only query for athlete if we have an athleteId
@@ -426,6 +431,7 @@ const getProfiles = async (req, res, db) => {
 
     const profiles = await db.tables.AthleteProfiles.findAll({
       where: whereClause,
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
 
     // Get medal counts for all profiles in bulk
@@ -452,7 +458,9 @@ const getProfiles = async (req, res, db) => {
         },
         alwaysActiveOverride: profile.alwaysActiveOverride,
         userId: profile.userId,
-        athleteId: profile.athleteId
+        athleteId: profile.athleteId,
+        vaultAssociationId: profile.vaultAssociationId ?? undefined,
+        vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
       };
     });
 
@@ -576,9 +584,10 @@ const getRankedProfiles = async (req, res, db) => {
         'nationality', 'dob', 'height',
         'weight', 'profileImage', 'backgroundImage',
         'gender', 'profileImageVerified', 'backgroundImageVerified',
-        'alwaysActiveOverride', 'athleteId', 'userId',
+        'alwaysActiveOverride', 'athleteId', 'userId', 'vaultAssociationId',
       ],
       include: [
+        { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
         {
           model: db.tables.PersonalRecords,
           as: 'personalRecords',
@@ -608,9 +617,10 @@ const getRankedProfiles = async (req, res, db) => {
         'nationality', 'dob', 'height',
         'weight', 'profileImage', 'backgroundImage',
         'gender', 'profileImageVerified', 'backgroundImageVerified',
-        'alwaysActiveOverride', 'athleteId', 'userId',
+        'alwaysActiveOverride', 'athleteId', 'userId', 'vaultAssociationId',
       ],
       include: [
+        { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
         {
           model: db.tables.PersonalRecords,
           as: 'personalRecords',
@@ -672,6 +682,8 @@ const getRankedProfiles = async (req, res, db) => {
         userId: profile.userId,
         athleteId: profile.athleteId,
         alwaysActiveOverride: profile.alwaysActiveOverride,
+        vaultAssociationId: profile.vaultAssociationId ?? undefined,
+        vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
       };
     });
 
