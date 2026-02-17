@@ -715,7 +715,7 @@ async function getUnverifiedMeetJumps(req, res, db) {
         {
           model: db.tables.AthleteProfiles,
           as: 'athleteProfile',
-          attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified'],
+          attributes: ['id', 'firstName', 'lastName', 'profileImage'],
         },
         { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
       ],
@@ -728,7 +728,7 @@ async function getUnverifiedMeetJumps(req, res, db) {
         athlete: {
           id: row.athleteProfile.id,
           name: row.athleteProfile.firstName + ' ' + row.athleteProfile.lastName,
-          profileImage: row.athleteProfile.profileImageVerified ? row.athleteProfile.profileImage : undefined,
+          profileImage: row.athleteProfile.profileImage || undefined,
         },
       }
     });

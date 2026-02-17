@@ -49,7 +49,7 @@ async function getConversations(req, res, db) {
           include: [{
             model: db.tables.AthleteProfiles,
             as: 'athleteProfile',
-            attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified']
+            attributes: ['id', 'firstName', 'lastName', 'profileImage']
           }]
         },
         {
@@ -81,7 +81,7 @@ async function getConversations(req, res, db) {
           include: [{
             model: db.tables.AthleteProfiles,
             as: 'athleteProfile',
-            attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified']
+            attributes: ['id', 'firstName', 'lastName', 'profileImage']
           }]
         },
         {
@@ -136,7 +136,7 @@ async function getConversations(req, res, db) {
         if (conversation.type === 'direct') {
           // For direct conversations, use the other participant's verified profile image
           const otherParticipant = conversation.participants?.find(p => p.athleteProfileId !== parseInt(athleteProfileId));
-          if (otherParticipant?.athleteProfile?.profileImage && otherParticipant.athleteProfile.profileImageVerified) {
+          if (otherParticipant?.athleteProfile?.profileImage) {
             conversationImage = otherParticipant.athleteProfile.profileImage;
           }
         } else {
@@ -238,7 +238,7 @@ async function getConversation(req, res, db) {
         include: [{
           model: db.tables.AthleteProfiles,
           as: 'athleteProfile',
-          attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified']
+          attributes: ['id', 'firstName', 'lastName', 'profileImage']
         }]
       });
       conversation.dataValues.participants = participants;
@@ -254,7 +254,7 @@ async function getConversation(req, res, db) {
     if (conversation.type === 'direct') {
       // For direct conversations, use the other participant's verified profile image
       const otherParticipant = conversation?.dataValues?.participants?.find(p => p.athleteProfileId !== parseInt(athleteProfileId));
-      if (otherParticipant?.athleteProfile?.profileImage && otherParticipant?.athleteProfile?.profileImageVerified) {
+      if (otherParticipant?.athleteProfile?.profileImage) {
         conversationImage = otherParticipant.athleteProfile.profileImage;
       }
     } else {

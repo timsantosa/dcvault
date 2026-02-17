@@ -1,12 +1,14 @@
 const express = require('express');
 const multer = require("multer");
-const { 
-  deleteProfilePicture, 
-  deleteBackgroundImage, 
-  uploadProfileImage, 
-  uploadBackgroundImage, 
+const {
+  deleteProfilePicture,
+  deleteBackgroundImage,
+  uploadProfileImage,
+  uploadBackgroundImage,
   verifyImage,
+  rejectImage,
   getAllUnverifiedImages,
+  getPendingImagesForProfile,
   uploadConversationImage,
   deleteConversationImage
 } = require('../controllers/imageUploadController');
@@ -39,7 +41,9 @@ const imageUploadRoutes = (db) => {
   router.delete('/profile/:athleteProfileId/background', (req, res) => deleteBackgroundImage(req, res, db));
 
   router.post('/verify', checkPermission('verify_images'), (req, res) => verifyImage(req, res, db));
+  router.post('/reject', checkPermission('verify_images'), (req, res) => rejectImage(req, res, db));
   router.get('/unverified', checkPermission('verify_images'), (req, res) => getAllUnverifiedImages(req, res, db));
+  router.get('/profile/:athleteProfileId/pending', (req, res) => getPendingImagesForProfile(req, res, db));
 
   // Conversation image routes (protected by manage_conversations permission)
   router.post('/conversations/:conversationId',

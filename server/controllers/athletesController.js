@@ -189,7 +189,7 @@ const getProfile = async (req, res, db) => {
       'id', 'firstName', 'lastName',
       'nationality', 'dob', 'height', 
       'weight', 'profileImage', 'backgroundImage', 
-      'gender', 'profileImageVerified', 'backgroundImageVerified',
+      'gender',
       'alwaysActiveOverride', 'userId', 'athleteId', 'vaultAssociationId'];
     const userHasFullAccess = athleteProfileBelongsToUser(athleteProfileId, user) || user.permissions?.includes('view_contact_info');
     if (userHasFullAccess) {
@@ -249,8 +249,8 @@ const getProfile = async (req, res, db) => {
       lastName: profile.lastName,
       gender: profile.gender,
       dob: profile.dob,
-      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
-      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+      profileImage: profile.profileImage || undefined,
+      backgroundImage: profile.backgroundImage || undefined,
       nationality: profile.nationality,
       stats: {
         height: profile.height,
@@ -447,8 +447,8 @@ const getProfiles = async (req, res, db) => {
         lastName: profile.lastName,
         gender: profile.gender,
         dob: profile.dob,
-        profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
-        backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+        profileImage: profile.profileImage || undefined,
+        backgroundImage: profile.backgroundImage || undefined,
         nationality: profile.nationality,
         stats: {
           height: profile.height,
@@ -583,7 +583,7 @@ const getRankedProfiles = async (req, res, db) => {
         'id', 'firstName', 'lastName',
         'nationality', 'dob', 'height',
         'weight', 'profileImage', 'backgroundImage',
-        'gender', 'profileImageVerified', 'backgroundImageVerified',
+        'gender',
         'alwaysActiveOverride', 'athleteId', 'userId', 'vaultAssociationId',
       ],
       include: [
@@ -616,7 +616,7 @@ const getRankedProfiles = async (req, res, db) => {
         'id', 'firstName', 'lastName',
         'nationality', 'dob', 'height',
         'weight', 'profileImage', 'backgroundImage',
-        'gender', 'profileImageVerified', 'backgroundImageVerified',
+        'gender',
         'alwaysActiveOverride', 'athleteId', 'userId', 'vaultAssociationId',
       ],
       include: [
@@ -667,8 +667,8 @@ const getRankedProfiles = async (req, res, db) => {
         gender: profile.gender,
         nationality: profile.nationality,
         dob: profile.dob,
-        profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
-        backgroundImage: profile.backgroundImage ? profile.backgroundImage : undefined,
+        profileImage: profile.profileImage || undefined,
+        backgroundImage: profile.backgroundImage || undefined,
         stats: {
           height: profile.height,
           weight: profile.weight,

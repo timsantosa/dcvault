@@ -155,10 +155,7 @@ columns.athleteProfiles = {
   lastName: Sequelize.STRING,
   nationality: { type: Sequelize.STRING, defaultValue: 'US' },
   profileImage: Sequelize.STRING,
-  // TODO: Remove verified, create a separate table for holding suggested images.
-  profileImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column profileImageVerified bool;
   backgroundImage: Sequelize.STRING,
-  backgroundImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column backgroundImageVerified bool;
   height: Sequelize.INTEGER, // Inches
   weight: Sequelize.INTEGER, // Pounds
   dob: Sequelize.STRING,
@@ -521,6 +518,23 @@ columns.rejectedJumps = {
   },
 };
 
+// Pending Images (profile/background uploads awaiting admin verify/reject)
+columns.pendingImages = {
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+  },
+  imageUrl: { type: Sequelize.STRING, allowNull: false },
+  imageType: { type: Sequelize.STRING, allowNull: false }, // 'profile' | 'background'
+  rejected: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false },
+  rejectionMessage: { type: Sequelize.TEXT, allowNull: true },
+};
+
 // User Devices for Push Notifications
 columns.userDevices = {
   userId: {
@@ -838,6 +852,20 @@ const syncTables = (schema, force) => {
     ]
   });
 
+  // Pending Images (profile/background awaiting verify/reject)
+  tables.PendingImages = schema.define('pendingImage', columns.pendingImages, {
+    indexes: [
+      {
+        fields: ['athleteProfileId', 'imageType'],
+        name: 'pending_images_profile_type'
+      },
+      {
+        fields: ['rejected'],
+        name: 'pending_images_rejected'
+      }
+    ]
+  });
+
   // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
@@ -957,6 +985,9 @@ const syncTables = (schema, force) => {
 
   tables.RejectedJumps.belongsTo(tables.Messages, { as: 'message', foreignKey: 'messageId' });
   tables.Messages.hasOne(tables.RejectedJumps, { as: 'jumpRejection', foreignKey: 'messageId' });
+
+  tables.PendingImages.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
+  tables.AthleteProfiles.hasMany(tables.PendingImages, { as: 'pendingImages', foreignKey: 'athleteProfileId' });
 
   tables.schema = schema;
   return schema.sync({ force: force })
