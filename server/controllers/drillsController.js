@@ -18,7 +18,7 @@ const addOrUpdateDrill = async (req, res, db) => {
       drillType: hardMetrics.drillType,
       runStepNum: hardMetrics.run?.stepNum,
       runDistanceInches: hardMetrics.run?.distanceInches,
-      targetTakeOffInches: hardMetrics.run?.targetTakeOffInches,
+      targetTakeOffInches: hardMetrics.run?.targetTakeOffInches ?? hardMetrics.run?.takeOffInches, // TODO: Remove this fallback eventually
       actualTakeOffInches: hardMetrics.run?.actualTakeOffInches,
       spikes: hardMetrics.run?.spikes,
       // Flattened pole metrics
@@ -325,6 +325,7 @@ function mapDbRowToDrill(dbRow) {
       run: {
         stepNum: dbRow.runStepNum,
         distanceInches: dbRow.runDistanceInches,
+        takeOffInches: dbRow.takeOffInches ?? undefined, // TODO: Remove in a future update
         targetTakeOffInches: dbRow.targetTakeOffInches,
         actualTakeOffInches: dbRow.actualTakeOffInches ?? undefined,
         spikes: dbRow.spikes ?? undefined,

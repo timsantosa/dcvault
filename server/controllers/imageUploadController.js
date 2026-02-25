@@ -194,6 +194,7 @@ async function rejectImage(req, res, db) {
     pending.rejectionMessage = message;
     await pending.save();
 
+    // TODO: Maybe send message instead of just a notification.
     const imageLabel = getImageTypeLabel(pending.imageType).toLowerCase();
     const body = `Your ${imageLabel} image was rejected: ${message}`;
     try {
