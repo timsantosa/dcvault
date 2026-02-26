@@ -70,7 +70,8 @@ async function createProfile(req, res, db) {
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
       alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false, // TODO: This is flawed logic, should be removed.
-      userId: actualUserId
+      userId: actualUserId,
+      vaultAssociationId: newProfileData.vaultAssociationId ?? null,
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
@@ -106,6 +107,9 @@ async function updateProfile(req, res, db) {
     const userSendingRequest = req.user;
     const newProfileData = req.body.athleteProfile;
     const athleteProfileIdToUpdate = parseInt(req.query.athleteProfileId);
+    const userId = newProfileData.userId;
+    // Handle -1 as null userId for standalone profiles
+    const newUserId = userId === '-1' ? null : userId;
 
     if (!athleteProfileIdToUpdate) {
       return res.status(400).json({ ok: false, message: 'Athlete profile ID is required for updating a profile' });
@@ -145,11 +149,16 @@ async function updateProfile(req, res, db) {
       weight: newProfileData.weight,
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
-      alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false, // TODO: This is flawed logic, should be removed.
+      userId: newUserId,
+      vaultAssociationId: newProfileData.vaultAssociationId ?? null,
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
       athleteProfileData.alwaysActiveOverride = newProfileData.alwaysActiveOverride;
+    }
+
+    if (userSendingRequest.permissions?.includes('edit_others_profiles')) {
+      athleteProfileData.userId = newProfileData.userId;
     }
 
     // Update existing profile
@@ -180,8 +189,8 @@ const getProfile = async (req, res, db) => {
       'id', 'firstName', 'lastName',
       'nationality', 'dob', 'height', 
       'weight', 'profileImage', 'backgroundImage', 
-      'gender', 'profileImageVerified', 'backgroundImageVerified',
-      'alwaysActiveOverride', 'userId', 'athleteId'];
+      'gender',
+      'alwaysActiveOverride', 'userId', 'athleteId', 'vaultAssociationId'];
     const userHasFullAccess = athleteProfileBelongsToUser(athleteProfileId, user) || user.permissions?.includes('view_contact_info');
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
@@ -189,6 +198,7 @@ const getProfile = async (req, res, db) => {
 
     const profile = await db.tables.AthleteProfiles.findByPk(athleteProfileId, {
       attributes: attributes,
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
 
     if (!profile) {
@@ -229,14 +239,18 @@ const getProfile = async (req, res, db) => {
     const medalCountsMap = await getMedalCountsForProfiles([profile.id], db);
     const medalCounts = medalCountsMap.get(profile.id) || { gold: 0, silver: 0, bronze: 0 };
 
+    // Get record counts by record type for this profile
+    const recordCountsMap = await getRecordCountsForProfiles([profile.id], db);
+    const recordCounts = recordCountsMap.get(profile.id) || [];
+
     const athleteProfile = {
       id: profile.id,
       firstName: profile.firstName,
       lastName: profile.lastName,
       gender: profile.gender,
       dob: profile.dob,
-      profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
-      backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+      profileImage: profile.profileImage || undefined,
+      backgroundImage: profile.backgroundImage || undefined,
       nationality: profile.nationality,
       stats: {
         height: profile.height,
@@ -249,11 +263,14 @@ const getProfile = async (req, res, db) => {
           weight: largestPole.jump.poleWeight,
         } : undefined,
         medalCounts,
+        recordCounts,
       },
       isActiveMember,
       userId: profile.userId,
       athleteId: profile.athleteId,
       alwaysActiveOverride: profile.alwaysActiveOverride, // Only used for editing profile.
+      vaultAssociationId: profile.vaultAssociationId ?? undefined,
+      vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
     };
 
     // Only query for athlete if we have an athleteId
@@ -414,6 +431,7 @@ const getProfiles = async (req, res, db) => {
 
     const profiles = await db.tables.AthleteProfiles.findAll({
       where: whereClause,
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
 
     // Get medal counts for all profiles in bulk
@@ -429,8 +447,8 @@ const getProfiles = async (req, res, db) => {
         lastName: profile.lastName,
         gender: profile.gender,
         dob: profile.dob,
-        profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
-        backgroundImage: profile.backgroundImageVerified ? profile.backgroundImage : undefined,
+        profileImage: profile.profileImage || undefined,
+        backgroundImage: profile.backgroundImage || undefined,
         nationality: profile.nationality,
         stats: {
           height: profile.height,
@@ -440,7 +458,9 @@ const getProfiles = async (req, res, db) => {
         },
         alwaysActiveOverride: profile.alwaysActiveOverride,
         userId: profile.userId,
-        athleteId: profile.athleteId
+        athleteId: profile.athleteId,
+        vaultAssociationId: profile.vaultAssociationId ?? undefined,
+        vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
       };
     });
 
@@ -563,10 +583,11 @@ const getRankedProfiles = async (req, res, db) => {
         'id', 'firstName', 'lastName',
         'nationality', 'dob', 'height',
         'weight', 'profileImage', 'backgroundImage',
-        'gender', 'profileImageVerified', 'backgroundImageVerified',
-        'alwaysActiveOverride', 'athleteId', 'userId',
+        'gender',
+        'alwaysActiveOverride', 'athleteId', 'userId', 'vaultAssociationId',
       ],
       include: [
+        { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
         {
           model: db.tables.PersonalRecords,
           as: 'personalRecords',
@@ -595,10 +616,11 @@ const getRankedProfiles = async (req, res, db) => {
         'id', 'firstName', 'lastName',
         'nationality', 'dob', 'height',
         'weight', 'profileImage', 'backgroundImage',
-        'gender', 'profileImageVerified', 'backgroundImageVerified',
-        'alwaysActiveOverride', 'athleteId', 'userId',
+        'gender',
+        'alwaysActiveOverride', 'athleteId', 'userId', 'vaultAssociationId',
       ],
       include: [
+        { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
         {
           model: db.tables.PersonalRecords,
           as: 'personalRecords',
@@ -645,8 +667,8 @@ const getRankedProfiles = async (req, res, db) => {
         gender: profile.gender,
         nationality: profile.nationality,
         dob: profile.dob,
-        profileImage: profile.profileImageVerified ? profile.profileImage : undefined,
-        backgroundImage: profile.backgroundImage ? profile.backgroundImage : undefined,
+        profileImage: profile.profileImage || undefined,
+        backgroundImage: profile.backgroundImage || undefined,
         stats: {
           height: profile.height,
           weight: profile.weight,
@@ -660,6 +682,8 @@ const getRankedProfiles = async (req, res, db) => {
         userId: profile.userId,
         athleteId: profile.athleteId,
         alwaysActiveOverride: profile.alwaysActiveOverride,
+        vaultAssociationId: profile.vaultAssociationId ?? undefined,
+        vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
       };
     });
 
@@ -792,10 +816,14 @@ async function autoAssignAthleteId(profile, db) {
 
   try {
     // Find athletes with matching userId, firstName (case-insensitive), lastName (case-insensitive), and dob
+    // dob can be stored as MM/DD/YYYY or YYYY-MM-DD, so match against both formats
+    const dobVariants = helpers.getDobMatchVariants(profile.dob);
     const matchingAthletes = await db.tables.Athletes.findAll({
       where: {
         userId: profile.userId,
-        dob: profile.dob,
+        ...(dobVariants.length > 0
+          ? { dob: { [db.tables.schema.Sequelize.Op.in]: dobVariants } }
+          : { dob: profile.dob }),
         [db.tables.schema.Sequelize.Op.and]: [
           db.tables.schema.Sequelize.where(
             db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
@@ -841,6 +869,56 @@ async function autoAssignAthleteId(profile, db) {
     // Return original profile if there's an error
     return profile;
   }
+}
+
+// Helper function to get record counts by record type for multiple athlete profiles.
+// recordType column can contain multiple comma-separated types per jump; we split and count each.
+// Returns Map<profileId, Array<{ recordType: string, count: number }>>.
+async function getRecordCountsForProfiles(athleteProfileIds, db) {
+  if (!athleteProfileIds || athleteProfileIds.length === 0) {
+    return new Map();
+  }
+
+  const rows = await db.tables.Jumps.findAll({
+    where: {
+      athleteProfileId: { [db.tables.schema.Sequelize.Op.in]: athleteProfileIds },
+      recordType: {
+        [db.tables.schema.Sequelize.Op.and]: [
+          { [db.tables.schema.Sequelize.Op.ne]: null },
+          { [db.tables.schema.Sequelize.Op.ne]: '' }
+        ]
+      },
+      verified: true
+    },
+    attributes: ['athleteProfileId', 'recordType']
+  });
+
+  // Count per profile: type name -> count (object). recordType column holds comma-separated types.
+  const countsByProfile = new Map();
+  athleteProfileIds.forEach(id => {
+    countsByProfile.set(id, {});
+  });
+
+  rows.forEach(row => {
+    const profileId = row.athleteProfileId;
+    const recordTypesStr = row.recordType;
+    if (!recordTypesStr || typeof recordTypesStr !== 'string') return;
+    const types = recordTypesStr.split(',').map(s => s.trim()).filter(Boolean);
+    const counts = countsByProfile.get(profileId) || {};
+    types.forEach(type => {
+      counts[type] = (counts[type] || 0) + 1;
+    });
+    countsByProfile.set(profileId, counts);
+  });
+
+  // Convert to array format per profile
+  const recordCountsMap = new Map();
+  countsByProfile.forEach((counts, profileId) => {
+    const list = Object.entries(counts).map(([recordType, count]) => ({ recordType, count }));
+    recordCountsMap.set(profileId, list);
+  });
+
+  return recordCountsMap;
 }
 
 // Helper function to get medal counts for multiple athlete profiles
@@ -929,5 +1007,6 @@ module.exports = {
   getMedalCountsForProfile,
   getRegisteredAthlete,
   getMedalCountsForProfiles,
+  getRecordCountsForProfiles,
   refreshRankingCache,
 };

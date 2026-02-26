@@ -1,5 +1,5 @@
 const express = require('express');
-const { getJump, addOrUpdateJump, deleteJump, fetchJumps, pinOrUnpinJump, getFavoriteJumps, getTopMeetJumps } = require('../controllers/jumpsController');
+const { getJump, addOrUpdateJump, deleteJump, fetchJumps, pinOrUnpinJump, getFavoriteJumps, getTopMeetJumps, getTopIndoorOutdoorMeetJumps } = require('../controllers/jumpsController');
 const { checkPermission, checkOwnAthleteProfileOrPermission } = require('../middlewares/mobileAuthMiddleware');
 
 
@@ -37,7 +37,8 @@ const jumpRoutes = (db) => {
   router.post('/favorite-jump', checkJumpEditPermission, (req, res) => pinOrUnpinJump(req, res, db));
   router.get('/favorite-jumps', checkJumpViewPermission, (req, res) => getFavoriteJumps(req, res, db));
 
-  router.get('/top-meet-jumps', checkViewProfilesPermission,(req, res) => getTopMeetJumps(req, res, db));
+  router.get('/top-meet-jumps', checkViewProfilesPermission, (req, res) => getTopMeetJumps(req, res, db));
+  router.get('/top-indoor-outdoor-meet-jumps', checkViewProfilesPermission, (req, res) => getTopIndoorOutdoorMeetJumps(req, res, db));
 
   return router;
 };

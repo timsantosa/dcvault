@@ -145,6 +145,9 @@ columns.addresses = {
   country: Sequelize.STRING
 }
 
+columns.vaultAssociations = {
+  name: { type: Sequelize.STRING, allowNull: false },
+}
 
 // Mobile app related tables
 columns.athleteProfiles = {
@@ -152,10 +155,7 @@ columns.athleteProfiles = {
   lastName: Sequelize.STRING,
   nationality: { type: Sequelize.STRING, defaultValue: 'US' },
   profileImage: Sequelize.STRING,
-  // TODO: Remove verified, create a separate table for holding suggested images.
-  profileImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column profileImageVerified bool;
   backgroundImage: Sequelize.STRING,
-  backgroundImageVerified: Sequelize.BOOLEAN, // alter table athleteProfiles add column backgroundImageVerified bool;
   height: Sequelize.INTEGER, // Inches
   weight: Sequelize.INTEGER, // Pounds
   dob: Sequelize.STRING,
@@ -176,6 +176,14 @@ columns.athleteProfiles = {
     allowNull: true,
     references: {
       model: tables.athletes,
+      key: 'id',
+    },
+  },
+  vaultAssociationId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.VaultAssociations,
       key: 'id',
     },
   },
@@ -204,6 +212,7 @@ columns.jumps = {
   midMarkInches: Sequelize.FLOAT,
   targetTakeOffInches: Sequelize.FLOAT,
   actualTakeOffInches: Sequelize.FLOAT,
+  spikes: { type: Sequelize.BOOLEAN, allowNull: true },
   poleId: Sequelize.INTEGER, // TODO: add to db, add relationship
   poleLengthInches: Sequelize.FLOAT,
   poleWeight: Sequelize.FLOAT,
@@ -222,7 +231,7 @@ columns.jumps = {
   meetType: Sequelize.STRING,
   division: Sequelize.STRING,
   placement: Sequelize.INTEGER,
-  recordType: Sequelize.STRING,
+  recordType: Sequelize.STRING, // comma-separated list of record type names (stored as "Type A, Type B")
   meetEventDetails: Sequelize.JSON, // Stores the rest of MeetInfo object as JSON since we probably don't need to query on these values
 
   // Other fields
@@ -230,6 +239,14 @@ columns.jumps = {
   notes: Sequelize.TEXT,
   videoLink: Sequelize.STRING,
   verified: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false, },
+  vaultAssociationId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.VaultAssociations,
+      key: 'id',
+    },
+  },
 };
 
 columns.personalRecords = {
@@ -276,6 +293,30 @@ columns.favoriteJumps = {
   },
   stepNum: { 
     type: Sequelize.INTEGER, 
+    allowNull: false,
+  },
+};
+
+columns.favoriteDrills = {
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+  },
+  drillId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.drills,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+  },
+  drillType: { 
+    type: Sequelize.STRING, 
     allowNull: false,
   },
 };
@@ -359,6 +400,35 @@ columns.recordTypes = {
   }
 };
 
+// Meet entities (facilities, organizations, meet names) — populated on jump verification
+columns.facilities = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  },
+  address: {
+    type: Sequelize.JSON,
+    allowNull: true
+  }
+};
+
+columns.hostingOrganizations = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+};
+
+columns.meetNames = {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+};
+
 columns.drillTypes = {
   name: {
     type: Sequelize.STRING,
@@ -384,7 +454,9 @@ columns.drills = {
   // Flattened run metrics
   runStepNum: Sequelize.INTEGER,
   runDistanceInches: Sequelize.FLOAT,
-  runTakeOffInches: Sequelize.FLOAT,
+  targetTakeOffInches: Sequelize.FLOAT,
+  actualTakeOffInches: Sequelize.FLOAT,
+  spikes: { type: Sequelize.BOOLEAN, allowNull: true },
   // Flattened pole metrics
   poleId: {
     type: Sequelize.INTEGER,
@@ -444,6 +516,23 @@ columns.rejectedJumps = {
       key: 'id',
     },
   },
+};
+
+// Pending Images (profile/background uploads awaiting admin verify/reject)
+columns.pendingImages = {
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+  },
+  imageUrl: { type: Sequelize.STRING, allowNull: false },
+  imageType: { type: Sequelize.STRING, allowNull: false }, // 'profile' | 'background'
+  rejected: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false },
+  rejectionMessage: { type: Sequelize.TEXT, allowNull: true },
 };
 
 // User Devices for Push Notifications
@@ -618,6 +707,9 @@ const syncTables = (schema, force) => {
   tables.EventAthletes = schema.define('eventAthlete', columns.eventAthletes)
   tables.EventPurchases = schema.define('eventPurchase', columns.eventPurchases)
 
+  // Vault associations (must be defined before AthleteProfiles and Jumps)
+  tables.VaultAssociations = schema.define('vaultAssociation', columns.vaultAssociations);
+
   // Mobile app specific
   tables.AthleteProfiles = schema.define('athleteProfile', columns.athleteProfiles);
   tables.Jumps = schema.define('jump', columns.jumps);
@@ -637,6 +729,16 @@ const syncTables = (schema, force) => {
         unique: true,
         fields: ['athleteProfileId', 'stepNum'],
         name: 'unique_favorite_step_per_athlete'
+      }
+    ]
+  });
+
+  tables.FavoriteDrills = schema.define('favoriteDrill', columns.favoriteDrills, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['athleteProfileId', 'drillType'],
+        name: 'unique_favorite_drill_type_per_athlete'
       }
     ]
   });
@@ -729,6 +831,9 @@ const syncTables = (schema, force) => {
   tables.ChampionshipTypes = schema.define('championshipType', columns.championshipTypes);
   tables.DivisionTypes = schema.define('divisionType', columns.divisionTypes);
   tables.RecordTypes = schema.define('recordType', columns.recordTypes);
+  tables.Facilities = schema.define('facility', columns.facilities);
+  tables.HostingOrganizations = schema.define('hostingOrganization', columns.hostingOrganizations);
+  tables.MeetNames = schema.define('meetName', columns.meetNames);
   tables.DrillTypes = schema.define('drillType', columns.drillTypes);
   tables.Drills = schema.define('drill', columns.drills);
 
@@ -743,6 +848,20 @@ const syncTables = (schema, force) => {
       {
         fields: ['athleteProfileId'],
         name: 'rejected_jumps_athlete'
+      }
+    ]
+  });
+
+  // Pending Images (profile/background awaiting verify/reject)
+  tables.PendingImages = schema.define('pendingImage', columns.pendingImages, {
+    indexes: [
+      {
+        fields: ['athleteProfileId', 'imageType'],
+        name: 'pending_images_profile_type'
+      },
+      {
+        fields: ['rejected'],
+        name: 'pending_images_rejected'
       }
     ]
   });
@@ -775,6 +894,11 @@ const syncTables = (schema, force) => {
   tables.Jumps.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
   tables.AthleteProfiles.hasMany(tables.Jumps, { as: 'jumps', foreignKey: 'athleteProfileId' })
 
+  tables.VaultAssociations.hasMany(tables.AthleteProfiles, { foreignKey: 'vaultAssociationId' })
+  tables.AthleteProfiles.belongsTo(tables.VaultAssociations, { as: 'vaultAssociation', foreignKey: 'vaultAssociationId' })
+  tables.VaultAssociations.hasMany(tables.Jumps, { foreignKey: 'vaultAssociationId' })
+  tables.Jumps.belongsTo(tables.VaultAssociations, { as: 'vaultAssociation', foreignKey: 'vaultAssociationId' })
+
   // A jump can only have one personal record, or none. A PR has to have at exactly 1 jump
   tables.PersonalRecords.belongsTo(tables.Jumps, { as: 'jump', foreignKey: 'jumpId' })
   tables.Jumps.hasOne(tables.PersonalRecords, { as: 'personalRecord', foreignKey: 'jumpId' }) // There may or may not a PR for a jump.
@@ -788,6 +912,13 @@ const syncTables = (schema, force) => {
 
   tables.FavoriteJumps.belongsTo(tables.Jumps, { as: 'jump', foreignKey: 'jumpId' })
   tables.Jumps.hasOne(tables.FavoriteJumps, { as: 'favoriteJump', foreignKey: 'jumpId' })
+
+  // Favorite drills associations
+  tables.FavoriteDrills.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' })
+  tables.AthleteProfiles.hasMany(tables.FavoriteDrills, { as: 'favoriteDrills', foreignKey: 'athleteProfileId' })
+
+  tables.FavoriteDrills.belongsTo(tables.Drills, { as: 'drill', foreignKey: 'drillId' })
+  tables.Drills.hasOne(tables.FavoriteDrills, { as: 'favoriteDrill', foreignKey: 'drillId' })
 
   // Mobile App permissions
   tables.Users.belongsToMany(tables.Roles, { through: tables.User_Roles, foreignKey: 'userId' });
@@ -854,6 +985,9 @@ const syncTables = (schema, force) => {
 
   tables.RejectedJumps.belongsTo(tables.Messages, { as: 'message', foreignKey: 'messageId' });
   tables.Messages.hasOne(tables.RejectedJumps, { as: 'jumpRejection', foreignKey: 'messageId' });
+
+  tables.PendingImages.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
+  tables.AthleteProfiles.hasMany(tables.PendingImages, { as: 'pendingImages', foreignKey: 'athleteProfileId' });
 
   tables.schema = schema;
   return schema.sync({ force: force })

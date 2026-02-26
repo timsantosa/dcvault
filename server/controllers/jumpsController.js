@@ -39,6 +39,7 @@ const addOrUpdateJump = async (req, res, db) => {
       midMarkInches: hardMetrics?.run?.midMarkInches,
       targetTakeOffInches: hardMetrics?.run?.targetTakeOffInches,
       actualTakeOffInches: hardMetrics?.run?.actualTakeOffInches,
+      spikes: hardMetrics?.run?.spikes,
       poleGripInches: hardMetrics?.pole?.gripInches,
       poleLengthInches: hardMetrics?.pole?.lengthInches,
       poleWeight: hardMetrics?.pole?.weight,
@@ -113,8 +114,23 @@ const addOrUpdateJump = async (req, res, db) => {
     
     const verified = !needsVerification;
 
-    // Upsert jump
-    const [jumpRow, created] = await db.tables.Jumps.upsert({
+    // Resolve vaultAssociationId: explicit null/'' = unassociate; omitted = default from profile; otherwise use id
+    let vaultAssociationId;
+    if (req.body.jump && 'vaultAssociationId' in req.body.jump) {
+      const raw = req.body.jump.vaultAssociationId;
+      if (raw === null || raw === '') {
+        vaultAssociationId = null;
+      } else {
+        const parsed = parseInt(raw, 10);
+        vaultAssociationId = Number.isNaN(parsed) ? null : parsed;
+      }
+    } else {
+      const profile = await db.tables.AthleteProfiles.findByPk(athleteProfileId, { attributes: ['vaultAssociationId'] });
+      vaultAssociationId = profile?.vaultAssociationId ?? null;
+    }
+
+    // Upsert jump (vaultAssociationId always set so we can unassociate with null)
+    const upsertPayload = {
       id: jumpId,
       athleteProfileId,
       date,
@@ -124,7 +140,9 @@ const addOrUpdateJump = async (req, res, db) => {
       softMetrics,
       ...flattenedMeetInfo,
       verified,
-    });
+      vaultAssociationId,
+    };
+    const [jumpRow, created] = await db.tables.Jumps.upsert(upsertPayload);
 
     // If we're updating a verified PR and it needs re-verification, we need to recalculate PRs
     if (jumpId && wasPr && needsVerification) {
@@ -147,7 +165,11 @@ const addOrUpdateJump = async (req, res, db) => {
       }
     }
 
-    const jump = mapDbRowToJump(jumpRow);
+    // Re-fetch with vaultAssociation for response
+    const jumpWithVaultAssociation = await db.tables.Jumps.findByPk(jumpRow.id, {
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
+    });
+    const jump = mapDbRowToJump(jumpWithVaultAssociation);
 
     res.json({
       ok: true,
@@ -201,7 +223,9 @@ const getJump = async (req, res, db) => {
       return res.status(400).json({ ok: false, message: 'Jump ID is required.' });
     }
 
-    const jumpRow = await db.tables.Jumps.findByPk(jumpId);
+    const jumpRow = await db.tables.Jumps.findByPk(jumpId, {
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
+    });
 
     if (!jumpRow) {
       return res.status(404).json({ ok: false, message: 'Jump not found.' });
@@ -335,40 +359,19 @@ const fetchJumps = async (req, res, db) => {
       }
     }
 
-    // Fetch PRs for the athlete with jump data included
-    const personalRecords = await db.tables.PersonalRecords.findAll({
-      where: { athleteProfileId },
-      attributes: ['stepNum', 'jumpId'],
-      include: [
-        {
-          model: db.tables.Jumps,
-          as: 'jump',
-          attributes: ['id', 'heightInches'],
-        },
-      ],
-    });
+    // Fetch PRs and favorite jumps in parallel
+    const [{ prMap, overallPrJumpId }, favoriteJumps] = await Promise.all([
+      getMeetJumpsPrInfo(db, athleteProfileId),
+      db.tables.FavoriteJumps.findAll({
+        where: { athleteProfileId },
+        attributes: ['jumpId', 'stepNum'],
+      }),
+    ]);
 
-    // Fetch favorite jumps for the athlete
-    const favoriteJumps = await db.tables.FavoriteJumps.findAll({
-      where: { athleteProfileId },
-      attributes: ['jumpId', 'stepNum'],
-    });
-
-    // Create a map of PR jump IDs for quick lookup
-    const prMap = new Map();
-    personalRecords.forEach(pr => {
-      prMap.set(pr.stepNum, pr.jumpId);
-    });
-
-    // Create a map of favorite jump IDs for quick lookup
     const favoriteMap = new Map();
     favoriteJumps.forEach(fav => {
       favoriteMap.set(fav.jumpId, fav.stepNum);
     });
-
-    // Find the overall PR (highest height among all PRs)
-    const bestPr = getBestOfPersonalRecords(personalRecords);
-    const overallPrJumpId = bestPr.jumpId;
 
     let limit = null;
     let offset = null;
@@ -384,14 +387,11 @@ const fetchJumps = async (req, res, db) => {
       order: [['date', 'DESC']], // Most recent first
       limit,
       offset,
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
 
-    let returnedJumps = jumps.map(mapDbRowToJump).map((jump => ({
-      ...jump,
-      isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
-      isPr: jump.id === overallPrJumpId,
-      isFavorite: favoriteMap.has(jump.id),
-    })));
+    let returnedJumps = formatJumpsWithPrFlags(jumps, prMap, overallPrJumpId)
+      .map(jump => ({ ...jump, isFavorite: favoriteMap.has(jump.id) }));
 
     // Add rejection info to all jumps
     returnedJumps = await addRejectionInfoToJumps(returnedJumps, db);
@@ -408,6 +408,53 @@ const fetchJumps = async (req, res, db) => {
     res.status(500).json({ ok: false, message: 'Internal server error.' });
   }
 };
+
+function normalizeAddress(location) {
+  if (!location || typeof location !== 'object') return null;
+  const addr = {
+    line1: location.line1 ?? null,
+    line2: location.line2 ?? null,
+    city: location.city ?? null,
+    state: location.state ?? null,
+    country: location.country ?? null,
+    zip: location.zip ?? null
+  };
+  return Object.values(addr).every(v => v == null) ? null : addr;
+}
+
+async function upsertMeetEntitiesFromJump(jump, db) {
+  if (jump.setting !== 'Meet' || !jump.meetEventDetails) return;
+  const details = jump.meetEventDetails;
+
+  try {
+    if (details.facility && String(details.facility).trim()) {
+      const name = String(details.facility).trim();
+      const address = normalizeAddress(details.location);
+      const existing = await db.tables.Facilities.findOne({ where: { name } });
+      if (existing) {
+        await existing.update({ address: address != null ? address : existing.address });
+      } else {
+        await db.tables.Facilities.create({ name, address });
+      }
+    }
+    if (details.organization && String(details.organization).trim()) {
+      const name = String(details.organization).trim();
+      const existing = await db.tables.HostingOrganizations.findOne({ where: { name } });
+      if (!existing) {
+        await db.tables.HostingOrganizations.create({ name });
+      }
+    }
+    if (details.meetName && String(details.meetName).trim()) {
+      const name = String(details.meetName).trim();
+      const existing = await db.tables.MeetNames.findOne({ where: { name } });
+      if (!existing) {
+        await db.tables.MeetNames.create({ name });
+      }
+    }
+  } catch (err) {
+    console.error('Error upserting meet entities from jump:', err);
+  }
+}
 
 async function verifyJump(req, res, db) {
   const { jumpId, verify } = req.body;
@@ -430,6 +477,8 @@ async function verifyJump(req, res, db) {
       // Mark jump as verified
       jump.verified = true;
       await jump.save();
+
+      await upsertMeetEntitiesFromJump(jump, db);
 
       await checkIfJumpIsStepPr(jump, db);
 
@@ -464,7 +513,11 @@ async function verifyJump(req, res, db) {
     // Reorder ranks for that gender. Can probably be done asyncronusly if needed
     await rankingCache.regenerateAllRankings();
 
-    res.json({ ok: true, message, jump });
+    const jumpWithVaultAssociation = await db.tables.Jumps.findByPk(jumpId, {
+      include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
+    });
+    const mappedJump = mapDbRowToJump(jumpWithVaultAssociation);
+    res.json({ ok: true, message, jump: mappedJump });
   } catch (error) {
     console.error('Error verifying jump:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
@@ -658,19 +711,13 @@ async function getUnverifiedMeetJumps(req, res, db) {
         setting: 'Meet',
         verified: false,
       },
-      // attributes: [
-      //   'id', 'stepNum', 'heightInches', 'poleLengthInches', 'poleWeight', 'meetType',
-      //   'division',
-      //   'placement',
-      //   'recordType',
-      //   'meetEventDetails', 'date',
-      // ],
       include: [
         {
           model: db.tables.AthleteProfiles,
           as: 'athleteProfile',
-          attributes: ['id', 'firstName', 'lastName', 'profileImage', 'profileImageVerified'],
+          attributes: ['id', 'firstName', 'lastName', 'profileImage'],
         },
+        { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
       ],
       order: [['date', 'ASC']], // Earlier dates should be first
     });
@@ -681,7 +728,7 @@ async function getUnverifiedMeetJumps(req, res, db) {
         athlete: {
           id: row.athleteProfile.id,
           name: row.athleteProfile.firstName + ' ' + row.athleteProfile.lastName,
-          profileImage: row.athleteProfile.profileImageVerified ? row.athleteProfile.profileImage : undefined,
+          profileImage: row.athleteProfile.profileImage || undefined,
         },
       }
     });
@@ -860,7 +907,8 @@ async function getFavoriteJumps(req, res, db) {
         {
           model: db.tables.Jumps,
           as: 'jump',
-          attributes: ['id', 'date', 'stepNum', 'heightInches', 'poleLengthInches', 'poleWeight', 'poleBrand', 'notes', 'videoLink', 'softMetrics']
+          attributes: ['id', 'date', 'stepNum', 'heightInches', 'poleLengthInches', 'poleWeight', 'poleBrand', 'notes', 'videoLink', 'softMetrics', 'vaultAssociationId'],
+          include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
         }
       ],
       order: [['stepNum', 'ASC']]
@@ -893,64 +941,53 @@ async function getTopMeetJumps(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Athlete ID is required.' });
     }
 
-    const limit = Math.min(parseInt(howMany,10), 100);
+    const limit = Math.min(parseInt(howMany, 10), 100);
     if (isNaN(limit) || limit <= 0) {
       return res.status(400).json({ ok: false, message: 'Invalid howMany parameter.' });
     }
 
-    // Fetch PRs for the athlete with jump data included
-    const personalRecords = await db.tables.PersonalRecords.findAll({
-      where: { athleteProfileId },
-      attributes: ['stepNum', 'jumpId'],
-      include: [
-        {
-          model: db.tables.Jumps,
-          as: 'jump',
-          attributes: ['id', 'heightInches'],
-        },
-      ],
-    });
-
-    // Create a map of PR jump IDs for quick lookup
-    const prMap = new Map();
-    personalRecords.forEach(pr => {
-      prMap.set(pr.stepNum, pr.jumpId);
-    });
-
-    // Find the overall PR (highest height among all PRs)
-    const bestPr = getBestOfPersonalRecords(personalRecords);
-    const overallPrJumpId = bestPr.jumpId;
-
-    // Get the top jumps by height, ordered by height descending, then by date descending
-    // Only include Meet jumps
-    const jumps = await db.tables.Jumps.findAll({
-      where: {
-        athleteProfileId,
-        verified: true,
-        setting: 'Meet',
-        heightInches: {
-          [db.tables.schema.Sequelize.Op.ne]: null, // Only get jumps with a height
-        },
-      },
-      order: [
-        ['heightInches', 'DESC'],
-        ['date', 'DESC'],
-      ],
-      limit,
-    });
-
-    const formattedJumps = jumps.map(mapDbRowToJump).map((jump => ({
-      ...jump,
-      isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
-      isPr: jump.id === overallPrJumpId,
-    })));
+    const { prMap, overallPrJumpId } = await getMeetJumpsPrInfo(db, athleteProfileId);
+    const jumpRows = await fetchVerifiedMeetJumps(db, athleteProfileId, { limit });
+    const jumps = formatJumpsWithPrFlags(jumpRows, prMap, overallPrJumpId);
 
     res.json({
       ok: true,
-      jumps: formattedJumps,
+      jumps,
     });
   } catch (error) {
     console.error('Error in getTopMeetJumps:', error);
+    res.status(500).json({ ok: false, message: 'Internal server error.' });
+  }
+}
+
+async function getTopIndoorOutdoorMeetJumps(req, res, db) {
+  try {
+    const { athleteProfileId } = req.query;
+    if (!athleteProfileId) {
+      return res.status(400).json({ ok: false, message: 'Athlete ID is required.' });
+    }
+
+    const { prMap, overallPrJumpId } = await getMeetJumpsPrInfo(db, athleteProfileId);
+
+    const [indoorRows, outdoorRows] = await Promise.all([
+      fetchVerifiedMeetJumps(db, athleteProfileId, { facilitySetting: 'Indoor', limit: 1 }),
+      fetchVerifiedMeetJumps(db, athleteProfileId, { facilitySetting: 'Outdoor', limit: 1 }),
+    ]);
+
+    const indoorJump = indoorRows.length > 0
+      ? formatJumpsWithPrFlags(indoorRows, prMap, overallPrJumpId)[0]
+      : null;
+    const outdoorJump = outdoorRows.length > 0
+      ? formatJumpsWithPrFlags(outdoorRows, prMap, overallPrJumpId)[0]
+      : null;
+
+    res.json({
+      ok: true,
+      indoorJump,
+      outdoorJump,
+    });
+  } catch (error) {
+    console.error('Error in getTopIndoorOutdoorMeetJumps:', error);
     res.status(500).json({ ok: false, message: 'Internal server error.' });
   }
 }
@@ -969,6 +1006,7 @@ module.exports = {
   pinOrUnpinJump,
   getFavoriteJumps,
   getTopMeetJumps,
+  getTopIndoorOutdoorMeetJumps,
   // getPersonalBests,
   // getLargestPole,
 }
@@ -1082,6 +1120,7 @@ function mapDbRowToJump(dbRow) {
         midMarkInches: dbRow.midMarkInches ?? undefined,
         targetTakeOffInches: dbRow.targetTakeOffInches,
         actualTakeOffInches: dbRow.actualTakeOffInches ?? undefined,
+        spikes: dbRow.spikes ?? undefined,
       },
       pole: {
         id: dbRow.poleId,
@@ -1119,5 +1158,82 @@ function mapDbRowToJump(dbRow) {
     notes: dbRow.notes || undefined,
     videoLink: dbRow.videoLink || undefined,
     verified: dbRow.verified,
+    vaultAssociationId: dbRow.vaultAssociationId ?? undefined,
+    vaultAssociation: dbRow.vaultAssociation ? { id: dbRow.vaultAssociation.id, name: dbRow.vaultAssociation.name } : null,
   };
+}
+
+/**
+ * Fetches PR info for an athlete for use when formatting meet jumps (step PR map and overall PR jump id).
+ * @param {Object} db - Database instance
+ * @param {number} athleteProfileId - Athlete profile id
+ * @returns {Promise<{ prMap: Map<number, number>, overallPrJumpId: number|null }>}
+ */
+async function getMeetJumpsPrInfo(db, athleteProfileId) {
+  const personalRecords = await db.tables.PersonalRecords.findAll({
+    where: { athleteProfileId },
+    attributes: ['stepNum', 'jumpId'],
+    include: [
+      {
+        model: db.tables.Jumps,
+        as: 'jump',
+        attributes: ['id', 'heightInches'],
+      },
+    ],
+  });
+  const prMap = new Map();
+  personalRecords.forEach(pr => {
+    prMap.set(pr.stepNum, pr.jumpId);
+  });
+  const bestPr = getBestOfPersonalRecords(personalRecords);
+  return { prMap, overallPrJumpId: bestPr.jumpId };
+}
+
+/**
+ * Fetches verified meet jumps for an athlete, optionally filtered by facility setting.
+ * @param {Object} db - Database instance
+ * @param {number} athleteProfileId - Athlete profile id
+ * @param {{ limit?: number, facilitySetting?: 'Indoor'|'Outdoor' }} options - Optional limit and facilitySetting filter
+ * @returns {Promise<Array>} Raw jump rows
+ */
+async function fetchVerifiedMeetJumps(db, athleteProfileId, options = {}) {
+  const { limit, facilitySetting } = options;
+  const where = {
+    athleteProfileId,
+    verified: true,
+    setting: 'Meet',
+    heightInches: {
+      [db.tables.schema.Sequelize.Op.ne]: null,
+    },
+  };
+  if (facilitySetting) {
+    where.facilitySetting = facilitySetting;
+  }
+  const findOptions = {
+    where,
+    order: [
+      ['heightInches', 'DESC'],
+      ['date', 'DESC'],
+    ],
+    include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
+  };
+  if (limit != null) {
+    findOptions.limit = limit;
+  }
+  return db.tables.Jumps.findAll(findOptions);
+}
+
+/**
+ * Maps raw jump rows to API format and adds isStepPr / isPr flags.
+ * @param {Array} jumpRows - Raw jump rows from DB
+ * @param {Map<number, number>} prMap - Step number -> PR jump id
+ * @param {number|null} overallPrJumpId - Overall PR jump id
+ * @returns {Array} Formatted jumps with isStepPr and isPr
+ */
+function formatJumpsWithPrFlags(jumpRows, prMap, overallPrJumpId) {
+  return jumpRows.map(mapDbRowToJump).map(jump => ({
+    ...jump,
+    isStepPr: prMap.get(jump.hardMetrics?.run?.stepNum) === jump.id,
+    isPr: jump.id === overallPrJumpId,
+  }));
 }

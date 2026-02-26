@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const { checkPermission, checkOwnAthleteProfileOrPermission, checkOwnAthleteProfile } = require('../middlewares/mobileAuthMiddleware');
 const {
   getConversations,
@@ -11,8 +12,18 @@ const {
   removeParticipant,
   deleteMessage,
   deleteConversation,
-  getUnreadCounts
+  getUnreadCounts,
+  uploadMessageAttachment,
+  deleteMessageAttachment
 } = require('../controllers/messagesController');
+
+const attachmentUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100 MB (Cloudinary Free video limit)
+    files: 5
+  }
+});
 
 function userCanManageConversations(req, res, next) {
   checkOwnAthleteProfileOrPermission(req, res, next, 'manage_conversations');
@@ -43,6 +54,19 @@ module.exports = function messageRoutes(db) {
   router.put('/conversations/:conversationId',
     userCanManageConversations,
     (req, res) => updateConversation(req, res, db)
+  );
+
+  // Upload message attachments (upload then send in a separate request)
+  router.post('/conversations/:conversationId/attachments',
+    checkOwnAthleteProfile,
+    attachmentUpload.array('attachments', 5),
+    (req, res) => uploadMessageAttachment(req, res, db)
+  );
+
+  // Delete an orphaned attachment (e.g. user removed from compose before send)
+  router.delete('/conversations/:conversationId/attachments',
+    checkOwnAthleteProfile,
+    (req, res) => deleteMessageAttachment(req, res, db)
   );
 
   // Send a message (can be regular message or reaction)
