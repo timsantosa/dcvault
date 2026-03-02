@@ -288,7 +288,7 @@ class AthleteInfo extends React.Component {
                         <div>
                             <div className='form-row'>
                                 <label>
-                                    <span>After Party ($30)</span>
+                                    <span>After Party - 18 and up only ($30)</span>
                                     <input
                                     type="checkbox"
                                     name="afterparty"
