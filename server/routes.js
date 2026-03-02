@@ -615,13 +615,12 @@ module.exports = (app, db) => {
         accomplishments: event_athlete.accomplishments,
         dates: event_athlete.dates1,
         age: event_athlete.age
-
     }
     let emailData = JSON.stringify(athleteData)
     emailData = emailData.replace(/,/g, "<br>")
     console.log(emailData)
       if (email) {
-          helpers.sendDMVEventConfirmationEmails(email, emailData)
+          helpers.sendDMVEventConfirmationEmails(email, emailData, event_athlete.dates1)
           res.send({ok: true, message: 'email sent'})
       } else {
           res.status(400).send({ok: false, message: 'no or bad email'})
@@ -898,6 +897,7 @@ module.exports = (app, db) => {
                           currentlyRegistered = true
                           break
                         }
+
                       }
                     }
                     athlete.dataValues.currentlyRegistered = currentlyRegistered

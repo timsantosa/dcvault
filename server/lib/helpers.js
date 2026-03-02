@@ -19,7 +19,65 @@ const transporter = nodemailer.createTransport({
     ciphers: 'SSLv3'
   }
 })
+function formatAthleteData(rawString) {
+  if (!rawString) return "";
 
+  const data = {};
+  
+  // Match all "key":"value" pairs dynamically
+  const regex = /"([^"]+)"\s*:\s*"([^"]*)"/g;
+  let match;
+
+  while ((match = regex.exec(rawString)) !== null) {
+    data[match[1]] = match[2];
+  }
+
+  // Convert camelCase to Normal Words
+  const formatLabel = (key) => {
+    return key
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, str => str.toUpperCase());
+  };
+
+  let html = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+      <h3 style="margin-bottom:10px;">Athlete Information</h3>
+      <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
+  `;
+
+  for (const key in data) {
+    if (!data[key]) continue;
+
+    let value = data[key];
+
+    // Handle multi-line values (like dates)
+    if (value.includes("\n")) {
+      value = value
+        .split("\n")
+        .filter(v => v.trim() !== "")
+        .map(v => `• ${v.trim()}`)
+        .join("<br>");
+    }
+
+    html += `
+      <tr>
+        <td style="padding:6px 8px; font-weight:bold; vertical-align:top; border-bottom:1px solid #eee;">
+          ${formatLabel(key)}
+        </td>
+        <td style="padding:6px 8px; border-bottom:1px solid #eee;">
+          ${value}
+        </td>
+      </tr>
+    `;
+  }
+
+  html += `
+      </table>
+    </div>
+  `;
+
+  return html;
+}
 module.exports.decodeUser = (token) => {
   let user = {}
   try {
@@ -105,7 +163,7 @@ module.exports.sendConfirmationEmails = (email,athleteInfo) => {
       <h3>WORKOUTS (attached)</h3>\
       <p>If you want to progress as quickly as possible, conditioning is very important. We\'ve attached our general team conditioning program. It\'s a 12 week program for our athletes to follow outside of scheduled practices. We strongly encourage every athlete to complete this workout in total. If you do, your progress will accelerate significantly.</p>\
       <h3>CANCELLATIONS / WEATHER POLICY</h3>\
-      <p>If any change is made to a scheduled class time, it is posted on the DCVault.com website calendar immediately. Any change or cancellation will be posted a minimum of 1-hour prior to the class time, but normally 2-or more-hours before the scheduled class time.</p\
+      <p>If any change is made to a scheduled class time, it is posted on the DCVault.com website calendar immediately. Any change or cancellation will be posted a minimum of 1-hour prior to the class time, but normally 2-or more-hours before the scheduled class time.</p>\
       <p>We NEVER “intend” to cancel or change a class time, and therefore cannot send a notification that we are “planning” on cancelling a class. We watch weather radar, etc. up to the moment that it becomes explicitly clear that we cannot hold class. At that time we update the website calendar and - when possible - send out an email notification as well. Any inquiries regarding scheduling changes will be referred to the website calendar.</p>\
       <p>Note - The Zen Planner app is NOT where you check for class cancellations. Refer to the website calendar.</p>\
       <h3>MAKEUP SESSIONS</h3>\
@@ -163,107 +221,109 @@ transporter.sendMail(mailOptions2, (error, info) => {
 */
 }
 
-module.exports.sendDMVEventConfirmationEmails = (email, athleteInfo) => {
-    let mailOptions = {
-        from: '"DC Vault" <' + config.email.username + '>', // sender address
-        subject: '2025 Pole Vault Championships', // Subject line
-        to: email,
-        html: '<p>Thank you for registering for the 2025 Pole Vault Championships! Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org. For additional information including schedule, results, etc, please see our online event info <a href="https://dcvault.com/events">HERE</a>.</p>\
-        <h3>Entry Fee - Spectators/Coaches</h3>\
-        <ul>\
-          <li>$10 for all non-competitors entering the facility (cash only)</li>\
-          <li>Entry free for DC Residents!</li>\
-          <li>Spectators and coaches can watch from outside the fence free of charge if they prefer</li>\
-        </ul>\
-        <h3>Facility</h3>\
-        <ul>\
-          <li>DC Vault Pole Vault Center</li>\
-          <li>3 Mondo Runways, UCS 1800, 1900 and Elite 2100 series pits</li>\
-          <li>Parking On-Site (Lot #3)</li>\
-          <li><u>Athletes enter the facility from the E. Capitol street sidewalk gate</u></li>\
-          <li>Address:\
-              <ul>\
-                <li>2200 <b>East</b> Capitol street <b>NE</b> Washington DC</li>\
-                <li>Enter the address above or just enter "DC Vault" into your navigation system</li>\
-              </ul>\
-          </li>\
-        </ul>\
-        <h3>SPIKES</h3>\
-        <ul>\
-          <li><b>1/8" spikes ONLY at this facility (not standard 1/4" spikes!)</b></li>\
-          <li>Athletes using spikes longer than 1/8" will be disqualified/scratched from the competition without refund</li>\
-          <li>1/8” spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a></li>\
-          <ul>\
-            <li>Recommended so you don’t waste time at the event trying to change spikes!</li>\
-          </ul>\
-          <li>Available for $5 per set at the event (bring your own spike wrench)</li>\
-        </ul>\
-        <h3>Pole Drop-off/Pick-up</h3>\
-        <ul>\
-          <li>If you need to store poles overnight, arrangements can be made for drop-off and pick-up</li>\
-          <li>Arrangements must be made by June 20th - Email events@dcvault.org</li>\
-        </ul>\
-        <h3>Pole Rentals</h3>\
-        <ul>\
-          <li>$30 cash at check-in</li>\
-          <li>You may be sharing your rental pole</li>\
-          <li>ID will be held until pole is returned</li>\
-        </ul>'
-    }
+const getEventEmailContent = (dates) => {
+  let eventContent = '';
   
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error)
-        }
-        console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
-    })
-    let mailOptions2 = {
-      from: '"DC Vault" <' + config.email.username + '>', // sender address
-      subject: 'New Event Registrant', // Subject line
-      to: "events@dcvault.org",
-      html:  '<p>Details</p>' +athleteInfo,
-      attachments: [
-      ]
+  if (dates && dates.includes('pvchamps26')) {
+    eventContent = '<p>Thank you for registering for the <strong>2026 Pole Vault Championships</strong>! Please review the information below and let us know if you have any questions by emailing us at <a href="mailto:events@dcvault.org">events@dcvault.org</a>.</p>' +
+      '<h3>ENTRY - PARTICIPANTS / SPECTATORS</h3>' +
+      '<p>Parking is located in Lot #3. Entry to the facility fronts on East Capitol Street. After parking, exit the lot back out onto the sidewalk along East Capitol Street and walk along the sidewalk to the double gates next to the black <strong>DC VAULT</strong>-logoed storage unit. Wait at the gate for entry and please arrive a few minutes early.</p>' +
+      '<p>Spectators may sit on the bleachers during the competition; please remain in the designated seating areas for safety.</p>' +
+      '<h3>FACILITY</h3>' +
+      '<p><strong>DC Vault Pole Vault Center</strong></p>' +
+      '<p>3 Mondo Runways — UCS 1800, 1900 and Elite 2100 series pits.</p>' +
+      '<h3>ADDRESS</h3>' +
+      '<p>2200 East Capitol Street NE, Washington, DC</p>' +
+      '<p>Enter the address above into your navigation system or simply search for "<strong>DC Vault</strong>".</p>' +
+      '<h3>ADDITIONAL NOTES</h3>' +
+      '<p>Please arrive prepared (water, appropriate footwear). If you have accessibility or special needs questions, contact us at <a href="mailto:events@dcvault.org">events@dcvault.org</a> prior to the event.</p>' +
+      '<p>We look forward to seeing you at the championships — good luck and jump safe!</p>';
+  } else if (dates && dates.includes('family-pv-experience')) {
+    eventContent = '<p>Thank you for registering for the <strong>Family Pole Vault Experience</strong>! Please review the information below and let us know if you have any questions by emailing us at <a href="mailto:events@dcvault.org">events@dcvault.org</a>.</p>' +
+'<h3>ENTRY - PARTICIPANTS / SPECTATORS</h3>' +
+'<p>Parking is located in Lot #3. Entry to the facility fronts on East Capitol Street. After parking, exit the lot back out onto the sidewalk along East Capitol Street and walk along the sidewalk to the double gates next to the black <strong>DC VAULT</strong>-logoed storage unit. Wait at the gate for entry and please arrive a few minutes early.</p>' +
+'<p>Spectators may sit on the bleachers during the class; please remain in the designated seating area for safety.</p>' +
+'<h3>FACILITY</h3>' +
+'<p><strong>DC Vault Pole Vault Center</strong></p>' +
+'<p>3 Mondo Runways — UCS 1800, 1900 and Elite 2100 series pits.</p>' +
+'<h3>ADDRESS</h3>' +
+'<p>2200 East Capitol Street NE, Washington, DC</p>' +
+'<p>Enter the address above into your navigation system or simply search for "<strong>DC Vault</strong>".</p>' +
+'<h3>ADDITIONAL NOTES</h3>' +
+'<p>Please arrive prepared (water, comfortable athletic clothing). If you have any additional questions, contact us at <a href="mailto:events@dcvault.org">events@dcvault.org</a>.</p>' +
+'<p>We look forward to seeing you at the Family Pole Vault Experience!</p>';
+  } else if (dates && dates.includes('spring-fling-urself')) {
+    eventContent = '<p>Thank you for registering for <strong>Spring Fling – Urself Over a Bar!</strong> Please review the information below and let us know if you have any questions by emailing us at <a href="mailto:events@dcvault.org">events@dcvault.org</a>.</p>' +
+'<h3>ENTRY FEES - WALK-UP / SPECTATORS / COACHES</h3>' +
+'<p>$50 cash for additional Walk-Up registering athletes on the day of the event.</p>' +
+'<p>$10 cash for all non-competitors entering the facility (cash only).</p>' +
+'<p>Entry is free for DC Residents.</p>' +
+'<p>Spectators and coaches may watch from outside the fence free of charge if preferred.</p>' +
+'<h3>FACILITY</h3>' +
+'<p><strong>DC Vault Pole Vault Center</strong></p>' +
+'<p>3 Mondo Runways — UCS 1800, 1900 and Elite 2100 series pits.</p>' +
+'<p>Parking On-Site (Lot #3).</p>' +
+'<p>Athletes enter the facility from the East Capitol Street sidewalk gate.</p>' +
+'<h3>ADDRESS</h3>' +
+'<p>2200 East Capitol Street NE, Washington, DC</p>' +
+'<p>Enter the address above into your navigation system or simply search for "<strong>DC Vault</strong>".</p>' +
+'<h3>SPIKES</h3>' +
+'<p><strong>1/8" spikes ONLY</strong> at this facility (not standard 1/4" spikes).</p>' +
+'<p>Athletes using spikes longer than 1/8" will be disqualified or scratched from the competition without refund.</p>' +
+'<p>1/8" spikes can be purchased online at <a href="https://amazon.com">Amazon.com</a>.</p>' +
+'<p>Strongly recommended so you do not waste time at the event changing spikes.</p>' +
+'<p>Available for $5 per set at the event (bring your own spike wrench).</p>' +
+'<h3>POLE RENTALS</h3>' +
+'<p>UCS Spirit Poles available for rent.</p>' +
+'<p>$30 cash at check-in.</p>' +
+'<p>You may be sharing your rental pole.</p>' +
+'<p>ID will be held until the pole is returned.</p>' +
+'<p><strong>You break it / You buy it.</strong></p>' +
+'<p>We look forward to seeing you at Spring Fling!</p>';
   }
-  transporter.sendMail(mailOptions2, (error, info) => {
-      if (error) {
-          return console.log(error)
-      }
-      console.log('Message %s sent to %s response: %s', info.messageId, "events@dcvault.org", info.response)
-  })
-}
+  
+  return eventContent;
+};
 
-module.exports.sendEventConfirmationEmails = (email, athleteInfo) => {
+module.exports.sendEventConfirmationEmails = (email, emailData) => {
   let mailOptions = {
-      from: '"DC Vault" <' + config.email.username + '>', // sender address
-      subject: '2025 Fly-Kids Summer Camp', // Subject line
-      to: email,
-      html: '<p>Thank you for registering for the Fly-Kids Summer Camp!</p>\
-        <p>We will provide the designated counselor contact phone # the first day of camp for emergencies.</p>\
-        <p>Please be sure to review the camp event information at DCVault.com/events and do not hesitate to contact us at Events@dcvault.org if you have any questions about the upcoming camp!</p>'
+    from: '"DC Vault" <' + config.email.username + '>', // sender address
+    subject: 'DC Vault Event Registration Confirmation', // Subject line
+    to: email,
+    html: '<p>Thank you for registering for the event!</p>\
+      <p>Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org.</p>\
+      <p>Athlete Information:</p>\
+      <p>' + emailData + '</p>'
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-          return console.log(error)
-      }
-      console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
-  })
-  let mailOptions2 = {
-    from: '"DC Vault" <' + config.email.username + '>', // sender address
-    subject: 'New Summer Camp Registrant', // Subject line
-    to: "events@dcvault.org",
-    html:  '<p>Details</p>' +athleteInfo,
-    attachments: [
-    ]
-}
-transporter.sendMail(mailOptions2, (error, info) => {
     if (error) {
-        return console.log(error)
+      return console.log(error)
     }
-    console.log('Message %s sent to %s response: %s', info.messageId, "events@dcvault.org", info.response)
-})
+    console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+  })
 }
+
+module.exports.sendDMVEventConfirmationEmails = (email, emailData, dates) => {
+  let eventContent = getEventEmailContent(dates);
+  const formattedAthleteInfo = formatAthleteData(emailData);
+
+  
+  let mailOptions = {
+    from: `"DC Vault" <${config.email.username}>`,
+    to: [email, "events@dcvault.org"],
+    subject: "Event Registration Confirmation",
+    html: `<p>${eventContent}</p><br>${formattedAthleteInfo}`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error)
+    }
+    console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+  })
+}
+
 module.exports.randString = (len) => {
   len = len || 16
   let retVal = ''

@@ -8,7 +8,7 @@ import Register from './register.jsx'
 import AdminPanel from './admin-panel.jsx'
 import ContactModal from './contact-modal.jsx'
 import GenericModal from './generic-modal.jsx'
-import Pvchamps from './pvchamps.jsx'
+import EventRegistration from './eventregistration.jsx'
 import PoleApp from './pole-app.jsx'
 import Events from './events.jsx'
 import Competition from './competition.jsx'
@@ -70,18 +70,18 @@ if (currentPage.indexOf('account') !== -1) {
     render(<Login />, document.getElementById('login'))
     render(<Register />, document.getElementById('registration-page'))
   }
-} else if (currentPage.indexOf('admin') !== -1) {//test page
+} else if (currentPage.indexOf('admin') !== -1) {
   render(<AdminPanel />, document.getElementById('admin-panel'))
 } else if (currentPage.indexOf('poles') !== -1) {
   render(<PoleApp />, document.getElementById('pole-panel'))
 } else if (currentPage.indexOf('events') !== -1) {
-    render(<Login />, document.getElementById('login'))
-    render(<Events />, document.getElementById('events-container'))
-} else if(currentPage.indexOf('compete') !== -1){
-    render(<Competition />, document.getElementById('competition-page'))
-} else if(currentPage.indexOf('pvchamps') !== -1){
-  render(<Pvchamps />, document.getElementById('pvchamps'))
-}else{
+  render(<Login />, document.getElementById('login'))
+  render(<Events />, document.getElementById('events-container'))
+} else if (currentPage.indexOf('compete') !== -1) {
+  render(<Competition />, document.getElementById('competition-page'))
+} else if (currentPage.indexOf('eventregistration') !== -1) {
+  render(<EventRegistration />, document.getElementById('eventregistration'))
+} else {
   render(<Calendar />, document.getElementById('calendar-container'))
   render(<Login />, document.getElementById('login'))
   render(<Training />, document.getElementById('training'))
@@ -92,6 +92,3 @@ if (currentPage.indexOf('account') !== -1) {
     loginDiv.style.visibility = 'visible'
   }
 }
-//else if(currentPage.indexOf('pvchamps') !== -1){
-//  render(<pvchamps />, document.getElementById('pvchamps'))
-//} 

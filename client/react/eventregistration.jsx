@@ -4,7 +4,7 @@ const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
 
-class Pvchamps extends React.Component {
+class EventRegistration extends React.Component {
     constructor (props) {
         super(props)
 
@@ -44,20 +44,6 @@ class Pvchamps extends React.Component {
     }
 
     componentDidMount () {
-
-        // let today = new Date()
-        // let month = today.getMonth() + 1
-        // let day = today.getDate()
-
-        // let registrationOpen = false
-
-        // let startMonths = [11, 2, 5, 8]
-        // let activeMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
-        // if ((day >= 15 && startMonths.indexOf(month) !== -1) || activeMonths.indexOf(month) !== -1) {
-        //   registrationOpen = true
-        // }
-
         this.setState({
             currentPage: (<AthleteInfo advance={this.advance.bind(this)} />),
             registrationOpen: true
@@ -70,7 +56,7 @@ class Pvchamps extends React.Component {
         let progressBar = this.state.showBar ? (<ProgressBar pageNum={this.state.pageNum} />) : ''
         if (this.state.registrationOpen) {
             return (
-                <section id='pvchamps'>
+                <section id='eventregistration'>
                     <div className='container'>
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
@@ -81,7 +67,7 @@ class Pvchamps extends React.Component {
                         {progressBar}
                         <div className='row'>
                             <div className='col-xs-12 col-md-6 col-md-push-3'>
-                                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><a onclick="document.getElementById('contact-button').click()">Contact us</a></p>
+                                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><a onClick={() => { document.getElementById('contact-button').click() }}>Contact us</a></p>
                             </div>
                         </div>
                     </div>
@@ -112,7 +98,9 @@ class AthleteInfo extends React.Component {
         this.state = {
             errorText: [],
             showUSATFinfo: false,
-            dateOptions: []
+            dateOptions: [],
+            selectedEvent: '',
+            afterPartyTickets: ''
         }
     }
 
@@ -120,13 +108,11 @@ class AthleteInfo extends React.Component {
         let dob = $('input[name=dob]').val()
         let dobFormatted = apiHelpers.formatDate(dob)
         $('input[name=dob]').val(dobFormatted)
-        // $('input[name=dob]').setSelectionRange(dobFormatted.length, dobFormatted.length);
     }
 
     formatPhone () {
         let phoneFormatted = apiHelpers.formatPhone($('input[name=emergency-phone]').val())
         $('input[name=emergency-phone]').val(phoneFormatted)
-        // $('input[name=emergency-phone]').setSelectionRange(phoneFormatted.length, phoneFormatted.length);
     }
 
     formatUSATF () {
@@ -140,25 +126,25 @@ class AthleteInfo extends React.Component {
         $('input[name=usatf]').val(usatfFormatted.slice(0, 10).join(''))
     }
 
-    //Link on how to get the list of check boxes
-    //https://stackoverflow.com/questions/37129437/how-do-i-use-react-and-forms-to-get-an-array-of-checked-checkbox-values
     formatDateList (e) {
-        //current array of options
         const dateOptions = this.state.dateOptions
         let index
 
-        // check if the check box is checked or unchecked
         if(e.target.checked){
-            //add the numerical value of the checkbox to options array
             dateOptions.push(+e.target.value)
         } else{
-            // or remove the value from the unchecked checkbox from the array
             index = dateOptions.indexOf(+e.target.value)
             dateOptions.splice(index, 1)
         }
 
-        // update the state with the new array of options
         this.setState({dateOptions: dateOptions})
+    }
+
+    handleEventChange (e) {
+        this.setState({
+            selectedEvent: e.target.value,
+            afterPartyTickets: ''
+        })
     }
 
     continue () {
@@ -166,11 +152,24 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division','memberdisc','elitedisc']
+        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
 
+        // Build dates1 value with event and add-ons
+        if (output.dates1) {
+            let addOns = []
+            if (output.afterparty === 'afterparty') {
+                addOns.push('afterparty-' + (output['afterparty-tickets'] || '0'))
+            }
+            if (output.eventbag === 'eventbag') {
+                addOns.push('eventbag')
+            }
+            if (addOns.length > 0) {
+                output.dates1 = output.dates1 + ',' + addOns.join(',')
+            }
+        }
 
         if (output.email.length !== 0 && !apiHelpers.validateEmail(output.email)) {
             let errorText = this.state.errorText
@@ -180,17 +179,6 @@ class AthleteInfo extends React.Component {
             })
             complete = false
         }
-
-        /*
-        if (output.usatf.length !== 0 && output.usatf.length !== 10) {
-            let errorText = this.state.errorText
-            errorText.push('Please provide a valid USATF membership number')
-            this.setState({
-                errorText: errorText
-            })
-            complete = false
-        }
-        */
 
         if (output.dob.length !== 0 && output.dob.length !== 10) {
             let errorText = this.state.errorText
@@ -227,26 +215,6 @@ class AthleteInfo extends React.Component {
         }
     }
 
-    // fillInfo() {
-    //   let output = {
-    //     conditions: 'Medical Conditions',
-    //     dob: "07/12/1994",
-    //     email: "moores.alexd@gmail.com",
-    //     fname: "Alex",
-    //     gender: "male",
-    //     lname: "Moores",
-    //     school: "school",
-    //     state: "ME",
-    //     usatf: "6546545645"
-    //   }
-    //   output['emergency-contact'] = 'Emergency Contact Name';
-    //   output['emergency-phone'] = '555-555-5555';
-    //   output['emergency-relation'] = 'Emergency Contact Relationship';
-
-    //   this.props.advance('athleteInfo', output);
-    // }
-    // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
-
     toggleUSATFinfo () {
         let current = this.state.showUSATFinfo
         this.setState({
@@ -272,45 +240,141 @@ class AthleteInfo extends React.Component {
                     <form id='event-athlete-info' className='form-labels-on-top'>
 
                     <div className='form-title-row'>
-                            <h1>Meet Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2025 Pole Vault Championships Registration is Open!
+                            <h1>Event Registration</h1>
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2026 Pole Vault Championships Registration is Open!
                                 <br></br>
                             </p>
                     </div>
 
                     <div className='form-row'>
-                        <label>
-                            <span className='required'>Competition</span>
-                            <input type ="checkbox" name="dates1" value="pvchamps25"/>
-                            <label for="pvchamps25">&nbsp;&nbsp;2025 Pole Vault Championships ($50)</label>
-                            <br></br>
-                        </label>
+                    <label>
+                        <span className='required'>Competition</span>
+                    </label>
+
+                    <div>
+                        <input
+                        type="radio"
+                        name="dates1"
+                        id="pvchamps26"
+                        value="pvchamps26"
+                        onChange={this.handleEventChange.bind(this)}
+                        />
+                        <label htmlFor="pvchamps26">&nbsp;&nbsp;2026 Pole Vault Championships ($50)</label>
+                        <br />
+
+                        <input
+                        type="radio"
+                        name="dates1"
+                        id="family-pv-experience"
+                        value="family-pv-experience"
+                        onChange={this.handleEventChange.bind(this)}
+                        />
+                        <label htmlFor="family-pv-experience">&nbsp;&nbsp;Family Pole Vault Experience ($15)</label>
+                        <br />
+
+                        <input
+                        type="radio"
+                        name="dates1"
+                        id="spring-fling-urself"
+                        value="spring-fling-urself"
+                        onChange={this.handleEventChange.bind(this)}
+                        />
+                        <label htmlFor="spring-fling-urself">&nbsp;&nbsp;Spring Fling - Urself Over a Bar! ($30)</label>
+                        <br />
+                    </div>
                     </div>
 
+                    {this.state.selectedEvent === 'pvchamps26' && (
+                        <div>
+                            <div className='form-row'>
+                                <label>
+                                    <span>After Party ($30)</span>
+                                    <input
+                                    type="checkbox"
+                                    name="afterparty"
+                                    value="afterparty"
+                                    checked={this.state.afterparty === true}
+                                    onChange={(e) =>
+                                        this.setState({
+                                        afterparty: e.target.checked,
+                                        afterpartyTickets: e.target.checked ? (this.state.afterpartyTickets || '') : ''
+                                        })
+                                    }
+                                    />
+                                </label>
+                            </div>
+
+                        {this.state.afterparty && (
+                            <div className='form-row'>
+                                <label>
+                                    <span>After Party Tickets</span>
+                                    <select
+                                        name="afterparty-tickets"
+                                        value={this.state.afterpartyTickets || ''}
+                                        onChange={(e) =>
+                                            this.setState({ afterpartyTickets: e.target.value })
+                                        }
+                                    >
+                                        <option value=''>Select number of tickets</option>
+                                        <option value='1'>1 Ticket</option>
+                                        <option value='2'>2 Tickets</option>
+                                        <option value='3'>3 Tickets</option>
+                                        <option value='4'>4 Tickets</option>
+                                        <option value='5'>5 Tickets</option>
+                                    </select>
+                                </label>
+                            </div>
+                        )}
+
+                            <div className='form-row'>
+                                <label>
+                                    <span>Event Bag ($85)</span>
+                                    <input type="checkbox" name="eventbag" value="eventbag" />
+                                </label>
+                            </div>
+                        </div>
+                    )}
+
+                    {this.state.selectedEvent !== 'pvchamps26' && this.state.selectedEvent !== '' && (
+                        <div>
+                            <input type='hidden' name='afterparty' value='n/a' />
+                            <input type='hidden' name='eventbag' value='n/a' />
+                        </div>
+                    )}
 
                         <div className='form-title-row'>
                             <h1>Athlete Information</h1>
                         </div>
-                        <div className='form-row'>
-                            <label>
-                                <span className='required'>Are you a CURRENT member of DC Vault?</span>
-                                <select name='memberdisc'>
-                                    <option value=''>Select yes/no</option>
-                                    <option value='dcvault-member'>Yes</option>
-                                    <option value='not-member'>No</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div className='form-row'>
-                            <label>
-                                <span className='required'>Are you a registering for an Elite Division? (Standards - Men: 5.5m+ / Women: 4.3m+)</span>
-                                <select name='elitedisc'>
-                                    <option value=''>Select yes/no</option>
-                                    <option value='elite'>Yes</option>
-                                    <option value='not-elite'>No</option>
-                                </select>
-                            </label>
-                        </div>
+                        
+                        {this.state.selectedEvent === 'pvchamps26' && (
+                            <div>
+                                <div className='form-row'>
+                                    <label>
+                                        <span className='required'>Are you a CURRENT member of DC Vault?</span>
+                                        <select name='memberdisc'>
+                                            <option value=''>Select yes/no</option>
+                                            <option value='dcvault-member'>Yes</option>
+                                            <option value='not-member'>No</option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div className='form-row'>
+                                    <label>
+                                        <span className='required'>Are you a registering for an Elite Division? (Standards - Men: 5.65m+ / Women: 4.3m+)</span>
+                                        <select name='elitedisc'>
+                                            <option value=''>Select yes/no</option>
+                                            <option value='elite'>Yes</option>
+                                            <option value='not-elite'>No</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                        )}
+
+                        {this.state.selectedEvent !== 'pvchamps26' && this.state.selectedEvent !== '' && (
+                            <input type='hidden' name='memberdisc' value='n/a' />
+                        )}
+
                         <div className='row'>
                             <div className='col-xs-12 col-md-6'>
                                 <div className='form-row'>
@@ -365,30 +429,35 @@ class AthleteInfo extends React.Component {
                                 <input type = 'text' name = 'team'/>
                             </label>
                         </div>
-                        <div className='form-row'>
-                            <label>
-                                <span className='required'>Division</span>
-                                <select name='division'>
-                                    <option value=''>Select Division</option>
-                                    <option value='Boys State Champs'>Boy's State Champions Division (High School State Champions Only!)</option>
-                                    <option value='Girls State Champs'>Girl's State Champions Division (High School State Champions Only!)</option>
-                                    <option value='Girls Elementary'>Elementary School Division - Girls (Ages 7-11 who attended 5th grade and under during Spring of 2025)</option>
-                                    <option value='Boys Elementary'>Elementary School Division - Boys (Ages 7-11 who attended 5th grade and under during Spring of 2025)</option>
-                                    <option value='Girls Middle School'>Middle School Division - Girls (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
-                                    <option value='Boys Middle School'>Middle School Division - Boys (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
-                                    <option value='Girls High School'>High School Division - Girls (Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
-                                    <option value='Boys High School D1'>High School Division - Boys D1 PR 12'6"+(Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
-                                    <option value='Boys High School D2'>High School Division - Boys D2 PR under 12'6" (Ages 14-18 who attended grades 9-12 in Spring of 2025) </option>
-                                    <option value='Womens Adult'>Open Adult Division - Women</option>
-                                    <option value='Mens Adults'>Open Adult Division - Men</option>
-                                    <option value='Mens Emerging Elite'>Men’s Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
-                                    <option value='Mens Elite'>Elite Women (PR of 4.3m or higher)</option>
-                                    <option value='Womens Elite'>Elite Men (PR of 5.5m or higher)</option>
-                                </select>
-                            </label>
-                        </div>
-
                         
+                        {this.state.selectedEvent === 'pvchamps26' && (
+                            <div className='form-row'>
+                                <label>
+                                    <span className='required'>Division</span>
+                                    <select name='division'>
+                                        <option value=''>Select Division</option>
+                                        <option value='Boys State Champs'>Boy's State Champions Division (High School State Champions Only!)</option>
+                                        <option value='Girls State Champs'>Girl's State Champions Division (High School State Champions Only!)</option>
+                                        <option value='Girls Elementary'>Elementary School Division - Girls (Ages 7-11 who attended 5th grade and under during Spring of 2025)</option>
+                                        <option value='Boys Elementary'>Elementary School Division - Boys (Ages 7-11 who attended 5th grade and under during Spring of 2025)</option>
+                                        <option value='Girls Middle School'>Middle School Division - Girls (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
+                                        <option value='Boys Middle School'>Middle School Division - Boys (Ages 11-14 who attended grades 6-8 during Spring of 2025)</option>
+                                        <option value='Girls High School'>High School Division - Girls (Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
+                                        <option value='Boys High School D1'>High School Division - Boys D1 PR 12'6"+(Ages 14-18 who attended grades 9-12 in Spring of 2025)</option>
+                                        <option value='Boys High School D2'>High School Division - Boys D2 PR under 12'6" (Ages 14-18 who attended grades 9-12 in Spring of 2025) </option>
+                                        <option value='Womens Adult'>Open Adult Division - Women</option>
+                                        <option value='Mens Adults'>Open Adult Division - Men</option>
+                                        <option value='Mens Emerging Elite'>Men’s Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
+                                        <option value='Mens Elite'>Elite Women (PR of 4.3m or higher)</option>
+                                        <option value='Womens Elite'>Elite Men (PR of 5.65m or higher)</option>
+                                    </select>
+                                </label>
+                            </div>
+                        )}
+
+                        {this.state.selectedEvent !== 'pvchamps26' && this.state.selectedEvent !== '' && (
+                            <input type='hidden' name='division' value='n/a' />
+                        )}
 
                         <div className='form-row'>
                             <label>
@@ -554,12 +623,6 @@ class Agreement extends React.Component {
         }
     }
 
-    // fillInfo() {
-    //   this.props.advance('agreement', {name: 'Signatory Jones', date: '01/23/2562'});
-    // }
-
-    // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
-
     render () {
         let errorContainer
         if (!(this.state.errorText.length === 0)) {
@@ -628,34 +691,31 @@ class Payment extends React.Component {
     constructor (props) {
         super(props)
         let price = 0
+        
+        // Parse dates1 to extract individual items and calculate price
         if(this.props.data.athleteInfo.dates1){
-            if(this.props.data.athleteInfo.memberdisc == "dcvault-member"){
-                price = 5
-            }else if(this.props.data.athleteInfo.elitedisc == "elite"){
-                price = 5
-            }else{
-                price+=50
+            let items = this.props.data.athleteInfo.dates1.split(',').map(item => item.trim())
+            
+            for(let item of items) {
+                if(item === 'pvchamps26') {
+                    // Apply member or elite discount
+                    if(this.props.data.athleteInfo.memberdisc === "dcvault-member" || this.props.data.athleteInfo.elitedisc === "elite") {
+                        price += 5
+                    } else {
+                        price += 50
+                    }
+                } else if(item === 'family-pv-experience') {
+                    price += 15
+                } else if(item === 'spring-fling-urself') {
+                    price += 30
+                } else if(item.startsWith('afterparty-')) {
+                    let ticketCount = parseInt(item.split('-')[1])
+                    price += (30 * ticketCount)
+                } else if(item === 'eventbag') {
+                    price += 85
+                }
             }
-          }
-          if(this.props.data.athleteInfo.dates2){
-            price+=25
-          }
-          if(this.props.data.athleteInfo.dates3){
-            price+=25          }
-          if(this.props.data.athleteInfo.dates4){
-            price+=25          }
-          if(this.props.data.athleteInfo.dates5){
-            price+=25          }
-          if(this.props.data.athleteInfo.dates6){
-            price+=25          }
-          if(this.props.data.athleteInfo.dates7){
-            price+=25          }
-          if(this.props.data.athleteInfo.dates8){
-            price+=25          }
-          if(this.props.data.athleteInfo.dates9){
-            price+=25          }
-          if(this.props.data.athleteInfo.dates10){
-            price+=25          }
+        }
 
         this.state = {
             price: price,
@@ -711,7 +771,26 @@ class Payment extends React.Component {
             dateLst += this.props.data.athleteInfo.dates10 + ", "
         }
         this.props.data.athleteInfo.dates1 = dateLst
-        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\n State:' + this.props.data.athleteInfo.state + '\n Division: ' + this.props.data.athleteInfo.division +  '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Competitions: ' + dateLst
+        
+        // Parse dates1 to extract add-on details for payment description
+        let addOnDetails = ''
+        if(this.props.data.athleteInfo.dates1){
+            let items = this.props.data.athleteInfo.dates1.split(',').map(item => item.trim())
+            let addOns = []
+            for(let item of items) {
+                if(item.startsWith('afterparty-')) {
+                    let ticketCount = item.split('-')[1]
+                    addOns.push('After Party (' + ticketCount + ' tickets)')
+                } else if(item === 'eventbag') {
+                    addOns.push('Event Bag')
+                }
+            }
+            if(addOns.length > 0) {
+                addOnDetails = '\nAdd-ons: ' + addOns.join(', ')
+            }
+        }
+        
+        var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nState: ' + this.props.data.athleteInfo.state + '\nDivision: ' + this.props.data.athleteInfo.division + '\nAthlete Email: ' + this.props.data.athleteInfo.email + '\nCompetitions: ' + dateLst + addOnDetails
 
 
         paypal.Button.render({ // eslint-disable-line
@@ -761,11 +840,6 @@ class Payment extends React.Component {
 
 
 
-    // fillInfo() {
-    //   this.props.advance('payment', {paymentId: 'paymentID==2348759012834570', payerId: 'payerID==9018245709284'})
-    // }
-    // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
-
     render () {
         let errorContainer
         if (!(this.state.errorText.length === 0)) {
@@ -796,8 +870,6 @@ class Payment extends React.Component {
                             </div>
                             {errorContainer}
                         </div>
-
-
 
                         <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
                         <div className='form-row' style={{textAlign: 'center'}}>
@@ -892,4 +964,4 @@ class ProgressBar extends React.Component {
     }
 }
 
-export default Pvchamps
+export default EventRegistration
