@@ -28,84 +28,84 @@ class Events extends React.Component {
    */
   render () {
     let contents = [
-    {
-      date: new Date('April 10, 2026'),
-      partial: (
-        <div className='event-block' id='10APR2026'>
-          <p className='event-block-title'><span className='red-text'>FAMILY</span> POLE VAULT EXPERIENCE!</p>
-          <img src="../img/events/DCV_FamilyExperience-01.jpg" alt="Family Pole Vault Experience" width='350' class="center"></img>
+      {
+        date: new Date('April 10, 2026'),
+        partial: (
+          <div className='event-block' id='10APR2026'>
+            <p className='event-block-title'><span className='red-text'>FAMILY</span> POLE VAULT EXPERIENCE!</p>
+            <img src="../img/events/DCV_FamilyExperience-01.jpg" alt="Family Pole Vault Experience" width='350' class="center"></img>
 
-          <p className='event-block-info'>
-            <span className='event-block-date'>Friday, April 10th, 2026</span><br></br>
-            <span className='event-block-date'>6:30pm – 7:45pm</span><br></br>
-            <span className='event-block-date'>DC Vault Pole Vault Center</span><br></br>
-            <span className='event-block-date'>2200 East Capitol Street NE · Washington DC</span>
-          </p>
+            <p className='event-block-info'>
+              <span className='event-block-date'>Friday, April 10th, 2026</span><br></br>
+              <span className='event-block-date'>6:30pm – 7:45pm</span><br></br>
+              <span className='event-block-date'>DC Vault Pole Vault Center</span><br></br>
+              <span className='event-block-date'>2200 East Capitol Street NE · Washington DC</span>
+            </p>
 
-          <span className='event-block-details-header'>Event Info</span>
-          <ul className='event-block-details'>
-            <li>A unique opportunity for kids and/or parents to try out pole vaulting at the DC Vault Pole Vault Center!</li>
-            <li>Adults and children work in separate groups, progressing at-your-own pace while learning basic fundamentals.</li>
-            <li>Open to ages 7 and up</li>
-            <li>Dog friendly venue</li>
-            <li><span className='red-text'>Space is limited!</span></li>
-          </ul>
+            <span className='event-block-details-header'>Event Info</span>
+            <ul className='event-block-details'>
+              <li>A unique opportunity for kids and/or parents to try out pole vaulting at the DC Vault Pole Vault Center!</li>
+              <li>Adults and children work in separate groups, progressing at-your-own pace while learning basic fundamentals.</li>
+              <li>Open to ages 7 and up</li>
+              <li>Dog friendly venue</li>
+              <li><span className='red-text'>Space is limited!</span></li>
+            </ul>
 
-          <span className='event-block-details-header'>Registration</span>
-          <ul className='event-block-details'>
-            <li>$15 advance registration - <a style={{color: '#C0282D'}} href='https://dcvault.com/eventregistration' target='_blank' rel='noopener noreferrer'>REGISTER HERE!</a></li>
-            <li>General inquiries: <span className='red-text'>events@dcvault.org</span></li>
-          </ul>
+            <span className='event-block-details-header'>Registration</span>
+            <ul className='event-block-details'>
+              <li>$15 advance registration - <a style={{color: '#C0282D'}} href='https://dcvault.com/eventregistration' target='_blank' rel='noopener noreferrer'>REGISTER HERE!</a></li>
+              <li>General inquiries: <span className='red-text'>events@dcvault.org</span></li>
+            </ul>
 
-          <center><span className='red-text'>Click Arrow for More Info</span></center>
-        </div>
-      ),
-      full: (
-        <div className='event-block' id='10APR2026'>
-          <p className='event-block-title'><span className='red-text'>FAMILY</span> POLE VAULT EXPERIENCE!</p>
-          <img src="../img/events/DCV_FamilyExperience-01.jpg" alt="Family Pole Vault Experience" width='350' class="center"></img>
+            <center><span className='red-text'>Click Arrow for More Info</span></center>
+          </div>
+        ),
+        full: (
+          <div className='event-block' id='10APR2026'>
+            <p className='event-block-title'><span className='red-text'>FAMILY</span> POLE VAULT EXPERIENCE!</p>
+            <img src="../img/events/DCV_FamilyExperience-01.jpg" alt="Family Pole Vault Experience" width='350' class="center"></img>
 
-          <p className='event-block-info'>
-            <span className='event-block-date'>Friday, April 10th, 2026</span><br></br>
-            <span className='event-block-date'>6:30pm – 7:45pm</span><br></br>
-            <span className='event-block-date'>DC Vault Pole Vault Center</span><br></br>
-            <span className='event-block-date'>2200 East Capitol Street NE · Washington DC</span>
-          </p>
+            <p className='event-block-info'>
+              <span className='event-block-date'>Friday, April 10th, 2026</span><br></br>
+              <span className='event-block-date'>6:30pm – 7:45pm</span><br></br>
+              <span className='event-block-date'>DC Vault Pole Vault Center</span><br></br>
+              <span className='event-block-date'>2200 East Capitol Street NE · Washington DC</span>
+            </p>
 
-          <span className='event-block-details-header'>Event Info</span>
-          <ul className='event-block-details'>
-            <li>A unique opportunity for kids and/or parents to try out pole vaulting at the DC Vault Pole Vault Center!</li>
-            <li>Adults and children will work in separate groups, progressing at-your-own pace, while learning basic fundamentals of pole vaulting.</li>
-            <li>Open to ages 7 and up</li>
-            <li>Dog friendly venue</li>
-            <li><span className='red-text'>Space is limited!</span></li>
-          </ul>
+            <span className='event-block-details-header'>Event Info</span>
+            <ul className='event-block-details'>
+              <li>A unique opportunity for kids and/or parents to try out pole vaulting at the DC Vault Pole Vault Center!</li>
+              <li>Adults and children will work in separate groups, progressing at-your-own pace, while learning basic fundamentals of pole vaulting.</li>
+              <li>Open to ages 7 and up</li>
+              <li>Dog friendly venue</li>
+              <li><span className='red-text'>Space is limited!</span></li>
+            </ul>
 
-          <span className='event-block-details-header'>Schedule</span>
-          <ul className='event-block-details'>
-            <li>6:30pm – Session Begins</li>
-            <li>7:45pm – Session Ends</li>
-          </ul>
+            <span className='event-block-details-header'>Schedule</span>
+            <ul className='event-block-details'>
+              <li>6:30pm – Session Begins</li>
+              <li>7:45pm – Session Ends</li>
+            </ul>
 
-          <span className='event-block-details-header'>Registration</span>
-          <ul className='event-block-details'>
-            <li>$15 advance registration - <a style={{color: '#C0282D'}} href='https://dcvault.com/eventregistration' target='_blank' rel='noopener noreferrer'>REGISTER HERE!</a></li>
-            <li>General inquiries: <span className='red-text'>events@dcvault.org</span></li>
-          </ul>
+            <span className='event-block-details-header'>Registration</span>
+            <ul className='event-block-details'>
+              <li>$15 advance registration - <a style={{color: '#C0282D'}} href='https://dcvault.com/eventregistration' target='_blank' rel='noopener noreferrer'>REGISTER HERE!</a></li>
+              <li>General inquiries: <span className='red-text'>events@dcvault.org</span></li>
+            </ul>
 
-          <span className='event-block-details-header'>Weather Fall-Back Date</span>
-          <ul className='event-block-details'>
-            <li>Friday, May 1st, 2026 — 6:30pm – 7:45pm</li>
-          </ul>
+            <span className='event-block-details-header'>Weather Fall-Back Date</span>
+            <ul className='event-block-details'>
+              <li>Friday, May 1st, 2026 — 6:30pm – 7:45pm</li>
+            </ul>
 
-          <span className='event-block-details-header'>Location</span>
-          <ul className='event-block-details'>
-            <li>DC Vault Pole Vault Center</li>
-            <li>2200 East Capitol Street NE · Washington DC</li>
-          </ul>
-        </div>
-      )
-    },
+            <span className='event-block-details-header'>Location</span>
+            <ul className='event-block-details'>
+              <li>DC Vault Pole Vault Center</li>
+              <li>2200 East Capitol Street NE · Washington DC</li>
+            </ul>
+          </div>
+        )
+      },
       {
         date: new Date('March 29, 2026'),
         partial: (
@@ -114,7 +114,7 @@ class Events extends React.Component {
             <img src="../img/events/26springfling.jpg" alt="Spring Fling" width='350' class="center"></img>
 
             <p className='event-block-info'>
-              <span className='event-block-date'>Saturday, March 29th, 2026</span><br></br>
+              <span className='event-block-date'>Sunday, March 29th, 2026</span><br></br>
               <span className='event-block-date'>DC Vault Pole Vault Center</span><br></br>
               <span className='event-block-date'>2200 East Capitol Street NE · Washington DC</span>
             </p>
@@ -149,7 +149,7 @@ class Events extends React.Component {
             <img src="../img/events/26springfling.jpg" alt="Spring Fling" width='350' class="center"></img>
 
             <p className='event-block-info'>
-              <span className='event-block-date'>Saturday, March 29th, 2026</span><br></br>
+              <span className='event-block-date'>Sunday, March 29th, 2026</span><br></br>
               <span className='event-block-date'>DC Vault Pole Vault Center</span><br></br>
               <span className='event-block-date'>2200 East Capitol Street NE · Washington DC</span>
             </p>
