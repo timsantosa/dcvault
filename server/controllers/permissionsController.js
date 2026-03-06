@@ -324,67 +324,11 @@ async function deleteRole(req, res, db) {
     }
 }
 
-async function getAllUsersWithRole(req, res, db) {
-    try {
-        const { roleId } = req.params;
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const offset = (page - 1) * limit;
-
-        if (!roleId) {
-            return res.status(400).json({ ok: false, message: 'Missing roleId' });
-        }
-
-        // First check if role exists
-        const role = await db.tables.Roles.findByPk(roleId);
-        if (!role) {
-            return res.status(404).json({ ok: false, message: 'Role not found' });
-        }
-
-        // Get total count for pagination
-        const total = await db.tables.User_Roles.count({
-            where: { roleId }
-        });
-
-        // Get paginated users with their roles
-        const userRoles = await db.tables.User_Roles.findAll({
-            where: { roleId },
-            include: [{
-                model: db.tables.Users,
-                attributes: ['id', 'email', 'name']
-            }],
-            limit,
-            offset,
-            order: [['createdAt', 'DESC']]
-        });
-
-        const users = userRoles.map(ur => ur.user);
-
-        res.json({
-            ok: true,
-            message: 'Successfully retrieved users with role',
-            users,
-            pagination: {
-                total,
-                page,
-                limit,
-                totalPages: Math.ceil(total / limit)
-            }
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ ok: false, message: 'Internal server error' });
-    }
-}
-
-
 module.exports = {
 
     getRolesForUser,
     addRoleToUser,
     removeRoleFromUser,
-
-    getAllUsersWithRole,
 
     getPermissionsForRole,
     addPermissionToRole,

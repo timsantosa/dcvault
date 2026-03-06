@@ -58,6 +58,6 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.post('/mobileapp/user/jump/reject', checkPermission('verify_jumps'), (req, res) => rejectJumpVerification(req, res, db));
   app.get('/mobileapp/user/jumps/unverified', checkPermission('verify_jumps'), (req, res) => getUnverifiedMeetJumps(req, res, db));
 
-  app.use('/mobileapp/user/permissions', checkPermission('manage_roles'), permissionRoutes(db));
+  app.use('/mobileapp/user/permissions', permissionRoutes(db));
   app.use('/mobileapp/user/userData', checkPermission('manage_roles'), userRoutes(db));
 }

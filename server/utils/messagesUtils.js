@@ -169,7 +169,7 @@ async function getOrCreateAnnouncementConversation(type, creatorId, db) {
   
   try {
     const name = type === 'announcement_all' 
-      ? 'Announcements' 
+      ? 'DC Vault Announcements' 
       : 'Active Member Announcements';
     
     conversation = await db.tables.Conversations.create({

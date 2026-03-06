@@ -149,7 +149,7 @@ async function updateProfile(req, res, db) {
       weight: newProfileData.weight,
       gender: newProfileData.gender,
       athleteId: newProfileData.associatedAthleteId,
-      userId: newUserId,
+      // userId: newUserId,
       vaultAssociationId: newProfileData.vaultAssociationId ?? null,
     }
 
@@ -158,7 +158,7 @@ async function updateProfile(req, res, db) {
     }
 
     if (userSendingRequest.permissions?.includes('edit_others_profiles')) {
-      athleteProfileData.userId = newProfileData.userId;
+      athleteProfileData.userId = newUserId;
     }
 
     // Update existing profile

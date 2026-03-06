@@ -129,6 +129,21 @@ function checkOwnAthleteProfileOrPermission(req, res, next, permission) {
   next();
 }
 
+function checkOwnUser(req, res, next) {
+  const user = req.user;
+  const userId = parseInt(req.query.userId);
+
+  if (!user || !user.id || !isValidId(userId)) {
+    return res.status(400).json({ ok: false, message: 'Bad request' });
+  }
+
+  if (user.id !== userId) {
+    return res.status(403).json({ ok: false, message: 'Forbidden - No access to this resource' });
+  }
+
+  next();
+}
+
 function checkOwnUserOrPermission(req, res, next, permission) {
   const user = req.user;
   const userId = parseInt(req.query.userId);
@@ -138,16 +153,16 @@ function checkOwnUserOrPermission(req, res, next, permission) {
   }
 
   // Check if user has the required permission
-  if (user.permissions.includes(permission)) {
+  if (user.permissions?.includes(permission)) {
     return next();
   }
 
-  // Check if user has access to this specific athlete profile
-  if (user.id !== userId) {
-    return res.status(403).json({ ok: false, message: 'Forbidden - No access to this athlete profile' });
+  // Check if user has access to this specific user
+  if (user.id === userId) {
+    return next();
   }
 
-  next();
+  return res.status(403).json({ ok: false, message: 'Forbidden - No access to this resource' });
 }
 
 function checkOwnUserOrProfileOrPermission(req, res, next, permission) {
@@ -181,6 +196,7 @@ function checkOwnUserOrProfileOrPermission(req, res, next, permission) {
 module.exports = { 
   authenticateJWT,
   checkPermission,
+  checkOwnUser,
   athleteProfileBelongsToUser,
   checkOwnAthleteProfileOrPermission,
   checkOwnUserOrPermission,
