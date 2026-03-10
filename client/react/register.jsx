@@ -580,7 +580,7 @@ class SelectPackage extends React.Component {
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
-                    <input type='radio' name='fkmembership' value='4classes' checked={this.state.checkedFKMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
+                    <input type='radio' name='fkmembership' value='8classes' checked={this.state.checkedFKMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
                     <span>8 Classes ($200)</span>
                   </label>
                 </div>
