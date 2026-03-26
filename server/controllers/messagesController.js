@@ -125,6 +125,7 @@ async function getConversations(req, res, db) {
           where: {
             conversationId: conversation.id,
             senderId: { [Op.ne]: parseInt(athleteProfileId) }, // Don't count own messages
+            deletedAt: null,
             ...(lastReadAt ? {
               createdAt: { [Op.gt]: lastReadAt }
             } : {}) // If never read, count all messages from others
@@ -619,6 +620,9 @@ async function sendMessage(req, res, db) {
       if (!parentMessage) {
         return res.status(404).json({ ok: false, message: 'Parent message not found' });
       }
+      if (parentMessage.deletedAt) {
+        return res.status(400).json({ ok: false, message: 'Cannot react to a deleted message' });
+      }
     }
 
     // Check if user is part of the conversation
@@ -746,9 +750,17 @@ async function sendMessage(req, res, db) {
 async function editMessage(req, res, db) {
   try {
     const { messageId } = req.params;
-    const { content, athleteProfileId } = req.query;
+    const { athleteProfileId: athleteProfileIdString } = req.query;
+    const athleteProfileId = parseInt(athleteProfileIdString, 10);
+    const content =
+      req.body?.content !== undefined && req.body?.content !== null
+        ? req.body.content
+        : req.query?.content;
 
-    if (!messageId || !athleteProfileId || !content) {
+    if (!messageId || !athleteProfileIdString || isNaN(athleteProfileId)) {
+      return res.status(400).json({ ok: false, message: 'Missing required parameters' });
+    }
+    if (content === undefined || content === null) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
     }
 
@@ -770,14 +782,22 @@ async function editMessage(req, res, db) {
       return res.status(404).json({ ok: false, message: 'Message not found' });
     }
 
+    if (message.type !== 'attachment' && !String(content).trim()) {
+      return res.status(400).json({ ok: false, message: 'Content is required' });
+    }
+
+    if (message.deletedAt) {
+      return res.status(400).json({ ok: false, message: 'Cannot edit a deleted message' });
+    }
+
     // Check if user is the sender
     if (message.senderId !== athleteProfileId) {
       return res.status(403).json({ ok: false, message: 'Not authorized to edit this message' });
     }
 
-    // Check if message is too old to edit (e.g., 24 hours)
+    // Check if message is too old to edit (3 days)
     const messageAge = Date.now() - new Date(message.createdAt).getTime();
-    const MAX_EDIT_AGE = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    const MAX_EDIT_AGE = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
     if (messageAge > MAX_EDIT_AGE) {
       return res.status(400).json({ ok: false, message: 'Message is too old to edit' });
     }
@@ -790,7 +810,16 @@ async function editMessage(req, res, db) {
 
     // TODO: Send notification to conversation participants about edited message
 
-    res.json({ ok: true, message });
+    const fullMessage = await db.tables.Messages.findOne({
+      where: { id: message.id },
+      include: [{
+        model: db.tables.AthleteProfiles,
+        as: 'sender',
+        attributes: ['id', 'firstName', 'lastName']
+      }]
+    });
+
+    res.json({ ok: true, message: fullMessage });
   } catch (error) {
     console.error('Error editing message:', error);
     res.status(500).json({ ok: false, message: 'Failed to edit message' });
@@ -907,20 +936,24 @@ async function deleteMessage(req, res, db) {
       return res.status(404).json({ ok: false, message: 'Message not found' });
     }
 
+    if (message.deletedAt) {
+      return res.status(400).json({ ok: false, message: 'Message already deleted' });
+    }
+
     // Check if user is the sender or an admin
     const participant = message.conversation.participants[0];
     if (message.senderId !== athleteProfileId && participant.role !== 'admin') {
       return res.status(403).json({ ok: false, message: 'Not authorized to delete this message' });
     }
 
-    // Check if message is too old to delete (e.g., 24 hours)
+    // Check if message is too old to delete (3 days; admins exempt)
     const messageAge = Date.now() - new Date(message.createdAt).getTime();
-    const MAX_DELETE_AGE = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    const MAX_DELETE_AGE = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
     if (messageAge > MAX_DELETE_AGE && participant.role !== 'admin') {
       return res.status(400).json({ ok: false, message: 'Message is too old to delete' });
     }
 
-    // Delete attachment assets from Cloudinary before removing the message
+    // Delete attachment assets from Cloudinary before soft-deleting the message
     if (message.attachments && Array.isArray(message.attachments) && message.attachments.length > 0) {
       for (const att of message.attachments) {
         if (att.publicId) {
@@ -936,11 +969,26 @@ async function deleteMessage(req, res, db) {
       }
     }
 
-    await message.destroy();
+    const now = new Date();
+    await message.update({
+      deletedAt: now,
+      content: null,
+      attachments: null,
+      updatedAt: now
+    });
 
     // TODO: Send notification to conversation participants about deleted message
 
-    res.json({ ok: true });
+    const fullMessage = await db.tables.Messages.findOne({
+      where: { id: message.id },
+      include: [{
+        model: db.tables.AthleteProfiles,
+        as: 'sender',
+        attributes: ['id', 'firstName', 'lastName']
+      }]
+    });
+
+    res.json({ ok: true, message: fullMessage });
   } catch (error) {
     console.error('Error deleting message:', error);
     res.status(500).json({ ok: false, message: 'Failed to delete message' });
@@ -976,6 +1024,7 @@ async function getUnreadCounts(req, res, db) {
           where: {
             conversationId,
             senderId: { [Op.ne]: parseInt(athleteProfileId) }, // Don't count own messages
+            deletedAt: null,
             // Exclude reactions unless they are reactions to a message from the requester
             [Op.or]: [
               { type: { [Op.ne]: 'reaction' } },
