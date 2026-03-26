@@ -20,7 +20,7 @@ const {
 const attachmentUpload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 100 * 1024 * 1024, // 100 MB (Cloudinary Free video limit)
+    fileSize: 20 * 1024 * 1024, // 20 MB
     files: 5
   }
 });

@@ -610,9 +610,8 @@ async function sendMessage(req, res, db) {
       return res.status(400).json({ ok: false, message: 'Attachments required for attachment message' });
     }
 
-    // If it's a reaction, check if the parent message exists and replace any reactions from the same sender
+    // If it's a reaction, check if the parent message exists
     if (type === 'reaction') {
-      // Check if parent message exists
       const parentMessage = await db.tables.Messages.findOne({
         where: { id: parentMessageId }
       });
@@ -620,15 +619,6 @@ async function sendMessage(req, res, db) {
       if (!parentMessage) {
         return res.status(404).json({ ok: false, message: 'Parent message not found' });
       }
-
-      // Delete any existing reactions from this user to the parent message
-      await db.tables.Messages.destroy({
-        where: {
-          parentMessageId,
-          senderId: athleteProfileId,
-          type: 'reaction'
-        }
-      });
     }
 
     // Check if user is part of the conversation
@@ -653,6 +643,28 @@ async function sendMessage(req, res, db) {
     
     if (!canSend) {
       return res.status(403).json({ ok: false, message: 'Not authorized to send messages' });
+    }
+
+    // Reactions: toggle off if same emoji; otherwise remove any prior reaction from this sender before creating a new one
+    if (type === 'reaction') {
+      const existingReaction = await db.tables.Messages.findOne({
+        where: {
+          parentMessageId,
+          senderId: athleteProfileId,
+          type: 'reaction'
+        }
+      });
+      if (existingReaction && existingReaction.content === content) {
+        await existingReaction.destroy();
+        return res.json({ ok: true, message: null });
+      }
+      await db.tables.Messages.destroy({
+        where: {
+          parentMessageId,
+          senderId: athleteProfileId,
+          type: 'reaction'
+        }
+      });
     }
 
     // If this is an announcement conversation and user has announcement permissions, sync participants
