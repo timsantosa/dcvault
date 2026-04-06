@@ -259,7 +259,7 @@ class AthleteInfo extends React.Component {
                         value="pvchamps26"
                         onChange={this.handleEventChange.bind(this)}
                         />
-                        <label htmlFor="pvchamps26">&nbsp;&nbsp;2026 Pole Vault Championships ($50)</label>
+                        <label htmlFor="pvchamps26">&nbsp;&nbsp;2026 Pole Vault Championships ($60)</label>
                         <br />
 
                         <input
@@ -272,15 +272,6 @@ class AthleteInfo extends React.Component {
                         <label htmlFor="family-pv-experience">&nbsp;&nbsp;Family Pole Vault Experience ($15)</label>
                         <br />
 
-                        <input
-                        type="radio"
-                        name="dates1"
-                        id="spring-fling-urself"
-                        value="spring-fling-urself"
-                        onChange={this.handleEventChange.bind(this)}
-                        />
-                        <label htmlFor="spring-fling-urself">&nbsp;&nbsp;Spring Fling - Urself Over a Bar! ($30)</label>
-                        <br />
                     </div>
                     </div>
 
@@ -702,7 +693,7 @@ class Payment extends React.Component {
                     if(this.props.data.athleteInfo.memberdisc === "dcvault-member" || this.props.data.athleteInfo.elitedisc === "elite") {
                         price += 5
                     } else {
-                        price += 50
+                        price += 60
                     }
                 } else if(item === 'family-pv-experience') {
                     price += 15
