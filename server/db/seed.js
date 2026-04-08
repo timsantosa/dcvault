@@ -181,6 +181,7 @@ const fillDb = (numEntries) => {
                       pr.athleteProfileId = newProfile.id;
                       pr.stepNum = newJump.stepNum;
                       pr.jumpId = newJump.id;
+                      pr.vaultAssociationId = newJump.vaultAssociationId != null ? newJump.vaultAssociationId : 0;
                       db.tables.PersonalRecords.create(pr).then(newPr => {
                         if (newPr.id === numEntries) {
                           console.log('done')

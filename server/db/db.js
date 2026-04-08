@@ -271,6 +271,12 @@ columns.personalRecords = {
       key: 'id',
     },
   },
+  // Denormalized from jumps; 0 = unassociated (see server/constants/vaultAssociations.js)
+  vaultAssociationId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
 };
 
 columns.favoriteJumps = {
@@ -717,11 +723,11 @@ const syncTables = (schema, force) => {
     indexes: [
       {
         unique: true,
-        fields: ['athleteProfileId', 'stepNum'],
-        name: 'unique_step_per_athlete'
+        fields: ['athleteProfileId', 'stepNum', 'vaultAssociationId'],
+        name: 'unique_step_vault_per_athlete'
       }
     ]
-  }); // ALTER TABLE personalRecords ADD CONSTRAINT unique_step_per_athlete UNIQUE (athleteProfileId, stepNum);
+  }); // UNIQUE (athleteProfileId, stepNum, vaultAssociationId); see migrations/personal-records-vault-association.sql
 
   tables.FavoriteJumps = schema.define('favoriteJump', columns.favoriteJumps, {
     indexes: [

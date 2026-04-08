@@ -1,7 +1,15 @@
 const helpers = require('../lib/helpers');
 const rankingCache = require('./athleteRankingCache');
-const { getPersonalBest } = require('./jumpsController');
-const { getBestOfPersonalRecords, sortProfilesByPR, isAthleteProfileActive, isPurchaseActiveForCurrentYear, assignRanksWithTies } = require('../utils/rankingUtils');
+const {
+  getBestOfPersonalRecords,
+  getPersonalBestForVaultScope,
+  sortProfilesByPR,
+  isAthleteProfileActive,
+  isPurchaseActiveForCurrentYear,
+  assignRanksWithTies,
+  cloneProfilesForRanking,
+  filterPersonalRecordsForRanking,
+} = require('../utils/rankingUtils');
 const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
 const NotificationUtils = require('../utils/notificationUtils');
 
@@ -213,14 +221,26 @@ const getProfile = async (req, res, db) => {
     const isActiveMember = await isAthleteProfileActive(profile, db);
 
     // Get the appropriate ranking based on active status
+    const vaultScope = profile.vaultAssociationId == null ? 'global' : profile.vaultAssociationId;
     const cachedRank = await rankingCache.getRankingForAthlete(
-      profile.id, 
-      profile.gender, 
-      isActiveMember ? 'active' : 'allTime'
+      profile.id,
+      profile.gender,
+      isActiveMember ? 'active' : 'allTime',
+      vaultScope
     ) || undefined;
-    
-    // Get the highest PR using the dedicated function
-    const highestPr = await getPersonalBest(profile.id, db);
+
+    const prRecords = await db.tables.PersonalRecords.findAll({
+      where: { athleteProfileId: profile.id },
+      include: [
+        {
+          model: db.tables.Jumps,
+          as: 'jump',
+          attributes: ['heightInches', 'id'],
+        },
+      ],
+    });
+    const highestPr = getBestOfPersonalRecords(prRecords);
+    const rankingPr = getPersonalBestForVaultScope(prRecords, profile.vaultAssociationId);
     
     // Get the largest pole used in PRs
     const largestPole = await db.tables.PersonalRecords.findOne({
@@ -257,7 +277,8 @@ const getProfile = async (req, res, db) => {
         weight: profile.weight,
         age: helpers.calculateAge(profile.dob),
         rank: cachedRank,
-        pr: highestPr, // Object containing height and jump id
+        pr: highestPr,
+        rankingPr,
         largestPole: largestPole?.jump ? {
           lengthInches: largestPole.jump.poleLengthInches,
           weight: largestPole.jump.poleWeight,
@@ -477,10 +498,18 @@ const getRankedProfiles = async (req, res, db) => {
   const user = req.user;
 
   try {
-    const { gender, allTime: allTimeStr, offset: offsetStr = '0', limit: limitStr = '20', search } = req.query;
+    const { gender, allTime: allTimeStr, offset: offsetStr = '0', limit: limitStr = '20', search, vaultAssociationId: vaultAssociationQuery } = req.query;
     const allTime = allTimeStr !== 'false'; // Convert string to boolean
     const offset = parseInt(offsetStr, 10);
     const limit = parseInt(limitStr, 10);
+
+    let rankingVaultId;
+    if (vaultAssociationQuery !== undefined && vaultAssociationQuery !== null && vaultAssociationQuery !== '') {
+      const n = parseInt(vaultAssociationQuery, 10);
+      if (!Number.isNaN(n)) {
+        rankingVaultId = n;
+      }
+    }
 
     // Helper function to build base where clause (without search filters)
     const buildBaseWhereClause = (athleteActiveStatus) => {
@@ -591,7 +620,7 @@ const getRankedProfiles = async (req, res, db) => {
         {
           model: db.tables.PersonalRecords,
           as: 'personalRecords',
-          attributes: ['stepNum'],
+          attributes: ['stepNum', 'vaultAssociationId'],
           include: [
             {
               model: db.tables.Jumps,
@@ -603,11 +632,9 @@ const getRankedProfiles = async (req, res, db) => {
       ],
     });
 
-    // Sort the profiles in JavaScript to avoid MySQL 5.7 compatibility issues
-    sortProfilesByPR(allProfilesForRanking);
-
-    // Calculate global rankings with ties
-    const globalRankings = assignRanksWithTies(allProfilesForRanking);
+    const profilesForRankCalc = cloneProfilesForRanking(allProfilesForRanking, rankingVaultId);
+    sortProfilesByPR(profilesForRankCalc);
+    const rankMap = assignRanksWithTies(profilesForRankCalc);
 
     // Now get the profiles that match search criteria (if any)
     const { count: totalCount, rows: profilesWithPRs } = await db.tables.AthleteProfiles.findAndCountAll({
@@ -624,7 +651,7 @@ const getRankedProfiles = async (req, res, db) => {
         {
           model: db.tables.PersonalRecords,
           as: 'personalRecords',
-          attributes: ['stepNum'],
+          attributes: ['stepNum', 'vaultAssociationId'],
           include: [
             {
               model: db.tables.Jumps,
@@ -638,20 +665,24 @@ const getRankedProfiles = async (req, res, db) => {
       offset: 0,
     });
 
-    // Sort the search results by the same criteria as global rankings
-    sortProfilesByPR(profilesWithPRs);
-
-    // Apply pagination after sorting
-    const paginatedProfiles = profilesWithPRs.slice(offset, offset + limit);
+    const profilesForListingSorted = cloneProfilesForRanking(profilesWithPRs, rankingVaultId);
+    sortProfilesByPR(profilesForListingSorted);
+    const paginatedIds = profilesForListingSorted
+      .slice(offset, offset + limit)
+      .map((p) => p.id);
+    const idToProfile = new Map(profilesWithPRs.map((p) => [p.id, p]));
+    const paginatedProfiles = paginatedIds.map((id) => idToProfile.get(id)).filter(Boolean);
 
     // Get medal counts for all profiles in bulk
     const profileIdsForMedals = paginatedProfiles.map(profile => profile.id);
     const medalCountsMap = await getMedalCountsForProfiles(profileIdsForMedals, db);
 
     // Map the data into a structured response
-    const athletes = paginatedProfiles.map((profile, index) => {
-      // Find the best PR from the included personalRecords and jumps
+    const athletes = paginatedProfiles.map((profile) => {
       const pr = getBestOfPersonalRecords(profile.personalRecords);
+      const rankingPr = getBestOfPersonalRecords(
+        filterPersonalRecordsForRanking(profile.personalRecords, rankingVaultId)
+      );
 
       // Determine active status
       const isActiveMember = profile.alwaysActiveOverride || 
@@ -673,8 +704,9 @@ const getRankedProfiles = async (req, res, db) => {
           height: profile.height,
           weight: profile.weight,
           age: helpers.calculateAge(profile.dob),
-          rank: globalRankings.get(profile.id) || 1,
+          rank: rankMap.get(profile.id) || 1,
           pr,
+          rankingPr,
           largestPole: undefined,
           medalCounts,
         },

@@ -5,6 +5,43 @@ const helpers = require('../lib/helpers');
  * @param {Array} personalRecords - Array of personal record objects with jump data
  * @returns {Object} Object containing heightInches and jumpId of the best PR
  */
+/**
+ * @param {number|undefined|null} rankingVaultId - If set, only PR rows for this vault (e.g. DC Vault = 1). If null/undefined, use all rows (global leaderboard).
+ */
+function filterPersonalRecordsForRanking(personalRecords, rankingVaultId) {
+  if (rankingVaultId === undefined || rankingVaultId === null) {
+    return personalRecords || [];
+  }
+  const id = Number(rankingVaultId);
+  return (personalRecords || []).filter((pr) => Number(pr.vaultAssociationId) === id);
+}
+
+/**
+ * Best PR for an athlete profile’s team: if profile has no affiliation, same as global best.
+ * @param {number|undefined|null} profileVaultAssociationId
+ */
+function getPersonalBestForVaultScope(personalRecords, profileVaultAssociationId) {
+  if (profileVaultAssociationId === undefined || profileVaultAssociationId === null) {
+    return getBestOfPersonalRecords(personalRecords);
+  }
+  return getBestOfPersonalRecords(
+    filterPersonalRecordsForRanking(personalRecords, profileVaultAssociationId)
+  );
+}
+
+/**
+ * Shallow-clone each profile with personalRecords filtered for ranking/sorting (does not mutate originals).
+ */
+function cloneProfilesForRanking(profiles, rankingVaultId) { // TODO: Why are we doing this?
+  return profiles.map((p) => {
+    const filtered = filterPersonalRecordsForRanking(p.personalRecords, rankingVaultId);
+    const o = Object.create(Object.getPrototypeOf(p));
+    Object.assign(o, p);
+    o.personalRecords = filtered;
+    return o;
+  });
+}
+
 function getBestOfPersonalRecords(personalRecords) {
   if (!personalRecords || personalRecords.length === 0) {
     return { heightInches: 0, jumpId: null };
@@ -231,6 +268,9 @@ function assignRanksWithTies(sortedProfiles) {
 
 module.exports = {
   getBestOfPersonalRecords,
+  filterPersonalRecordsForRanking,
+  getPersonalBestForVaultScope,
+  cloneProfilesForRanking,
   sortProfilesByPR,
   isAthleteProfileActive,
   isPurchaseActiveForCurrentYear,
