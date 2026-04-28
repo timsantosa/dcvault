@@ -15,7 +15,7 @@ const cloudinary = require('./cloudinaryConfig');
 async function getConversations(req, res, db) {
   try {
     const { athleteProfileId } = req.query;
-    
+
     if (!athleteProfileId) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
     }
@@ -111,15 +111,15 @@ async function getConversations(req, res, db) {
       [...regularConversations, ...announcementConversations].map(async (conversation) => {
         // Get the user's participant record for this conversation
         const userParticipant = await db.tables.ConversationParticipants.findOne({
-          where: { 
-            conversationId: conversation.id, 
-            athleteProfileId: parseInt(athleteProfileId) 
+          where: {
+            conversationId: conversation.id,
+            athleteProfileId: parseInt(athleteProfileId)
           },
           attributes: ['lastReadAt']
         });
-        
+
         const lastReadAt = userParticipant?.lastReadAt;
-        
+
         // Count unread messages (excluding user's own messages)
         const unreadCount = await db.tables.Messages.count({
           where: {
@@ -153,14 +153,37 @@ async function getConversations(req, res, db) {
       })
     );
 
-    // Sort conversations by last message time
-    conversationsWithUnread.sort((a, b) => {
-      const aLastMessage = a.messages?.[0]?.createdAt || a.createdAt;
-      const bLastMessage = b.messages?.[0]?.createdAt || b.createdAt;
-      return new Date(bLastMessage) - new Date(aLastMessage);
+    const getLastMessageTime = (c) =>
+      new Date(c.messages?.[0]?.createdAt || c.createdAt);
+
+    // Global pins: pinned conversations first (by sortIndex), then the rest by recency
+    const pinRows = await db.tables.GlobalConversationPins.findAll({
+      order: [['sortIndex', 'ASC']],
+      raw: true,
+    });
+    const pinOrderById = new Map();
+    pinRows.forEach((row) => {
+      pinOrderById.set(row.conversationId, row.sortIndex);
     });
 
-    res.json({ ok: true, conversations: conversationsWithUnread });
+    conversationsWithUnread.forEach((c) => {
+      c.globalPinOrder = pinOrderById.has(c.id) ? pinOrderById.get(c.id) : null;
+    });
+
+    const pinned = [];
+    const unpinned = [];
+    for (const c of conversationsWithUnread) {
+      if (pinOrderById.has(c.id)) {
+        pinned.push(c);
+      } else {
+        unpinned.push(c);
+      }
+    }
+    pinned.sort((a, b) => (a.globalPinOrder ?? 0) - (b.globalPinOrder ?? 0));
+    unpinned.sort((a, b) => getLastMessageTime(b) - getLastMessageTime(a));
+    const ordered = [...pinned, ...unpinned];
+
+    res.json({ ok: true, conversations: ordered });
   } catch (error) {
     console.error('Error getting conversations:', error);
     res.status(500).json({ ok: false, message: 'Failed to get conversations' });
@@ -266,8 +289,15 @@ async function getConversation(req, res, db) {
     // Add imageUrl to conversation data
     conversation.dataValues.imageUrl = conversationImage;
 
-    res.json({ 
-      ok: true, 
+    const pinRow = await db.tables.GlobalConversationPins.findOne({
+      where: { conversationId: parseInt(conversationId, 10) },
+      attributes: ['sortIndex'],
+      raw: true,
+    });
+    conversation.dataValues.globalPinOrder = pinRow ? pinRow.sortIndex : null;
+
+    res.json({
+      ok: true,
       conversation,
       pagination: {
         total: totalMessages,
@@ -308,11 +338,11 @@ async function createConversation(req, res, db) {
     // For direct conversations, check if one already exists between these participants
     if (type === 'direct' && participantIds.length === 1) {
       const existingConversationId = await getOrCreateDirectConversation(
-        athleteProfileId, 
-        participantIds[0], 
+        athleteProfileId,
+        participantIds[0],
         db
       );
-      
+
       // If we got an existing conversation, return it
       const conversation = await db.tables.Conversations.findByPk(existingConversationId, {
         include: [{
@@ -321,7 +351,7 @@ async function createConversation(req, res, db) {
           attributes: ['athleteProfileId']
         }]
       });
-      
+
       return res.json({ ok: true, conversation });
     }
 
@@ -347,9 +377,9 @@ async function createConversation(req, res, db) {
         }))
       ];
 
-      await db.tables.ConversationParticipants.bulkCreate(participants, { 
+      await db.tables.ConversationParticipants.bulkCreate(participants, {
         transaction,
-        ignoreDuplicates: true 
+        ignoreDuplicates: true
       });
 
       // Commit the transaction
@@ -381,8 +411,8 @@ async function updateConversation(req, res, db) {
 
     // Check if user is admin of the conversation
     const adminParticipant = await db.tables.ConversationParticipants.findOne({
-      where: { 
-        conversationId, 
+      where: {
+        conversationId,
         athleteProfileId,
         role: 'admin'
       }
@@ -412,23 +442,23 @@ async function updateConversation(req, res, db) {
       if (participantIds !== undefined) {
         // Get ALL current participants (to avoid role-based duplicates)
         const currentParticipants = await db.tables.ConversationParticipants.findAll({
-          where: { 
+          where: {
             conversationId
           },
           attributes: ['athleteProfileId', 'role'],
           transaction
         });
-        
+
         const currentParticipantIds = currentParticipants.map(p => p.athleteProfileId);
         const newParticipantIds = new Set(participantIds);
-        
+
         // Remove only MEMBER participants who are no longer in the list (preserve admins)
         const memberParticipants = currentParticipants.filter(p => p.role === 'member');
         const memberParticipantIds = memberParticipants.map(p => p.athleteProfileId);
         const participantsToRemove = memberParticipantIds.filter(id => !newParticipantIds.has(id));
         if (participantsToRemove.length > 0) {
           await db.tables.ConversationParticipants.destroy({
-            where: { 
+            where: {
               conversationId,
               athleteProfileId: participantsToRemove,
               role: 'member'
@@ -436,7 +466,7 @@ async function updateConversation(req, res, db) {
             transaction
           });
         }
-        
+
         // Add only new participants
         const participantsToAdd = participantIds.filter(id => !currentParticipantIds.includes(id));
         if (participantsToAdd.length > 0) {
@@ -446,9 +476,9 @@ async function updateConversation(req, res, db) {
             role: 'member'
           }));
 
-          await db.tables.ConversationParticipants.bulkCreate(newParticipants, { 
+          await db.tables.ConversationParticipants.bulkCreate(newParticipants, {
             transaction,
-            ignoreDuplicates: true 
+            ignoreDuplicates: true
           });
         }
       }
@@ -640,11 +670,11 @@ async function sendMessage(req, res, db) {
 
     // Check permissions
     const canSend = participant.role === 'admin' ||
-                   (participant.role === 'member' &&
-                    ((type === 'text' && participant.conversation.settings.canSendMessages) ||
-                     (type === 'attachment' && participant.conversation.settings.canSendMessages) ||
-                     (type === 'reaction' && participant.conversation.settings.canReact)));
-    
+      (participant.role === 'member' &&
+        ((type === 'text' && participant.conversation.settings.canSendMessages) ||
+          (type === 'attachment' && participant.conversation.settings.canSendMessages) ||
+          (type === 'reaction' && participant.conversation.settings.canReact)));
+
     if (!canSend) {
       return res.status(403).json({ ok: false, message: 'Not authorized to send messages' });
     }
@@ -697,7 +727,7 @@ async function sendMessage(req, res, db) {
       if (originalMessage && originalMessage.senderId !== athleteProfileId) {
         const reacterProfile = await db.tables.AthleteProfiles.findByPk(athleteProfileId);
         const reacterName = `${reacterProfile.firstName} ${reacterProfile.lastName}`;
-        
+
         const title = conversation.name || 'New Reaction';
         const body = `${reacterName} ${content}d to your message: ${originalMessage.content}`;
         const data = {
@@ -738,7 +768,7 @@ async function sendMessage(req, res, db) {
         attributes: ['id', 'firstName', 'lastName']
       }]
     });
-    
+
     res.json({ ok: true, message: fullMessage });
   } catch (error) {
     console.error('Error sending message:', error);
@@ -803,7 +833,7 @@ async function editMessage(req, res, db) {
     }
 
     // Update the message
-    await message.update({ 
+    await message.update({
       content,
       updatedAt: new Date()
     });
@@ -839,8 +869,8 @@ async function addParticipants(req, res, db) {
 
     // Check if user is admin of the conversation
     const participant = await db.tables.ConversationParticipants.findOne({
-      where: { 
-        conversationId, 
+      where: {
+        conversationId,
         athleteProfileId,
         role: 'admin'
       }
@@ -882,8 +912,8 @@ async function removeParticipant(req, res, db) {
 
     // Check if user is admin of the conversation
     const participant = await db.tables.ConversationParticipants.findOne({
-      where: { 
-        conversationId, 
+      where: {
+        conversationId,
         athleteProfileId,
         role: 'admin'
       }
@@ -999,7 +1029,7 @@ async function deleteMessage(req, res, db) {
 async function getUnreadCounts(req, res, db) {
   try {
     const { athleteProfileId } = req.query;
-    
+
     if (!athleteProfileId) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters' });
     }
@@ -1019,7 +1049,7 @@ async function getUnreadCounts(req, res, db) {
       participants.map(async (participant) => {
         const conversationId = participant.conversationId;
         const lastReadAt = participant.lastReadAt;
-        
+
         const unreadCount = await db.tables.Messages.count({
           where: {
             conversationId,
@@ -1056,8 +1086,8 @@ async function getUnreadCounts(req, res, db) {
     // Filter to only conversations with unread messages for efficiency
     const conversationsWithUnread = unreadCounts.filter(conv => conv.unreadCount > 0);
 
-    res.json({ 
-      ok: true, 
+    res.json({
+      ok: true,
       unreadCounts: conversationsWithUnread,
       totalUnread,
       hasUnreadMessages: totalUnread > 0
@@ -1065,6 +1095,117 @@ async function getUnreadCounts(req, res, db) {
   } catch (error) {
     console.error('Error getting unread counts:', error);
     res.status(500).json({ ok: false, message: 'Failed to get unread counts' });
+  }
+}
+
+async function addGlobalConversationPin(req, res, db) {
+  try {
+    const { conversationId } = req.body;
+    if (conversationId == null) {
+      return res.status(400).json({ ok: false, message: 'Missing conversationId' });
+    }
+    const id = parseInt(conversationId, 10);
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ ok: false, message: 'Invalid conversationId' });
+    }
+    const conv = await db.tables.Conversations.findByPk(id);
+    if (!conv) {
+      return res.status(404).json({ ok: false, message: 'Conversation not found' });
+    }
+    const existing = await db.tables.GlobalConversationPins.findByPk(id);
+    if (existing) {
+      return res.json({ ok: true, message: 'Already pinned' });
+    }
+    const maxRow = await db.tables.GlobalConversationPins.findOne({
+      order: [['sortIndex', 'DESC']],
+    });
+    const nextIndex = maxRow ? maxRow.sortIndex + 1 : 0;
+    await db.tables.GlobalConversationPins.create({ conversationId: id, sortIndex: nextIndex });
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error('Error adding global conversation pin:', error);
+    return res.status(500).json({ ok: false, message: 'Failed to pin conversation' });
+  }
+}
+
+async function removeGlobalConversationPin(req, res, db) {
+  try {
+    const conversationId = parseInt(req.params.conversationId, 10);
+    if (Number.isNaN(conversationId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid conversationId' });
+    }
+
+    // Read outside the transaction: we only need a transaction so destroy + renumber run atomically.
+    const row = await db.tables.GlobalConversationPins.findByPk(conversationId);
+    if (!row) {
+      return res.status(404).json({ ok: false, message: 'Not pinned' });
+    }
+
+    const sequelize = db.tables.GlobalConversationPins.sequelize;
+    const transaction = await sequelize.transaction();
+    try {
+      await row.destroy({ transaction });
+      const rest = await db.tables.GlobalConversationPins.findAll({
+        order: [['sortIndex', 'ASC']],
+        transaction,
+      });
+      for (let i = 0; i < rest.length; i++) {
+        await rest[i].update({ sortIndex: i }, { transaction });
+      }
+      await transaction.commit();
+      return res.json({ ok: true });
+    } catch (error) {
+      await transaction.rollback();
+      console.error('Error removing global conversation pin:', error);
+      return res.status(500).json({ ok: false, message: 'Failed to unpin conversation' });
+    }
+  } catch (error) {
+    console.error('Error removing global conversation pin:', error);
+    return res.status(500).json({ ok: false, message: 'Failed to unpin conversation' });
+  }
+}
+
+async function reorderGlobalConversationPins(req, res, db) {
+  const sequelize = db.tables.GlobalConversationPins.sequelize;
+  try {
+    const { conversationIds } = req.body;
+    if (!Array.isArray(conversationIds) || conversationIds.length === 0) {
+      return res.status(400).json({ ok: false, message: 'conversationIds must be a non-empty array' });
+    }
+    const parsedIds = conversationIds.map((x) => parseInt(x, 10));
+    if (parsedIds.some((id) => Number.isNaN(id))) {
+      return res.status(400).json({ ok: false, message: 'Invalid conversation id in list' });
+    }
+    if (new Set(parsedIds).size !== parsedIds.length) {
+      return res.status(400).json({ ok: false, message: 'Duplicate conversation ids' });
+    }
+    const allPins = await db.tables.GlobalConversationPins.findAll({ order: [['sortIndex', 'ASC']] });
+    if (allPins.length !== parsedIds.length) {
+      return res.status(400).json({ ok: false, message: 'Pin list does not match current pins' });
+    }
+    const currentSet = new Set(allPins.map((p) => p.conversationId));
+    for (const id of parsedIds) {
+      if (!currentSet.has(id)) {
+        return res.status(400).json({ ok: false, message: 'Unknown or unpinned conversation in order list' });
+      }
+    }
+    const transaction = await sequelize.transaction();
+    try {
+      for (let i = 0; i < parsedIds.length; i++) {
+        await db.tables.GlobalConversationPins.update(
+          { sortIndex: i },
+          { where: { conversationId: parsedIds[i] }, transaction }
+        );
+      }
+      await transaction.commit();
+    } catch (e) {
+      await transaction.rollback();
+      throw e;
+    }
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error('Error reordering global conversation pins:', error);
+    return res.status(500).json({ ok: false, message: 'Failed to reorder pins' });
   }
 }
 
@@ -1080,8 +1221,8 @@ async function deleteConversation(req, res, db) {
 
     // Check if user is admin of the conversation
     const participant = await db.tables.ConversationParticipants.findOne({
-      where: { 
-        conversationId, 
+      where: {
+        conversationId,
         athleteProfileId,
         role: 'admin'
       }
@@ -1154,5 +1295,8 @@ module.exports = {
   deleteConversation,
   getUnreadCounts,
   uploadMessageAttachment,
-  deleteMessageAttachment
+  deleteMessageAttachment,
+  addGlobalConversationPin,
+  removeGlobalConversationPin,
+  reorderGlobalConversationPins,
 }; 

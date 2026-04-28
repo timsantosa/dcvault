@@ -28,6 +28,7 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'manage_drill_types', permissionName: 'Manage Drill Types', description: 'Allows managing drill types.' },
         { permissionKey: 'manage_active_profiles', permissionName: 'Manage Active Profiles', description: "Allows user to set athlete profiles as always active, even if they don't have a currently registered athleteId" },
         { permissionKey: 'manage_conversations', permissionName: 'Manage Conversations', description: 'Allows user to create new conversations or edit existing conversations.' },
+        { permissionKey: 'manage_global_conversation_pins', permissionName: 'Manage Global Conversation Pins', description: 'Pin and order conversations for all users’ conversation lists.' },
         { permissionKey: 'create_athlete_profiles', permissionName: 'Create Athlete Profiles', description: 'Allows user to create new Athlete Profiles for their own user account.' },
         { permissionKey: 'manage_vault_associations', permissionName: 'Manage Vault Associations', description: 'Allows user to create, edit, and delete Pole Vault Associations.' },
         { permissionKey: 'jumps_access_override', permissionName: 'Jumps Access Override', description: "Allows any athlete profile under this user to access their own jumps even if they don't have a currently registered athleteId or the alwaysActive flag is off." },

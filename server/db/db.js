@@ -696,6 +696,25 @@ columns.messages = {
   },
 };
 
+// App-wide pin order for conversation list (one row per pinned conversation)
+columns.globalConversationPins = {
+  conversationId: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    allowNull: false,
+    references: {
+      model: tables.conversations,
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  },
+  sortIndex: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+};
+
 const syncTables = (schema, force) => {
   force = !!force
 
@@ -805,6 +824,15 @@ const syncTables = (schema, force) => {
       {
         fields: ['senderId', 'createdAt'],
         name: 'messages_sender_created'
+      }
+    ]
+  });
+
+  tables.GlobalConversationPins = schema.define('globalConversationPin', columns.globalConversationPins, {
+    indexes: [
+      {
+        fields: ['sortIndex'],
+        name: 'global_conversation_pins_sort'
       }
     ]
   });
@@ -972,6 +1000,9 @@ const syncTables = (schema, force) => {
 
   tables.Messages.belongsTo(tables.Conversations, { as: 'conversation', foreignKey: 'conversationId' });
   tables.Conversations.hasMany(tables.Messages, { as: 'messages', foreignKey: 'conversationId' });
+
+  tables.GlobalConversationPins.belongsTo(tables.Conversations, { as: 'conversation', foreignKey: 'conversationId' });
+  tables.Conversations.hasOne(tables.GlobalConversationPins, { as: 'globalPin', foreignKey: 'conversationId' });
 
   tables.Messages.belongsTo(tables.AthleteProfiles, { as: 'sender', foreignKey: 'senderId' });
   tables.AthleteProfiles.hasMany(tables.Messages, { as: 'sentMessages', foreignKey: 'senderId' });
