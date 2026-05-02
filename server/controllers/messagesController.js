@@ -8,8 +8,11 @@ const {
   sendMessageInConversation
 } = require('../utils/messagesUtils');
 const NotificationUtils = require('../utils/notificationUtils');
-const { deleteCloudinaryImage } = require('./imageUploadController');
-const cloudinary = require('./cloudinaryConfig');
+const cloudinary = require('../lib/cloudinaryClient');
+const {
+  destroyByImageUrl,
+  destroyStoredMessageAttachment,
+} = require('../lib/cloudinaryMedia');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -586,7 +589,7 @@ async function deleteMessageAttachment(req, res, db) {
   try {
     const { conversationId } = req.params;
     const { athleteProfileId } = req.query;
-    const { publicId, resourceType } = req.body || {};
+    const { publicId, resourceType, url } = req.body || {};
 
     if (!conversationId || !athleteProfileId || !publicId) {
       return res.status(400).json({ ok: false, message: 'Missing required parameters (publicId in body, athleteProfileId in query)' });
@@ -606,11 +609,12 @@ async function deleteMessageAttachment(req, res, db) {
     }
 
     try {
-      await cloudinary.uploader.destroy(publicId, { resource_type: resourceType || 'image' });
+      await destroyStoredMessageAttachment({
+        publicId,
+        resourceType: resourceType || 'image',
+        url,
+      });
     } catch (destroyErr) {
-      if (destroyErr?.error?.http_code === 404) {
-        return res.json({ ok: true });
-      }
       console.error('Cloudinary destroy error:', destroyErr);
       return res.status(502).json({ ok: false, message: 'Failed to delete attachment from storage' });
     }
@@ -986,15 +990,10 @@ async function deleteMessage(req, res, db) {
     // Delete attachment assets from Cloudinary before soft-deleting the message
     if (message.attachments && Array.isArray(message.attachments) && message.attachments.length > 0) {
       for (const att of message.attachments) {
-        if (att.publicId) {
-          try {
-            await cloudinary.uploader.destroy(att.publicId, {
-              resource_type: att.resourceType || 'image'
-            });
-          } catch (destroyErr) {
-            console.error('Error deleting attachment from Cloudinary:', att.publicId, destroyErr);
-            // Continue; do not block message deletion
-          }
+        try {
+          await destroyStoredMessageAttachment(att);
+        } catch (destroyErr) {
+          console.error('Error deleting attachment from Cloudinary:', att && att.publicId, destroyErr);
         }
       }
     }
@@ -1240,7 +1239,7 @@ async function deleteConversation(req, res, db) {
 
     // Delete the conversation image from Cloudinary if it exists
     if (conversation.imageUrl) {
-      await deleteCloudinaryImage(conversation.imageUrl);
+      await destroyByImageUrl(conversation.imageUrl);
     }
 
     // Start a transaction

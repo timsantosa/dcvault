@@ -1,31 +1,10 @@
-const cloudinary = require("./cloudinaryConfig");
 const NotificationUtils = require('../utils/notificationUtils');
 const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
+const { destroyByImageUrl } = require('../lib/cloudinaryMedia');
 
-// Configure Cloudinary
-// const cloudConfig = cloudinary.config({
-//   cloud_name: config.cloudinary.cloudName,
-//   api_key: config.cloudinary.apiKey,
-//   api_secret: config.cloudinary.apiSecret,
-//   secure: true, // Ensures HTTPS URLs
-// });
-
-
-// Function to extract Cloudinary public ID from the stored URL
-const getCloudinaryPublicId = (imageUrl) => {
-  if (!imageUrl) return null;
-  const parts = imageUrl.split("/");
-  return parts[parts.length - 1].split(".")[0]; // Extracts "filename" from ".../profile_abc123.jpg"
-};
-
-// Function to delete an image from Cloudinary
-const deleteCloudinaryImage = async (imageUrl) => {
-  if (!imageUrl) return;
-  const publicId = getCloudinaryPublicId(imageUrl);
-  if (publicId) {
-    await cloudinary.uploader.destroy(publicId);
-  }
-};
+async function deleteCloudinaryImage(imageUrl) {
+  return destroyByImageUrl(imageUrl);
+}
 
 const IMAGE_TYPE_PROFILE = 'profile';
 const IMAGE_TYPE_BACKGROUND = 'background';
@@ -249,7 +228,7 @@ async function getPendingImagesForProfile(req, res, db) {
     res.json({ ok: true, pendingImages });
   } catch (error) {
     console.error("Error fetching pending images for profile:", error);
-    res.status(500).json({ error: "Failed to fetch pending images" });
+    res.status(500).json({ error: "Failed to fetch pending images for profile" });
   }
 }
 
@@ -262,8 +241,8 @@ async function uploadConversationImage(req, res, db) {
 
     // Fetch the existing conversation
     const conversation = await db.tables.Conversations.findByPk(conversationId);
-    if (!conversation) { 
-      return res.status(404).json({ error: "Conversation not found" }); 
+    if (!conversation) {
+      return res.status(404).json({ error: "Conversation not found" });
     }
 
     // Delete the old conversation image from Cloudinary
