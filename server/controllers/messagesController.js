@@ -8,11 +8,11 @@ const {
   sendMessageInConversation
 } = require('../utils/messagesUtils');
 const NotificationUtils = require('../utils/notificationUtils');
-const cloudinary = require('../lib/cloudinaryClient');
 const {
   destroyByImageUrl,
   destroyStoredMessageAttachment,
 } = require('../lib/cloudinaryMedia');
+const { uploadBufferToCloudinary } = require('../lib/cloudinaryUploadFromBuffer');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -519,14 +519,6 @@ async function updateConversation(req, res, db) {
   }
 }
 
-// Helper: map mimetype to Cloudinary resource_type
-function getCloudinaryResourceType(mimetype) {
-  if (!mimetype) return 'raw';
-  if (mimetype.startsWith('image/')) return 'image';
-  if (mimetype.startsWith('video/')) return 'video';
-  return 'raw';
-}
-
 // Upload message attachments (returns attachment metadata for use in send message)
 async function uploadMessageAttachment(req, res, db) {
   try {
@@ -556,20 +548,19 @@ async function uploadMessageAttachment(req, res, db) {
 
     const attachments = [];
     for (const file of files) {
-      const resourceType = getCloudinaryResourceType(file.mimetype);
-      const dataUri = `data:${file.mimetype || 'application/octet-stream'};base64,${file.buffer.toString('base64')}`;
       try {
-        const result = await cloudinary.uploader.upload(dataUri, {
-          resource_type: resourceType,
-          folder: 'message_attachments'
+        const { secure_url, public_id: publicId, resourceType } = await uploadBufferToCloudinary({
+          buffer: file.buffer,
+          mimetype: file.mimetype,
+          folder: 'message_attachments',
         });
         attachments.push({
-          url: result.secure_url,
+          url: secure_url,
           filename: file.originalname,
           mimeType: file.mimetype,
           size: file.size,
-          publicId: result.public_id,
-          resourceType
+          publicId,
+          resourceType,
         });
       } catch (uploadErr) {
         console.error('Cloudinary upload error:', uploadErr);

@@ -1,6 +1,8 @@
 const express = require('express');
+const multer = require('multer');
 const { getJump, addOrUpdateJump, deleteJump, fetchJumps, pinOrUnpinJump, getFavoriteJumps, getTopMeetJumps, getTopIndoorOutdoorMeetJumps } = require('../controllers/jumpsController');
-const { checkPermission, checkOwnAthleteProfileOrPermission } = require('../middlewares/mobileAuthMiddleware');
+const { uploadLogVideo, deleteLogVideo } = require('../controllers/logVideoController');
+const { checkOwnAthleteProfileOrPermission } = require('../middlewares/mobileAuthMiddleware');
 
 
 const jumpRoutes = (db) => {
@@ -24,6 +26,23 @@ const jumpRoutes = (db) => {
   const checkViewProfilesPermission = (req, res, next) => {
     checkOwnAthleteProfileOrPermission(req, res, next, 'view_profiles');
   }
+
+  const logVideoUpload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+      fileSize: 20 * 1024 * 1024,
+      files: 1,
+    },
+  });
+
+  router.post(
+    '/video',
+    checkJumpEditPermission,
+    logVideoUpload.single('video'),
+    (req, res) => uploadLogVideo(req, res)
+  );
+
+  router.delete('/video', checkJumpEditPermission, (req, res) => deleteLogVideo(req, res));
 
   // Pass the db to the controller functions
   router.route('/jump')

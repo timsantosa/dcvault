@@ -6,13 +6,24 @@ const { getBestOfPersonalRecords } = require("../utils/rankingUtils");
 const { normalizeJumpVaultAssociationId } = require("../constants/vaultAssociations");
 const NotificationUtils = require("../utils/notificationUtils");
 const { getOrCreateDirectConversation, sendMessageInConversation } = require("../utils/messagesUtils");
+const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../lib/cloudinaryMedia");
+
+function normalizeStoredVideoLink(v) {
+  if (v === null || v === undefined || v === "") return null;
+  const s = String(v).trim();
+  return s === "" ? null : s;
+}
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
   // TODO: If the vault association changes, we need to update the PRs for the athlete.
   try {
     const athleteProfileId = parseInt(req.query.athleteProfileId);
-    const { id, date, hardMetrics, meetInfo, softMetrics, notes, videoLink } = req.body.jump;
+    const bodyJump = req.body.jump;
+    const {
+      id, date, hardMetrics, meetInfo, softMetrics, notes,
+      videoLink: videoLinkRaw,
+    } = bodyJump;
 
     // Validate required fields
     if (!athleteProfileId || isNaN(athleteProfileId) || !date) {
@@ -130,13 +141,22 @@ const addOrUpdateJump = async (req, res, db) => {
       vaultAssociationId = profile?.vaultAssociationId ?? null;
     }
 
+    let resolvedVideoLink;
+    if (jumpId && originalJump) {
+      resolvedVideoLink = 'videoLink' in bodyJump
+        ? normalizeStoredVideoLink(bodyJump.videoLink)
+        : normalizeStoredVideoLink(originalJump.videoLink);
+    } else {
+      resolvedVideoLink = normalizeStoredVideoLink(videoLinkRaw);
+    }
+
     // Upsert jump (vaultAssociationId always set so we can unassociate with null)
     const upsertPayload = {
       id: jumpId,
       athleteProfileId,
       date,
       notes,
-      videoLink,
+      videoLink: resolvedVideoLink,
       ...flattenedHardMetrics,
       softMetrics,
       ...flattenedMeetInfo,
@@ -144,6 +164,13 @@ const addOrUpdateJump = async (req, res, db) => {
       vaultAssociationId,
     };
     const [jumpRow, created] = await db.tables.Jumps.upsert(upsertPayload);
+
+    if (jumpId && originalJump) {
+      const previousVideoLink = normalizeStoredVideoLink(originalJump.videoLink);
+      if (previousVideoLink && previousVideoLink !== resolvedVideoLink) {
+        await destroyJumpDrillCloudinaryAssetIfOwned(previousVideoLink);
+      }
+    }
 
     // If we're updating a verified PR and it needs re-verification, we need to recalculate PRs
     // Or if we're updating a PR with a different vault association, we need to recalculate PRs
@@ -271,6 +298,8 @@ const deleteJump = async (req, res, db) => {
         return res.status(404).json({ ok: false, message: 'Jump not found.' });
       }
 
+      const previousVideoLink = normalizeStoredVideoLink(jump.videoLink);
+
       // Check if jump was a PR
       const personalRecord = await db.tables.PersonalRecords.findOne({
         where: { jumpId, athleteProfileId },
@@ -303,6 +332,14 @@ const deleteJump = async (req, res, db) => {
 
       // Commit the transaction
       await transaction.commit();
+
+      if (previousVideoLink) {
+        try {
+          await destroyJumpDrillCloudinaryAssetIfOwned(previousVideoLink);
+        } catch (e) {
+          console.warn('Jump delete Cloudinary cleanup:', e && e.message);
+        }
+      }
 
       res.json({ ok: true, message: 'Jump deletion successful.' });
     } catch (error) {

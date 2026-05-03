@@ -1,9 +1,20 @@
 const { validatePoleBrand } = require("../utils/poleBrandValidation");
+const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../lib/cloudinaryMedia");
+
+function normalizeStoredVideoLink(v) {
+  if (v === null || v === undefined || v === "") return null;
+  const s = String(v).trim();
+  return s === "" ? null : s;
+}
 
 const addOrUpdateDrill = async (req, res, db) => {
   try {
     const athleteProfileId = req.query.athleteProfileId;
-    const { id, date, hardMetrics, softMetrics, notes, videoLink } = req.body.drill;
+    const bodyDrill = req.body.drill;
+    const {
+      id, date, hardMetrics, softMetrics, notes,
+      videoLink: videoLinkRaw,
+    } = bodyDrill;
 
     // Validate required fields
     if (!athleteProfileId || !date || !hardMetrics?.drillType) {
@@ -12,6 +23,14 @@ const addOrUpdateDrill = async (req, res, db) => {
 
     // New drills come in with an id of -1
     const drillId = id > 0 ? id : undefined;
+
+    let originalDrill = null;
+    if (drillId) {
+      originalDrill = await db.tables.Drills.findByPk(drillId);
+      if (!originalDrill) {
+        return res.status(404).json({ ok: false, message: 'Drill not found.' });
+      }
+    }
 
     // Flatten hardMetrics for upsert
     const flattenedHardMetrics = {
@@ -33,16 +52,32 @@ const addOrUpdateDrill = async (req, res, db) => {
       athleteWeightPounds: hardMetrics.athleteStats?.weightPounds,
     };
 
+    let resolvedVideoLink;
+    if (drillId && originalDrill) {
+      resolvedVideoLink = "videoLink" in bodyDrill
+        ? normalizeStoredVideoLink(bodyDrill.videoLink)
+        : normalizeStoredVideoLink(originalDrill.videoLink);
+    } else {
+      resolvedVideoLink = normalizeStoredVideoLink(videoLinkRaw);
+    }
+
     // Upsert drill
     const [drillRow, created] = await db.tables.Drills.upsert({
       id: drillId,
       athleteProfileId,
       date,
       notes,
-      videoLink,
+      videoLink: resolvedVideoLink,
       ...flattenedHardMetrics,
       softMetrics,
     });
+
+    if (drillId && originalDrill) {
+      const previousVideoLink = normalizeStoredVideoLink(originalDrill.videoLink);
+      if (previousVideoLink && previousVideoLink !== resolvedVideoLink) {
+        await destroyJumpDrillCloudinaryAssetIfOwned(previousVideoLink);
+      }
+    }
 
     const drill = mapDbRowToDrill(drillRow);
 
@@ -101,6 +136,8 @@ const deleteDrill = async (req, res, db) => {
       return res.status(404).json({ ok: false, message: 'Drill not found.' });
     }
 
+    const previousVideoLink = normalizeStoredVideoLink(drill.videoLink);
+
     // Start a transaction using the Drills model's sequelize instance
     const transaction = await db.tables.Drills.sequelize.transaction();
 
@@ -122,7 +159,15 @@ const deleteDrill = async (req, res, db) => {
       // Commit the transaction
       await transaction.commit();
 
-      res.json({ ok: true, message: 'Drill deletion successful.' });
+      if (previousVideoLink) {
+        try {
+          await destroyJumpDrillCloudinaryAssetIfOwned(previousVideoLink);
+        } catch (e) {
+          console.warn("Drill delete Cloudinary cleanup:", e && e.message);
+        }
+      }
+
+      res.json({ ok: true, message: "Drill deletion successful." });
     } catch (error) {
       // If anything fails, rollback the transaction
       await transaction.rollback();

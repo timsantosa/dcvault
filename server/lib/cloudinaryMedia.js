@@ -240,11 +240,31 @@ async function destroyPublicIdWithDualFallback(publicId, resourceType = 'image')
   }
 }
 
+/** Cloudinary folder for jump/drill log videos (must match upload folder). */
+const JUMP_DRILL_VIDEO_FOLDER = 'jump_drill_video';
+
+function isJumpDrillCloudinaryDeliveryUrl(imageUrl) {
+  const parsed = parseResCloudinaryUrl(imageUrl);
+  if (!parsed) return false;
+  if (parsed.resourceType !== 'video') return false;
+  const prefix = `${JUMP_DRILL_VIDEO_FOLDER}/`;
+  return parsed.publicId.startsWith(prefix);
+}
+
+/** Safe delete only for app-owned jump/drill videos (ignored for external URLs). */
+async function destroyJumpDrillCloudinaryAssetIfOwned(imageUrl) {
+  if (!isJumpDrillCloudinaryDeliveryUrl(imageUrl)) return;
+  await destroyByImageUrl(imageUrl);
+}
+
 module.exports = {
   destroyByImageUrl,
+  destroyJumpDrillCloudinaryAssetIfOwned,
   destroyPublicIdWithDualFallback,
   destroyStoredMessageAttachment,
   parseResCloudinaryUrl,
   naivePublicIdFromDeliveryUrl,
   credentialOptionsForCloudName,
+  JUMP_DRILL_VIDEO_FOLDER,
+  isJumpDrillCloudinaryDeliveryUrl,
 };
