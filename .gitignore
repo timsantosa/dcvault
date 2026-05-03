@@ -10,3 +10,4 @@ server.log
 '.DS_Store'
 server/db/createTestUser.js
 server/db/registerAthlete.js
+server/db/migrations/add-vault-associations.sql

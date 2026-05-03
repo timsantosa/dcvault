@@ -3,14 +3,27 @@
 const rankingCache = require("./athleteRankingCache");
 const { validatePoleBrand } = require("../utils/poleBrandValidation");
 const { getBestOfPersonalRecords } = require("../utils/rankingUtils");
+const { normalizeJumpVaultAssociationId } = require("../constants/vaultAssociations");
 const NotificationUtils = require("../utils/notificationUtils");
 const { getOrCreateDirectConversation, sendMessageInConversation } = require("../utils/messagesUtils");
+const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../lib/cloudinaryMedia");
+
+function normalizeStoredVideoLink(v) {
+  if (v === null || v === undefined || v === "") return null;
+  const s = String(v).trim();
+  return s === "" ? null : s;
+}
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
+  // TODO: If the vault association changes, we need to update the PRs for the athlete.
   try {
     const athleteProfileId = parseInt(req.query.athleteProfileId);
-    const { id, date, hardMetrics, meetInfo, softMetrics, notes, videoLink } = req.body.jump;
+    const bodyJump = req.body.jump;
+    const {
+      id, date, hardMetrics, meetInfo, softMetrics, notes,
+      videoLink: videoLinkRaw,
+    } = bodyJump;
 
     // Validate required fields
     if (!athleteProfileId || isNaN(athleteProfileId) || !date) {
@@ -85,6 +98,11 @@ const addOrUpdateJump = async (req, res, db) => {
         });
       }
 
+      const prRecord = await db.tables.PersonalRecords.findOne({
+        where: { jumpId, athleteProfileId }
+      });
+      wasPr = !!prRecord;
+
       if (!originalJump.verified) {
         // If original jump was unverified, just do normal verification check
         needsVerification = await requiresVerification(hardMetrics, meetInfo, athleteProfileId, db);
@@ -98,13 +116,7 @@ const addOrUpdateJump = async (req, res, db) => {
           (hardMetrics?.setting != originalJump.setting);
 
         if (criticalFieldsChanged) {
-          needsVerification = true;
-          
-          // Only check if it was a PR if we need to recalculate PRs
-          const prRecord = await db.tables.PersonalRecords.findOne({
-            where: { jumpId, athleteProfileId }
-          });
-          wasPr = !!prRecord;
+          needsVerification = true; //TODO: requiresVerification()
         }
       }
     } else {
@@ -129,13 +141,22 @@ const addOrUpdateJump = async (req, res, db) => {
       vaultAssociationId = profile?.vaultAssociationId ?? null;
     }
 
+    let resolvedVideoLink;
+    if (jumpId && originalJump) {
+      resolvedVideoLink = 'videoLink' in bodyJump
+        ? normalizeStoredVideoLink(bodyJump.videoLink)
+        : normalizeStoredVideoLink(originalJump.videoLink);
+    } else {
+      resolvedVideoLink = normalizeStoredVideoLink(videoLinkRaw);
+    }
+
     // Upsert jump (vaultAssociationId always set so we can unassociate with null)
     const upsertPayload = {
       id: jumpId,
       athleteProfileId,
       date,
       notes,
-      videoLink,
+      videoLink: resolvedVideoLink,
       ...flattenedHardMetrics,
       softMetrics,
       ...flattenedMeetInfo,
@@ -144,8 +165,16 @@ const addOrUpdateJump = async (req, res, db) => {
     };
     const [jumpRow, created] = await db.tables.Jumps.upsert(upsertPayload);
 
+    if (jumpId && originalJump) {
+      const previousVideoLink = normalizeStoredVideoLink(originalJump.videoLink);
+      if (previousVideoLink && previousVideoLink !== resolvedVideoLink) {
+        await destroyJumpDrillCloudinaryAssetIfOwned(previousVideoLink);
+      }
+    }
+
     // If we're updating a verified PR and it needs re-verification, we need to recalculate PRs
-    if (jumpId && wasPr && needsVerification) {
+    // Or if we're updating a PR with a different vault association, we need to recalculate PRs
+    if (jumpId && wasPr && (needsVerification || vaultAssociationId !== originalJump.vaultAssociationId)) {
       await populatePRsForAthlete(athleteProfileId, db);
     }
 
@@ -269,6 +298,8 @@ const deleteJump = async (req, res, db) => {
         return res.status(404).json({ ok: false, message: 'Jump not found.' });
       }
 
+      const previousVideoLink = normalizeStoredVideoLink(jump.videoLink);
+
       // Check if jump was a PR
       const personalRecord = await db.tables.PersonalRecords.findOne({
         where: { jumpId, athleteProfileId },
@@ -301,6 +332,14 @@ const deleteJump = async (req, res, db) => {
 
       // Commit the transaction
       await transaction.commit();
+
+      if (previousVideoLink) {
+        try {
+          await destroyJumpDrillCloudinaryAssetIfOwned(previousVideoLink);
+        } catch (e) {
+          console.warn('Jump delete Cloudinary cleanup:', e && e.message);
+        }
+      }
 
       res.json({ ok: true, message: 'Jump deletion successful.' });
     } catch (error) {
@@ -628,33 +667,45 @@ async function rejectJumpVerification(req, res, db) {
 async function checkIfJumpIsStepPr(jump, db) {
   // Check if it's a meet jump and update PR records if applicable
   if (jump.setting === 'Meet' && jump.heightInches) {
+    const vaultKey = normalizeJumpVaultAssociationId(jump.vaultAssociationId);
 
-    // Check if this jump beats the current PR for its stepNum
+    // Check if this jump beats the current PR for its stepNum and vault association
     const currentPr = await db.tables.PersonalRecords.findOne({
-      where: { athleteProfileId: jump.athleteProfileId, stepNum: jump.stepNum },
+      where: {
+        athleteProfileId: jump.athleteProfileId,
+        stepNum: jump.stepNum,
+        vaultAssociationId: vaultKey,
+      },
       include: {
         model: db.tables.Jumps,
         as: 'jump',
       },
     });
 
-    if (!currentPr || jump.heightInches > currentPr.jump.heightInches) {
-      // Update PR
+    const betterHeight = !currentPr || jump.heightInches > currentPr.jump.heightInches;
+    const tieEarlierDate =
+      currentPr &&
+      jump.heightInches === currentPr.jump.heightInches &&
+      jump.date &&
+      currentPr.jump.date &&
+      new Date(jump.date) < new Date(currentPr.jump.date);
+
+    if (betterHeight || tieEarlierDate) {
       if (currentPr) {
-        await currentPr.destroy(); // Remove old PR record //TODO: What does this destroy, both the jump and the prRow?
+        await currentPr.destroy();
       }
 
       await db.tables.PersonalRecords.create({
         athleteProfileId: jump.athleteProfileId,
         stepNum: jump.stepNum,
         jumpId: jump.id,
+        vaultAssociationId: vaultKey,
       });
     }
   }
 }
 
 async function populatePRsForAthlete(athleteProfileId, db, transaction) {
-  // Step 1: Get all verified "Meet" jumps for the athlete, grouped by stepNum
   const jumps = await db.tables.Jumps.findAll({
     where: {
       athleteProfileId: athleteProfileId,
@@ -662,9 +713,8 @@ async function populatePRsForAthlete(athleteProfileId, db, transaction) {
       verified: true,
     },
     attributes: [
-      'id', 'stepNum', 'heightInches'
+      'id', 'stepNum', 'heightInches', 'vaultAssociationId', 'date',
     ],
-    order: [['stepNum', 'ASC'], ['heightInches', 'DESC']], // Order by stepNum, then highest height
     transaction
   });
 
@@ -673,32 +723,46 @@ async function populatePRsForAthlete(athleteProfileId, db, transaction) {
     return;
   }
 
-  // Step 2: Get the best jump for each stepNum
-  const bestJumps = {};
-  jumps.forEach(jump => {
-    if (!bestJumps[jump.stepNum]) {
-      bestJumps[jump.stepNum] = jump; // First jump per stepNum will be the best
+  // Best jump per (stepNum, vault bucket): highest height, then earliest date on tie
+  const bestByKey = {};
+  jumps.forEach((jump) => {
+    const vaultKey = normalizeJumpVaultAssociationId(jump.vaultAssociationId);
+    const key = `${jump.stepNum}:${vaultKey}`;
+    const existing = bestByKey[key];
+    if (!existing) {
+      bestByKey[key] = jump;
+      return;
+    }
+    if (jump.heightInches > existing.heightInches) {
+      bestByKey[key] = jump;
+    } else if (
+      jump.heightInches === existing.heightInches &&
+      new Date(jump.date) < new Date(existing.date)
+    ) {
+      bestByKey[key] = jump;
     }
   });
 
-  // Step 3: Delete all existing PRs for this athlete
   await db.tables.PersonalRecords.destroy({
     where: { athleteProfileId },
     transaction
   });
 
-  // Step 4: Create new PRs for each stepNum using upsert
-  for (const stepNum in bestJumps) {
-    const bestJump = bestJumps[stepNum];
-    await db.tables.PersonalRecords.upsert({
-      athleteProfileId: athleteProfileId,
-      stepNum: bestJump.stepNum,
-      jumpId: bestJump.id,
-      uniqueStep: athleteProfileId, // This will enforce uniqueness
-    }, {
-      transaction,
-      fields: ['jumpId'], // Only update the jumpId if record exists
-    });
+  for (const key of Object.keys(bestByKey)) {
+    const bestJump = bestByKey[key];
+    const vaultKey = normalizeJumpVaultAssociationId(bestJump.vaultAssociationId);
+    await db.tables.PersonalRecords.upsert(
+      {
+        athleteProfileId,
+        stepNum: bestJump.stepNum,
+        jumpId: bestJump.id,
+        vaultAssociationId: vaultKey,
+      },
+      {
+        transaction,
+        fields: ['jumpId'],
+      }
+    );
   }
 
   console.log(`Personal records updated for athlete ${athleteProfileId}`);

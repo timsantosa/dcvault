@@ -14,13 +14,16 @@ const {
   deleteConversation,
   getUnreadCounts,
   uploadMessageAttachment,
-  deleteMessageAttachment
+  deleteMessageAttachment,
+  addGlobalConversationPin,
+  removeGlobalConversationPin,
+  reorderGlobalConversationPins,
 } = require('../controllers/messagesController');
 
 const attachmentUpload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 100 * 1024 * 1024, // 100 MB (Cloudinary Free video limit)
+    fileSize: 20 * 1024 * 1024, // 20 MB
     files: 5
   }
 });
@@ -37,6 +40,23 @@ module.exports = function messageRoutes(db) {
 
   // Get unread message counts for badges
   router.get('/conversations/unread-counts', checkOwnAthleteProfile, (req, res) => getUnreadCounts(req, res, db));
+
+  // Global conversation pins (order for all users) — static paths before /conversations/:conversationId
+  router.post(
+    '/conversations/pins',
+    checkPermission('manage_global_conversation_pins'),
+    (req, res) => addGlobalConversationPin(req, res, db)
+  );
+  router.put(
+    '/conversations/pins/order',
+    checkPermission('manage_global_conversation_pins'),
+    (req, res) => reorderGlobalConversationPins(req, res, db)
+  );
+  router.delete(
+    '/conversations/pins/:conversationId',
+    checkPermission('manage_global_conversation_pins'),
+    (req, res) => removeGlobalConversationPin(req, res, db)
+  );
 
   // Get a single conversation with its messages
   router.get('/conversations/:conversationId',

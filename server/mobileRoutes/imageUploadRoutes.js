@@ -13,7 +13,7 @@ const {
   deleteConversationImage
 } = require('../controllers/imageUploadController');
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("../controllers/cloudinaryConfig");
+const cloudinary = require('../lib/cloudinaryClient');
 const { checkPermission } = require('../middlewares/mobileAuthMiddleware');
 
 
