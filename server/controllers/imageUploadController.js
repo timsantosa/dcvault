@@ -63,6 +63,13 @@ async function uploadProfileOrBackgroundImage(req, res, db, imageType) {
       imageType
     });
   }
+
+  try {
+    await NotificationUtils.notifyAdminsOfPendingImage(pending.id, athleteProfileId, imageType);
+  } catch (notificationError) {
+    console.error('Error sending image verification notification:', notificationError);
+  }
+
   res.json({
     ok: true,
     imageUrl: newImageUrl,

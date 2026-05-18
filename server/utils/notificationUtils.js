@@ -171,21 +171,53 @@ class NotificationUtils {
    */
   static async sendNotificationToUsersWithPermission(permissionKey, title, body, data = {}) {
     try {
-      // Get users with the specified permission
+      const permission = await tables.Permissions.findOne({
+        where: { permissionKey },
+        attributes: ['id'],
+      });
+      if (!permission) {
+        return { success: true, notifiedDevices: 0 };
+      }
+
+      const [directRows, roleLinkRows] = await Promise.all([
+        tables.User_Permissions.findAll({
+          where: { permissionId: permission.id },
+          attributes: ['userId'],
+          raw: true,
+        }),
+        tables.Role_Permissions.findAll({
+          where: { permissionId: permission.id },
+          attributes: ['roleId'],
+          raw: true,
+        }),
+      ]);
+
+      const userIdSet = new Set(directRows.map((r) => r.userId));
+      const roleIds = [...new Set(roleLinkRows.map((r) => r.roleId))];
+      if (roleIds.length > 0) {
+        const roleUserRows = await tables.User_Roles.findAll({
+          where: { roleId: roleIds },
+          attributes: ['userId'],
+          raw: true,
+        });
+        roleUserRows.forEach((r) => userIdSet.add(r.userId));
+      }
+
+      const userIds = [...userIdSet];
+      if (userIds.length === 0) {
+        return { success: true, notifiedDevices: 0 };
+      }
+
       const users = await tables.Users.findAll({
+        where: { id: userIds },
         include: [
           {
             model: tables.UserDevices,
             as: 'devices',
             where: { isActive: true },
-            required: false
+            required: false,
           },
-          {
-            model: tables.Permissions,
-            where: { permissionKey },
-            through: { attributes: [] } // Don't include junction table data
-          }
-        ]
+        ],
       });
 
       const messages = [];
@@ -244,6 +276,37 @@ class NotificationUtils {
       );
     } catch (error) {
       console.error('Error notifying admins of pending jump:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Send notification when a profile or background image needs verification
+   * @param {number} pendingImageId - PendingImages row id
+   * @param {number} athleteProfileId - The athlete profile ID
+   * @param {string} imageType - 'profile' or 'background'
+   * @returns {Object} Result with success status
+   */
+  static async notifyAdminsOfPendingImage(pendingImageId, athleteProfileId, imageType) {
+    try {
+      const athleteProfile = await tables.AthleteProfiles.findByPk(athleteProfileId);
+      const athleteName = `${athleteProfile.firstName} ${athleteProfile.lastName}`;
+      const imageNoun = imageType === 'background' ? 'background image' : 'profile picture';
+
+      return await this.sendNotificationToUsersWithPermission(
+        'verify_images',
+        'Image Verification Needed',
+        `${athleteName} submitted a ${imageNoun} for verification`,
+        {
+          type: 'image_verification',
+          pendingImageId,
+          athleteProfileId,
+          athleteName,
+          imageType,
+        }
+      );
+    } catch (error) {
+      console.error('Error notifying admins of pending image:', error);
       throw error;
     }
   }
