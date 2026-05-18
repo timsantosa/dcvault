@@ -1,5 +1,7 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+import paypalCheckout from './paypalCheckout'
+const dcPricing = require('../../pricing')
 const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
@@ -600,12 +602,14 @@ class Payment extends React.Component {
     }
 
     calculatePrice () {
-        let price = this.state.price * 1.03
+        let price = this.state.price * dcPricing.processingFeeMultiplier
         this.renderButton(price)
     }
 
     renderButton (amount) {
         amount = parseFloat(amount)
+
+        var paypalPurchaseInfo = JSON.parse(JSON.stringify(this.props.data || {}))
 
         var cont = this.continue.bind(this)
         var dateLst = ""
@@ -641,50 +645,25 @@ class Payment extends React.Component {
         }
         this.props.data.athleteInfo.dates1 = dateLst
         var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email + 'Weeks: ' + dateLst
+        var comp = this
 
-
-        paypal.Button.render({ // eslint-disable-line
-            env: window.configVariables.PAYPAL_MODE, // sandbox | production
-            client: {
-                sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
-                production: window.configVariables.PAYPAL_CLIENT_ID
+        paypalCheckout.renderHostedButtons('#paypal-button-container', {
+            flow: 'compete',
+            amountUsd: amount,
+            description: paymentDescription,
+            getPurchaseInfoPayload: function () {
+                return paypalPurchaseInfo
             },
-            commit: true,
-
-            style: {
-                size: 'responsive',
-                shape: 'rect',
-                color: 'silver',
-                label: 'pay'
-            },
-
-            payment: function (data, actions) {
-                return actions.payment.create({
-                    payment: {
-                        transactions: [
-                            {
-                                amount: { total: amount.toFixed(2), currency: 'USD' },
-                                note_to_payee: paymentDescription
-                            }
-                        ]
-                    }
-                })
-            },
-
-            // onAuthorize() is called when the buyer approves the payment
-            onAuthorize: function (data, actions) {
-                return actions.payment.execute().then(function () {
-                    cont(data)
-                })
-            }
-
-        }, '#paypal-button-container')
+            onPaid: function (ids) { cont(ids) },
+            onError: function () {}
+        }).catch(function () {})
     }
 
     continue (data) {
         this.props.advance('event-payment', {
-            paymentId: data.paymentID,
-            payerId: data.payerID
+            paypalOrderId: data.paypalOrderId,
+            paypalCaptureId: data.paypalCaptureId,
+            paypalFlow: 'compete'
         })
     }
 
@@ -707,7 +686,7 @@ class Payment extends React.Component {
 
         let currentPrice = (this.state.price)
         let currentDiscount = (this.state.discount)
-        let currentProcessingFee = ((this.state.price) * 0.03).toFixed(2)
+        let currentProcessingFee = ((this.state.price) * (dcPricing.processingFeeMultiplier - 1)).toFixed(2)
 
         return (
             <div className='row'>

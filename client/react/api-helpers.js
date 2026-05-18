@@ -302,9 +302,24 @@ apiHelpers.contactForm = (name, from, to, subject, text) => {
   })
 }
 
-apiHelpers.requestPole = (athleteId, period, quarter) => {
+apiHelpers.requestPole = (
+  athleteId,
+  period,
+  quarter,
+  paypalFlow,
+  paypalOrderId,
+  paypalCaptureId
+) => {
   let token = getToken()
-  return axios.post('/rentals/request', {token, athleteId, period, quarter})
+  return axios.post('/rentals/request', {
+    token,
+    athleteId,
+    period,
+    quarter,
+    paypalFlow,
+    paypalOrderId,
+    paypalCaptureId,
+  })
   .then((response) => {
     return response
   })

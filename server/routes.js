@@ -9,6 +9,9 @@ const config = require('./config/config')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const addMobileAppRoutes = require('./mobileAppRoutes');
+const registerPayPalRoutes = require('./paypalPaymentRoutes');
+const paypalClient = require('./lib/paypalClient');
+const { assertCaptureMatchesFlow } = require('./lib/paypalPaymentVerify');
 
 module.exports = (app, db) => {
   // External Middleware
@@ -16,6 +19,8 @@ module.exports = (app, db) => {
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(morgan('combined'))
+
+  registerPayPalRoutes(app, db)
 
   // Misc endpoints
 
@@ -170,46 +175,90 @@ module.exports = (app, db) => {
     }
   })
 
-  app.post('/rentals/request', (req, res) => {
-    if (!req.body.token || !req.body.athleteId || !req.body.period || (req.body.period == 'quarterly' && !req.body.quarter)) {
-      res.status(400).send({ok: false, message: 'bad request'})
-    } else {
-      let tokenDecoded = helpers.decodeUser(req.body.token)
-      db.tables.Users.findOne({where: {id: tokenDecoded.id}}).then(user => {
-        if (!user) {
-          res.status(400).send({ok: false, message: 'bad user token'})
+  app.post('/rentals/request', async (req, res) => {
+    try {
+      if (
+        !req.body.token ||
+        !req.body.athleteId ||
+        !req.body.period ||
+        (req.body.period === 'quarterly' && !req.body.quarter)
+      ) {
+        return res.status(400).send({ ok: false, message: 'bad request' })
+      }
+      const expectedFlow =
+        req.body.period === 'quarterly' ? 'pole_quarterly' : 'pole_48h'
+      if (
+        !req.body.paypalCaptureId ||
+        !req.body.paypalOrderId ||
+        req.body.paypalFlow !== expectedFlow
+      ) {
+        return res
+          .status(400)
+          .send({ ok: false, message: 'payment verification required' })
+      }
+      try {
+        const paypalConfig = registerPayPalRoutes.paypalCfg()
+        const capBody = await paypalClient.getCapture(
+          paypalConfig,
+          req.body.paypalCaptureId
+        )
+        await assertCaptureMatchesFlow(
+          req.body.paypalFlow,
+          capBody,
+          db,
+          { purchaseInfo: {} }
+        )
+      } catch (pe) {
+        console.error('Pole rental PayPal verification failed:', pe.message)
+        return res
+          .status(402)
+          .send({ ok: false, message: 'payment verification failed' })
+      }
+
+      const tokenDecoded = helpers.decodeUser(req.body.token)
+      const user = await db.tables.Users.findOne({
+        where: { id: tokenDecoded.id },
+      })
+      if (!user) {
+        return res.status(400).send({ ok: false, message: 'bad user token' })
+      }
+      const athlete = await db.tables.Athletes.findOne({
+        where: { id: req.body.athleteId },
+      })
+      if (!athlete || (!user.isAdmin && athlete.userId !== user.id)) {
+        return res.status(400).send({ ok: false, message: 'athlete not found' })
+      }
+      let request = {
+        type: req.body.period,
+        year: new Date().getFullYear(),
+      }
+      let expiration
+      if (request.type === 'quarterly') {
+        if (req.body.quarter === 'winter') {
+          expiration = new Date(request.year, 2, 1)
+        } else if (req.body.quarter === 'spring') {
+          expiration = new Date(request.year, 5, 1)
+        } else if (req.body.quarter === 'summer') {
+          expiration = new Date(request.year, 8, 1)
         } else {
-          db.tables.Athletes.findOne({where: {id: req.body.athleteId}}).then(athlete => {
-            if (!athlete || (!user.isAdmin && athlete.userId !== user.id)) {
-              res.status(400).send({ok: false, message: 'athlete not found'})
-            } else {
-              let request = {
-                type: req.body.period,
-                year: (new Date()).getFullYear()
-              }
-              let expiration
-              if (request.type === 'quarterly') {
-                if (req.body.quarter === 'winter') {
-                  expiration = new Date(request.year, 2, 1)
-                } else if (req.body.quarter === 'spring') {
-                  expiration = new Date(request.year, 5, 1)
-                } else if (req.body.quarter === 'summer') {
-                  expiration = new Date(request.year, 8, 1)
-                } else {
-                  expiration = new Date(request.year, 11, 1)
-                }
-                if (expiration < Date.now()) {
-                  expiration = expiration.setFullYear(request.year + 1)
-                }
-              } else {
-                expiration = new Date(Date.now() + 1209600000)
-              }
-              db.tables.Rentals.create({expiration, athleteId: athlete.id}).then(rental => {
-                res.send({ok: true, message: 'rental request created', rental})
-              })
-            }
-          })
+          expiration = new Date(request.year, 11, 1)
         }
+        if (expiration < Date.now()) {
+          expiration.setFullYear(request.year + 1)
+        }
+      } else {
+        expiration = new Date(Date.now() + 1209600000)
+      }
+      const rental = await db.tables.Rentals.create({
+        expiration,
+        athleteId: athlete.id,
+      })
+      res.send({ ok: true, message: 'rental request created', rental })
+    } catch (err) {
+      console.error('/rentals/request:', err)
+      res.status(500).send({
+        ok: false,
+        message: 'server error creating rental request',
       })
     }
   })
@@ -417,7 +466,31 @@ module.exports = (app, db) => {
       if (!foundUser) {
         return res.status(403).send({ ok: false, message: 'bad user token' });
       }
-  
+
+      const purchaseSnap = req.body.purchaseInfo
+      const paymentSnap = purchaseSnap.payment || {}
+      const paypalCaptureId = paymentSnap.paypalCaptureId || paymentSnap.payerId
+      const paypalOrderId = paymentSnap.paypalOrderId || paymentSnap.paymentId
+      if (!paypalCaptureId || !paypalOrderId) {
+        return res.status(400).send({
+          ok: false,
+          message: 'missing PayPal capture / order identifiers',
+        })
+      }
+      try {
+        const paypalConfig = registerPayPalRoutes.paypalCfg()
+        const capBody = await paypalClient.getCapture(
+          paypalConfig,
+          paypalCaptureId
+        )
+        if (!capBody || capBody.status !== 'COMPLETED') {
+          throw new Error('capture_not_completed')
+        }
+      } catch (pe) {
+        console.error('Registration PayPal verification failed:', pe.message)
+        return res.status(402).send({ ok: false, message: 'payment verification failed' })
+      }
+
       let athlete = req.body.purchaseInfo.athleteInfo;
       let foundAthlete = await db.tables.Athletes.findOne({
         where: { firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob }
@@ -494,8 +567,8 @@ module.exports = (app, db) => {
         strengthFam: purchaseInfo.selectPackage.strengthFam,
         membership: mem,
         waiverDate: purchaseInfo.agreement.date,
-        paymentId: purchaseInfo.payment.paymentId,
-        payerId: purchaseInfo.payment.payerId
+        paymentId: paypalOrderId,
+        payerId: paypalCaptureId,
       });
   
       // Ensure `invite` and `discount` exist before deleting
@@ -516,51 +589,80 @@ module.exports = (app, db) => {
   });
   
 
-    app.post('/event/finalize', (req, res) => {
+    app.post('/event/finalize', async (req, res) => {
+      try {
         if (!req.body.purchaseInfo) {
-            res.status(400).send({ok: false, message: 'missing purchase details'})
-        } else {
-            let event_athlete = req.body.purchaseInfo.athleteInfo
-            let dateLst = ""
-
-            //dateLst += event_athlete.date1
-            //console.log(req.body.purchaseInfo)
-            let athleteData = {
-                firstName: event_athlete.fname,
-                lastName: event_athlete.lname,
-                email: event_athlete.email,
-                dob: event_athlete.dob,
-                pr: event_athlete.pr,
-                team: event_athlete.team,
-                usatf: event_athlete.usatf,
-                emergencyContactName: event_athlete['emergency-contact'],
-                emergencyContactMDN: event_athlete['emergency-phone'],
-                emergencyContactRelation: event_athlete['emergency-relation'],
-                gender: event_athlete.gender,
-                state: event_athlete.state,
-                division: event_athlete.division,
-                accomplishments: event_athlete.accomplishments,
-                dates: event_athlete.dates1,
-                age: event_athlete.age
-
-            }
-
-            db.tables.EventAthletes.create(athleteData)
-
-            let purchaseInfo = req.body.purchaseInfo
-            db.tables.EventPurchases.create({
-                waiverSignatory: purchaseInfo.agreement.name,
-                waiverDate: purchaseInfo.agreement.date,
-                paymentId: purchaseInfo['event-payment'].paymentId,
-                payerId: purchaseInfo['event-payment'].payerId,
-                athlete: event_athlete.fname + event_athlete.lname
-            }).then(() => {
-                res.send({ok: true, message: 'purchase record saved'})
-            })
-                .catch((error) => {
-                    res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
-                })
+          return res
+            .status(400)
+            .send({ ok: false, message: 'missing purchase details' })
         }
+        let event_athlete = req.body.purchaseInfo.athleteInfo
+
+        let athleteData = {
+          firstName: event_athlete.fname,
+          lastName: event_athlete.lname,
+          email: event_athlete.email,
+          dob: event_athlete.dob,
+          pr: event_athlete.pr,
+          team: event_athlete.team,
+          usatf: event_athlete.usatf,
+          emergencyContactName: event_athlete['emergency-contact'],
+          emergencyContactMDN: event_athlete['emergency-phone'],
+          emergencyContactRelation: event_athlete['emergency-relation'],
+          gender: event_athlete.gender,
+          state: event_athlete.state,
+          division: event_athlete.division,
+          accomplishments: event_athlete.accomplishments,
+          dates: event_athlete.dates1,
+          age: event_athlete.age,
+        }
+
+        const purchaseInfo = req.body.purchaseInfo
+        const evPay = purchaseInfo['event-payment'] || {}
+        const paypalCaptureId = evPay.paypalCaptureId || evPay.payerId
+        const paypalOrderId = evPay.paypalOrderId || evPay.paymentId
+        if (!paypalCaptureId || !paypalOrderId) {
+          return res.status(400).send({
+            ok: false,
+            message: 'missing PayPal capture / order identifiers',
+          })
+        }
+        try {
+          const paypalConfig = registerPayPalRoutes.paypalCfg()
+          const capBody = await paypalClient.getCapture(
+            paypalConfig,
+            paypalCaptureId
+          )
+          if (!capBody || capBody.status !== 'COMPLETED') {
+            throw new Error('capture_not_completed')
+          }
+        } catch (pe) {
+          console.error('Event PayPal verification failed:', pe.message)
+          return res
+            .status(402)
+            .send({ ok: false, message: 'payment verification failed' })
+        }
+
+        await db.tables.EventAthletes.create(athleteData)
+
+        await db.tables.EventPurchases.create({
+          waiverSignatory: purchaseInfo.agreement.name,
+          waiverDate: purchaseInfo.agreement.date,
+          paymentId: paypalOrderId,
+          payerId: paypalCaptureId,
+          athlete: event_athlete.fname + event_athlete.lname,
+        })
+        res.send({ ok: true, message: 'purchase record saved' })
+      } catch (error) {
+        console.error('Event finalize error:', error)
+        res
+          .status(500)
+          .send({
+            ok: false,
+            message: 'a db error has occurred',
+            error: error.message,
+          })
+      }
     })
 
     app.post('/event/confirm', (req, res) => {

@@ -1,0 +1,49 @@
+{
+  "processingFeeMultiplier": 1.03,
+  "training": {
+    "apparelAddonUsd": 35,
+    "defaultGroupUsd": 600,
+    "dropinUsd": 75,
+    "privateLessonUsd": 250,
+    "flyKidsUsd": {
+      "2classes": 60,
+      "8classes": 200,
+      "15classes": 300,
+      "summercamp": 350,
+      "default": 550
+    },
+    "adultUsd": {
+      "2classes": 100,
+      "default": 350
+    },
+    "allAgesUsd": {
+      "4classes": 250,
+      "8classes": 425,
+      "15classes": 575,
+      "30classes": 825,
+      "default": 825
+    }
+  },
+  "events": {
+    "items": {
+      "pvchamps26StandardUsd": 60,
+      "pvchamps26MemberOrEliteUsd": 5,
+      "familyPvExperienceUsd": 15,
+      "springFlingUrselfUsd": 30,
+      "afterpartyPerTicketUsd": 30,
+      "eventbagUsd": 85
+    }
+  },
+  "competition": {
+    "week1Usd": 450,
+    "week2345Usd": 350,
+    "week2Usd": 400,
+    "addonUsd": 25,
+    "multiWeekBundleUsd": 750,
+    "multiWeekMinimumWeeks": 2
+  },
+  "pole": {
+    "quarterlyBaseUsd": 200,
+    "oneTime48hBaseUsd": 50
+  }
+}
