@@ -21,7 +21,8 @@ var config = {
         loader: 'babel-loader',
 
         include: [
-          APP_DIR
+          APP_DIR,
+          path.resolve(__dirname, 'pricing')
         ],
 
         test: /\.jsx?$/,

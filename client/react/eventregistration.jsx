@@ -1,5 +1,7 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+import paypalCheckout from './paypalCheckout'
+const dcPricing = require('../../pricing')
 const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
@@ -681,32 +683,7 @@ class Agreement extends React.Component {
 class Payment extends React.Component {
     constructor (props) {
         super(props)
-        let price = 0
-        
-        // Parse dates1 to extract individual items and calculate price
-        if(this.props.data.athleteInfo.dates1){
-            let items = this.props.data.athleteInfo.dates1.split(',').map(item => item.trim())
-            
-            for(let item of items) {
-                if(item === 'pvchamps26') {
-                    // Apply member or elite discount
-                    if(this.props.data.athleteInfo.memberdisc === "dcvault-member" || this.props.data.athleteInfo.elitedisc === "elite") {
-                        price += 5
-                    } else {
-                        price += 60
-                    }
-                } else if(item === 'family-pv-experience') {
-                    price += 15
-                } else if(item === 'spring-fling-urself') {
-                    price += 30
-                } else if(item.startsWith('afterparty-')) {
-                    let ticketCount = parseInt(item.split('-')[1])
-                    price += (30 * ticketCount)
-                } else if(item === 'eventbag') {
-                    price += 85
-                }
-            }
-        }
+        let price = dcPricing.computeEventCheckoutSubtotalUsd(this.props.data.athleteInfo)
 
         this.state = {
             price: price,
@@ -722,12 +699,14 @@ class Payment extends React.Component {
     }
 
     calculatePrice () {
-        let price = this.state.price * 1.03
+        let price = this.state.price * dcPricing.processingFeeMultiplier
         this.renderButton(price)
     }
 
     renderButton (amount) {
         amount = parseFloat(amount)
+
+        var paypalPurchaseInfo = JSON.parse(JSON.stringify(this.props.data || {}))
 
         var cont = this.continue.bind(this)
         var dateLst = ""
@@ -763,7 +742,6 @@ class Payment extends React.Component {
         }
         this.props.data.athleteInfo.dates1 = dateLst
         
-        // Parse dates1 to extract add-on details for payment description
         let addOnDetails = ''
         if(this.props.data.athleteInfo.dates1){
             let items = this.props.data.athleteInfo.dates1.split(',').map(item => item.trim())
@@ -782,50 +760,25 @@ class Payment extends React.Component {
         }
         
         var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nState: ' + this.props.data.athleteInfo.state + '\nDivision: ' + this.props.data.athleteInfo.division + '\nAthlete Email: ' + this.props.data.athleteInfo.email + '\nCompetitions: ' + dateLst + addOnDetails
+        var comp = this
 
-
-        paypal.Button.render({ // eslint-disable-line
-            env: window.configVariables.PAYPAL_MODE, // sandbox | production
-            client: {
-                sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
-                production: window.configVariables.PAYPAL_CLIENT_ID
+        paypalCheckout.renderHostedButtons('#paypal-button-container', {
+            flow: 'event_registration',
+            amountUsd: amount,
+            description: paymentDescription,
+            getPurchaseInfoPayload: function () {
+                return paypalPurchaseInfo
             },
-            commit: true,
-
-            style: {
-                size: 'responsive',
-                shape: 'rect',
-                color: 'silver',
-                label: 'pay'
-            },
-
-            payment: function (data, actions) {
-                return actions.payment.create({
-                    payment: {
-                        transactions: [
-                            {
-                                amount: { total: amount.toFixed(2), currency: 'USD' },
-                                note_to_payee: paymentDescription
-                            }
-                        ]
-                    }
-                })
-            },
-
-            // onAuthorize() is called when the buyer approves the payment
-            onAuthorize: function (data, actions) {
-                return actions.payment.execute().then(function () {
-                    cont(data)
-                })
-            }
-
-        }, '#paypal-button-container')
+            onPaid: function (ids) { cont(ids) },
+            onError: function () {}
+        }).catch(function () {})
     }
 
     continue (data) {
         this.props.advance('event-payment', {
-            paymentId: data.paymentID,
-            payerId: data.payerID
+            paypalOrderId: data.paypalOrderId,
+            paypalCaptureId: data.paypalCaptureId,
+            paypalFlow: 'event_registration'
         })
     }
 
@@ -842,7 +795,7 @@ class Payment extends React.Component {
         }
 
         let currentPrice = (this.state.price)
-        let currentProcessingFee = ((this.state.price) * 0.03).toFixed(2)
+        let currentProcessingFee = ((this.state.price) * (dcPricing.processingFeeMultiplier - 1)).toFixed(2)
 
         return (
             <div className='row'>

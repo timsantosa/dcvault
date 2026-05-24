@@ -1,5 +1,8 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+import paypalCheckout from './paypalCheckout'
+const dcPricing = require('../../pricing')
+const trainCat = dcPricing.catalog.training
 const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
@@ -517,25 +520,25 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='4classes' checked={this.state.checkedMembership === '4classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>4 Classes ($250)</span>
+                    <span>4 Classes (${trainCat.allAgesUsd['4classes']})</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='8classes' checked={this.state.checkedMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>8 Classes ($425)</span>
+                    <span>8 Classes (${trainCat.allAgesUsd['8classes']})</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='15classes' checked={this.state.checkedMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>15 Classes ($575)</span>
+                    <span>15 Classes (${trainCat.allAgesUsd['15classes']})</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='30classes' checked={this.state.checkedMembership === '30classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Unlimited Classes ($825) - 30-50 depending on training schedule</span>
+                    <span>Unlimited Classes (${trainCat.allAgesUsd['30classes']}) - 30-50 depending on training schedule</span>
                   </label>
                 </div>
               </div>
@@ -552,13 +555,13 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='2classes' checked={this.state.checkedMembership === '2classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>2 Classes ($100)</span>
+                    <span>2 Classes (${trainCat.adultUsd['2classes']})</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='membership' value='8classes' checked={this.state.checkedMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>8 Classes ($350)</span>
+                    <span>8 Classes (${trainCat.adultUsd.default})</span>
                   </label>
                 </div>
               </div>
@@ -575,19 +578,19 @@ class SelectPackage extends React.Component {
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='2classes' checked={this.state.checkedFKMembership === '2classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>2 Classes ($60)</span>
+                    <span>2 Classes (${trainCat.flyKidsUsd['2classes']})</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='8classes' checked={this.state.checkedFKMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>8 Classes ($200)</span>
+                    <span>8 Classes (${trainCat.flyKidsUsd['8classes']})</span>
                   </label>
                 </div>
                 <div style={{display: 'block'}}>
                   <label>
                     <input type='radio' name='fkmembership' value='15classes' checked={this.state.checkedFKMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>15 Classes ($300)</span>
+                    <span>15 Classes (${trainCat.flyKidsUsd['15classes']})</span>
                   </label>
                 </div>
               </div>
@@ -1140,7 +1143,6 @@ class Agreement extends React.Component {
 class Payment extends React.Component {
   constructor (props) {
     super(props)
-    let price
     let group = this.props.data.selectPackage.group
     let membership = this.props.data.selectPackage.membership
     let fkmembership = this.props.data.selectPackage.fkmembership
@@ -1149,48 +1151,26 @@ class Payment extends React.Component {
     // Then assign it to the props data for membership so it will reflect under "membership in the database"
     if(group === 'fly-kids'){
       if(fkmembership === '8classes'){
-        price = 200
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === '2classes') {
-        price = 60
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === '15classes') {
-        price = 300
         this.props.data.selectPackage.membership = fkmembership
       }else if(fkmembership === 'summercamp') {
-        price = 350
         this.props.data.selectPackage.membership = fkmembership
       }else{
-        price = 550
         this.props.data.selectPackage.membership = fkmembership
       }
-    }else if (group === 'dropin'){
-      price = 75
-    }else if(group === 'plesson'){
-      price = 250
-    }else if (group === 'adult') {
-      if(membership === '2classes'){
-        price = 100
-      }else{
-        price = 350
-      }     
-    } else if (group === 'elite' || group === 'professional') {
-      price = 0
-    } else if (group === 'allages') {
-      if(membership === '4classes'){
-        price = 250
-      }else if (membership === '8classes'){
-        price = 425
-      }else if (membership === '15classes'){
-        price = 575
-      }else if (membership === '30classes'){
-        price = 825
-      }else{
-        price = 825
-      }
-    } else {
-      price = 600
     }
+
+    let priceResolved = dcPricing.computeTrainingPackageBaseUsd({
+      group: group,
+      membership: this.props.data.selectPackage.membership,
+      fkmembership: fkmembership,
+      quarter: this.props.data.selectPackage.quarter,
+      yesApparel: this.props.data.selectPackage.yesApparel,
+      apparel: this.props.data.selectPackage.apparel
+    })
 
     let quarter = this.props.data.selectPackage.quarter
     let now = new Date()
@@ -1208,7 +1188,7 @@ class Payment extends React.Component {
     }
 
     this.state = {
-      price: price,
+      price: priceResolved,
       discount: 0,
       errorText: '',
       showDiscount: false,
@@ -1225,24 +1205,13 @@ class Payment extends React.Component {
   }
 
   calculatePrice () {
-    let price = (this.state.price * (1 - this.state.discount))
-    price = parseFloat(price) < 10 ? 1 : price
-    price += this.state.lateFee
-    let group = this.props.data.selectPackage.group
-    let apparel = this.props.data.selectPackage.apparel
-    let apparelRes= this.props.data.selectPackage.yesApparel
-    let str = this.props.data.selectPackage.strength
-    let strFam = this.props.data.selectPackage.strengthFam
-    let fkmembership = this.props.data.selectPackage.membership
-
-    
-
-    if (apparelRes === 'none' || fkmembership === 'summercamp'){
-    }else{
-      price += 35
+    let pi = {
+      selectPackage: this.props.data.selectPackage,
+      _resolvedDiscountAmount: this.state.discount
     }
-  
-    price = price * 1.03
+
+    let sub = dcPricing.computeTrainingSubtotalUsd(pi, new Date())
+    let price = sub * dcPricing.processingFeeMultiplier
 
     this.renderButton(price)
   }
@@ -1252,49 +1221,29 @@ class Payment extends React.Component {
 
     var cont = this.continue.bind(this)
     var paymentDescription = 'Athlete Name: ' + this.props.data.athleteInfo.fname + ' ' + this.props.data.athleteInfo.lname + '\nAthlete Email: ' + this.props.data.athleteInfo.email
+    var comp = this
 
-    paypal.Button.render({ // eslint-disable-line
-      env: window.configVariables.PAYPAL_MODE, // sandbox | production
-      client: {
-        sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
-        production: window.configVariables.PAYPAL_CLIENT_ID
+    paypalCheckout.renderHostedButtons('#paypal-button-container', {
+      flow: 'registration',
+      amountUsd: amount,
+      description: paymentDescription,
+      getPurchaseInfoPayload: function () {
+        var snap = JSON.parse(JSON.stringify(comp.props.data || {}))
+        if (!snap.payment) snap.payment = {}
+        if (comp.state.discountCode) snap.payment.discount = comp.state.discountCode
+        return snap
       },
-      commit: true,
-
-      style: {
-        size: 'responsive',
-        shape: 'rect',
-        color: 'silver',
-        label: 'pay'
+      onPaid: function (ids) {
+        cont(ids)
       },
-
-      payment: function (data, actions) {
-        return actions.payment.create({
-          payment: {
-            transactions: [
-              {
-                amount: { total: amount.toFixed(2), currency: 'USD' },
-                note_to_payee: paymentDescription
-              }
-            ]
-          }
-        })
-      },
-
-    // onAuthorize() is called when the buyer approves the payment
-      onAuthorize: function (data, actions) {
-        return actions.payment.execute().then(function () {
-          cont(data)
-        })
-      }
-
-    }, '#paypal-button-container')
+      onError: function () {}
+    }).catch(function () {})
   }
 
   continue (data) {
     this.props.advance('payment', {
-      paymentId: data.paymentID,
-      payerId: data.payerID,
+      paypalOrderId: data.paypalOrderId,
+      paypalCaptureId: data.paypalCaptureId,
       discount: this.state.discountCode
     })
   }
@@ -1323,7 +1272,7 @@ class Payment extends React.Component {
             discount: discountAmount,
             discountCode: info.code
           })
-          document.getElementById('paypal-button-container').innerHTML = ''
+          paypalCheckout.clearContainer('#paypal-button-container')
           this.calculatePrice()
         }
       })
@@ -1360,16 +1309,19 @@ class Payment extends React.Component {
     let group = this.props.data.selectPackage.group
     let fkmembership = this.props.data.selectPackage.membership
 
+    let procRate = dcPricing.processingFeeMultiplier - 1
+    let apparelUsd = dcPricing.trainingApparelAddonUsd
+
     let currentProcessingFee = 0
     if (apparelRes === 'yes') {
       if (fkmembership === 'summercamp'){
-        currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
+        currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * procRate).toFixed(2)
       }else{
-        currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 35) * 0.03).toFixed(2)
+        currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + apparelUsd) * procRate).toFixed(2)
 
       }
     }else{
-      currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
+      currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * procRate).toFixed(2)
     }
     
     let lateFee = this.state.lateFee
@@ -1391,7 +1343,7 @@ class Payment extends React.Component {
               <div className='row'>
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                   <p className='price-text'>Training Package: <span className='red-text'>${currentPrice}</span></p>
-                  {apparelRes !== 'none' && fkmembership !== 'summercamp'? (<p className='price-text'>Apparel Fee: <span className='red-text'>${35}</span></p>) : ''}
+                  {apparelRes !== 'none' && fkmembership !== 'summercamp'? (<p className='price-text'>Apparel Fee: <span className='red-text'>${trainCat.apparelAddonUsd}</span></p>) : ''}
                   <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
                 </div>
               </div>

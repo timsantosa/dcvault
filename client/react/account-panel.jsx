@@ -1,6 +1,8 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
 import GenericModal from './generic-modal.jsx'
+import paypalCheckout from './paypalCheckout'
+const dcPricing = require('../../pricing')
 const $ = window.$
 
 class AccountPanel extends React.Component {
@@ -405,7 +407,7 @@ class PoleRentalPurchase extends React.Component {
     super(props)
     if (this.props.period === 'quarterly') {
       this.state = {
-        price: 200.00,
+        price: dcPricing.poleQuarterlyBaseUsd,
         periodDisplay: 'Quarterly',
         successfulPayment: false,
         failedPayment: false,
@@ -413,7 +415,7 @@ class PoleRentalPurchase extends React.Component {
       }
     } else if (this.props.period === 'oneTime') {
       this.state = {
-        price: 50.00,
+        price: dcPricing.poleOneTime48hBaseUsd,
         periodDisplay: '48 Hours',
         successfulPayment: false,
         failedPayment: false,
@@ -428,64 +430,62 @@ class PoleRentalPurchase extends React.Component {
     }
   }
 
-  continue (data) {
-    apiHelpers.requestPole(this.props.athlete.id, this.props.period, this.props.quarter).then(res => {
+  continue (paypalData) {
+    var flow =
+      this.props.period === 'quarterly' ? 'pole_quarterly' : 'pole_48h'
+    apiHelpers.requestPole(
+      this.props.athlete.id,
+      this.props.period,
+      this.props.quarter,
+      flow,
+      paypalData.paypalOrderId,
+      paypalData.paypalCaptureId
+    ).then(res => {
       if (res.data.ok) {
         this.setState({
           successfulPayment: true,
-          statusText: 'Your request has been processed. Please see the head coach at your next training session to check out your Pole'
+          statusText:
+            'Your request has been processed. Please see the head coach at your next training session to check out your Pole',
         })
       } else {
         this.setState({
           failedPayment: true,
-          statusText: 'Request Failed. Please check your PayPal records to verify the payment, and contact us to resolve the issue'
+          statusText:
+            'Request Failed. Please check your PayPal records to verify the payment, and contact us to resolve the issue',
         })
       }
     })
   }
 
   renderButton () {
-    let amount = 1.03 * this.state.price
-
+    let amount = dcPricing.processingFeeMultiplier * this.state.price
     var cont = this.continue.bind(this)
-    var paymentDescription = 'Pole rental: ' + this.state.periodDisplay + '; Athlete: ' + this.props.athlete.firstName + ' ' + this.props.athlete.lastName
+    var paymentDescription =
+      'Pole rental: ' +
+      this.state.periodDisplay +
+      '; Athlete: ' +
+      this.props.athlete.firstName +
+      ' ' +
+      this.props.athlete.lastName
 
-    paypal.Button.render({ // eslint-disable-line
-      env: window.configVariables.PAYPAL_MODE, // sandbox | production
-      client: {
-        sandbox: window.configVariables.PAYPAL_SANDBOX_ID,
-        production: window.configVariables.PAYPAL_CLIENT_ID
+    var flow =
+      this.props.period === 'quarterly' ? 'pole_quarterly' : 'pole_48h'
+
+    paypalCheckout.renderHostedButtons('#paypal-button-container', {
+      flow: flow,
+      amountUsd: amount,
+      description: paymentDescription,
+      getPurchaseInfoPayload: function () {
+        return {
+          _: 'pole rental',
+          athleteId: '',
+        }
       },
-      commit: true,
-
-      style: {
-        size: 'responsive',
-        shape: 'rect',
-        color: 'silver',
-        label: 'pay'
+      onPaid: function (ids) {
+        cont(ids)
       },
-
-      payment: function (data, actions) {
-        return actions.payment.create({
-          payment: {
-            transactions: [
-              {
-                amount: { total: amount.toFixed(2), currency: 'USD' },
-                note_to_payee: paymentDescription
-              }
-            ]
-          }
-        })
-      },
-
-    // onAuthorize() is called when the buyer approves the payment
-      onAuthorize: function (data, actions) {
-        return actions.payment.execute().then(function () {
-          cont(data)
-        })
-      }
-
-    }, '#paypal-button-container')
+      onError: function () {},
+    }).catch(function () {})
   }
 
   render () {
@@ -497,7 +497,7 @@ class PoleRentalPurchase extends React.Component {
           ? 'A one-time rental is good for 48 hours. You are expected to return the pole at practice 48 hours from the date the pole is issued'
           : 'A quarterly rental is good for the duration of the training quarter. You are expected to return the pole at practice before the start of the following quarter'}</p>
           <p><span className='red-text'>{this.state.periodDisplay} rental:</span> ${this.state.price.toFixed(2)}</p>
-          <p><span className='red-text'>Online Transaction Fee:</span> ${(this.state.price * 0.03).toFixed(2)}</p>
+          <p><span className='red-text'>Online Transaction Fee:</span> ${(this.state.price * (dcPricing.processingFeeMultiplier - 1)).toFixed(2)}</p>
           <div id='paypal-button-container' />
         </div>
       )
