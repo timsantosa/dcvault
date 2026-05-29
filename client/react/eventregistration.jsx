@@ -259,7 +259,7 @@ class AthleteInfo extends React.Component {
                         value="pvchamps26"
                         onChange={this.handleEventChange.bind(this)}
                         />
-                        <label htmlFor="pvchamps26">&nbsp;&nbsp;2026 Pole Vault Championships ($60)</label>
+                        <label htmlFor="pvchamps26">&nbsp;&nbsp;2026 Pole Vault Championships ($70)</label>
                         <br />
 
 
