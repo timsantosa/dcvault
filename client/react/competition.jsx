@@ -511,10 +511,17 @@ class Agreement extends React.Component {
                 <div className='col-xs-12' style={{textAlign: 'center'}}>
                     <form id='event-agreement' className='form-labels-on-top'>
                         <div className='form-title-row'>
-                            <h1>Agreement</h1>
+                            <h1>Waiver Agreement</h1>
                         </div>
 
-                        <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree to notify us if you or anyone in your family has tested positive for COVID-19. You will also notify us if you have any of the following <a style={{color: '#C0282D'}} target='_blank' href='https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html'>symptoms</a> the week of the camp.</p>
+                        <img className='waiver-image' src='../img/forms/adult-comp-1.png' />
+                        <img className='waiver-image' src='../img/forms/adult-comp-2.png' />
+                        <img className='waiver-image' src='../img/forms/adult-comp-3.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-1.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-2.png' />
+                        <img className='waiver-image' src='../img/forms/youth-comp-3.png' />
+
+                        <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's legal guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/DC Vault Waiver - Competition.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
 
                         <div className='row'>
                             <div className='col-xs-12 col-md-6'>

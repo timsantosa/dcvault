@@ -262,21 +262,13 @@ class AthleteInfo extends React.Component {
                         <label htmlFor="pvchamps26">&nbsp;&nbsp;2026 Pole Vault Championships ($60)</label>
                         <br />
 
-                        <input
-                        type="radio"
-                        name="dates1"
-                        id="family-pv-experience"
-                        value="family-pv-experience"
-                        onChange={this.handleEventChange.bind(this)}
-                        />
-                        <label htmlFor="family-pv-experience">&nbsp;&nbsp;Family Pole Vault Experience ($15)</label>
-                        <br />
 
                     </div>
                     </div>
 
                     {this.state.selectedEvent === 'pvchamps26' && (
                         <div>
+                            <img style={{width: '100%'}} src='../img/events/after_party.jpg' />
                             <div className='form-row'>
                                 <label>
                                     <span>After Party - 18 and up only ($30)</span>
@@ -317,6 +309,7 @@ class AthleteInfo extends React.Component {
                             </div>
                         )}
 
+                            <img style={{width: '100%'}} src='../img/events/backpack.png' />
                             <div className='form-row'>
                                 <label>
                                     <span>Event Bag ($85)</span>
@@ -693,10 +686,8 @@ class Payment extends React.Component {
                     if(this.props.data.athleteInfo.memberdisc === "dcvault-member" || this.props.data.athleteInfo.elitedisc === "elite") {
                         price += 5
                     } else {
-                        price += 60
+                        price += 70
                     }
-                } else if(item === 'family-pv-experience') {
-                    price += 15
                 } else if(item === 'spring-fling-urself') {
                     price += 30
                 } else if(item.startsWith('afterparty-')) {
