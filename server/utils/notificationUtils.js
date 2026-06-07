@@ -312,6 +312,33 @@ class NotificationUtils {
   }
 
   /**
+   * Notify admins when a jump or drill log video needs verification
+   */
+  static async notifyAdminsOfPendingLogVideo(pendingLogVideoId, athleteProfileId, entityKind) {
+    try {
+      const athleteProfile = await tables.AthleteProfiles.findByPk(athleteProfileId);
+      const athleteName = `${athleteProfile.firstName} ${athleteProfile.lastName}`;
+      const kindNoun = entityKind === 'drill' ? 'drill log video' : 'jump log video';
+
+      return await this.sendNotificationToUsersWithPermission(
+        'verify_images',
+        'Log Video Verification Needed',
+        `${athleteName} submitted a ${kindNoun} for verification`,
+        {
+          type: 'log_video_verification',
+          pendingLogVideoId,
+          athleteProfileId,
+          athleteName,
+          entityKind,
+        }
+      );
+    } catch (error) {
+      console.error('Error notifying admins of pending log video:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Send notification when a new athlete profile is created
    * @param {number} athleteProfileId - The newly created athlete profile ID
    * @param {number} creatorUserId - The user ID who created the profile

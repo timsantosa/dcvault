@@ -176,23 +176,33 @@ async function rejectImage(req, res, db) {
     if (!pending) return res.status(404).json({ error: "Pending image not found" });
     if (pending.rejected) return res.status(400).json({ error: "Image is already rejected." });
 
-    pending.rejected = true;
-    pending.rejectionMessage = message;
-    await pending.save();
+    const athleteProfileId = pending.athleteProfileId;
+    const imageType = pending.imageType;
+    const imageUrl = pending.imageUrl;
+    const pendingRowId = pending.id;
+
+    try {
+      await deleteCloudinaryImage(imageUrl);
+    } catch (cloudErr) {
+      console.error('Error deleting rejected image from Cloudinary:', cloudErr);
+      return res.status(500).json({ ok: false, error: "Failed to remove image from storage." });
+    }
 
     // TODO: Maybe send message instead of just a notification.
-    const imageLabel = getImageTypeLabel(pending.imageType).toLowerCase();
+    const imageLabel = getImageTypeLabel(imageType).toLowerCase();
     const body = `Your ${imageLabel} image was rejected: ${message}`;
     try {
       await NotificationUtils.sendNotificationToAthleteProfiles(
-        [pending.athleteProfileId],
+        [athleteProfileId],
         'Image Rejected',
         body,
-        { type: 'image_rejection', pendingImageId: pending.id, rejectionMessage: message }
+        { type: 'image_rejection', pendingImageId: pendingRowId, rejectionMessage: message }
       );
     } catch (notificationError) {
       console.error('Error sending image rejection notification:', notificationError);
     }
+
+    await pending.destroy();
 
     res.json({ ok: true, message: "Image rejected successfully." });
   } catch (error) {
