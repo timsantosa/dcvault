@@ -4,6 +4,10 @@ const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
 
+// Feature flag: set to false to disable the "select an existing athlete"
+// feature and revert registration to the original blank-form flow.
+const ENABLE_ATHLETE_SELECTOR = true
+
 class Register extends React.Component {
   constructor (props) {
     super(props)
@@ -13,7 +17,8 @@ class Register extends React.Component {
       pageNum: 0,
       data: {},
       showBar: false,
-      registrationOpen: false
+      registrationOpen: false,
+      existingAthletes: []
     }
   }
 
@@ -28,7 +33,7 @@ class Register extends React.Component {
 
     if (newPageNum === 2) {
       this.setState({
-        currentPage: (<AthleteInfo advance={this.advance.bind(this)} />)
+        currentPage: (<AthleteInfo advance={this.advance.bind(this)} existingAthletes={this.state.existingAthletes} />)
       })
     } else if (newPageNum === 3) {
       this.setState({
@@ -76,6 +81,33 @@ class Register extends React.Component {
         loginButton.innerHTML = 'My Account'
         loginButton.onclick = () => {
           window.location.href = '/account'
+        }
+        if (ENABLE_ATHLETE_SELECTOR) {
+          // Skip the lookup for admins: the /users/info admin branch returns
+          // every athlete in the system, which we don't want to surface in the
+          // selector. We avoid the request entirely rather than changing that endpoint.
+          apiHelpers.isAdmin()
+          .then((admin) => {
+            if (admin) {
+              return
+            }
+            apiHelpers.getUserData()
+            .then((response) => {
+              if (response && response.data && response.data.ok && response.data.athletes) {
+                this.setState({
+                  existingAthletes: response.data.athletes
+                }, () => {
+                  // If the athletes arrive after the user already reached the
+                  // athlete page, rebuild it so the selector actually renders.
+                  if (this.state.pageNum === 2) {
+                    this.setState({
+                      currentPage: (<AthleteInfo advance={this.advance.bind(this)} existingAthletes={this.state.existingAthletes} />)
+                    })
+                  }
+                })
+              }
+            })
+          })
         }
         this.setState({
           currentPage: (<SelectPackage advance={this.advance.bind(this)} />),
@@ -703,8 +735,51 @@ class AthleteInfo extends React.Component {
     super(props)
     this.state = {
       errorText: [],
-      showUSATFinfo: false
+      showUSATFinfo: false,
+      selectedAthleteId: null
     }
+  }
+
+  selectAthlete (athlete) {
+    this.setState({
+      selectedAthleteId: athlete.id
+    })
+
+    // Prefill identity fields from the existing athlete. Emergency contact
+    // fields are intentionally left blank so they are re-entered each time.
+    $('input[name=fname]').val(athlete.firstName || '')
+    $('input[name=lname]').val(athlete.lastName || '')
+    $('input[name=dob]').val(athlete.dob || '')
+    $('input[name=email]').val(athlete.email || '')
+    $('input[name=lstserv]').val(athlete.notifications || '')
+    $('input[name=usatf]').val(athlete.usatf || '')
+    $('select[name=gender]').val(athlete.gender || '')
+    $('select[name=state]').val(athlete.state || '')
+    $('input[name=school]').val(athlete.school || '')
+
+    $('input[name=emergency-contact]').val('')
+    $('input[name=emergency-relation]').val('')
+    $('input[name=emergency-phone]').val('')
+  }
+
+  createNewAthlete () {
+    this.setState({
+      selectedAthleteId: null
+    })
+
+    $('input[name=fname]').val('')
+    $('input[name=lname]').val('')
+    $('input[name=dob]').val('')
+    $('input[name=email]').val('')
+    $('input[name=lstserv]').val('')
+    $('input[name=usatf]').val('')
+    $('select[name=gender]').val('')
+    $('select[name=state]').val('')
+    $('input[name=school]').val('')
+    $('textarea[name=conditions]').val('')
+    $('input[name=emergency-contact]').val('')
+    $('input[name=emergency-relation]').val('')
+    $('input[name=emergency-phone]').val('')
   }
 
   formatDOB () {
@@ -790,6 +865,7 @@ class AthleteInfo extends React.Component {
     }
 
     if (complete) {
+      output.athleteId = this.state.selectedAthleteId || null
       this.props.advance('athleteInfo', output)
     }
   }
@@ -833,6 +909,83 @@ class AthleteInfo extends React.Component {
       </div>
     }
 
+    let athleteSelector
+    let existingAthletes = ENABLE_ATHLETE_SELECTOR ? (this.props.existingAthletes || []) : []
+    if (existingAthletes.length > 0) {
+      let cardBaseStyle = {
+        border: '1px solid #ccc',
+        borderRadius: '6px',
+        padding: '12px',
+        marginBottom: '10px',
+        textAlign: 'left',
+        cursor: 'pointer'
+      }
+      let selectedCardStyle = Object.assign({}, cardBaseStyle, {
+        border: '2px solid #C0282D',
+        backgroundColor: 'rgba(192, 40, 45, 0.05)'
+      })
+
+      let detailStyle = {fontWeight: 'normal', fontSize: '13px', color: '#5f5f5f', marginTop: '6px' }
+      let columnStyle = {display: 'inline-block', verticalAlign: 'top', width: '50%', boxSizing: 'border-box'}
+
+      athleteSelector = (
+        <div className='form-row' style={{textAlign: 'left'}}>
+          <label style={{textAlign: 'center', display: 'block'}}>
+            <span style={{width: 'auto', textAlign: 'center'}}>Select an existing athlete or create a new one</span>
+          </label>
+
+          {existingAthletes.map((athlete) => {
+            let isSelected = this.state.selectedAthleteId === athlete.id
+            let profile = athlete.athleteProfile
+            return (
+              <div
+                key={athlete.id}
+                style={isSelected ? selectedCardStyle : cardBaseStyle}
+                onClick={() => { this.selectAthlete(athlete) }}
+              >
+                <div style={{fontWeight: 'bold', color: '#5f5f5f', display: 'flex', justifyContent: 'space-between'}}>
+                  <span>
+                    {athlete.firstName} {athlete.lastName}
+                    {athlete.currentlyRegistered
+                      ? (<span style={{color: '#1a7f37', fontWeight: 'normal', marginLeft: '8px'}}>(Currently Registered)</span>)
+                      : ''}
+                  </span>
+                  {athlete.dob
+                    ? (<span style={{fontWeight: 'normal', fontStyle: 'italic', marginLeft: '8px'}}>{athlete.dob}</span>)
+                    : ''}
+                </div>
+                <div style={{marginTop: '6px'}}>
+                  <div style={Object.assign({}, columnStyle, detailStyle)}>
+                    <div>{athlete.gender ? (athlete.gender.charAt(0).toUpperCase() + athlete.gender.slice(1)) : 'N/A'}</div>
+                  </div>
+                  <div style={Object.assign({}, columnStyle, detailStyle, {textAlign: 'right'})}>
+                    <div>USATF: {athlete.usatf || 'N/A'}</div>
+                  </div>
+                  {profile
+                    ? (<div style={Object.assign({marginTop: '4px'}, detailStyle)}>
+                        Linked App Profile: {profile.firstName + ' ' + profile.lastName + (profile.alwaysActiveOverride ? ' (active member)' : '')}
+                      </div>)
+                    : ''}
+                </div>
+              </div>
+            )
+          })}
+
+          <div
+            style={this.state.selectedAthleteId === null
+              ? selectedCardStyle
+              : cardBaseStyle}
+            onClick={() => { this.createNewAthlete() }}
+          >
+            <div style={{fontWeight: 'bold', color: '#5f5f5f'}}>+ Create New Athlete</div>
+            <div style={detailStyle}>
+              Add a new athlete with the information below.
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className='row'>
         <div className='col-xs-12' style={{textAlign: 'center'}}>
@@ -841,6 +994,8 @@ class AthleteInfo extends React.Component {
             <div className='form-title-row'>
               <h1>Athlete Information</h1>
             </div>
+
+            {athleteSelector}
 
             <div className='row'>
               <div className='col-xs-12 col-md-6'>

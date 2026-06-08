@@ -419,9 +419,18 @@ module.exports = (app, db) => {
       }
   
       let athlete = req.body.purchaseInfo.athleteInfo;
-      let foundAthlete = await db.tables.Athletes.findOne({
-        where: { firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob }
-      });
+      let foundAthlete = null;
+      if (athlete.athleteId) {
+        foundAthlete = await db.tables.Athletes.findOne({
+          where: { id: athlete.athleteId, userId: user.id }
+        });
+      }
+      // Fallback only when creating new: scope match to this user (fixes cross-user match bug)
+      if (!foundAthlete && !athlete.athleteId) {
+        foundAthlete = await db.tables.Athletes.findOne({
+          where: { firstName: athlete.fname, lastName: athlete.lname, dob: athlete.dob, userId: user.id }
+        });
+      }
   
       let athleteData = {
         firstName: athlete.fname,
@@ -880,7 +889,10 @@ module.exports = (app, db) => {
 
             } else {
               db.tables.Purchases.findAll({where: {userId: foundUser.id}}).then((purchases) => {
-                db.tables.Athletes.findAll({where: {userId: foundUser.id}}).then((athletes) => {
+                db.tables.Athletes.findAll({
+                  where: {userId: foundUser.id},
+                  include: [{model: db.tables.AthleteProfiles, as: 'athleteProfile'}]
+                }).then((athletes) => {
                   let quarter = helpers.getCurrentQuarter()
                   let year = new Date().getFullYear()
                   athletes = athletes.map(athlete => {
