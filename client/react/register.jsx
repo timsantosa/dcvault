@@ -83,13 +83,30 @@ class Register extends React.Component {
           window.location.href = '/account'
         }
         if (ENABLE_ATHLETE_SELECTOR) {
-          apiHelpers.getUserData()
-          .then((response) => {
-            if (response && response.data && response.data.ok && response.data.athletes) {
-              this.setState({
-                existingAthletes: response.data.athletes
-              })
+          // Skip the lookup for admins: the /users/info admin branch returns
+          // every athlete in the system, which we don't want to surface in the
+          // selector. We avoid the request entirely rather than changing that endpoint.
+          apiHelpers.isAdmin()
+          .then((admin) => {
+            if (admin) {
+              return
             }
+            apiHelpers.getUserData()
+            .then((response) => {
+              if (response && response.data && response.data.ok && response.data.athletes) {
+                this.setState({
+                  existingAthletes: response.data.athletes
+                }, () => {
+                  // If the athletes arrive after the user already reached the
+                  // athlete page, rebuild it so the selector actually renders.
+                  if (this.state.pageNum === 2) {
+                    this.setState({
+                      currentPage: (<AthleteInfo advance={this.advance.bind(this)} existingAthletes={this.state.existingAthletes} />)
+                    })
+                  }
+                })
+              }
+            })
           })
         }
         this.setState({
