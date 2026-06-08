@@ -541,6 +541,39 @@ columns.pendingImages = {
   rejectionMessage: { type: Sequelize.TEXT, allowNull: true },
 };
 
+// Pending log videos (jump/drill uploads awaiting admin verify/reject)
+columns.pendingLogVideos = {
+  athleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+  },
+  videoUrl: { type: Sequelize.STRING, allowNull: false },
+  entityKind: { type: Sequelize.STRING, allowNull: false }, // 'jump' | 'drill'
+  jumpId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.jumps,
+      key: 'id',
+    },
+    onDelete: 'SET NULL',
+  },
+  drillId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    references: {
+      model: tables.drills,
+      key: 'id',
+    },
+    onDelete: 'SET NULL',
+  },
+};
+
 // User Devices for Push Notifications
 columns.userDevices = {
   userId: {
@@ -900,6 +933,24 @@ const syncTables = (schema, force) => {
     ]
   });
 
+  // Pending log videos (jump/drill video awaiting verify)
+  tables.PendingLogVideos = schema.define('pendingLogVideo', columns.pendingLogVideos, {
+    indexes: [
+      {
+        fields: ['athleteProfileId'],
+        name: 'pending_log_videos_athlete',
+      },
+      {
+        fields: ['jumpId'],
+        name: 'pending_log_videos_jump',
+      },
+      {
+        fields: ['drillId'],
+        name: 'pending_log_videos_drill',
+      },
+    ],
+  });
+
   // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
@@ -1025,6 +1076,15 @@ const syncTables = (schema, force) => {
 
   tables.PendingImages.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
   tables.AthleteProfiles.hasMany(tables.PendingImages, { as: 'pendingImages', foreignKey: 'athleteProfileId' });
+
+  tables.PendingLogVideos.belongsTo(tables.AthleteProfiles, { as: 'athleteProfile', foreignKey: 'athleteProfileId' });
+  tables.AthleteProfiles.hasMany(tables.PendingLogVideos, { as: 'pendingLogVideos', foreignKey: 'athleteProfileId' });
+
+  tables.PendingLogVideos.belongsTo(tables.Jumps, { as: 'jump', foreignKey: 'jumpId' });
+  tables.Jumps.hasOne(tables.PendingLogVideos, { as: 'pendingLogVideo', foreignKey: 'jumpId' });
+
+  tables.PendingLogVideos.belongsTo(tables.Drills, { as: 'drill', foreignKey: 'drillId' });
+  tables.Drills.hasOne(tables.PendingLogVideos, { as: 'pendingLogVideo', foreignKey: 'drillId' });
 
   tables.schema = schema;
   return schema.sync({ force: force })

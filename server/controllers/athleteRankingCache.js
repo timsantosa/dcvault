@@ -15,6 +15,28 @@ function vaultKeyFromScope(vaultScope) {
   return String(vaultScope);
 }
 
+/** Stored `athleteProfiles.gender` values that belong in each ranking bucket (lowercase + common variants). */
+const DB_GENDERS_BY_RANKING_BUCKET = {
+  male: ['male', 'Male', 'm', 'M'],
+  female: ['female', 'Female', 'f', 'F'],
+  other: ['other', 'Other', 'non-binary', 'Non-binary', 'nonbinary', 'Nonbinary', 'U', ''],
+};
+
+/** Map a profile gender to a cache bucket; unknown / empty → other. */
+function canonicalRankingGender(gender) {
+  const s = gender === null || gender === undefined ? '' : String(gender).trim().toLowerCase();
+  if (!s) {
+    return 'other';
+  }
+  if (s === 'male' || s === 'm') {
+    return 'male';
+  }
+  if (s === 'female' || s === 'f') {
+    return 'female';
+  }
+  return 'other';
+}
+
 class RankingCache {
   constructor() {
     // rankings[gender][type][vaultKey] = ranking list or null
@@ -26,11 +48,17 @@ class RankingCache {
   }
 
   async generateRanking(gender, type = 'active', vaultKey = 'global') {
+    gender = canonicalRankingGender(gender);
+    if (type !== 'active' && type !== 'allTime') {
+      return;
+    }
+
     const rankingVaultId = vaultKey === 'global' ? undefined : parseInt(vaultKey, 10);
     console.log(`Generating ${type} ranking for ${gender} athletes (vault=${vaultKey})...`);
 
+    const Op = db.tables.schema.Sequelize.Op;
     const query = {
-      where: { gender },
+      where: { gender: { [Op.in]: DB_GENDERS_BY_RANKING_BUCKET[gender] } },
       include: [
         {
           model: db.tables.PersonalRecords,
@@ -96,23 +124,24 @@ class RankingCache {
   }
 
   async getRankingForAthlete(athleteProfileId, gender, type = 'active', vaultScope = 'global') {
-    if (!gender) {
+    const canonicalGender = canonicalRankingGender(gender);
+    if (type !== 'active' && type !== 'allTime') {
       return null;
     }
 
     const vaultKey = vaultKeyFromScope(vaultScope);
 
-    const list = this.rankings[gender][type][vaultKey];
+    const list = this.rankings[canonicalGender][type][vaultKey];
     if (!list) {
-      await this.generateRanking(gender, type, vaultKey);
+      await this.generateRanking(canonicalGender, type, vaultKey);
     }
 
-    const rankingList = this.rankings[gender][type][vaultKey];
+    const rankingList = this.rankings[canonicalGender][type][vaultKey];
     let rankEntry = rankingList.find((entry) => entry.athleteProfileId === athleteProfileId);
 
     if (!rankEntry) {
-      await this.generateRanking(gender, type, vaultKey);
-      rankEntry = this.rankings[gender][type][vaultKey].find(
+      await this.generateRanking(canonicalGender, type, vaultKey);
+      rankEntry = this.rankings[canonicalGender][type][vaultKey].find(
         (entry) => entry.athleteProfileId === athleteProfileId
       );
     }

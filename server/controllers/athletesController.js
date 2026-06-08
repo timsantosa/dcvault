@@ -12,6 +12,7 @@ const {
 } = require('../utils/rankingUtils');
 const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
 const NotificationUtils = require('../utils/notificationUtils');
+const { DC_VAULT_ASSOCIATION_ID } = require('../constants/vaultAssociations');
 
 async function createProfile(req, res, db) {
   try {
@@ -79,7 +80,7 @@ async function createProfile(req, res, db) {
       athleteId: newProfileData.associatedAthleteId,
       alwaysActiveOverride: newProfileData.alwaysActiveOverride ?? false, // TODO: This is flawed logic, should be removed.
       userId: actualUserId,
-      vaultAssociationId: newProfileData.vaultAssociationId ?? null,
+      vaultAssociationId: newProfileData.vaultAssociationId ?? DC_VAULT_ASSOCIATION_ID,
     }
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {

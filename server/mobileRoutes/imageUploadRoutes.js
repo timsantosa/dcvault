@@ -12,6 +12,11 @@ const {
   uploadConversationImage,
   deleteConversationImage
 } = require('../controllers/imageUploadController');
+const {
+  verifyPendingLogVideo,
+  rejectPendingLogVideo,
+  getAllUnverifiedLogVideos,
+} = require('../controllers/logVideoController');
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require('../lib/cloudinaryClient');
 const { checkPermission } = require('../middlewares/mobileAuthMiddleware');
@@ -43,6 +48,9 @@ const imageUploadRoutes = (db) => {
   router.post('/verify', checkPermission('verify_images'), (req, res) => verifyImage(req, res, db));
   router.post('/reject', checkPermission('verify_images'), (req, res) => rejectImage(req, res, db));
   router.get('/unverified', checkPermission('verify_images'), (req, res) => getAllUnverifiedImages(req, res, db));
+  router.post('/log-videos/verify', checkPermission('verify_images'), (req, res) => verifyPendingLogVideo(req, res, db));
+  router.post('/log-videos/reject', checkPermission('verify_images'), (req, res) => rejectPendingLogVideo(req, res, db));
+  router.get('/log-videos/unverified', checkPermission('verify_images'), (req, res) => getAllUnverifiedLogVideos(req, res, db));
   router.get('/profile/:athleteProfileId/pending', (req, res) => getPendingImagesForProfile(req, res, db));
 
   // Conversation image routes (protected by manage_conversations permission)
