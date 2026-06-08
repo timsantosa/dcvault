@@ -431,7 +431,7 @@ class AthleteInfo extends React.Component {
                                         <option value='Boys High School D2'>High School Division - Boys D2 PR under 12'6" (Ages 14-18 who attended grades 9-12 in Spring of 2025) </option>
                                         <option value='Womens Adult'>Open Adult Division - Women</option>
                                         <option value='Mens Adults'>Open Adult Division - Men</option>
-                                        <option value='Mens Emerging Elite'>Men’s Emerging Elite Division (PR of 4.57m/15'1" or higher)</option>
+                                        <option value='Mens Elite II'>Men's Elite II Division (PR of 4.9m/16' or higher)</option>
                                         <option value='Mens Elite'>Elite Women (PR of 4.3m or higher)</option>
                                         <option value='Womens Elite'>Elite Men (PR of 5.65m or higher)</option>
                                     </select>
