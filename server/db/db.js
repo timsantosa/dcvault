@@ -187,6 +187,7 @@ columns.athleteProfiles = {
       key: 'id',
     },
   },
+  worldAthleticsNumber: Sequelize.STRING,
 }
 
 columns.jumps = {

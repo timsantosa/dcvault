@@ -14,6 +14,60 @@ const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddle
 const NotificationUtils = require('../utils/notificationUtils');
 const { DC_VAULT_ASSOCIATION_ID } = require('../constants/vaultAssociations');
 
+function parseWorldAthleticsNumberForWrite(raw) {
+  if (raw === undefined) {
+    return { skip: true };
+  }
+  if (raw === null || String(raw).trim() === '') {
+    return { value: null };
+  }
+  const digits = String(raw).replace(/\D/g, '');
+  if (digits.length === 0) {
+    return { value: null };
+  }
+  if (digits.length !== 8) {
+    return { error: 'World Athletics number must be exactly 8 digits.' };
+  }
+  return { value: digits };
+}
+
+async function hydrateUsatfForProfiles(profiles, db) {
+  const athleteIds = [...new Set(profiles.map((p) => p.athleteId).filter(Boolean))];
+  if (athleteIds.length === 0) {
+    return new Map();
+  }
+
+  const athletes = await db.tables.Athletes.findAll({
+    where: {
+      id: { [db.tables.schema.Sequelize.Op.in]: athleteIds },
+    },
+    attributes: ['id', 'usatf'],
+  });
+  const usatfByAthleteId = new Map(
+    athletes.filter((a) => a.usatf).map((a) => [a.id, a.usatf])
+  );
+
+  const result = new Map();
+  for (const profile of profiles) {
+    if (profile.athleteId && usatfByAthleteId.has(profile.athleteId)) {
+      result.set(profile.id, usatfByAthleteId.get(profile.athleteId));
+    }
+  }
+  return result;
+}
+
+// Omit empty athletic IDs from list/bulk profile responses (used by getProfiles, getRankedProfiles).
+function attachAthleticIds(responseObj, profileRow, usatfMap) {
+  if (profileRow.worldAthleticsNumber) {
+    responseObj.worldAthleticsNumber = profileRow.worldAthleticsNumber;
+  }
+  const usatf = usatfMap.get(profileRow.id);
+  if (usatf) {
+    responseObj.usatf = usatf;
+  }
+  return responseObj;
+}
+
 async function createProfile(req, res, db) {
   try {
     const userSendingRequest = req.user;
@@ -85,6 +139,14 @@ async function createProfile(req, res, db) {
 
     if (userSendingRequest.permissions?.includes('manage_active_profiles')) {
       athleteProfileData.alwaysActiveOverride = newProfileData.alwaysActiveOverride;
+    }
+
+    const worldAthleticsParsed = parseWorldAthleticsNumberForWrite(newProfileData.worldAthleticsNumber);
+    if (worldAthleticsParsed.error) {
+      return res.status(400).json({ ok: false, message: worldAthleticsParsed.error });
+    }
+    if (!worldAthleticsParsed.skip) {
+      athleteProfileData.worldAthleticsNumber = worldAthleticsParsed.value;
     }
 
     const newProfile = await db.tables.AthleteProfiles.create(athleteProfileData);
@@ -170,6 +232,14 @@ async function updateProfile(req, res, db) {
       athleteProfileData.userId = newUserId;
     }
 
+    const worldAthleticsParsed = parseWorldAthleticsNumberForWrite(newProfileData.worldAthleticsNumber);
+    if (worldAthleticsParsed.error) {
+      return res.status(400).json({ ok: false, message: worldAthleticsParsed.error });
+    }
+    if (!worldAthleticsParsed.skip) {
+      athleteProfileData.worldAthleticsNumber = worldAthleticsParsed.value;
+    }
+
     // Update existing profile
     await existingProfile.update(athleteProfileData);
 
@@ -198,8 +268,9 @@ const getProfile = async (req, res, db) => {
       'id', 'firstName', 'lastName',
       'nationality', 'dob', 'height', 
       'weight', 'profileImage', 'backgroundImage', 
-      'gender',
-      'alwaysActiveOverride', 'userId', 'athleteId', 'vaultAssociationId'];
+      'gender', 'alwaysActiveOverride', 'userId',
+      'athleteId', 'vaultAssociationId',
+      'worldAthleticsNumber'];
     const userHasFullAccess = athleteProfileBelongsToUser(athleteProfileId, user) || user.permissions?.includes('view_contact_info');
     if (userHasFullAccess) {
       // attributes.push('email', ) //TODO: add any restricted columns here
@@ -264,6 +335,10 @@ const getProfile = async (req, res, db) => {
     const recordCountsMap = await getRecordCountsForProfiles([profile.id], db);
     const recordCounts = recordCountsMap.get(profile.id) || [];
 
+    const foundAthlete = profile.athleteId
+      ? await db.tables.Athletes.findByPk(profile.athleteId)
+      : null;
+
     const athleteProfile = {
       id: profile.id,
       firstName: profile.firstName,
@@ -295,19 +370,15 @@ const getProfile = async (req, res, db) => {
       vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
     };
 
-    // Only query for athlete if we have an athleteId
-    const foundAthlete = profile.athleteId 
-      ? await db.tables.Athletes.findByPk(profile.athleteId)
-      : null;
-
-    if (!foundAthlete) {
-      res.json({ok: true, message: 'found athlete profile', athleteProfile});
-      return;
+    if (profile.worldAthleticsNumber) {
+      athleteProfile.worldAthleticsNumber = profile.worldAthleticsNumber;
     }
-    if (userHasFullAccess) {
+    if (foundAthlete?.usatf) {
+      athleteProfile.usatf = foundAthlete.usatf;
+    }
+    if (foundAthlete && userHasFullAccess) {
       athleteProfile.email = foundAthlete.email;
       athleteProfile.notificationsEmail = foundAthlete.notifications;
-      athleteProfile.usatf = foundAthlete.usatf;
       athleteProfile.emergencyContactMDN = foundAthlete.emergencyContactMDN;
       athleteProfile.emergencyContactRelation = foundAthlete.emergencyContactRelation;
       athleteProfile.emergencyContactName = foundAthlete.emergencyContactName;
@@ -456,6 +527,8 @@ const getProfiles = async (req, res, db) => {
       include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
 
+    const usatfMap = await hydrateUsatfForProfiles(profiles, db);
+
     // Get medal counts for all profiles in bulk
     // const profileIdsForMedals = profiles.map(profile => profile.id);
     // const medalCountsMap = await getMedalCountsForProfiles(profileIdsForMedals, db);
@@ -463,7 +536,7 @@ const getProfiles = async (req, res, db) => {
     const athleteProfiles = profiles.map(profile => {
       // const medalCounts = medalCountsMap.get(profile.id) || { gold: 0, silver: 0, bronze: 0 };
       
-      return {
+      const athleteProfile = {
         id: profile.id,
         firstName: profile.firstName,
         lastName: profile.lastName,
@@ -484,6 +557,7 @@ const getProfiles = async (req, res, db) => {
         vaultAssociationId: profile.vaultAssociationId ?? undefined,
         vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
       };
+      return attachAthleticIds(athleteProfile, profile, usatfMap);
     });
 
     res.json({ ok: true, athleteProfiles });
@@ -615,6 +689,7 @@ const getRankedProfiles = async (req, res, db) => {
         'weight', 'profileImage', 'backgroundImage',
         'gender',
         'alwaysActiveOverride', 'athleteId', 'userId', 'vaultAssociationId',
+        'worldAthleticsNumber',
       ],
       include: [
         { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
@@ -646,6 +721,7 @@ const getRankedProfiles = async (req, res, db) => {
         'weight', 'profileImage', 'backgroundImage',
         'gender',
         'alwaysActiveOverride', 'athleteId', 'userId', 'vaultAssociationId',
+        'worldAthleticsNumber',
       ],
       include: [
         { model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] },
@@ -677,6 +753,7 @@ const getRankedProfiles = async (req, res, db) => {
     // Get medal counts for all profiles in bulk
     const profileIdsForMedals = paginatedProfiles.map(profile => profile.id);
     const medalCountsMap = await getMedalCountsForProfiles(profileIdsForMedals, db);
+    const usatfMap = await hydrateUsatfForProfiles(paginatedProfiles, db);
 
     // Map the data into a structured response
     const athletes = paginatedProfiles.map((profile) => {
@@ -692,7 +769,7 @@ const getRankedProfiles = async (req, res, db) => {
       // Get medal counts for this profile
       const medalCounts = medalCountsMap.get(profile.id) || { gold: 0, silver: 0, bronze: 0 };
 
-      return {
+      const athleteProfile = {
         id: profile.id,
         firstName: profile.firstName,
         lastName: profile.lastName,
@@ -718,6 +795,7 @@ const getRankedProfiles = async (req, res, db) => {
         vaultAssociationId: profile.vaultAssociationId ?? undefined,
         vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
       };
+      return attachAthleticIds(athleteProfile, profile, usatfMap);
     });
 
     // Get the total count for the base criteria (without search filters)

@@ -110,6 +110,8 @@ const fillDb = (numEntries) => {
         athleteProfile.height = 73;
         athleteProfile.weight = 168;
         athleteProfile.dob = newAthlete.dob;
+        athleteProfile.athleteId = newAthlete.id;
+        athleteProfile.worldAthleticsNumber = getRandNumLen(8);
         db.tables.AthleteProfiles.create(athleteProfile);
       })
   });
