@@ -241,7 +241,7 @@ class AthleteInfo extends React.Component {
 
                     <div className='form-title-row'>
                             <h1>Event Registration</h1>
-                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2026 Pole Vault Championships Registration is Open!
+                            <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}>2026 Pole Vault Championships Registration is Closed!
                                 <br></br>
                             </p>
                     </div>
@@ -252,6 +252,7 @@ class AthleteInfo extends React.Component {
                     </label>
 
                     <div>
+                        {/* Registration closed
                         <input
                         type="radio"
                         name="dates1"
@@ -261,6 +262,7 @@ class AthleteInfo extends React.Component {
                         />
                         <label htmlFor="pvchamps26">&nbsp;&nbsp;2026 Pole Vault Championships ($70)</label>
                         <br />
+                        */}
 
 
                     </div>
