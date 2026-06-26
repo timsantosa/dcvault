@@ -23,7 +23,7 @@ async function seedRolesAndPermissions(db) {
         { permissionKey: 'edit_others_jumps', permissionName: 'Edit Jumps of Other Athletes', description: "Allows editing of other athlete's jumps." },
         { permissionKey: 'verify_jumps', permissionName: 'Verify Jumps', description: "Allows verifying of any athlete's jumps." },
         { permissionKey: 'manage_roles', permissionName: 'Manage Roles', description: 'Allows assigning roles and permissions to users.' },
-        { permissionKey: 'verify_images', permissionName: 'Verify Images', description: "Allows user to verify other users' images" },
+        { permissionKey: 'verify_images', permissionName: 'Verify profile media and log videos', description: "Allows approving or rejecting profile/background images and jump/drill log videos uploaded by other athletes." },
         { permissionKey: 'manage_meet_data', permissionName: 'Manage Meet Data', description: 'Allows managing meet data like record types, championship types, and division types.' },
         { permissionKey: 'manage_drill_types', permissionName: 'Manage Drill Types', description: 'Allows managing drill types.' },
         { permissionKey: 'manage_active_profiles', permissionName: 'Manage Active Profiles', description: "Allows user to set athlete profiles as always active, even if they don't have a currently registered athleteId" },
@@ -41,10 +41,8 @@ async function seedRolesAndPermissions(db) {
       ];
   
       for (const perm of permissions) {
-        await db.tables.Permissions.findOrCreate({
-          where: { permissionKey: perm.permissionKey },
-          defaults: perm
-        });
+        // MySQL: INSERT … ON DUPLICATE KEY UPDATE (permissionKey is unique)
+        await db.tables.Permissions.upsert(perm);
       }
   
       // Assign Permissions to Roles

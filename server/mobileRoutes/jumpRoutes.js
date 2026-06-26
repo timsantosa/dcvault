@@ -30,7 +30,7 @@ const jumpRoutes = (db) => {
   const logVideoUpload = multer({
     storage: multer.memoryStorage(),
     limits: {
-      fileSize: 20 * 1024 * 1024,
+      fileSize: 50 * 1024 * 1024, // 50 MB
       files: 1,
     },
   });
@@ -39,10 +39,10 @@ const jumpRoutes = (db) => {
     '/video',
     checkJumpEditPermission,
     logVideoUpload.single('video'),
-    (req, res) => uploadLogVideo(req, res)
+    (req, res) => uploadLogVideo(req, res, db)
   );
 
-  router.delete('/video', checkJumpEditPermission, (req, res) => deleteLogVideo(req, res));
+  router.delete('/video', checkJumpEditPermission, (req, res) => deleteLogVideo(req, res, db));
 
   // Pass the db to the controller functions
   router.route('/jump')

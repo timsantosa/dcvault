@@ -7,12 +7,14 @@ const { normalizeJumpVaultAssociationId } = require("../constants/vaultAssociati
 const NotificationUtils = require("../utils/notificationUtils");
 const { getOrCreateDirectConversation, sendMessageInConversation } = require("../utils/messagesUtils");
 const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../lib/cloudinaryMedia");
-
-function normalizeStoredVideoLink(v) {
-  if (v === null || v === undefined || v === "") return null;
-  const s = String(v).trim();
-  return s === "" ? null : s;
-}
+const {
+  normalizeStoredVideoLink,
+  userCanVerifyLogVideoMedia,
+  linkPendingLogVideoToJump,
+  destroyPendingLogVideosForJump,
+  attachPendingLogVideoToJumpSingle,
+  attachPendingLogVideoToJumps,
+} = require('../utils/pendingLogVideo');
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {
@@ -150,6 +152,51 @@ const addOrUpdateJump = async (req, res, db) => {
       resolvedVideoLink = normalizeStoredVideoLink(videoLinkRaw);
     }
 
+
+    // TODO: Move this to a helper function, and the same for drills.
+    const pendingLogVideoId =
+      bodyJump.pendingLogVideoId != null && parseInt(bodyJump.pendingLogVideoId, 10) > 0
+        ? parseInt(bodyJump.pendingLogVideoId, 10)
+        : null;
+    const canVerifyMedia = userCanVerifyLogVideoMedia(req.user);
+    const hasPendingId = pendingLogVideoId != null;
+
+    if (hasPendingId) {
+      const pending = await db.tables.PendingLogVideos.findByPk(pendingLogVideoId);
+      if (!pending) {
+        return res.status(404).json({ ok: false, message: 'Pending log video not found.' });
+      }
+      if (pending.athleteProfileId !== athleteProfileId || pending.entityKind !== 'jump') {
+        return res.status(400).json({ ok: false, message: 'Invalid pending log video for this jump.' });
+      }
+      const bodyUrl = jumpId && originalJump && !('videoLink' in bodyJump)
+        ? normalizeStoredVideoLink(originalJump.videoLink)
+        : normalizeStoredVideoLink(videoLinkRaw);
+      if (!bodyUrl || pending.videoUrl !== bodyUrl) {
+        return res.status(400).json({ ok: false, message: 'Video URL does not match pending upload.' });
+      }
+      if (pending.jumpId && jumpId && pending.jumpId !== jumpId) {
+        return res.status(400).json({ ok: false, message: 'Pending video belongs to another jump.' });
+      }
+      resolvedVideoLink = null;
+    } else {
+      if (!jumpId) {
+        const incoming = normalizeStoredVideoLink(videoLinkRaw);
+        if (incoming && !canVerifyMedia) {
+          return res.status(400).json({ ok: false, message: 'Log video must be approved before it is saved.' });
+        }
+      } else if (originalJump && 'videoLink' in bodyJump) {
+        const incoming = normalizeStoredVideoLink(bodyJump.videoLink);
+        const orig = normalizeStoredVideoLink(originalJump.videoLink);
+        if (incoming && incoming !== orig && !canVerifyMedia) {
+          return res.status(400).json({ ok: false, message: 'Log video must be approved before it is saved.' });
+        }
+      }
+      if (jumpId && 'videoLink' in bodyJump && !normalizeStoredVideoLink(bodyJump.videoLink)) {
+        await destroyPendingLogVideosForJump(db, jumpId);
+      }
+    }
+
     // Upsert jump (vaultAssociationId always set so we can unassociate with null)
     const upsertPayload = {
       id: jumpId,
@@ -163,7 +210,21 @@ const addOrUpdateJump = async (req, res, db) => {
       verified,
       vaultAssociationId,
     };
-    const [jumpRow, created] = await db.tables.Jumps.upsert(upsertPayload);
+    let jumpRow;
+    let created;
+    const transaction = await db.tables.Jumps.sequelize.transaction();
+    try {
+      [jumpRow, created] = await db.tables.Jumps.upsert(upsertPayload, { transaction });
+      if (hasPendingId) {
+        await linkPendingLogVideoToJump(db, pendingLogVideoId, jumpRow.id, athleteProfileId, { transaction });
+      }
+      await transaction.commit();
+    } catch (e) {
+      await transaction.rollback();
+      console.error('addOrUpdateJump upsert/link', e);
+      const code = e.statusCode || 500;
+      return res.status(code).json({ ok: false, message: e.message || 'Failed to save jump.' });
+    }
 
     if (jumpId && originalJump) {
       const previousVideoLink = normalizeStoredVideoLink(originalJump.videoLink);
@@ -198,7 +259,12 @@ const addOrUpdateJump = async (req, res, db) => {
     const jumpWithVaultAssociation = await db.tables.Jumps.findByPk(jumpRow.id, {
       include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
-    const jump = mapDbRowToJump(jumpWithVaultAssociation);
+    const jump = await attachPendingLogVideoToJumpSingle(
+      mapDbRowToJump(jumpWithVaultAssociation),
+      db,
+      req.user,
+      athleteProfileId,
+    );
 
     res.json({
       ok: true,
@@ -271,6 +337,8 @@ const getJump = async (req, res, db) => {
     // Add rejection info
     jump = await addRejectionInfoToJumps(jump, db);
 
+    jump = await attachPendingLogVideoToJumpSingle(jump, db, req.user, jump.athleteProfileId);
+
     res.json({ ok: true, jump });
   } catch (error) {
     console.error('Error in getJump:', error);
@@ -299,6 +367,8 @@ const deleteJump = async (req, res, db) => {
       }
 
       const previousVideoLink = normalizeStoredVideoLink(jump.videoLink);
+
+      await destroyPendingLogVideosForJump(db, jumpId, { transaction });
 
       // Check if jump was a PR
       const personalRecord = await db.tables.PersonalRecords.findOne({
@@ -435,6 +505,13 @@ const fetchJumps = async (req, res, db) => {
     // Add rejection info to all jumps
     returnedJumps = await addRejectionInfoToJumps(returnedJumps, db);
 
+    returnedJumps = await attachPendingLogVideoToJumps(
+      returnedJumps,
+      db,
+      req.user,
+      athleteProfileId,
+    );
+
     res.json({
       ok: true,
       jumps: returnedJumps,
@@ -555,7 +632,13 @@ async function verifyJump(req, res, db) {
     const jumpWithVaultAssociation = await db.tables.Jumps.findByPk(jumpId, {
       include: [{ model: db.tables.VaultAssociations, as: 'vaultAssociation', attributes: ['id', 'name'] }],
     });
-    const mappedJump = mapDbRowToJump(jumpWithVaultAssociation);
+    let mappedJump = mapDbRowToJump(jumpWithVaultAssociation);
+    mappedJump = await attachPendingLogVideoToJumpSingle(
+      mappedJump,
+      db,
+      req.user,
+      mappedJump.athleteProfileId,
+    );
     res.json({ ok: true, message, jump: mappedJump });
   } catch (error) {
     console.error('Error verifying jump:', error);
@@ -806,6 +889,16 @@ async function getUnverifiedMeetJumps(req, res, db) {
       jump: jumpsWithRejection[index]
     }));
 
+    for (let i = 0; i < returnedJumps.length; i++) {
+      const j = returnedJumps[i].jump;
+      returnedJumps[i].jump = await attachPendingLogVideoToJumpSingle(
+        j,
+        db,
+        req.user,
+        j.athleteProfileId,
+      );
+    }
+
     res.json({
       ok: true,
       unverifiedJumps: returnedJumps,
@@ -988,9 +1081,16 @@ async function getFavoriteJumps(req, res, db) {
       }
     });
 
+    const jumpsOnly = formattedFavorites.map((f) => f.jump);
+    const withPending = await attachPendingLogVideoToJumps(jumpsOnly, db, req.user, athleteProfileId);
+    const mergedFavorites = formattedFavorites.map((f, i) => ({
+      ...f,
+      jump: { ...withPending[i], isFavorite: true },
+    }));
+
     res.json({
       ok: true,
-      favoriteJumps: formattedFavorites
+      favoriteJumps: mergedFavorites
     });
   } catch (error) {
     console.error('Error in getFavoriteJumps:', error);
@@ -1012,7 +1112,8 @@ async function getTopMeetJumps(req, res, db) {
 
     const { prMap, overallPrJumpId } = await getMeetJumpsPrInfo(db, athleteProfileId);
     const jumpRows = await fetchVerifiedMeetJumps(db, athleteProfileId, { limit });
-    const jumps = formatJumpsWithPrFlags(jumpRows, prMap, overallPrJumpId);
+    let jumps = formatJumpsWithPrFlags(jumpRows, prMap, overallPrJumpId);
+    jumps = await attachPendingLogVideoToJumps(jumps, db, req.user, athleteProfileId);
 
     res.json({
       ok: true,
@@ -1038,12 +1139,29 @@ async function getTopIndoorOutdoorMeetJumps(req, res, db) {
       fetchVerifiedMeetJumps(db, athleteProfileId, { facilitySetting: 'Outdoor', limit: 1 }),
     ]);
 
-    const indoorJump = indoorRows.length > 0
+    let indoorJump = indoorRows.length > 0
       ? formatJumpsWithPrFlags(indoorRows, prMap, overallPrJumpId)[0]
       : null;
-    const outdoorJump = outdoorRows.length > 0
+    let outdoorJump = outdoorRows.length > 0
       ? formatJumpsWithPrFlags(outdoorRows, prMap, overallPrJumpId)[0]
       : null;
+
+    if (indoorJump) {
+      indoorJump = await attachPendingLogVideoToJumpSingle(
+        indoorJump,
+        db,
+        req.user,
+        athleteProfileId,
+      );
+    }
+    if (outdoorJump) {
+      outdoorJump = await attachPendingLogVideoToJumpSingle(
+        outdoorJump,
+        db,
+        req.user,
+        athleteProfileId,
+      );
+    }
 
     res.json({
       ok: true,

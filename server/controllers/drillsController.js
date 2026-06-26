@@ -1,11 +1,13 @@
 const { validatePoleBrand } = require("../utils/poleBrandValidation");
 const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../lib/cloudinaryMedia");
-
-function normalizeStoredVideoLink(v) {
-  if (v === null || v === undefined || v === "") return null;
-  const s = String(v).trim();
-  return s === "" ? null : s;
-}
+const {
+  normalizeStoredVideoLink,
+  userCanVerifyLogVideoMedia,
+  linkPendingLogVideoToDrill,
+  destroyPendingLogVideosForDrill,
+  attachPendingLogVideoToDrillSingle,
+  attachPendingLogVideoToDrills,
+} = require('../utils/pendingLogVideo');
 
 const addOrUpdateDrill = async (req, res, db) => {
   try {
@@ -19,6 +21,11 @@ const addOrUpdateDrill = async (req, res, db) => {
     // Validate required fields
     if (!athleteProfileId || !date || !hardMetrics?.drillType) {
       return res.status(400).json({ ok: false, message: 'Athlete ID, Date, and Drill Type are required.' });
+    }
+
+    const profileId = parseInt(athleteProfileId, 10);
+    if (Number.isNaN(profileId)) {
+      return res.status(400).json({ ok: false, message: 'Invalid athlete profile id.' });
     }
 
     // New drills come in with an id of -1
@@ -61,16 +68,73 @@ const addOrUpdateDrill = async (req, res, db) => {
       resolvedVideoLink = normalizeStoredVideoLink(videoLinkRaw);
     }
 
+    const pendingLogVideoId =
+      bodyDrill.pendingLogVideoId != null && parseInt(bodyDrill.pendingLogVideoId, 10) > 0
+        ? parseInt(bodyDrill.pendingLogVideoId, 10)
+        : null;
+    const canVerifyMedia = userCanVerifyLogVideoMedia(req.user);
+    const hasPendingId = pendingLogVideoId != null;
+
+    if (hasPendingId) {
+      const pending = await db.tables.PendingLogVideos.findByPk(pendingLogVideoId);
+      if (!pending) {
+        return res.status(404).json({ ok: false, message: 'Pending log video not found.' });
+      }
+      if (pending.athleteProfileId !== profileId || pending.entityKind !== 'drill') {
+        return res.status(400).json({ ok: false, message: 'Invalid pending log video for this drill.' });
+      }
+      const bodyUrl = drillId && originalDrill && !('videoLink' in bodyDrill)
+        ? normalizeStoredVideoLink(originalDrill.videoLink)
+        : normalizeStoredVideoLink(videoLinkRaw);
+      if (!bodyUrl || pending.videoUrl !== bodyUrl) {
+        return res.status(400).json({ ok: false, message: 'Video URL does not match pending upload.' });
+      }
+      if (pending.drillId && drillId && pending.drillId !== drillId) {
+        return res.status(400).json({ ok: false, message: 'Pending video belongs to another drill.' });
+      }
+      resolvedVideoLink = null;
+    } else {
+      if (!drillId) {
+        const incoming = normalizeStoredVideoLink(videoLinkRaw);
+        if (incoming && !canVerifyMedia) {
+          return res.status(400).json({ ok: false, message: 'Log video must be approved before it is saved.' });
+        }
+      } else if (originalDrill && 'videoLink' in bodyDrill) {
+        const incoming = normalizeStoredVideoLink(bodyDrill.videoLink);
+        const orig = normalizeStoredVideoLink(originalDrill.videoLink);
+        if (incoming && incoming !== orig && !canVerifyMedia) {
+          return res.status(400).json({ ok: false, message: 'Log video must be approved before it is saved.' });
+        }
+      }
+      if (drillId && 'videoLink' in bodyDrill && !normalizeStoredVideoLink(bodyDrill.videoLink)) {
+        await destroyPendingLogVideosForDrill(db, drillId);
+      }
+    }
+
     // Upsert drill
-    const [drillRow, created] = await db.tables.Drills.upsert({
-      id: drillId,
-      athleteProfileId,
-      date,
-      notes,
-      videoLink: resolvedVideoLink,
-      ...flattenedHardMetrics,
-      softMetrics,
-    });
+    let drillRow;
+    let created;
+    const transaction = await db.tables.Drills.sequelize.transaction();
+    try {
+      [drillRow, created] = await db.tables.Drills.upsert({
+        id: drillId,
+        athleteProfileId: profileId,
+        date,
+        notes,
+        videoLink: resolvedVideoLink,
+        ...flattenedHardMetrics,
+        softMetrics,
+      }, { transaction });
+      if (hasPendingId) {
+        await linkPendingLogVideoToDrill(db, pendingLogVideoId, drillRow.id, profileId, { transaction });
+      }
+      await transaction.commit();
+    } catch (e) {
+      await transaction.rollback();
+      console.error('addOrUpdateDrill upsert/link', e);
+      const code = e.statusCode || 500;
+      return res.status(code).json({ ok: false, message: e.message || 'Failed to save drill.' });
+    }
 
     if (drillId && originalDrill) {
       const previousVideoLink = normalizeStoredVideoLink(originalDrill.videoLink);
@@ -79,7 +143,8 @@ const addOrUpdateDrill = async (req, res, db) => {
       }
     }
 
-    const drill = mapDbRowToDrill(drillRow);
+    let drill = mapDbRowToDrill(drillRow);
+    drill = await attachPendingLogVideoToDrillSingle(drill, db, req.user, profileId);
 
     res.json({
       ok: true,
@@ -114,6 +179,8 @@ const getDrill = async (req, res, db) => {
     let drill = mapDbRowToDrill(drillRow);
     drill.isFavorite = !!favoriteDrill;
 
+    drill = await attachPendingLogVideoToDrillSingle(drill, db, req.user, drill.athleteProfileId);
+
     res.json({ ok: true, drill });
   } catch (error) {
     console.error('Error in getDrill:', error);
@@ -142,6 +209,8 @@ const deleteDrill = async (req, res, db) => {
     const transaction = await db.tables.Drills.sequelize.transaction();
 
     try {
+      await destroyPendingLogVideosForDrill(db, drillId, { transaction });
+
       // Check if this drill is favorited
       const favoriteDrill = await db.tables.FavoriteDrills.findOne({
         where: { drillId, athleteProfileId },
@@ -204,14 +273,16 @@ const fetchDrills = async (req, res, db) => {
       order: [['date', 'DESC']], // Most recent first
     });
 
-    const returnedDrills = drills.map(mapDbRowToDrill).map((drill => ({
+    const returnedDrills = drills.map(mapDbRowToDrill).map((drill) => ({
       ...drill,
       isFavorite: favoriteMap.has(drill.id),
-    })));
+    }));
+
+    const withPending = await attachPendingLogVideoToDrills(returnedDrills, db, req.user, athleteProfileId);
 
     res.json({
       ok: true,
-      drills: returnedDrills,
+      drills: withPending,
     });
   } catch (error) {
     console.error('Error in fetchDrills:', error);
