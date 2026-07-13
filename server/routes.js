@@ -525,16 +525,20 @@ module.exports = (app, db) => {
   });
   
 
-    app.post('/event/finalize', (req, res) => {
-        if (!req.body.purchaseInfo) {
-            res.status(400).send({ok: false, message: 'missing purchase details'})
-        } else {
-            let event_athlete = req.body.purchaseInfo.athleteInfo
-            let dateLst = ""
+    app.post('/event/finalize', async (req, res) => {
+        try {
+            if (!req.body.purchaseInfo) {
+                return res.status(400).send({ok: false, message: 'missing purchase details'})
+            }
 
-            //dateLst += event_athlete.date1
-            //console.log(req.body.purchaseInfo)
-            let athleteData = {
+            const event_athlete = req.body.purchaseInfo.athleteInfo
+            const ageInt = parseInt(event_athlete.age, 10)
+
+            if (event_athlete.age === '' || event_athlete.age == null || isNaN(ageInt)) {
+                return res.status(400).send({ok: false, message: 'invalid or missing age'})
+            }
+
+            const athleteData = {
                 firstName: event_athlete.fname,
                 lastName: event_athlete.lname,
                 email: event_athlete.email,
@@ -550,25 +554,24 @@ module.exports = (app, db) => {
                 division: event_athlete.division,
                 accomplishments: event_athlete.accomplishments,
                 dates: event_athlete.dates1,
-                age: event_athlete.age
-
+                age: ageInt
             }
 
-            db.tables.EventAthletes.create(athleteData)
+            await db.tables.EventAthletes.create(athleteData)
 
-            let purchaseInfo = req.body.purchaseInfo
-            db.tables.EventPurchases.create({
+            const purchaseInfo = req.body.purchaseInfo
+            await db.tables.EventPurchases.create({
                 waiverSignatory: purchaseInfo.agreement.name,
                 waiverDate: purchaseInfo.agreement.date,
                 paymentId: purchaseInfo['event-payment'].paymentId,
                 payerId: purchaseInfo['event-payment'].payerId,
                 athlete: event_athlete.fname + event_athlete.lname
-            }).then(() => {
-                res.send({ok: true, message: 'purchase record saved'})
             })
-                .catch((error) => {
-                    res.status(500).send({ok: false, message: 'a db error has occurred', error: error})
-                })
+
+            res.send({ok: true, message: 'purchase record saved'})
+        } catch (error) {
+            console.error('Event Finalize Error:', error)
+            res.status(500).send({ok: false, message: 'a db error has occurred', error: error.message})
         }
     })
 
