@@ -12,7 +12,9 @@
     "watch": "./node_modules/.bin/webpack -d --watch",
     "prod": "./node_modules/.bin/webpack -p",
     "start": "nodemon ./server/app.js | tee -a 'server.log'",
-    "quick": "npm run build && npm start"
+    "quick": "npm run build && npm start",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "author": "",
   "license": "ISC",
@@ -49,7 +51,7 @@
   },
   "devDependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
-    "chai": "^4.1.2",
-    "supertest": "^3.0.0"
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
   }
 }
