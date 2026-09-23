@@ -3,7 +3,7 @@
 **Version:** 1.2 (client-review updates)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-09-15  
+**Last updated:** 2026-09-22  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)
 
 This document is the **source of truth**. The wireframes describe how MVP screens look and walk; if they ever disagree, update this file first, then the wireframes.
@@ -143,8 +143,6 @@ Class-type color lives on the **list rows**, not as the only calendar signal. Th
 
 Exact glyph is a visual-design choice; the requirement is that reserved days are distinguishable at a glance without relying on class-type color.
 
-
-
 ### Display per class
 
 - Title, start/end time, location, description
@@ -168,8 +166,6 @@ Show:
 Example: `8 remaining · 3 reserved · 4 expire Sep 30`.
 
 On reserve (and cancel, when a credit returns), **animate** the remaining and reserved numbers so the spend is obvious without a confirm sheet (count change, brief emphasis on the chip). Exact motion is a visual-design choice.
-
-
 
 ### Actions
 
@@ -217,28 +213,28 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 ### Configurable properties
 
 
-| Property                          | Notes                                                                                                                                              |
-| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Title                             |                                                                                                                                                    |
-| Description                       |                                                                                                                                                    |
-| Start / end time                  | Per occurrence; custom series may use **different times on different days**                                                                        |
-| Location                          |                                                                                                                                                    |
-| Allowed athlete groups            | Fly Kids, Open/All Ages, Adult, Elite Development, etc.                                                                                            |
-| Age limits                        | Optional                                                                                                                                           |
-| Recurrence                        | Simple weekly **or custom multi-day** (see below). Edits apply to **single instance** or **entire series**                                         |
-| Reservation cutoff                | Duration **before class start** (e.g. 24 hours before), not a clock time that day                                                                  |
-| Cancellation cutoff               | Duration **before class start** (e.g. 24 hours before), not a clock time that day                                                                  |
-| Max capacity                      | Single number per class/session                                                                                                                    |
-| Cost                              | **Credits and/or money**: credit cost (0, 1, …) and/or dollar cost for paid events / lessons                                                       |
-| Visibility                        | Hidden vs visible on member schedule                                                                                                               |
-| Color                             | Manual or default from athlete group                                                                                                               |
-| `isReservable`                    | `false` for display-only items (meets, breaks)                                                                                                     |
-| Requires approval                 | **Not used in MVP.** Private lessons reserve immediately like other classes. Approval flow is Phase 2+                                             |
-| Sends notification on reservation | Available as a class setting; MVP private lessons do not require a special request/approve loop                                                    |
-| Coaching staff                    | Multiple; coaches have athlete profiles                                                                                                            |
-| Class note / pole suggestion      | Free-text note shown to members (e.g., "Bring your 14' pole")                                                                                      |
-| Max attendees (lessons)           | Configurable — supports private → semi-private adjustment                                                                                          |
-| Lifecycle                         | **Active**, **canceled** (still on calendar, reversible), or **deleted** (removed, confirmed, not reversible)                                      |
+| Property                          | Notes                                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Title                             |                                                                                                               |
+| Description                       |                                                                                                               |
+| Start / end time                  | Per occurrence; custom series may use **different times on different days**                                   |
+| Location                          |                                                                                                               |
+| Allowed athlete groups            | Fly Kids, Open/All Ages, Adult, Elite Development, etc.                                                       |
+| Age limits                        | Optional                                                                                                      |
+| Recurrence                        | Simple weekly **or custom multi-day** (see below). Edits apply to **single instance** or **entire series**    |
+| Reservation cutoff                | Duration **before class start** (e.g. 24 hours before), not a clock time that day                             |
+| Cancellation cutoff               | Duration **before class start** (e.g. 24 hours before), not a clock time that day                             |
+| Max capacity                      | Single number per class/session                                                                               |
+| Cost                              | **Credits and/or money**: credit cost (0, 1, …) and/or dollar cost for paid events / lessons                  |
+| Visibility                        | Hidden vs visible on member schedule                                                                          |
+| Color                             | Manual or default from athlete group                                                                          |
+| `isReservable`                    | `false` for display-only items (meets, breaks)                                                                |
+| Requires approval                 | **Not used in MVP.** Private lessons reserve immediately like other classes. Approval flow is Phase 2+        |
+| Sends notification on reservation | Available as a class setting; MVP private lessons do not require a special request/approve loop               |
+| Coaching staff                    | Multiple; coaches have athlete profiles                                                                       |
+| Class note / pole suggestion      | Free-text note shown to members (e.g., "Bring your 14' pole")                                                 |
+| Max attendees (lessons)           | Configurable — supports private → semi-private adjustment                                                     |
+| Lifecycle                         | **Active**, **canceled** (still on calendar, reversible), or **deleted** (removed, confirmed, not reversible) |
 
 
 
@@ -246,16 +242,17 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 ### Behaviors by use case
 
 
-| Use case                        | MVP behavior                                                                                          |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Open / all-ages classes         | Reservable; group restrictions via config                                                             |
-| Age-restricted / group-specific | Reservable; eligibility enforced                                                                      |
-| Private lessons                 | Reservable **immediately** (same as group classes). No request/approve in MVP. Payment model TBD §7   |
-| Semi-private lessons            | Same as private; staff increases capacity as needed                                                   |
-| Meets                           | **Visible only, not reservable**                                                                      |
-| DC Vault hosted events          | Configurable credit and/or dollar cost; reservable if `isReservable`                                  |
-| Non-bookable items (breaks)     | Visible, not reservable                                                                               |
-| Community events                | Free (`credit cost = 0`), sign-up if reservable                                                       |
+| Use case                        | MVP behavior                                                                                        |
+| ------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Open / all-ages classes         | Reservable; group restrictions via config                                                           |
+| Age-restricted / group-specific | Reservable; eligibility enforced                                                                    |
+| Private lessons                 | Reservable **immediately** (same as group classes). No request/approve in MVP. Payment model TBD §7 |
+| Semi-private lessons            | Same as private; staff increases capacity as needed                                                 |
+| Meets                           | **Visible only, not reservable**                                                                    |
+| DC Vault hosted events          | Configurable credit and/or dollar cost; reservable if `isReservable`                                |
+| Non-bookable items (breaks)     | Visible, not reservable                                                                             |
+| Community events                | Free (`credit cost = 0`), sign-up if reservable                                                     |
+
 
 
 
@@ -277,8 +274,6 @@ These are different actions:
 
 Canceling a **member’s reservation** is a separate action (see §8 / §9) and does not delete the class.
 
-
-
 ### Cost: credits and/or money
 
 Staff choose how the class is paid for:
@@ -288,8 +283,6 @@ Staff choose how the class is paid for:
 - Both, if a class should consume a credit **and** collect money (rare; keep the fields independent so staff are not forced into one model).
 
 Charging mechanics for dollar cost are an engineering design session (§7). The configuration must exist in MVP so events and lessons can be described correctly.
-
-
 
 ### Duplication
 
@@ -346,8 +339,6 @@ Build the credit system on a **flexible expiration model**:
 MVP packages are **a total number of classes for a period** (configurable count, including effectively unlimited). A later package style — **N classes per week during the period** — is Phase 2+ (see §15). Do not block MVP on weekly-allotment rules, but keep the inventory model from assuming “total count” is the only product that will ever exist.
 
 When weekly-allotment packages ship: unused classes **do not roll**. If the package is 3 per week and the athlete only uses 1, the leftover 2 **vanish at the end of that week**. The point is to incentivize showing up more often.
-
-
 
 ### Entity relationships
 
@@ -516,16 +507,17 @@ An athlete is an **active member** if they have purchased a package for the curr
 ### Permission: `manage_credits` (separate from `manage_classes`)
 
 
-| Action                                   | MVP                    |
-| ---------------------------------------- | ---------------------- |
-| Add credits to athlete                   | Yes (new credit record)|
-| Remove credits from athlete              | Yes (new credit record)|
-| Cancel reservation on behalf of user     | Yes (`manage_classes`) |
-| Restore credit after late cancel         | Same as add credits    |
-| Override cutoff / eligibility            | **No** — future        |
-| Optional note/reason on actions          | **No** — future        |
-| Audit log                                | **No** — future        |
-| Notify user on credit/reservation change | **Yes**                |
+| Action                                   | MVP                     |
+| ---------------------------------------- | ----------------------- |
+| Add credits to athlete                   | Yes (new credit record) |
+| Remove credits from athlete              | Yes (new credit record) |
+| Cancel reservation on behalf of user     | Yes (`manage_classes`)  |
+| Restore credit after late cancel         | Same as add credits     |
+| Override cutoff / eligibility            | **No** — future         |
+| Optional note/reason on actions          | **No** — future         |
+| Audit log                                | **No** — future         |
+| Notify user on credit/reservation change | **Yes**                 |
+
 
 
 
@@ -687,24 +679,26 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 ## 13. Permissions Summary
 
 
-| Permission               | Purpose                                                                              | MVP                       |
-| ------------------------ | ------------------------------------------------------------------------------------ | ------------------------- |
-| `reserve_classes`        | Access new Schedule/reservation experience                                           | Yes                       |
-| `manage_classes`         | Create/edit/cancel/delete classes; cancel reservations on behalf of users            | Yes                       |
-| `manage_credits`         | Manually add/remove athlete credits (as new records)                                 | Yes                       |
-| `manage_attendance`      | Check-in interface                                                                   | Yes                       |
-| `view_class_roster`      | See attendee names/photos on class detail                                            | Yes                       |
-| `edit_training_group`    | Change athlete training group on **Edit Profile**                                    | Yes                       |
-| `manage_feature_toggles` | —                                                                                    | Not used                  |
-| `manage_discounts`       | —                                                                                    | Deferred (website system) |
+| Permission               | Purpose                                                                   | MVP                       |
+| ------------------------ | ------------------------------------------------------------------------- | ------------------------- |
+| `reserve_classes`        | Access new Schedule/reservation experience                                | Yes                       |
+| `manage_classes`         | Create/edit/cancel/delete classes; cancel reservations on behalf of users | Yes                       |
+| `manage_credits`         | Manually add/remove athlete credits (as new records)                      | Yes                       |
+| `manage_attendance`      | Check-in interface                                                        | Yes                       |
+| `view_class_roster`      | See attendee names/photos on class detail                                 | Yes                       |
+| `edit_training_group`    | Change athlete training group on **Edit Profile**                         | Yes                       |
+| `manage_feature_toggles` | —                                                                         | Not used                  |
+| `manage_discounts`       | —                                                                         | Deferred (website system) |
 
 
 
 
-### Roles (informal)
+### Roles
 
-- **Admin:** all permissions.
-- **Coaches:** typically `manage_attendance`; may also get `manage_classes`, `manage_credits`, `edit_training_group`, `view_class_roster` — assign per person.
+- **Admin** (seeded): all permissions, including the six class-reservation keys.
+- **Base** (seeded): existing member defaults plus `view_class_roster`. Does **not** include `reserve_classes` (dark-launch gate).
+- **Coach** (seeded if missing): `manage_attendance` only. Seed does not add permissions if a `Coach` role already exists. Coaches also have Base, so they get `view_class_roster` from Base. They may also get `manage_classes`, `manage_credits`, and `edit_training_group` — assign per person.
+- **`reserve_classes`:** still granted per user for dark launch. Admin has it via the Admin role; coaches and members do not get it from seed.
 
 ---
 
@@ -865,14 +859,14 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 ### Task 1: Permissions foundation
 
-- [ ] **1.1 — Seed new permissions**
+- [x] **1.1 — Seed new permissions**
   - Add to `dcvault/server/db/seedPermissions.js`: `reserve_classes`, `manage_classes`, `manage_credits`, `manage_attendance`, `view_class_roster`, `edit_training_group`.
   - Assign to appropriate roles (admin gets all; document coach defaults).
-  - *Completion notes:*
+  - *Completion notes:* 2026-09-22. Seeded all six keys. Admin gets the full catalog. Base gained `view_class_roster` only (`reserve_classes` stays off Base). `Coach` is `findOrCreate`; defaults (`manage_attendance`) are assigned only when the role is newly created. Existing Coach roles are left alone. Catalog + role lists exported for unit tests. §13 Roles updated.
 
-- [ ] **1.2 — Mobile permission helpers**
+- [x] **1.2 — Mobile permission helpers**
   - Add typed permission checks in mobile app (mirror existing pattern in auth/permissions).
-  - *Completion notes:*
+  - *Completion notes:* 2026-09-22. Added `canReserveClasses`, `canManageClasses`, `canManageCredits`, `canManageAttendance`, `canViewClassRoster`, `canEditTrainingGroup` on `UserPermissions`. Tests in `__tests__/model/UserPermissions.test.ts`. Session/refresh plumbing unchanged.
 
 
 
@@ -1095,3 +1089,4 @@ Read dcvault/docs/CLASS_RESERVATION_SYSTEM.md (especially §18 Agent Instruction
 Implement Task [X.Y — task name].
 When done: check off the task, update the PRD with any decision changes, and give me manual test steps + test commands.
 ```
+
