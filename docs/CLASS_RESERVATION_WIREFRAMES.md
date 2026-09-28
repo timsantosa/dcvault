@@ -3,8 +3,8 @@
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Audience:** Client design review (walkthrough)  
 **Status:** Proposed UI for MVP / dark launch — not pixel-final  
-**Last updated:** 2026-09-15  
-**Aligned with PRD:** v1.2
+**Last updated:** 2026-09-27  
+**Aligned with PRD:** v1.3
 
 This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail, data models, and later-phase features live in the PRD and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree, the **PRD is the source of truth**.
 
@@ -14,7 +14,7 @@ This document is the screen-by-screen version of the PRD. It is meant to be walk
 
 1. Start with **Who sees what** so it is clear this is a permission-gated dark launch, not an overnight cutover.
 2. Walk **member flows first** (A–E). That is what most people will actually use.
-3. Then walk **coach flows** (F–H) and **admin flows** (I–K). Those screens are hidden unless the person has the matching permission.
+3. Then walk **coach flows** (F–H) and **admin flows** (I–L). Those screens are hidden unless the person has the matching permission. Package catalog editing (Flow L) does not need to be in the first walkthrough.
 4. End with **Not in MVP** so waitlists, in-app payment, pole pickers, subscriptions, and automatic discounts do not derail the review.
 
 Wireframes follow the existing DC Vault app: Schedule tab header (messages / logo / more), expandable month + agenda list, red accent (`#bf2026`), and the same bottom tabs (Roster, Schedule, Profile, Convert, Journal). New screens reuse those patterns rather than introducing a separate admin app.
@@ -33,7 +33,7 @@ Beta is per-user, using the existing permissions system. Non-beta members keep t
 | `reserve_classes`     | Beta members               | New Schedule tab, reserve / cancel, credits on profile                       |
 | `view_class_roster`   | Members + coaches (MVP)    | Names and photos on class detail                                             |
 | `manage_attendance`   | Coaches                    | Check-in and walk-ins                                                        |
-| `manage_classes`      | Coaches (optional) / admin | Create / edit / cancel / delete classes, cancel for someone else             |
+| `manage_classes`      | Coaches (optional) / admin | Create / edit / cancel / delete classes, cancel for someone else, edit the class-package catalog |
 | `manage_credits`      | Admin (coaches optional)   | Add / remove credits on an athlete (each adjustment is its own history line) |
 | `edit_training_group` | Admin (coaches optional)   | Training group field on **Edit Profile**                                     |
 
@@ -61,9 +61,9 @@ No reserve_classes          Has reserve_classes
 MEMBER                          COACH                         ADMIN
 Schedule tab ─────────┐         same Schedule +               same as coach +
   ├ Class detail      │           Create Class                Adjust Credits
-  │   ├ Reserve       │           Check In                    Edit Profile
-  │   └ Cancel        │           Message class                 (training group)
-  └ Upcoming list     │           Cancel for member
+  │   ├ Reserve       │           Check In                    Class packages
+  │   └ Cancel        │           Message class               Edit Profile
+  └ Upcoming list     │           Cancel for member             (training group)
 Athlete profile ──────┘           Cancel / delete class
   ├ Progress / credits
   └ History
@@ -380,11 +380,11 @@ Credits bought on the website show up here automatically. Staff no longer need t
 
 
 
-## Flow D — Private lesson (same reserve path as other classes)
+## Flow D — Private lesson (pay at reserve, no card charge)
 
-Private lessons use the same Schedule tab and the **same immediate Reserve** as a group class. There is **no request / wait / approve loop in MVP**. (That approval system is a later phase if we want it.)
+Private lessons use the same Schedule tab. There is **no request / wait / approve loop in MVP**. A lesson is a normal class configured with a dollar price, a small capacity, and notify-on-reserve. It does not spend group credits, and the website does not sell lesson packs.
 
-Payment details (credit vs dollar charge at reserve) are still an engineering decision. The **interaction** for MVP is: tap Reserve → spot is theirs (same one-tap as Flow A; chip animates).
+Reserving a credit class is still one tap (Flow A). Reserving a **dollar** class asks the member to confirm the price, then saves the spot. MVP does not call PayPal. Staff are notified and send the invoice themselves.
 
 ### D1. Member sees a lesson slot
 
@@ -393,14 +393,28 @@ Payment details (credit vs dollar charge at reserve) are still an engineering de
 │  │ 5:00–5:45 PM            0/1  │   │
 │  │ Private Lesson               │   │
 │  │ Coach Ramirez                │   │
-│  │ $45 or 1 lesson credit       │   │
+│  │ $45                          │   │
 │  │           [ Reserve ]        │   │
 │  └──────────────────────────────┘   │
 ```
 
-Reserve is one tap, with whatever cost the class is configured for (credits, money, or both). Optional note still exists on class detail (“Working 13' 7" this week”). To give the spot back, they Cancel — same confirm as Flow B.
+### D2. Price confirm (no charge)
 
-If the slot is already taken: **Full** — same hard stop as group classes.
+```
+│  ┌─────────────────────────────┐    │
+│  │ Reserve this lesson?        │    │
+│  │                             │    │
+│  │ Private Lesson · $45        │    │
+│  │ Tue Aug 25 · 5:00–5:45 PM   │    │
+│  │                             │    │
+│  │ Your spot is saved. A coach │    │
+│  │ will send the invoice.      │    │
+│  │                             │    │
+│  │  [ Back ]    [ Reserve ]    │    │
+│  └─────────────────────────────┘    │
+```
+
+Optional note still exists on class detail (“Working 13' 7" this week”). To give the spot back, they Cancel — same confirm as Flow B. If the slot is already taken: **Full**.
 
 ---
 
@@ -985,7 +999,25 @@ These sit with the existing staff buttons (View Contact, View Jumps, Edit Roles)
 
 Typical uses: excused late cancel, walk-in with no credits, goodwill makeup, fixing a website sync mistake.
 
-Unlimited / no-expiration packages are assignable here too (staff pick or create that package type). Members just see a remaining count that does not expire.
+### I3. End a package (unlimited, or the whole grant)
+
+Add and remove still create a new history line. They cannot take an unlimited package away, because there is no count to subtract. **End package** sets that grant’s expiration to now and keeps the row.
+
+```
+│  Unlimited Classes                  │
+│  through Nov 30                     │
+│                                     │
+│  [ End package ]                    │
+│                                     │
+│  Ends Emma’s unlimited package      │
+│  today. The history line stays.     │
+│  Classes she already reserved       │
+│  stay reserved.                     │
+│                                     │
+│  [ Back ]          [ End package ]  │
+```
+
+Afterward the chip falls back to any finite credits she still has, or to 0. Staff who want to leave her a few classes end this grant, then add a finite one.
 
 ---
 
@@ -1061,21 +1093,67 @@ Tapping opens that class detail **and** the class conversation. MVP does not add
 
 
 
-# Part 4 — Website (member does not do this in the app)
+## Flow L — Class packages
 
-MVP registration and payment stay on the **existing website**. After PayPal, credits appear on the selected athlete in the app — no Zen Planner typing for that beta user.
+**Permission:** `manage_classes`  
+**Where:** app, not the website. The website only reads the list.
+
+Staff create the products registration can sell. The first nine (Fly-Kids, Adult, All Ages, including Unlimited) are seeded once. After that, this screen is how packages change.
 
 ```
-Website (unchanged for MVP)          App (new)
+│  ←           Class packages        │
+│                                     │
+│  ALL AGES                           │
+│  4 Classes              $250    [>] │
+│  8 Classes              $425    [>] │
+│  15 Classes             $575    [>] │
+│  Unlimited Classes      $825    [>] │
+│                                     │
+│  [ + New package ]                  │
+│                                     │
+│  New package                        │
+│  Name          8 Classes            │
+│  Price         $425                 │
+│  Group         All Ages          ▾  │
+│  Credits       8                    │
+│  Unlimited                     [OFF]│
+│  Who can see it                     │
+│  (•) Everyone                       │
+│  ( ) Invite level  1 ▾              │
+│  Show on website               [ON] │
+│                                     │
+│  [ Save ]                           │
+```
+
+Turning **Show on website** off hides the package from registration and leaves credits already purchased. Invite level uses the same 1–5 codes as today. A hidden package stays off the form until someone enters a code of that level.
+
+---
+
+
+
+# Part 4 — Website (member does not do this in the app)
+
+MVP registration and payment stay on the **existing website**. A database flag chooses which package list checkout uses.
+
+**Flag off (default):** today’s radios, including invite-only groups. No credits are created. Staff add credits by hand.
+
+**Flag on:** the quarter picker stays. Class options come from the package catalog. Public packages show for everyone. A valid invite code reveals hidden packages of that invite level, and the code is still used up on purchase. PayPal, waivers, apparel, and facility stay. After payment, one credit grant appears on that athlete.
+
+```
+Website (catalog flag on)           App (new)
 ┌──────────────────────────┐         ┌──────────────────────────┐
-│ Choose package           │         │ Emma · 16 remaining      │
-│ Apply discount code      │  ──►    │ 0 reserved               │
-│ Sign waivers             │  sync   │ 16 expire Sep 30         │
-│ PayPal checkout          │         │ Reserve is enabled       │
+│ Choose quarter           │         │ Emma · 16 remaining      │
+│ Choose catalog package   │  ──►    │ 0 reserved               │
+│ Invite code if needed    │  sync   │ 16 expire Sep 30         │
+│ Sign waivers · PayPal    │         │ Reserve is enabled       │
 └──────────────────────────┘         └──────────────────────────┘
 ```
 
+People who already paid before the flag is turned on do not get grants automatically.
+
 If they buy **next quarter early**, those credits have a start date. The app shows them as “starts Oct 1” and will not spend them on this quarter’s classes.
+
+Admins with `manage_classes` edit the catalog in the app (name, price, who it’s for, class count or unlimited, public or invite-only). Turning a package off hides it here and leaves credits people already bought.
 
 ---
 
@@ -1135,7 +1213,9 @@ Call these out so the review stays on launch scope:
 - **Auto-renewing memberships** — admin configures the cadence; customer signs up and can cancel anytime
 - **Weekly-allotment packages** (e.g. 3 classes per week for the quarter; unused classes vanish that week) — MVP is total classes per period
 - **Package expiration push** (~2 weeks before a package runs out)
-- Private lesson request / approve (lessons reserve immediately)
+- Private lesson request / approve (lessons reserve immediately after a price confirm)
+- Charging a card when reserving a lesson (MVP shows the price; a coach sends the invoice)
+- Lesson packs sold on the website registration form
 - Structured pole picker (free-text note only)
 - Bulk “reserve every Tuesday”
 - Admin override of cutoffs / eligibility (workaround: add a credit)
@@ -1159,7 +1239,7 @@ Call these out so the review stays on launch scope:
 | 1–2   | Who sees what / dark launch                     | Confirm beta is permission-based, Zen Planner stays                 |
 | 2–6   | Flow A + B — reserve and cancel                 | Confirm one-tap Reserve + credit animation; cancel still confirms   |
 | 6–8   | Flow C — full / ineligible / no credits         | Confirm classes stay visible with a reason                          |
-| 8–9   | Flow D — private lesson as immediate reserve    | Confirm no approval loop for launch                                 |
+| 8–9   | Flow D — private lesson price confirm       | Confirm no approval loop and no card charge        |
 | 9–12  | Flow E — profile meter + history                | Confirm “attended” = checked in                                     |
 | 12–15 | Flow F — check-in + walk-in                     | Confirm tap-to-present; two-step grant+check-in when at zero        |
 | 15–17 | Flow G — create class sheet                     | Confirm custom series, relative cutoffs, cancel vs delete           |
@@ -1178,14 +1258,14 @@ These used to be open UI questions. They are now in the PRD as well.
 
 1. **Agenda:** single scrolling list, past dimmed, load about 2 weeks of past. No Upcoming / Past toggle.
 2. **Roster for all members:** OK for now.
-3. **Reserve is one tap on the schedule row** (no confirm sheet). Credit chip animates remaining / reserved. Opening detail is optional. Cancel still confirms.
+3. **Reserve is one tap on the schedule row** for credit classes (no confirm sheet). Credit chip animates remaining / reserved. Opening detail is optional. Cancel still confirms. Dollar-cost classes confirm the price and do not charge a card.
 4. **Walk-in with zero credits:** two steps, one flow (add credit, then check in).
-5. **Private lessons:** no approval system for MVP; immediate reserve / purchase.
-6. **Header credit chip:** always visible; updates on reserve; remaining, reserved, and how many expire on the soonest date.
+5. **Private lessons:** no approval system for MVP. They are a dollar-priced class. The member confirms the price; staff invoice outside the app.
+6. **Header credit chip:** always visible; updates on reserve; remaining, reserved, and how many expire on the soonest date. A spendable unlimited grant shows `Unlimited` instead of a count.
 7. **Calendar markers:** reserved vs unreserved days are a separate indicator from class-type color.
 8. **Cutoffs:** duration before start (e.g. 24 hours before), not a clock time that day.
 9. **Training group:** field on Edit Profile, not its own flow.
-10. **Credit adjustments:** new record for history, not a silent edit of the original package.
+10. **Credit adjustments:** new record for history, not a silent edit of the original package. Ending a package (including unlimited) sets that grant’s expiration and keeps the row.
 11. **Cancel vs delete class:** cancel stays on the calendar and is reversible; delete is permanent and confirmed (this one vs series).
 12. **Class changes:** class messaging, with option to save without notifying.
 13. **Weekly-allotment (later):** unused classes vanish at week’s end (use-it-or-lose-it).

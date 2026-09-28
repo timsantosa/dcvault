@@ -1,10 +1,11 @@
 # Class Reservation System — Product Requirements Document
 
-**Version:** 1.2 (client-review updates)  
+**Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-09-22  
-**Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)
+**Last updated:** 2026-09-27  
+**Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
+**Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
 This document is the **source of truth**. The wireframes describe how MVP screens look and walk; if they ever disagree, update this file first, then the wireframes.
 
@@ -165,11 +166,14 @@ Show:
 
 Example: `8 remaining · 3 reserved · 4 expire Sep 30`.
 
-On reserve (and cancel, when a credit returns), **animate** the remaining and reserved numbers so the spend is obvious without a confirm sheet (count change, brief emphasis on the chip). Exact motion is a visual-design choice.
+If the athlete has a spendable **unlimited** grant, the chip shows `Unlimited` instead of a remaining count (`Unlimited · 3 reserved · through Nov 30`). Finite grants are still spent first. Details: [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §8.
+
+On reserve (and cancel, when a credit returns), **animate** the remaining and reserved numbers so the spend is obvious without a confirm sheet (count change, brief emphasis on the chip). An unlimited chip animates the reserved count only. Exact motion is a visual-design choice.
 
 ### Actions
 
-- **Reserve from the schedule row — one tap, no confirm sheet.** The member does **not** have to open class detail first. Tapping Reserve commits immediately: deduct credit, mark the class Reserved, update the chip with the credit animation. Accidental reserves are undone by canceling within the cutoff (Flow B still uses a confirm, because that returns a credit).
+- **Reserve from the schedule row — one tap, no confirm sheet** when the class costs credits. The member does **not** have to open class detail first. Tapping Reserve commits immediately: deduct credit, mark the class Reserved, update the chip with the credit animation. Accidental reserves are undone by canceling within the cutoff (Flow B still uses a confirm, because that returns a credit).
+- **Dollar-cost classes** (private lessons and other pay-at-reserve classes) use a confirm sheet that shows the price. MVP does not charge a card; staff invoice outside the app. See §7.
 - **Cancel reservation** — within policy window (from the row, detail, or upcoming list). Cancel still asks for confirmation.
 - **View class details** — including roster (see below). Opening detail is optional for a normal weekly reserve. Reserve on detail is also one tap (same as the row).
 - **Register / buy classes** entry point when athlete has no usable credits (links to registration flow when available; for MVP, may direct to website)
@@ -282,7 +286,7 @@ Staff choose how the class is paid for:
 - Dollar cost (paid events / lessons).
 - Both, if a class should consume a credit **and** collect money (rare; keep the fields independent so staff are not forced into one model).
 
-Charging mechanics for dollar cost are an engineering design session (§7). The configuration must exist in MVP so events and lessons can be described correctly.
+Dollar-cost classes confirm the price and reserve without calling PayPal in MVP. Staff invoice outside the app (§7). The configuration must exist so events and lessons can be described correctly.
 
 ### Duplication
 
@@ -334,7 +338,7 @@ The **app/backend class system is the source of truth** for beta users.
 Build the credit system on a **flexible expiration model**:
 
 - Each package has: **credit count**, **expiration date**, optional **start date**, optional **no expiration** (unlimited).
-- **Quarter-bound behavior** is a policy layer: set expiration to end-of-quarter. This layer can be removed later without rewriting the core model.
+- **Quarter-bound behavior** is a policy layer: set expiration to end-of-quarter. This layer can be removed later without rewriting the core model. MVP uses fixed seasons (Dec–Feb, Mar–May, Jun–Aug, Sep–Nov). Later, an admin configures each season’s dates, and credit windows and active-member checks use that same configuration (§15).
 
 MVP packages are **a total number of classes for a period** (configurable count, including effectively unlimited). A later package style — **N classes per week during the period** — is Phase 2+ (see §15). Do not block MVP on weekly-allotment rules, but keep the inventory model from assuming “total count” is the only product that will ever exist.
 
@@ -350,9 +354,11 @@ When weekly-allotment packages ship: unused classes **do not roll**. If the pack
 
 ### Website registration (MVP requirement)
 
-- Purchases on the **website** must create/update package/credit records in the new system.
-- App displays remaining classes, expiration, and purchase history for website-registered athletes.
+- A database flag selects the registration catalog. **Off (default):** today’s hardcoded form, including invite-only groups. Those purchases do **not** create credits. **On:** the form lists active rows from the class-package catalog (public packages, plus hidden packages after a matching invite code). Checkout still writes `purchases`, then creates one credit grant. Idempotent on the PayPal payment.
+- **No backfill.** Athletes who already paid are adjusted by hand.
+- App displays remaining classes, expiration, and purchase history for athletes who have grants.
 - Zen Planner manual credit entry continues in parallel until full cutover.
+- Schema, seed, invite levels, and spending rules: [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md).
 
 
 
@@ -381,26 +387,29 @@ When weekly-allotment packages ship: unused classes **do not roll**. If the pack
 
 ### Unlimited packages (MVP)
 
-- Admin can assign a package with **no expiration** and effectively unlimited credits (or a very high count — engineering TBD).
-- Required for MVP because it's a natural extension of the flexible model.
+- Unlimited means **no credit count** (`creditCount` / grant `quantity` is null), not a stand-in number such as 30 or 50 and not a separate flag. The grant still has an expiration when the product has one (the seeded All Ages unlimited package expires at the end of the purchased quarter). A staff grant may omit expiration until someone ends it.
+- **Taking unlimited away** sets that grant’s expiration to now. The original expiration is left as it was created, so an early end is “expiration changed.” The row stays so history and existing reservations still have something to point at. The same “end this package” action can end a finite grant early. Deleting the row and inserting a negative cancel row are not the mechanism.
+- Finite add and remove still create **new** grants (§ staff adjustments below). A negative grant cannot end an unlimited package.
 
 
 
 ### Staff credit adjustments preserve history
 
-Adding or removing credits is **not** a silent edit of the existing package’s remaining count.
+Adding or removing credits is **not** a silent edit of the existing package’s quantity.
 
-- Each add or remove creates a **new package (or package-like credit record)** so purchase/adjustment history stays intact (e.g. “+1 makeup credit” appears as its own line rather than rewriting “16 → 17” on the original quarterly package).
-- Staff still pick which period / expiration the new record should use (typically matching the current quarter).
-- Members still see a **summed** remaining count; history shows each grant and removal separately.
+- Each add or remove creates a **new credit grant** so purchase/adjustment history stays intact (e.g. “+1 makeup credit” appears as its own line rather than rewriting “16 → 17” on the original quarterly package). A removal is a new grant with a negative count. It does not edit the original grant.
+- How many credits are left is **computed**: grant quantity minus reservations that are still holding a credit. It is not a stored column. Check-in and no-shows do not change the balance; the credit was already taken when they reserved.
+- **End package** is the exception: it sets that grant’s expiration to now and does not insert another row. An early end is visible because that date no longer matches the expiration stored at creation. Use it to take an unlimited package away, or to stop an entire grant early.
+- Staff still pick which period / expiration a new add or remove should use (typically matching the current quarter).
+- Members still see a **summed** remaining count, or `Unlimited` when a spendable unlimited grant exists. History shows each grant, removal, and early end separately.
 
 
 
 ### Private lessons and dollar purchases
 
-- **Engineering design task (pre-implementation):** define credit inventory vs one-time purchase for private/semi-private lessons.
-- Direction: private lesson purchases may only apply to private lesson slots; may **not use the group credit pool** — possibly one-time PayPal charges instead of credits.
-- **Payment timing (MVP):** charge / consume at **reservation**, because there is no approval step in MVP. Charge-at-approval is only relevant if/when the approval flow ships (Phase 2+).
+- A private lesson is a class configuration, not a separate product: dollar price, small capacity, notify on reserve. It does **not** spend group credits. Website registration does not sell lesson packs in MVP.
+- **Payment (MVP):** reserving shows a confirm sheet with the price and saves the reservation. No PayPal call. Staff are notified and invoice outside the app. They can cancel the reservation with `manage_classes`.
+- Real card charging at reserve is later. A lesson-credit pool can be added later with a `creditPool` column; do not add it in the MVP schema. See [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §9.
 
 
 
@@ -548,8 +557,8 @@ An athlete is an **active member** if they have purchased a package for the curr
 - **Classes attended** (current quarter)
 - **Classes remaining** — sum across active packages
 - **Reserved** vs remaining, consistent with the Schedule chip
-- **Progress visualization** — semicircle meter (remaining vs total purchased for the displayed period)
-- **Expiration timing** — `N expire [date]` for the soonest-expiring remaining credits
+- **Progress visualization** — semicircle meter (remaining vs total purchased for the displayed period). If a spendable unlimited grant covers the period, show **Unlimited** instead of a fraction.
+- **Expiration timing** — `N expire [date]` for the soonest-expiring remaining credits, or `through [date]` when the visible balance is unlimited
 
 
 
@@ -682,7 +691,7 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 | Permission               | Purpose                                                                   | MVP                       |
 | ------------------------ | ------------------------------------------------------------------------- | ------------------------- |
 | `reserve_classes`        | Access new Schedule/reservation experience                                | Yes                       |
-| `manage_classes`         | Create/edit/cancel/delete classes; cancel reservations on behalf of users | Yes                       |
+| `manage_classes`         | Create/edit/cancel/delete classes; cancel reservations on behalf of users; create/edit class packages | Yes                       |
 | `manage_credits`         | Manually add/remove athlete credits (as new records)                      | Yes                       |
 | `manage_attendance`      | Check-in interface                                                        | Yes                       |
 | `view_class_roster`      | See attendee names/photos on class detail                                 | Yes                       |
@@ -718,10 +727,10 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 
 ### Deferred engineering design tasks
 
-1. **Credit inventory architecture** — group credits vs private lesson purchases vs dollar charges; package schema; linkage to website purchases; leave room for later weekly-allotment packages and auto-renewing memberships without requiring a full rewrite.
-2. **Private/semi-private payment flow** — charge at reservation for MVP; PayPal integration points.
+1. **Credit inventory architecture** — resolved 2026-09-27. See [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md).
+2. **Private/semi-private payment flow** — resolved for MVP: fake price confirm at reserve, no PayPal. Real charging is Phase 2+.
 3. **Reservation note / pole field storage** — free-text now, structured later.
-4. **Website purchase → new system sync** — exact integration with existing `Purchases` / `Packages` tables.
+4. **Website purchase → new system sync** — resolved 2026-09-27. Catalog flag, grant created inside registration finalize, no backfill. See [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §5.
 
 ---
 
@@ -735,9 +744,10 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 
 - [ ] Permission-gated new Schedule experience; fallback to Google Calendar
 - [ ] Class CRUD with full configuration options (§5), including custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, cancel vs delete
-- [ ] Flexible credit/package model with quarter overlay, start dates, unlimited packages
-- [ ] Staff credit add/remove as **new records** (history preserved)
-- [ ] Website purchase → credit sync
+- [ ] Flexible credit/package model with quarter overlay, start dates, unlimited packages (end unlimited by setting expiration)
+- [ ] Class package catalog, one-time seed, and admin package editor (`manage_classes`)
+- [ ] Staff credit add/remove as **new records** (history preserved); end-grant sets expiration
+- [ ] Website purchase → credit sync when the catalog flag is on (no backfill)
 - [ ] Reserve from schedule row in **one tap** (no confirm sheet); credit chip animates remaining / reserved
 - [ ] Credit chip: remaining, reserved, `N expire [date]`
 - [ ] Calendar reserved vs unreserved day markers (independent of class-type color)
@@ -774,11 +784,14 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 - Registration discount management in app
 - **Automatic discounts** — configurable **early bird** and other discounts (e.g. **military**) that apply **automatically** from rules, instead of a coach manually issuing discount codes. Applies to **class packages and paid events**. Early-bird window is a **configurable amount of time**. Manual codes may still exist as a complement until they are no longer needed.
 - **Auto-renewing memberships / subscriptions** — admin **sets up** one or more membership products and their **cadence** (quarterly, yearly, or whatever interval they configure). The customer **signs up** for that membership and can **cancel at any time**. Staff can also change or end a membership. Cadence is not hardcoded in the product — new intervals are an admin configuration, not an engineering project.
+- **Configurable quarter dates** — MVP seasons are fixed (Dec–Feb, Mar–May, Jun–Aug, Sep–Nov). Later, an admin sets each season’s start and end. Credit expiration and the active-member quarter check must use that same configuration.
 - **Weekly-allotment packages** — in addition to “N classes for the quarter,” offer packages that grant **N classes per week** for the period (e.g. 3 per week) so people keep showing up each week. This may need a **separate inventory model** from total-count packages if the same structure cannot express both cleanly. **Unused weekly classes vanish at week’s end** (use-it-or-lose-it; leftover 2 of 3 do not roll).
 - Progress meter fallback to next-quarter inventory when current quarter is exhausted (§10)
 - Refund/chargeback automation
 - Class configuration presets / "types" UI
 - Private lesson **request / approve** flow (held from MVP)
+- **Real payment at reserve** for dollar-cost classes (MVP shows the price and reserves; staff invoice outside the app)
+- **Lesson-credit packs** sold on the website (MVP lessons are pay-at-reserve only)
 - Attendance-based restrictions, dynamic pricing, analytics
 - **Message retention / auto-delete** — all class conversations after ~2 weeks; all other message types after 6 months
 - **Negative / overdraft credits** — potential Phase 2; **not decided**. If built: walk-in (or similar) can go negative and the next package purchase pays the debt back. Keep on this list so it is not lost.
@@ -793,16 +806,19 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 
 These are intentionally unresolved — capture decisions as they come up during design/build:
 
-1. **Credit inventory for private lessons** — credits vs one-time purchases (engineering design session).
-2. **Private lesson payment timing** — MVP charges/consumes at reservation; revisit if approval ships later.
-3. **Roster privacy** — confirmed OK for all members for now; revisit if gym culture changes.
-4. **Training group fallback** — when AthleteProfile group unset, derive from purchase or require admin set?
-5. **Google Calendar sync details** — which separate calendar, sync frequency, what fields map; how canceled vs deleted classes appear.
-6. **Website → new system sync** — real-time webhook vs batch; handling of existing Purchases data model.
-7. **Success metrics** — define before full release (e.g., beta reservation volume, support tickets, Zen Planner manual entry reduction).
-8. **Launch communication** — member messaging when switching off Zen Planner.
-9. **Walk-in overdraft (parked, not decided)** — potential Phase 2: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
-10. **Automatic discount eligibility** — how military / other non-time-based discounts are verified; whether automatic discounts stack with remaining manual codes. Early-bird window itself is decided: configurable duration.
+1. **Roster privacy** — confirmed OK for all members for now; revisit if gym culture changes.
+2. **Training group fallback** — when AthleteProfile group unset, derive from purchase or require admin set?
+3. **Google Calendar sync details** — which separate calendar, sync frequency, what fields map; how canceled vs deleted classes appear. (Task 5.1)
+4. **Success metrics** — define before full release (e.g., beta reservation volume, support tickets, Zen Planner manual entry reduction).
+5. **Launch communication** — member messaging when switching off Zen Planner.
+6. **Walk-in overdraft (parked, not decided)** — potential Phase 2: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
+7. **Automatic discount eligibility** — how military / other non-time-based discounts are verified; whether automatic discounts stack with remaining manual codes. Early-bird window itself is decided: configurable duration.
+
+### Resolved (2026-09-27)
+
+- **Private lesson inventory** — not a credit pack in MVP. Dollar-cost class, group credits are not spent. [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §9.
+- **Private lesson payment** — confirm sheet shows the price and the reservation is saved. No PayPal. Staff invoice manually. Real charging is Phase 2+.
+- **Website → credit sync** — one grant inside registration finalize when `useClassPackageCatalog` is on. Flag off and all historical purchases create no grants. No backfill. Invite-only catalog packages stay hidden until a matching invite level. [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §5.
 
 ---
 
@@ -872,19 +888,25 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 ### Task 2: Credit/package data model (design + build)
 
-- [ ] **2.1 — Credit inventory design doc**
+- [x] **2.1 — Credit inventory design doc**
   - Resolve open questions in §7 and §16 #1–2, #6.
   - Document schema: packages, credits, expiration, start date, unlimited, deduction order, staff adjustments as new records.
   - Leave conceptual room for later weekly-allotment packages (use-it-or-lose-it per week) and admin-configured auto-renewing memberships without implementing them.
   - Update §16 and this task list if decisions differ from PRD.
-  - *Completion notes:*
+  - *Completion notes:* 2026-09-27. Design is [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md). New `classPackages`, `creditGrants`, and a one-row `registrationSettings` flag. Did not extend the legacy `packages` table. Unlimited is a null credit count, ended by moving `expiresAt` earlier than `originalExpiresAt`. Balance is computed from reservations still holding a credit, not stored, and not derived from attendance. Finite add/remove are new grants (remove is negative). Website grants only when the catalog flag is on; no backfill. Invite level on a package keeps the hidden-package behavior. Private lessons are pay-at-reserve with a fake price confirm. Seed is the nine public website packages. Package editor is Task 2.4. Quarter boundaries stay hardcoded until a later configurable-dates task.
 
 - [ ] **2.2 — Database schema + models**
-  - Sequelize models/migrations for credit/package tables in `dcvault/server/db/`.
+  - Sequelize models for `classPackages`, `creditGrants`, and `registrationSettings` in `dcvault/server/db/`. Seed the nine public packages and the settings row (`useClassPackageCatalog = false`).
+  - Do not add weekly-allotment or `creditPool` columns. Do not alter the legacy `packages` table. No backfill.
   - *Completion notes:*
 
 - [ ] **2.3 — Credit business logic + unit tests**
-  - Core functions: add/remove credits as new records, deduct (soonest expiring), expiration/start-date checks, unlimited packages.
+  - Core functions: add/remove credits as new records, end a grant by expiration, deduct (soonest expiring, unlimited last), expiration/start-date checks, return-on-cancel to the same grant.
+  - *Completion notes:*
+
+- [ ] **2.4 — Package catalog admin UI**
+  - Mobile screen to create and edit `classPackages` (name, price, audience, credit count or unlimited, public vs invite level, sort order, active).
+  - Permission: `manage_classes`. Deactivating a package hides it from the website and leaves existing grants.
   - *Completion notes:*
 
 
@@ -892,9 +914,9 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 ### Task 3: Website purchase sync
 
 - [ ] **3.1 — Purchase → credit sync**
-  - Hook existing website registration/PayPal flow to create/update credit packages.
-  - Backfill or migration strategy for existing purchases (if needed).
-  - Unit tests for sync logic.
+  - When `useClassPackageCatalog` is on, list active catalog packages (public, plus invite-level matches) and create one grant inside registration finalize. Idempotent on `purchaseId`.
+  - Flag off: keep today’s form and do not create grants. No backfill.
+  - Unit tests for the grant-creation and idempotency logic.
   - *Completion notes:*
 
 
@@ -916,7 +938,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 - [ ] **5.1 — Separate calendar sync**
   - One-way push from app/backend to dedicated Google Calendar (not the public one).
-  - Resolve §16 #5 during implementation; document config (calendar ID, credentials).
+  - Resolve §16 (Google Calendar sync details) during implementation; document config (calendar ID, credentials).
   - *Completion notes:*
 
 
@@ -956,8 +978,8 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
   - *Completion notes:*
 
 - [ ] **8.2 — Private lessons as immediate reserve**
-  - No request/approve UI in MVP. Lesson slots use the same reserve path as group classes; payment hook stub if dollar charge is not ready (see §7).
-  - Approval workflow is Phase 2+ — do not build it in this task.
+  - No request/approve UI in MVP. Lesson slots reserve immediately. Dollar-cost classes show a confirm sheet with the price and do not call PayPal (see §7 and CREDIT_INVENTORY.md §9).
+  - Approval workflow and real card charging are Phase 2+ — do not build them in this task.
   - *Completion notes:*
 
 
@@ -965,11 +987,12 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 ### Task 9: Admin credits UI
 
 - [ ] **9.1 — manage_credits API** (if not fully covered in Task 2)
-  - Add/remove credits as new records; notify member on change.
+  - Add/remove credits as new records; end a grant by setting `expiresAt` to now. Notify member on change.
   - *Completion notes:*
 
 - [ ] **9.2 — manage_credits UI**
   - Entry points: athlete profile, class roster.
+  - Add, remove, and **End package** (required for unlimited). Ending sets expiration and keeps the grant.
   - *Completion notes:*
 
 
