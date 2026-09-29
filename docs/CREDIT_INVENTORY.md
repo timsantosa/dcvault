@@ -63,6 +63,14 @@ Public products only (`inviteLevel` null, `active` true). Prices are the radio l
 
 The All Ages $825 product is truly unlimited until the purchased quarter ends. The old “30–50 classes” label was a Zen Planner limit. Do not seed invite-only products (drop-in, private lesson, elite, and the rest). Add those later in the package editor if they should be sold.
 
+Server startup creates the empty tables and does not insert these rows. After deploy, run this once from `dcvault/`:
+
+```bash
+node server/db/seedClassPackages.js
+```
+
+The script inserts a missing product when no row has that `audience` and `name`, and inserts the settings row (`id = 1`, flag false) when it is missing. It does not change an existing package’s price, name, or active flag, and it does not turn the catalog flag back off.
+
 ---
 
 ## 3. `creditGrants`
@@ -244,7 +252,7 @@ Do not add these columns or tables in Task 2.2.
 
 | Task | Implements |
 | --- | --- |
-| **2.2** | Models for `classPackages`, `creditGrants`, `registrationSettings`. Seed the nine packages and the settings row (`useClassPackageCatalog = false`). No weekly column, no `creditPool`, no backfill. |
+| **2.2** | Models for `classPackages`, `creditGrants`, `registrationSettings`. Manual seed (`node server/db/seedClassPackages.js`) for the nine packages and the settings row (`useClassPackageCatalog = false`). Not run on server startup. No weekly column, no `creditPool`, no backfill. |
 | **2.3** | Add, remove, end-grant, quarter window resolver, deduct, return-on-cancel. Unit tests for soonest-expiring order, start and expiration, negative remove grants, unlimited last, end-by-expiration, and purchase idempotency. |
 | **2.4** | Mobile package editor, `manage_classes`. Create and edit catalog rows, including invite level. Deactivate hides the product and leaves grants. |
 | **3.1** | When the flag is on, registration lists the catalog (public, plus invite-level matches) and finalize creates one grant. Flag off: no grant. No backfill. |

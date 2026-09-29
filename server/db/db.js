@@ -1,5 +1,6 @@
 'use strict'
 const Sequelize = require('sequelize')
+const { assertValidPackageCreditCount } = require('./classPackageCreditCount')
 
 let tables = {}
 let columns = {}
@@ -749,6 +750,44 @@ columns.globalConversationPins = {
   },
 };
 
+// Class reservation catalog. Null creditCount means unlimited.
+columns.classPackages = {
+  name: { type: Sequelize.STRING, allowNull: false },
+  price: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
+  audience: { type: Sequelize.STRING, allowNull: false },
+  creditCount: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    validate: {
+      unlimitedOrAtLeastOne(value) {
+        assertValidPackageCreditCount(value);
+      },
+    },
+  },
+  inviteLevel: { type: Sequelize.INTEGER, allowNull: true },
+  active: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true },
+  sortOrder: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+};
+
+// One row per website purchase or staff credit adjustment. quantity is immutable.
+columns.creditGrants = {
+  athleteId: { type: Sequelize.INTEGER, allowNull: false },
+  classPackageId: { type: Sequelize.INTEGER, allowNull: true },
+  purchaseId: { type: Sequelize.INTEGER, allowNull: true },
+  source: { type: Sequelize.STRING, allowNull: false },
+  label: { type: Sequelize.STRING, allowNull: false },
+  quantity: { type: Sequelize.INTEGER, allowNull: true },
+  startsAt: { type: Sequelize.DATE, allowNull: true },
+  expiresAt: { type: Sequelize.DATE, allowNull: true },
+  originalExpiresAt: { type: Sequelize.DATE, allowNull: true },
+  createdByUserId: { type: Sequelize.INTEGER, allowNull: true },
+};
+
+// Single row (id = 1). Flipped in the database; there is no admin screen.
+columns.registrationSettings = {
+  useClassPackageCatalog: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+};
+
 const syncTables = (schema, force) => {
   force = !!force
 
@@ -952,6 +991,22 @@ const syncTables = (schema, force) => {
     ],
   });
 
+  tables.ClassPackages = schema.define('classPackage', columns.classPackages);
+  tables.CreditGrants = schema.define('creditGrant', columns.creditGrants, {
+    indexes: [
+      {
+        fields: ['athleteId'],
+        name: 'credit_grants_athlete',
+      },
+      {
+        fields: ['purchaseId'],
+        unique: true,
+        name: 'credit_grants_purchase_unique',
+      },
+    ],
+  });
+  tables.RegistrationSettings = schema.define('registrationSetting', columns.registrationSettings);
+
   // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
@@ -1086,6 +1141,39 @@ const syncTables = (schema, force) => {
 
   tables.PendingLogVideos.belongsTo(tables.Drills, { as: 'drill', foreignKey: 'drillId' });
   tables.Drills.hasOne(tables.PendingLogVideos, { as: 'pendingLogVideo', foreignKey: 'drillId' });
+
+  // Class reservation credits. onDelete is set on belongsTo first so the inverse association does not replace it.
+  tables.CreditGrants.belongsTo(tables.Athletes, {
+    as: 'athlete',
+    foreignKey: 'athleteId',
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  });
+  tables.Athletes.hasMany(tables.CreditGrants, { as: 'creditGrants', foreignKey: 'athleteId' });
+
+  tables.CreditGrants.belongsTo(tables.ClassPackages, {
+    as: 'classPackage',
+    foreignKey: 'classPackageId',
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassPackages.hasMany(tables.CreditGrants, { as: 'creditGrants', foreignKey: 'classPackageId' });
+
+  tables.CreditGrants.belongsTo(tables.Purchases, {
+    as: 'purchase',
+    foreignKey: 'purchaseId',
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  });
+  tables.Purchases.hasOne(tables.CreditGrants, { as: 'creditGrant', foreignKey: 'purchaseId' });
+
+  tables.CreditGrants.belongsTo(tables.Users, {
+    as: 'createdBy',
+    foreignKey: 'createdByUserId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  });
+  tables.Users.hasMany(tables.CreditGrants, { as: 'creditGrantsCreated', foreignKey: 'createdByUserId' });
 
   tables.schema = schema;
   return schema.sync({ force: force })

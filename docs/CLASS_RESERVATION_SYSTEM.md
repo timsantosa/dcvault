@@ -895,10 +895,10 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
   - Update §16 and this task list if decisions differ from PRD.
   - *Completion notes:* 2026-09-27. Design is [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md). New `classPackages`, `creditGrants`, and a one-row `registrationSettings` flag. Did not extend the legacy `packages` table. Unlimited is a null credit count, ended by moving `expiresAt` earlier than `originalExpiresAt`. Balance is computed from reservations still holding a credit, not stored, and not derived from attendance. Finite add/remove are new grants (remove is negative). Website grants only when the catalog flag is on; no backfill. Invite level on a package keeps the hidden-package behavior. Private lessons are pay-at-reserve with a fake price confirm. Seed is the nine public website packages. Package editor is Task 2.4. Quarter boundaries stay hardcoded until a later configurable-dates task.
 
-- [ ] **2.2 — Database schema + models**
+- [x] **2.2 — Database schema + models**
   - Sequelize models for `classPackages`, `creditGrants`, and `registrationSettings` in `dcvault/server/db/`. Seed the nine public packages and the settings row (`useClassPackageCatalog = false`).
   - Do not add weekly-allotment or `creditPool` columns. Do not alter the legacy `packages` table. No backfill.
-  - *Completion notes:*
+  - *Completion notes:* 2026-09-27. Models are in `server/db/db.js` and are created by the existing startup `schema.sync()`. `creditCount` / grant `quantity` null means unlimited; package `creditCount` rejects 0 and below. Grant `purchaseId` is unique. Package and purchase deletes are restricted while a grant points at them. `createdByUserId` is set null when that user is deleted (`deleteUser` clears it too). The nine public packages and the settings row are **not** inserted on startup. Run `node server/db/seedClassPackages.js` from `dcvault/` once after deploy. A second run skips existing audience+name rows and does not change prices or the catalog flag.
 
 - [ ] **2.3 — Credit business logic + unit tests**
   - Core functions: add/remove credits as new records, end a grant by expiration, deduct (soonest expiring, unlimited last), expiration/start-date checks, return-on-cancel to the same grant.
