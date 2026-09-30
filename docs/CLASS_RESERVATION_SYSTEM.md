@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-09-27  
+**Last updated:** 2026-09-29  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -900,9 +900,9 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
   - Do not add weekly-allotment or `creditPool` columns. Do not alter the legacy `packages` table. No backfill.
   - *Completion notes:* 2026-09-27. Models are in `server/db/db.js` and are created by the existing startup `schema.sync()`. `creditCount` / grant `quantity` null means unlimited; package `creditCount` rejects 0 and below. Grant `purchaseId` is unique. Package and purchase deletes are restricted while a grant points at them. `createdByUserId` is set null when that user is deleted (`deleteUser` clears it too). The nine public packages and the settings row are **not** inserted on startup. Run `node server/db/seedClassPackages.js` from `dcvault/` once after deploy. A second run skips existing audience+name rows and does not change prices or the catalog flag.
 
-- [ ] **2.3 — Credit business logic + unit tests**
+- [x] **2.3 — Credit business logic + unit tests**
   - Core functions: add/remove credits as new records, end a grant by expiration, deduct (soonest expiring, unlimited last), expiration/start-date checks, return-on-cancel to the same grant.
-  - *Completion notes:*
+  - *Completion notes:* 2026-09-29. Pure functions in `server/lib/creditInventory.js`, tests in `server/__tests__/creditInventory.test.js`. Quarter windows, staff add/remove, idempotent website grant, end-grant, soonest-expiring deduct with unlimited last, and return-on-cancel. Member chip and history lines are included. The shown date is the last local day a class can start (midnight `expiresAt` displays the previous day). Allocations stay in memory. No table, route, notification, or registration wiring.
 
 - [ ] **2.4 — Package catalog admin UI**
   - Mobile screen to create and edit `classPackages` (name, price, audience, credit count or unlimited, public vs invite level, sort order, active).

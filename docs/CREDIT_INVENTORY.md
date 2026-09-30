@@ -2,7 +2,7 @@
 
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Status:** Decided (Task 2.1). Tasks 2.2+ implement this file.  
-**Last updated:** 2026-09-27
+**Last updated:** 2026-09-29
 
 This is the schema and spending model for class credits. The PRD remains the product source of truth. If this file and the PRD disagree, update the PRD first, then this file.
 
@@ -199,7 +199,9 @@ No active unlimited grant:
 
 `8 remaining · 3 reserved · 4 expire Sep 30`
 
-`remaining` is `max(0, finite total)` for grants whose window covers now. `N expire [date]` is the sum of positive balances on grants that share the soonest `expiresAt`.
+`remaining` is `max(0, finite total)` for grants whose window covers now. `N expire [date]` is the sum of positive balances on grants that share the soonest `expiresAt`. Omit that clause when `remaining` is 0, and when every remaining credit has no `expiresAt`.
+
+The date is the last local calendar day a class can still start. `expiresAt` at local midnight displays the previous day (Dec 1 displays Nov 30; Mar 1 displays Feb 28, or Feb 29 in a leap year). Any other time displays that calendar day, so a grant ended at 3:00pm on Sep 27 displays Sep 27.
 
 An active unlimited grant:
 
@@ -253,7 +255,7 @@ Do not add these columns or tables in Task 2.2.
 | Task | Implements |
 | --- | --- |
 | **2.2** | Models for `classPackages`, `creditGrants`, `registrationSettings`. Manual seed (`node server/db/seedClassPackages.js`) for the nine packages and the settings row (`useClassPackageCatalog = false`). Not run on server startup. No weekly column, no `creditPool`, no backfill. |
-| **2.3** | Add, remove, end-grant, quarter window resolver, deduct, return-on-cancel. Unit tests for soonest-expiring order, start and expiration, negative remove grants, unlimited last, end-by-expiration, and purchase idempotency. |
+| **2.3** | Done. `server/lib/creditInventory.js`: add, remove, end-grant, quarter window resolver, deduct, return-on-cancel, chip, and history lines. Unit tests cover soonest-expiring order, start and expiration, negative remove grants, unlimited last, end-by-expiration, and purchase idempotency. Allocations stay in memory. |
 | **2.4** | Mobile package editor, `manage_classes`. Create and edit catalog rows, including invite level. Deactivate hides the product and leaves grants. |
 | **3.1** | When the flag is on, registration lists the catalog (public, plus invite-level matches) and finalize creates one grant. Flag off: no grant. No backfill. |
 | **7.x** | Persist allocations. Dollar classes use the fake price confirm and skip deduct. |
