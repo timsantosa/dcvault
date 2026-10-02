@@ -3,7 +3,7 @@
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Audience:** Client design review (walkthrough)  
 **Status:** Proposed UI for MVP / dark launch — not pixel-final  
-**Last updated:** 2026-09-27  
+**Last updated:** 2026-09-30  
 **Aligned with PRD:** v1.3
 
 This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail, data models, and later-phase features live in the PRD and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree, the **PRD is the source of truth**.
@@ -1096,20 +1096,18 @@ Tapping opens that class detail **and** the class conversation. MVP does not add
 ## Flow L — Class packages
 
 **Permission:** `manage_classes`  
-**Where:** app, not the website. The website only reads the list.
+**Where:** More → Administrator → Class packages. The website only reads the list.
 
 Staff create the products registration can sell. The first nine (Fly-Kids, Adult, All Ages, including Unlimited) are seeded once. After that, this screen is how packages change.
 
 ```
-│  ←           Class packages        │
+│  ←           Class packages     +  │
 │                                     │
 │  ALL AGES                           │
 │  4 Classes              $250    [>] │
 │  8 Classes              $425    [>] │
 │  15 Classes             $575    [>] │
 │  Unlimited Classes      $825    [>] │
-│                                     │
-│  [ + New package ]                  │
 │                                     │
 │  New package                        │
 │  Name          8 Classes            │
@@ -1125,7 +1123,9 @@ Staff create the products registration can sell. The first nine (Fly-Kids, Adult
 │  [ Save ]                           │
 ```
 
-Turning **Show on website** off hides the package from registration and leaves credits already purchased. Invite level uses the same 1–5 codes as today. A hidden package stays off the form until someone enters a code of that level.
+The + in the header starts a new package. Tap a row to edit that package. Each group header has **Reorder**, which opens a drag sheet for that group only. Save rewrites the order inside the group. The groups themselves stay in a fixed order: Fly Kids, Adult, All Ages, then any other group alphabetically.
+
+Turning **Show on website** off hides the package from registration and leaves credits already purchased. Invite level uses the same 1–5 codes as today. A hidden package stays off the form until someone enters a code of that level. The form says changes apply to future website sales; credits already purchased stay as they are.
 
 ---
 

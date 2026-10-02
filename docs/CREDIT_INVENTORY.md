@@ -2,7 +2,7 @@
 
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Status:** Decided (Task 2.1). Tasks 2.2+ implement this file.  
-**Last updated:** 2026-09-29
+**Last updated:** 2026-09-30
 
 This is the schema and spending model for class credits. The PRD remains the product source of truth. If this file and the PRD disagree, update the PRD first, then this file.
 
@@ -44,6 +44,7 @@ Rules:
 
 - `creditCount` null means unlimited. A number must be 1 or more. The package editor writes null only when Unlimited is explicitly chosen. A blank count without that choice is a validation error, so a half-finished form cannot become an unlimited product.
 - `audience` does not set `AthleteProfile.trainingGroup` and does not limit which classes a credit can book. Eligibility stays on the athlete’s training group. Facility on the purchase does not limit where a credit can be used.
+- The package editor lists sections in a fixed order: `fly-kids`, `adult`, `allages`, then any other audience key alphabetically. Reorder within a section rewrites `sortOrder` to 1..n. A new package, or one whose audience changes, is appended at the end of that section. Staff do not reorder the sections themselves.
 
 ### One-time seed
 
@@ -256,7 +257,7 @@ Do not add these columns or tables in Task 2.2.
 | --- | --- |
 | **2.2** | Models for `classPackages`, `creditGrants`, `registrationSettings`. Manual seed (`node server/db/seedClassPackages.js`) for the nine packages and the settings row (`useClassPackageCatalog = false`). Not run on server startup. No weekly column, no `creditPool`, no backfill. |
 | **2.3** | Done. `server/lib/creditInventory.js`: add, remove, end-grant, quarter window resolver, deduct, return-on-cancel, chip, and history lines. Unit tests cover soonest-expiring order, start and expiration, negative remove grants, unlimited last, end-by-expiration, and purchase idempotency. Allocations stay in memory. |
-| **2.4** | Mobile package editor, `manage_classes`. Create and edit catalog rows, including invite level. Deactivate hides the product and leaves grants. |
+| **2.4** | Done. Mobile package editor, `manage_classes`. Create and edit catalog rows, including invite level. Deactivate hides the product and leaves grants. Reorder is per audience. |
 | **3.1** | When the flag is on, registration lists the catalog (public, plus invite-level matches) and finalize creates one grant. Flag off: no grant. No backfill. |
 | **7.x** | Persist allocations. Dollar classes use the fake price confirm and skip deduct. |
 | **9.x** | Add, remove, and end-grant UI. Notify on all three. |

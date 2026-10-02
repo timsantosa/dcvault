@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-09-29  
+**Last updated:** 2026-09-30  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -904,10 +904,10 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
   - Core functions: add/remove credits as new records, end a grant by expiration, deduct (soonest expiring, unlimited last), expiration/start-date checks, return-on-cancel to the same grant.
   - *Completion notes:* 2026-09-29. Pure functions in `server/lib/creditInventory.js`, tests in `server/__tests__/creditInventory.test.js`. Quarter windows, staff add/remove, idempotent website grant, end-grant, soonest-expiring deduct with unlimited last, and return-on-cancel. Member chip and history lines are included. The shown date is the last local day a class can start (midnight `expiresAt` displays the previous day). Allocations stay in memory. No table, route, notification, or registration wiring.
 
-- [ ] **2.4 — Package catalog admin UI**
+- [x] **2.4 — Package catalog admin UI**
   - Mobile screen to create and edit `classPackages` (name, price, audience, credit count or unlimited, public vs invite level, sort order, active).
   - Permission: `manage_classes`. Deactivating a package hides it from the website and leaves existing grants.
-  - *Completion notes:*
+  - *Completion notes:* 2026-09-30. More → Administrator → Class packages, gated by `manage_classes`. List, create, and edit call `/mobileapp/user/classPackages`. Show on website writes `active`. No delete. Reorder is a per-group drag sheet that rewrites `sortOrder` as 1..n. Section order is fixed: Fly Kids, Adult, All Ages, then other keys alphabetically. A new package, or one whose group changes, is appended to that section. The catalog flag and website checkout are unchanged (Task 3.1).
 
 
 
