@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-09-30  
+**Last updated:** 2026-10-02  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -747,7 +747,7 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 - [ ] Flexible credit/package model with quarter overlay, start dates, unlimited packages (end unlimited by setting expiration)
 - [ ] Class package catalog, one-time seed, and admin package editor (`manage_classes`)
 - [ ] Staff credit add/remove as **new records** (history preserved); end-grant sets expiration
-- [ ] Website purchase → credit sync when the catalog flag is on (no backfill)
+- [x] Website purchase → credit sync when the catalog flag is on (no backfill)
 - [ ] Reserve from schedule row in **one tap** (no confirm sheet); credit chip animates remaining / reserved
 - [ ] Credit chip: remaining, reserved, `N expire [date]`
 - [ ] Calendar reserved vs unreserved day markers (independent of class-type color)
@@ -913,11 +913,11 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 ### Task 3: Website purchase sync
 
-- [ ] **3.1 — Purchase → credit sync**
+- [x] **3.1 — Purchase → credit sync**
   - When `useClassPackageCatalog` is on, list active catalog packages (public, plus invite-level matches) and create one grant inside registration finalize. Idempotent on `purchaseId`.
   - Flag off: keep today’s form and do not create grants. No backfill.
   - Unit tests for the grant-creation and idempotency logic.
-  - *Completion notes:*
+  - *Completion notes:* 2026-10-02. `GET /registration/catalog` and the invite response drive the website form. Flag off keeps the hardcoded radios and writes no grant. Flag on lists active public packages, plus packages matching the invite level, and finalize stores `membership` as `pkg:<id>`, `group` as the package audience, and one `creditGrants` row. A second grant for that `purchaseId` is skipped. No backfill. Rules are in `server/lib/registrationCatalog.js`.
 
 
 
@@ -1105,11 +1105,11 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 ### Suggested session prompt (for the user)
 
-Copy and adapt this when starting a new agent session:
+In a new agent chat, run:
 
 ```
-Read dcvault/docs/CLASS_RESERVATION_SYSTEM.md (especially §18 Agent Instructions).
-Implement Task [X.Y — task name].
-When done: check off the task, update the PRD with any decision changes, and give me manual test steps + test commands.
+/next-class-reservation-task
 ```
+
+That skill (`.cursor/skills/next-class-reservation-task/`) reads this file and the wireframes, takes the first unchecked §18 task, asks what is still undecided, plans, then builds after you approve. Name a task in the same message (`/next-class-reservation-task` then "do 4.1") to override the next unchecked item.
 

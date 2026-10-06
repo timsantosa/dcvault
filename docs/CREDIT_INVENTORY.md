@@ -2,7 +2,7 @@
 
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Status:** Decided (Task 2.1). Tasks 2.2+ implement this file.  
-**Last updated:** 2026-09-30
+**Last updated:** 2026-10-02
 
 This is the schema and spending model for class credits. The PRD remains the product source of truth. If this file and the PRD disagree, update the PRD first, then this file.
 
@@ -258,6 +258,6 @@ Do not add these columns or tables in Task 2.2.
 | **2.2** | Models for `classPackages`, `creditGrants`, `registrationSettings`. Manual seed (`node server/db/seedClassPackages.js`) for the nine packages and the settings row (`useClassPackageCatalog = false`). Not run on server startup. No weekly column, no `creditPool`, no backfill. |
 | **2.3** | Done. `server/lib/creditInventory.js`: add, remove, end-grant, quarter window resolver, deduct, return-on-cancel, chip, and history lines. Unit tests cover soonest-expiring order, start and expiration, negative remove grants, unlimited last, end-by-expiration, and purchase idempotency. Allocations stay in memory. |
 | **2.4** | Done. Mobile package editor, `manage_classes`. Create and edit catalog rows, including invite level. Deactivate hides the product and leaves grants. Reorder is per audience. |
-| **3.1** | When the flag is on, registration lists the catalog (public, plus invite-level matches) and finalize creates one grant. Flag off: no grant. No backfill. |
+| **3.1** | Done. When the flag is on, registration lists the catalog (public, plus invite-level matches) and finalize creates one grant. Flag off: no grant. No backfill. |
 | **7.x** | Persist allocations. Dollar classes use the fake price confirm and skip deduct. |
 | **9.x** | Add, remove, and end-grant UI. Notify on all three. |

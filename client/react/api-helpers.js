@@ -271,6 +271,16 @@ apiHelpers.getDiscountAmount = (code) => {
   })
 }
 
+apiHelpers.getRegistrationCatalog = () => {
+  return axios.get('/registration/catalog')
+  .then((response) => {
+    return response
+  })
+  .catch((error) => {
+    return error.response
+  })
+}
+
 apiHelpers.applyInvite = (code) => {
   return axios.post('/registration/invite', {code: code})
   .then((response) => {
