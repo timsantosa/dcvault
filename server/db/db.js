@@ -859,16 +859,19 @@ columns.classOccurrences = {
   overrideGroups: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
 };
 
+// Groups for one date that should not inherit the series list. Used only when that occurrence sets overrideGroups.
 columns.classOccurrenceTrainingGroups = {
   classOccurrenceId: { type: Sequelize.INTEGER, allowNull: false },
   trainingGroupId: { type: Sequelize.INTEGER, allowNull: false },
 };
 
+// Coaches for the series. A coach is an athlete profile, and a series can have more than one.
 columns.classSeriesCoaches = {
   classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
   athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
 };
 
+// Coaches for one date that should not inherit the series list. Used only when that occurrence sets overrideCoaches.
 columns.classOccurrenceCoaches = {
   classOccurrenceId: { type: Sequelize.INTEGER, allowNull: false },
   athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
