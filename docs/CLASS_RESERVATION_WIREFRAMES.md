@@ -746,6 +746,7 @@ One form covers every current use case (open class, age-restricted, private, mee
 │                                     │
 │  Repeat                             │
 │  Custom                      [▾]    │
+│  Ends (optional)       Sep 30       │
 │  Sun  11:30 AM – 1:00 PM            │
 │  Tue   6:00 PM – 8:00 PM            │
 │  Thu   7:00 PM – 8:30 PM            │
@@ -798,6 +799,8 @@ One form covers every current use case (open class, age-restricted, private, mee
 
 **Custom repeat:** a series can be mixed days and times (Sunday 11:30, Tuesday 6 PM, Thursday 7 PM) instead of “every Tuesday only.” Simple weekly is still the default shortcut.
 
+**End date** is optional. That last date is included. Leave it empty and the series keeps going. A one-week camp sets the end on the last day and adds a slot for each weekday it meets. A class that does not repeat is a single date.
+
 **Cutoffs** are **how long before start**, not “3:30 PM that day.” Same idea for reserve and cancel (often both 24 hours before).
 
 **Cost** is credits, money, or both. Charging mechanics for dollar cost are a follow-up engineering session. The fields are here so staff can describe events and lessons correctly.
@@ -827,7 +830,7 @@ Saving a repeating class asks:
 │  └─────────────────────────────┘    │
 ```
 
-Staff can **save without notifying**. Bulk “update pole note on every week of the series” is **not** a separate MVP tool — series edit covers the whole series, single-instance edit covers one day.
+Staff can **save without notifying**. Bulk “update pole note on every week of the series” is **not** a separate MVP tool — series edit covers the whole series, single-instance edit covers one day. Moving one class to another day is a single-instance edit. The other weeks stay on their usual days. Moving a class that does not repeat changes that class’s date.
 
 ### G4. Cancel a member’s reservation (staff)
 

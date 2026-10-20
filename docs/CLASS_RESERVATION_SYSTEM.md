@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-10-02  
+**Last updated:** 2026-10-07  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -264,7 +264,11 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 
 - Typical case: weekly on one weekday at one time.
 - **Custom series required for MVP:** one series can include mixed days and times, e.g. Sunday 11:30, Tuesday 6:00 PM, Thursday 7:00 PM. Staff add those day/time rows rather than creating three unrelated series when it is conceptually one repeating class.
+- A repeating series may set an optional **end date**. That date is included. With no end date, the series continues.
+- A short run such as a week-long camp is a repeating series with an end date and one slot per weekday it meets. It does not continue after the end date. A non-repeating class is a single session.
 - Edit **this occurrence only** or **entire series**.
+- Moving one session of a repeating series keeps it on that series. That original date drops off the schedule, the session shows on the new date, and the other weeks stay. The new day cannot be a weekday the series already uses. Moving a non-repeating class changes the series date itself.
+- Two sessions of one series do not fall on the same calendar day. A second session that day is a separate series.
 - Design series-wide reservation/pole updates with future bulk-update in mind (§8) — don't paint into a corner, but bulk update is **not MVP**.
 
 
@@ -282,7 +286,7 @@ Canceling a **member’s reservation** is a separate action (see §8 / §9) and 
 
 Staff choose how the class is paid for:
 
-- Credit cost (including 0 for free sign-up items).
+- Credit cost (including 0 for free sign-up items, and half steps such as 0.5 or 1.5). Package grants stay whole numbers. Spending a fractional cost is part of reservation deduction (task 7.1).
 - Dollar cost (paid events / lessons).
 - Both, if a class should consume a credit **and** collect money (rare; keep the fields independent so staff are not forced into one model).
 
@@ -316,6 +320,7 @@ The **app/backend class system is the source of truth** for beta users.
 - The **existing public Google Calendar** (website practice schedule) is **maintained separately** by staff — unchanged workflow for non-beta members.
 - Classes created in the new system **sync one-way to a separate Google Calendar** (not the existing public one) to avoid duplicate events during testing.
 - Canceled classes should remain represented (canceled) if they still appear in-app; deleted classes should be removed from the sync calendar.
+- Each synced event is one series plus one date, including dates that were not individually edited. A moved session stays one event and changes day. Task 5.1 stores the Google event id in its own sync table.
 
 
 
@@ -456,7 +461,8 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Credit consumption
 
-- Reserving deducts 1 credit (or configured cost) from the **soonest-expiring eligible package** immediately on tap (no confirm step).
+- Reserving deducts the class credit cost (1, or another configured cost such as 0.5) from the **soonest-expiring eligible package** immediately on tap (no confirm step).
+- A **canceled** class does not count as a credit spent. A moved class keeps the reservation and the credit; the reservation date follows the class.
 - Display: remaining count, reserved count, and `N expire [date]` for the soonest relevant expiration (§4), with a brief animation on the chip when the numbers change.
 
 
@@ -481,6 +487,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 ### Reservation management
 
 - View upcoming reservations (per athlete).
+- A reservation is for **one session** (one series and one date), not for the whole series. Most sessions have no separate edited-date row.
 - Update/cancel before cutoff.
 - **Bulk/multi-class reservation:** later phase.
 
@@ -545,7 +552,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Training group
 
-- New property on **AthleteProfile**: `trainingGroup`.
+- An athlete profile can belong to **more than one training group**, using the same group list as class eligibility (`fly-kids`, `adult`, `allages`, `elite`). This is a join, not a single column. Task 11.1 adds the profile side. No groups means no group limit on a class.
 - **Not editable by the athlete/user themselves.**
 - Shown and edited on the existing **Edit Profile** screen (not a standalone “Edit Training Group” flow). The field is only writable for users with a dedicated permission (e.g. `edit_training_group` — may or may not be assigned to coach role).
 - If unset, fall back to group from latest purchase or a default (engineering TBD).
@@ -923,9 +930,9 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 ### Task 4: Class data model + API
 
-- [ ] **4.1 — Class schema + recurrence**
+- [x] **4.1 — Class schema + recurrence**
   - Models for classes, series, occurrences; all configurable properties from §5 (custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, canceled vs deleted).
-  - *Completion notes:*
+  - *Completion notes:* 2026-10-07. Tables `classSeries`, `classSeriesSlots`, `classOccurrences`, `trainingGroups`, and the coach and group joins are created by `schema.sync()`. Seed the four groups once with `node server/db/seedTrainingGroups.js` (not on startup). Expansion and validation are in `server/lib/classSchedule.js`. A repeating series may set `endsOn`. A camp is that series with an end date and one slot per weekday. A one-off moves by changing `startsOn`. One date of a repeating series moves with `rescheduledFrom` and stays on the series. Credit cost is `DECIMAL(6,2)`. No API.
 
 - [ ] **4.2 — Class CRUD API + unit tests**
   - Mobile-authenticated routes; permission checks (`manage_classes`).
@@ -939,6 +946,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 - [ ] **5.1 — Separate calendar sync**
   - One-way push from app/backend to dedicated Google Calendar (not the public one).
   - Resolve §16 (Google Calendar sync details) during implementation; document config (calendar ID, credentials).
+  - Each event is one series plus one date. Canceled stays, deleted is removed, and a moved session stays one event on the new date. Store the Google event id in a sync table added here.
   - *Completion notes:*
 
 
@@ -962,6 +970,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 - [ ] **7.1 — Reservation API + unit tests**
   - Reserve, cancel, relative cutoff rules, capacity hard stop, credit deduction/return.
   - Free-text reservation note field (MVP).
+  - A reservation is one series and one date. Credit cost may be fractional. A canceled session does not count as a credit spent. A moved session keeps the reservation, and its date follows the class.
   - *Completion notes:*
 
 - [ ] **7.2 — Reservation UI**
@@ -1014,6 +1023,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 - [ ] **11.1 — trainingGroup on AthleteProfile**
   - Schema, API, `edit_training_group` permission gate on **Edit Profile** (no standalone training-group screen).
+  - Join profiles to `trainingGroups` (many groups per profile). Do not add a single `trainingGroup` column. The group rows are seeded in task 4.1.
   - *Completion notes:*
 
 - [ ] **11.2 — Progress + history UI**

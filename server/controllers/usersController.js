@@ -313,6 +313,11 @@ async function deleteUser(req, res, db) {
                 { where: { createdByUserId: userIdNum }, transaction }
             );
 
+            await db.tables.ClassSeries.update(
+                { createdByUserId: null },
+                { where: { createdByUserId: userIdNum }, transaction }
+            );
+
             // 7. Finally, delete the User record
             await db.tables.Users.destroy({
                 where: { id: userIdNum },

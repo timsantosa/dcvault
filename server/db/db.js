@@ -1,6 +1,12 @@
 'use strict'
 const Sequelize = require('sequelize')
 const { assertValidPackageCreditCount } = require('./classPackageCreditCount')
+const {
+  assertValidSeriesRow,
+  assertValidSlot,
+  assertValidOccurrence,
+  assertCreditCost,
+} = require('../lib/classSchedule')
 
 let tables = {}
 let columns = {}
@@ -788,6 +794,86 @@ columns.registrationSettings = {
   useClassPackageCatalog: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
 };
 
+// Catalog of athlete groups a class can allow. Seeded separately from startup.
+columns.trainingGroups = {
+  key: { type: Sequelize.STRING, allowNull: false, unique: true },
+  label: { type: Sequelize.STRING, allowNull: false },
+};
+
+// Repeating template. One-off classes use startTime/endTime and repeats = false.
+columns.classSeries = {
+  title: { type: Sequelize.STRING, allowNull: false },
+  description: { type: Sequelize.TEXT, allowNull: true },
+  location: { type: Sequelize.STRING, allowNull: true },
+  startsOn: { type: Sequelize.DATEONLY, allowNull: false },
+  repeats: { type: Sequelize.BOOLEAN, allowNull: false },
+  endsOn: { type: Sequelize.DATEONLY, allowNull: true },
+  startTime: { type: Sequelize.TIME, allowNull: true },
+  endTime: { type: Sequelize.TIME, allowNull: true },
+  visible: { type: Sequelize.BOOLEAN, allowNull: false },
+  isReservable: { type: Sequelize.BOOLEAN, allowNull: false },
+  capacity: { type: Sequelize.INTEGER, allowNull: false },
+  creditCost: {
+    type: Sequelize.DECIMAL(6, 2),
+    allowNull: false,
+    validate: {
+      creditCost(value) {
+        assertCreditCost(value);
+      },
+    },
+  },
+  dollarCost: { type: Sequelize.DECIMAL(10, 2), allowNull: true },
+  minAge: { type: Sequelize.INTEGER, allowNull: true },
+  maxAge: { type: Sequelize.INTEGER, allowNull: true },
+  reservationCutoffMinutes: { type: Sequelize.INTEGER, allowNull: false },
+  cancellationCutoffMinutes: { type: Sequelize.INTEGER, allowNull: false },
+  color: { type: Sequelize.STRING, allowNull: true },
+  note: { type: Sequelize.TEXT, allowNull: true },
+  notifyCoachOnReserve: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+  canceledAt: { type: Sequelize.DATE, allowNull: true },
+  deletedAt: { type: Sequelize.DATE, allowNull: true },
+  createdByUserId: { type: Sequelize.INTEGER, allowNull: true },
+};
+
+columns.classSeriesSlots = {
+  classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
+  weekday: { type: Sequelize.INTEGER, allowNull: false },
+  startTime: { type: Sequelize.TIME, allowNull: false },
+  endTime: { type: Sequelize.TIME, allowNull: false },
+};
+
+columns.classSeriesTrainingGroups = {
+  classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
+  trainingGroupId: { type: Sequelize.INTEGER, allowNull: false },
+};
+
+// A date that differs from the series. Scalar differences live in overrides.
+columns.classOccurrences = {
+  classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
+  occursOn: { type: Sequelize.DATEONLY, allowNull: false },
+  status: { type: Sequelize.STRING, allowNull: true },
+  deletedAt: { type: Sequelize.DATE, allowNull: true },
+  rescheduledFrom: { type: Sequelize.DATEONLY, allowNull: true },
+  overrides: { type: Sequelize.JSON, allowNull: true },
+  overrideCoaches: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+  overrideGroups: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+};
+
+columns.classOccurrenceTrainingGroups = {
+  classOccurrenceId: { type: Sequelize.INTEGER, allowNull: false },
+  trainingGroupId: { type: Sequelize.INTEGER, allowNull: false },
+};
+
+columns.classSeriesCoaches = {
+  classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
+  athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
+};
+
+columns.classOccurrenceCoaches = {
+  classOccurrenceId: { type: Sequelize.INTEGER, allowNull: false },
+  athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
+};
+
 const syncTables = (schema, force) => {
   force = !!force
 
@@ -1007,6 +1093,93 @@ const syncTables = (schema, force) => {
   });
   tables.RegistrationSettings = schema.define('registrationSetting', columns.registrationSettings);
 
+  tables.TrainingGroups = schema.define('trainingGroup', columns.trainingGroups, {
+    tableName: 'trainingGroups',
+  });
+  tables.ClassSeries = schema.define('classSeries', columns.classSeries, {
+    tableName: 'classSeries',
+    validate: {
+      seriesRow() {
+        assertValidSeriesRow(this);
+      },
+    },
+  });
+  tables.ClassSeriesSlots = schema.define('classSeriesSlot', columns.classSeriesSlots, {
+    tableName: 'classSeriesSlots',
+    validate: {
+      slotRow() {
+        assertValidSlot(this);
+      },
+    },
+    indexes: [
+      {
+        unique: true,
+        fields: ['classSeriesId', 'weekday'],
+        name: 'class_series_slots_weekday',
+      },
+    ],
+  });
+  tables.ClassSeriesTrainingGroups = schema.define('classSeriesTrainingGroup', columns.classSeriesTrainingGroups, {
+    tableName: 'classSeriesTrainingGroups',
+    indexes: [
+      {
+        unique: true,
+        fields: ['classSeriesId', 'trainingGroupId'],
+        name: 'class_series_training_groups',
+      },
+    ],
+  });
+  tables.ClassOccurrences = schema.define('classOccurrence', columns.classOccurrences, {
+    tableName: 'classOccurrences',
+    validate: {
+      occurrenceRow() {
+        assertValidOccurrence(this);
+      },
+    },
+    indexes: [
+      {
+        unique: true,
+        fields: ['classSeriesId', 'occursOn'],
+        name: 'class_occurrences_series_date',
+      },
+      {
+        unique: true,
+        fields: ['classSeriesId', 'rescheduledFrom'],
+        name: 'class_occurrences_series_from',
+      },
+    ],
+  });
+  tables.ClassOccurrenceTrainingGroups = schema.define('classOccurrenceTrainingGroup', columns.classOccurrenceTrainingGroups, {
+    tableName: 'classOccurrenceTrainingGroups',
+    indexes: [
+      {
+        unique: true,
+        fields: ['classOccurrenceId', 'trainingGroupId'],
+        name: 'class_occurrence_training_groups',
+      },
+    ],
+  });
+  tables.ClassSeriesCoaches = schema.define('classSeriesCoach', columns.classSeriesCoaches, {
+    tableName: 'classSeriesCoaches',
+    indexes: [
+      {
+        unique: true,
+        fields: ['classSeriesId', 'athleteProfileId'],
+        name: 'class_series_coaches_profile',
+      },
+    ],
+  });
+  tables.ClassOccurrenceCoaches = schema.define('classOccurrenceCoach', columns.classOccurrenceCoaches, {
+    tableName: 'classOccurrenceCoaches',
+    indexes: [
+      {
+        unique: true,
+        fields: ['classOccurrenceId', 'athleteProfileId'],
+        name: 'class_occurrence_coaches_profile',
+      },
+    ],
+  });
+
   // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
 
@@ -1174,6 +1347,91 @@ const syncTables = (schema, force) => {
     onUpdate: 'CASCADE',
   });
   tables.Users.hasMany(tables.CreditGrants, { as: 'creditGrantsCreated', foreignKey: 'createdByUserId' });
+
+  // Class schedule. onDelete is set on belongsTo first so the inverse association does not replace it.
+  tables.ClassSeries.belongsTo(tables.Users, {
+    as: 'createdBy',
+    foreignKey: 'createdByUserId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  });
+  tables.Users.hasMany(tables.ClassSeries, { as: 'classSeriesCreated', foreignKey: 'createdByUserId' });
+
+  tables.ClassSeriesSlots.belongsTo(tables.ClassSeries, {
+    as: 'classSeries',
+    foreignKey: 'classSeriesId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassSeries.hasMany(tables.ClassSeriesSlots, { as: 'slots', foreignKey: 'classSeriesId' });
+
+  tables.ClassSeriesTrainingGroups.belongsTo(tables.ClassSeries, {
+    as: 'classSeries',
+    foreignKey: 'classSeriesId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassSeries.hasMany(tables.ClassSeriesTrainingGroups, { as: 'seriesTrainingGroups', foreignKey: 'classSeriesId' });
+  tables.ClassSeriesTrainingGroups.belongsTo(tables.TrainingGroups, {
+    as: 'trainingGroup',
+    foreignKey: 'trainingGroupId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.TrainingGroups.hasMany(tables.ClassSeriesTrainingGroups, { as: 'classSeriesLinks', foreignKey: 'trainingGroupId' });
+
+  tables.ClassOccurrences.belongsTo(tables.ClassSeries, {
+    as: 'classSeries',
+    foreignKey: 'classSeriesId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassSeries.hasMany(tables.ClassOccurrences, { as: 'occurrences', foreignKey: 'classSeriesId' });
+
+  tables.ClassOccurrenceTrainingGroups.belongsTo(tables.ClassOccurrences, {
+    as: 'classOccurrence',
+    foreignKey: 'classOccurrenceId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassOccurrences.hasMany(tables.ClassOccurrenceTrainingGroups, { as: 'occurrenceTrainingGroups', foreignKey: 'classOccurrenceId' });
+  tables.ClassOccurrenceTrainingGroups.belongsTo(tables.TrainingGroups, {
+    as: 'trainingGroup',
+    foreignKey: 'trainingGroupId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.TrainingGroups.hasMany(tables.ClassOccurrenceTrainingGroups, { as: 'classOccurrenceLinks', foreignKey: 'trainingGroupId' });
+
+  tables.ClassSeriesCoaches.belongsTo(tables.ClassSeries, {
+    as: 'classSeries',
+    foreignKey: 'classSeriesId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassSeries.hasMany(tables.ClassSeriesCoaches, { as: 'coaches', foreignKey: 'classSeriesId' });
+  tables.ClassSeriesCoaches.belongsTo(tables.AthleteProfiles, {
+    as: 'athleteProfile',
+    foreignKey: 'athleteProfileId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.AthleteProfiles.hasMany(tables.ClassSeriesCoaches, { as: 'classSeriesCoaching', foreignKey: 'athleteProfileId' });
+
+  tables.ClassOccurrenceCoaches.belongsTo(tables.ClassOccurrences, {
+    as: 'classOccurrence',
+    foreignKey: 'classOccurrenceId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassOccurrences.hasMany(tables.ClassOccurrenceCoaches, { as: 'coaches', foreignKey: 'classOccurrenceId' });
+  tables.ClassOccurrenceCoaches.belongsTo(tables.AthleteProfiles, {
+    as: 'athleteProfile',
+    foreignKey: 'athleteProfileId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.AthleteProfiles.hasMany(tables.ClassOccurrenceCoaches, { as: 'classOccurrenceCoaching', foreignKey: 'athleteProfileId' });
 
   tables.schema = schema;
   return schema.sync({ force: force })
