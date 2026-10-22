@@ -4,6 +4,11 @@ const {
   expandClassOccurrences,
   assertValidClassSeries,
   isBlankOccurrence,
+  prepareClassCreate,
+  prepareClassUpdate,
+  prepareClassCancel,
+  prepareClassDelete,
+  parseScheduleRange,
 } = require('../lib/classSchedule');
 
 const MIXED_SLOTS = [
@@ -424,5 +429,497 @@ describe('assertValidClassSeries', () => {
         occurrence({ overrides: { pole: '14' } }),
       ],
     }))).toThrow(/unknown override pole/);
+  });
+});
+
+const KNOWN = { knownCoachIds: [], knownTrainingGroupIds: [] };
+const NOW = '2026-08-01T15:00:00.000Z';
+
+function classInput(overrides) {
+  return Object.assign({
+    title: 'Open Vault',
+    description: null,
+    location: 'DC Vault',
+    startsOn: '2026-08-25',
+    repeats: true,
+    endsOn: null,
+    startTime: null,
+    endTime: null,
+    slots: tuesdaySlot(),
+    visible: true,
+    isReservable: true,
+    capacity: 18,
+    creditCost: 1,
+    dollarCost: null,
+    minAge: null,
+    maxAge: null,
+    reservationCutoffMinutes: 1440,
+    cancellationCutoffMinutes: 1440,
+    color: null,
+    note: null,
+    notifyCoachOnReserve: false,
+    coachIds: [],
+    trainingGroupIds: [],
+  }, overrides);
+}
+
+function seriesInput(overrides) {
+  return classInput(Object.assign({ scope: 'series', notify: false }, overrides));
+}
+
+function occurrenceInput(overrides) {
+  return classInput(Object.assign({
+    scope: 'occurrence',
+    notify: false,
+    occursOn: '2026-08-25',
+    startTime: '18:00:00',
+    endTime: '20:00:00',
+  }, overrides));
+}
+
+function oneOffInput(overrides) {
+  return classInput(Object.assign({
+    repeats: false,
+    startTime: '16:00:00',
+    endTime: '18:00:00',
+    slots: [],
+  }, overrides));
+}
+
+function repeatingCurrent(seriesOverrides, occurrences) {
+  return {
+    series: series(seriesOverrides),
+    slots: tuesdaySlot(),
+    occurrences: occurrences || [],
+  };
+}
+
+function currentOf(prepared) {
+  return {
+    series: Object.assign({}, series(), prepared.value.series, {
+      coachIds: prepared.value.coachIds,
+      trainingGroupIds: prepared.value.trainingGroupIds,
+    }),
+    slots: prepared.value.slots,
+    occurrences: prepared.value.occurrences,
+  };
+}
+
+function expandPrepared(prepared, rangeEnd) {
+  return expandClassOccurrences({
+    series: Object.assign({ id: 4 }, prepared.value.series, {
+      coachIds: prepared.value.coachIds,
+      trainingGroupIds: prepared.value.trainingGroupIds,
+    }),
+    slots: prepared.value.slots,
+    occurrences: prepared.value.occurrences,
+    rangeStart: '2026-08-25',
+    rangeEnd: rangeEnd || '2026-09-01',
+  });
+}
+
+describe('prepareClassCreate', () => {
+  it('accepts a repeating series and a one-off', () => {
+    const repeating = prepareClassCreate(classInput({
+      creditCost: 0.5,
+      slots: MIXED_SLOTS,
+      endsOn: '2026-08-30',
+    }), KNOWN);
+    expect(repeating.ok).toBe(true);
+    expect(repeating.value.series.repeats).toBe(true);
+    expect(repeating.value.series.creditCost).toBe(0.5);
+    expect(repeating.value.series.endsOn).toBe('2026-08-30');
+    expect(repeating.value.slots.map((slot) => slot.weekday)).toEqual([0, 2, 4]);
+    expect(repeating.value.occurrences).toEqual([]);
+    expect(repeating.value.notifyRequested).toBeUndefined();
+
+    const single = prepareClassCreate(oneOffInput(), KNOWN);
+    expect(single.ok).toBe(true);
+    expect(single.value.series.repeats).toBe(false);
+    expect(single.value.series.startsOn).toBe('2026-08-25');
+    expect(single.value.series.startTime).toBe('16:00:00');
+    expect(single.value.slots).toEqual([]);
+  });
+
+  it('rejects a missing title, an unknown coach, and a duplicate coach', () => {
+    expect(prepareClassCreate(classInput({ title: '  ' }), KNOWN).message).toBe('title is required');
+    expect(prepareClassCreate(classInput({ creditCost: -1 }), KNOWN).message).toMatch(/creditCost/);
+    expect(prepareClassCreate(classInput({ coachIds: [4] }), {
+      knownCoachIds: [1],
+      knownTrainingGroupIds: [],
+    }).message).toBe('Unknown coach.');
+    expect(prepareClassCreate(classInput({ coachIds: [1, 1] }), {
+      knownCoachIds: [1],
+      knownTrainingGroupIds: [],
+    }).message).toBe('Duplicate coach.');
+  });
+});
+
+describe('prepareClassUpdate', () => {
+  it('clears only the overrides for fields the series edit changed', () => {
+    const prepared = prepareClassUpdate(repeatingCurrent(null, [
+      occurrence({
+        occursOn: '2026-08-25',
+        overrides: { title: 'Special', capacity: 10 },
+      }),
+    ]), seriesInput({ title: 'Vault Night', notify: true }), KNOWN);
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.notifyRequested).toBe(true);
+    expect(prepared.value.series.title).toBe('Vault Night');
+    expect(prepared.value.occurrences).toEqual([
+      occurrence({
+        occursOn: '2026-08-25',
+        overrides: { capacity: 10 },
+      }),
+    ]);
+    expect(expandPrepared(prepared).every((session) => session.title === 'Vault Night')).toBe(true);
+  });
+
+  it('drops a date whose only difference was a field the series edit changed', () => {
+    const prepared = prepareClassUpdate(repeatingCurrent(null, [
+      occurrence({ occursOn: '2026-08-25', overrides: { title: 'Special' } }),
+    ]), seriesInput({ title: 'Vault Night' }), KNOWN);
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.occurrences).toEqual([]);
+  });
+
+  it('keeps a moved date and a time override when the slots stay', () => {
+    const prepared = prepareClassUpdate(repeatingCurrent(null, [
+      occurrence({
+        occursOn: '2026-08-26',
+        rescheduledFrom: '2026-08-25',
+        overrides: { startTime: '17:00:00', endTime: '19:00:00' },
+      }),
+    ]), seriesInput({ title: 'Vault Night' }), KNOWN);
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.occurrences[0].occursOn).toBe('2026-08-26');
+    expect(prepared.value.occurrences[0].rescheduledFrom).toBe('2026-08-25');
+    expect(prepared.value.occurrences[0].overrides).toEqual({
+      startTime: '17:00:00',
+      endTime: '19:00:00',
+    });
+  });
+
+  it('clears per-date times when the slots change, and keeps an unchanged note', () => {
+    const prepared = prepareClassUpdate(repeatingCurrent(null, [
+      occurrence({
+        occursOn: '2026-08-25',
+        overrides: { startTime: '17:00:00', endTime: '19:00:00', note: 'Bring poles' },
+      }),
+    ]), seriesInput({
+      slots: [{ weekday: 2, startTime: '18:30:00', endTime: '20:30:00' }],
+    }), KNOWN);
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.occurrences[0].overrides).toEqual({ note: 'Bring poles' });
+    expect(prepared.value.slots[0].startTime).toBe('18:30:00');
+  });
+
+  it('clears per-date coaches and groups when those lists change', () => {
+    const prepared = prepareClassUpdate(repeatingCurrent({
+      coachIds: [1],
+      trainingGroupIds: [7],
+    }, [
+      occurrence({
+        occursOn: '2026-08-25',
+        overrideCoaches: true,
+        coachIds: [2],
+        overrideGroups: true,
+        trainingGroupIds: [9],
+        overrides: { note: 'Keep' },
+      }),
+    ]), seriesInput({
+      coachIds: [3, 1],
+      trainingGroupIds: [8],
+    }), {
+      knownCoachIds: [1, 3],
+      knownTrainingGroupIds: [8],
+    });
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.coachIds).toEqual([1, 3]);
+    expect(prepared.value.trainingGroupIds).toEqual([8]);
+    expect(prepared.value.occurrences[0].overrideCoaches).toBe(false);
+    expect(prepared.value.occurrences[0].overrideGroups).toBe(false);
+    expect(prepared.value.occurrences[0].coachIds).toEqual([]);
+    expect(prepared.value.occurrences[0].overrides).toEqual({ note: 'Keep' });
+  });
+
+  it('stores only the fields that differ on one date', () => {
+    const prepared = prepareClassUpdate(
+      repeatingCurrent(),
+      occurrenceInput({ title: 'Meet day', notify: false }),
+      KNOWN
+    );
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.occurrences).toHaveLength(1);
+    expect(prepared.value.occurrences[0].occursOn).toBe('2026-08-25');
+    expect(prepared.value.occurrences[0].overrides).toEqual({ title: 'Meet day' });
+    expect(prepared.value.occurrences[0].rescheduledFrom).toBeNull();
+    const sessions = expandPrepared(prepared);
+    expect(sessions[0].title).toBe('Meet day');
+    expect(sessions[1].title).toBe('Open Vault');
+    expect(sessions[1].occursOn).toBe('2026-09-01');
+  });
+
+  it('rejects a move onto a date that already has a session', () => {
+    const prepared = prepareClassUpdate(repeatingCurrent(null, [
+      occurrence({ occursOn: '2026-08-26', rescheduledFrom: '2026-08-25' }),
+    ]), occurrenceInput({
+      occursOn: '2026-09-01',
+      moveTo: '2026-08-26',
+    }), KNOWN);
+
+    expect(prepared.ok).toBe(false);
+    expect(prepared.message).toMatch(/share a date/);
+  });
+
+  it('rejects turning off repeat while a per-date change still exists', () => {
+    const blocked = prepareClassUpdate(repeatingCurrent(null, [
+      occurrence({ occursOn: '2026-08-25', overrides: { title: 'Special' } }),
+    ]), seriesInput({
+      repeats: false,
+      startTime: '16:00:00',
+      endTime: '18:00:00',
+      slots: [],
+    }), KNOWN);
+    expect(blocked.ok).toBe(false);
+    expect(blocked.message).toBe('a one-off series cannot keep per-date changes');
+
+    const cleared = prepareClassUpdate(repeatingCurrent(), seriesInput({
+      repeats: false,
+      startTime: '16:00:00',
+      endTime: '18:00:00',
+      slots: [],
+    }), KNOWN);
+    expect(cleared.ok).toBe(true);
+    expect(cleared.value.series.repeats).toBe(false);
+    expect(cleared.value.occurrences).toEqual([]);
+    expect(cleared.value.series.startTime).toBe('16:00:00');
+  });
+
+  it('moves one date, and a second move keeps the original slot date', () => {
+    const first = prepareClassUpdate(
+      repeatingCurrent(),
+      occurrenceInput({ moveTo: '2026-08-26' }),
+      KNOWN
+    );
+    expect(first.ok).toBe(true);
+    expect(first.value.occurrences[0].occursOn).toBe('2026-08-26');
+    expect(first.value.occurrences[0].rescheduledFrom).toBe('2026-08-25');
+
+    const second = prepareClassUpdate(
+      currentOf(first),
+      occurrenceInput({ occursOn: '2026-08-26', moveTo: '2026-08-28' }),
+      KNOWN
+    );
+    expect(second.ok).toBe(true);
+    expect(second.value.occurrences[0].occursOn).toBe('2026-08-28');
+    expect(second.value.occurrences[0].rescheduledFrom).toBe('2026-08-25');
+    expect(datesOf(expandPrepared(second, '2026-09-01'))).toEqual([
+      '2026-08-28',
+      '2026-09-01',
+    ]);
+  });
+
+  it('moves a one-off by changing startsOn for either scope', () => {
+    const current = { series: oneOff(), slots: [], occurrences: [] };
+    const bySeries = prepareClassUpdate(current, oneOffInput({
+      scope: 'series',
+      notify: false,
+      startsOn: '2026-08-26',
+    }), KNOWN);
+    expect(bySeries.ok).toBe(true);
+    expect(bySeries.value.series.startsOn).toBe('2026-08-26');
+    expect(bySeries.value.occurrences).toEqual([]);
+
+    const byDate = prepareClassUpdate(current, oneOffInput({
+      scope: 'occurrence',
+      notify: true,
+      occursOn: '2026-08-25',
+      moveTo: '2026-08-27',
+    }), KNOWN);
+    expect(byDate.ok).toBe(true);
+    expect(byDate.value.series.startsOn).toBe('2026-08-27');
+    expect(byDate.value.notifyRequested).toBe(true);
+    expect(byDate.value.slots).toEqual([]);
+
+    const missing = prepareClassUpdate(current, oneOffInput({
+      scope: 'occurrence',
+      notify: false,
+      occursOn: '2026-08-26',
+    }), KNOWN);
+    expect(missing.ok).toBe(false);
+    expect(missing.message).toBe('That date is not on this series.');
+  });
+
+  it('requires notify on an edit', () => {
+    const prepared = prepareClassUpdate(repeatingCurrent(), seriesInput({ notify: undefined }), KNOWN);
+    expect(prepared.ok).toBe(false);
+    expect(prepared.message).toBe('notify must be true or false');
+  });
+});
+
+describe('prepareClassCancel', () => {
+  it('cancels one date, then the series, and keeps that date canceled after restore', () => {
+    let current = repeatingCurrent();
+    let step = prepareClassCancel(current, {
+      scope: 'occurrence',
+      occursOn: '2026-08-25',
+      notify: false,
+      canceled: true,
+    }, NOW);
+    expect(step.ok).toBe(true);
+    expect(step.value.series.canceledAt).toBeNull();
+    expect(step.value.occurrences[0].status).toBe('canceled');
+
+    current = currentOf(step);
+    step = prepareClassCancel(current, {
+      scope: 'series',
+      notify: false,
+      canceled: true,
+    }, NOW);
+    expect(step.value.series.canceledAt).toBe(NOW);
+    expect(step.value.occurrences[0].status).toBe('canceled');
+
+    current = currentOf(step);
+    step = prepareClassCancel(current, {
+      scope: 'series',
+      notify: true,
+      canceled: false,
+    }, NOW);
+    expect(step.value.notifyRequested).toBe(true);
+    expect(step.value.series.canceledAt).toBeNull();
+    expect(step.value.occurrences[0].occursOn).toBe('2026-08-25');
+    expect(step.value.occurrences[0].status).toBe('canceled');
+  });
+
+  it('leaves an explicit active date active when the series is canceled', () => {
+    const prepared = prepareClassCancel(repeatingCurrent(null, [
+      occurrence({ occursOn: '2026-09-01', status: 'active' }),
+    ]), {
+      scope: 'series',
+      notify: false,
+      canceled: true,
+    }, NOW);
+
+    expect(prepared.ok).toBe(true);
+    const sessions = expandPrepared(prepared, '2026-09-08');
+    expect(sessions.map((session) => [session.occursOn, session.status])).toEqual([
+      ['2026-08-25', 'canceled'],
+      ['2026-09-01', 'active'],
+      ['2026-09-08', 'canceled'],
+    ]);
+  });
+
+  it('marks one date active again when the series itself is canceled', () => {
+    const prepared = prepareClassCancel(repeatingCurrent({
+      canceledAt: '2026-08-01T00:00:00.000Z',
+    }), {
+      scope: 'occurrence',
+      occursOn: '2026-08-25',
+      notify: false,
+      canceled: false,
+    }, NOW);
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.series.canceledAt).toBe('2026-08-01T00:00:00.000Z');
+    expect(prepared.value.occurrences[0].status).toBe('active');
+  });
+
+  it('drops a one-date cancel on an active series when that date is restored', () => {
+    const canceled = prepareClassCancel(repeatingCurrent(), {
+      scope: 'occurrence',
+      occursOn: '2026-08-25',
+      notify: false,
+      canceled: true,
+    }, NOW);
+    const restored = prepareClassCancel(currentOf(canceled), {
+      scope: 'occurrence',
+      occursOn: '2026-08-25',
+      notify: false,
+      canceled: false,
+    }, NOW);
+
+    expect(restored.ok).toBe(true);
+    expect(restored.value.occurrences).toEqual([]);
+  });
+
+  it('cancels a one-off on the series row', () => {
+    const current = { series: oneOff(), slots: [], occurrences: [] };
+    const prepared = prepareClassCancel(current, {
+      scope: 'occurrence',
+      occursOn: '2026-08-25',
+      notify: false,
+      canceled: true,
+    }, NOW);
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.series.canceledAt).toBe(NOW);
+    expect(prepared.value.occurrences).toEqual([]);
+  });
+});
+
+describe('prepareClassDelete', () => {
+  it('removes one date, and removes the whole series', () => {
+    const oneDate = prepareClassDelete(repeatingCurrent(), {
+      scope: 'occurrence',
+      occursOn: '2026-08-25',
+      notify: false,
+    }, NOW);
+    expect(oneDate.ok).toBe(true);
+    expect(oneDate.value.series.deletedAt).toBeNull();
+    expect(oneDate.value.occurrences[0].deletedAt).toBe(NOW);
+    expect(datesOf(expandPrepared(oneDate))).toEqual(['2026-09-01']);
+
+    const entire = prepareClassDelete(repeatingCurrent(), {
+      scope: 'series',
+      notify: true,
+    }, NOW);
+    expect(entire.ok).toBe(true);
+    expect(entire.value.notifyRequested).toBe(true);
+    expect(entire.value.series.deletedAt).toBe(NOW);
+    expect(expandPrepared(entire)).toEqual([]);
+  });
+
+  it('keeps a moved date\'s row so the original weekday stays off the calendar', () => {
+    const prepared = prepareClassDelete(repeatingCurrent(null, [
+      occurrence({ occursOn: '2026-08-26', rescheduledFrom: '2026-08-25' }),
+    ]), {
+      scope: 'occurrence',
+      occursOn: '2026-08-26',
+      notify: false,
+    }, NOW);
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.occurrences[0].rescheduledFrom).toBe('2026-08-25');
+    expect(prepared.value.occurrences[0].deletedAt).toBe(NOW);
+    expect(datesOf(expandPrepared(prepared))).toEqual(['2026-09-01']);
+  });
+
+  it('requires notify', () => {
+    const prepared = prepareClassDelete(repeatingCurrent(), {
+      scope: 'series',
+      notify: 'yes',
+    }, NOW);
+    expect(prepared.ok).toBe(false);
+    expect(prepared.message).toBe('notify must be true or false');
+  });
+});
+
+describe('parseScheduleRange', () => {
+  it('accepts 92 days and rejects a longer window', () => {
+    expect(parseScheduleRange('2026-08-01', '2026-11-01')).toEqual({
+      ok: true,
+      value: { from: '2026-08-01', to: '2026-11-01' },
+    });
+    const tooLong = parseScheduleRange('2026-08-01', '2026-11-02');
+    expect(tooLong.ok).toBe(false);
+    expect(tooLong.message).toBe('date window must be 92 days or less');
+    expect(parseScheduleRange('2026-08-02', '2026-08-01').message).toBe('from must be on or before to');
   });
 });

@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-10-07  
+**Last updated:** 2026-10-20  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -934,10 +934,10 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
   - Models for classes, series, occurrences; all configurable properties from §5 (custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, canceled vs deleted).
   - *Completion notes:* 2026-10-07. Tables `classSeries`, `classSeriesSlots`, `classOccurrences`, `trainingGroups`, and the coach and group joins are created by `schema.sync()`. Seed the four groups once with `node server/db/seedTrainingGroups.js` (not on startup). Expansion and validation are in `server/lib/classSchedule.js`. A repeating series may set `endsOn`. A camp is that series with an end date and one slot per weekday. A one-off moves by changing `startsOn`. One date of a repeating series moves with `rescheduledFrom` and stays on the series. Credit cost is `DECIMAL(6,2)`. No API.
 
-- [ ] **4.2 — Class CRUD API + unit tests**
+- [x] **4.2 — Class CRUD API + unit tests**
   - Mobile-authenticated routes; permission checks (`manage_classes`).
   - Single-instance vs series edit behavior; cancel vs delete; optional notify flag.
-  - *Completion notes:*
+  - *Completion notes:* 2026-10-20. `manage_classes` routes under `/mobileapp/user/classes`. Create, read one series, and list sessions for a window of at most 92 days. Edit, cancel, restore, and delete take `scope` `series` or `occurrence` and a boolean `notify`. `notify` is echoed as `notifyRequested` and does not send a message (task 12.2). A series edit clears per-date overrides only for fields that changed. A moved date stays moved. A one-off edit writes the series row. Turning off repeat is rejected while a per-date change still exists. Deleted series return 404. The §15 class-CRUD checkbox stays open until the staff UI (task 8.1).
 
 
 
