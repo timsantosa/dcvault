@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-10-20  
+**Last updated:** 2026-10-21  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -318,9 +318,14 @@ The **app/backend class system is the source of truth** for beta users.
 ### During transition
 
 - The **existing public Google Calendar** (website practice schedule) is **maintained separately** by staff — unchanged workflow for non-beta members.
-- Classes created in the new system **sync one-way to a separate Google Calendar** (not the existing public one) to avoid duplicate events during testing.
-- Canceled classes should remain represented (canceled) if they still appear in-app; deleted classes should be removed from the sync calendar.
-- Each synced event is one series plus one date, including dates that were not individually edited. A moved session stays one event and changes day. Task 5.1 stores the Google event id in its own sync table.
+- Classes created in the new system **sync one-way to a separate Google Calendar** (not the existing public one) to avoid duplicate events during testing. This is task 5.1. It stays in the MVP, and it is the **last MVP build task** (after Task 12, before dark launch) so the schedule and reservations can be tested first.
+- The push runs when a class is **created, edited, canceled, restored, or deleted**. There is no scheduled job.
+- A repeating class is **one Google event per weekday and time**. That event has **no end date** unless the class has one. A one-off class is a single event. Dates nobody edited are not stored as their own events.
+- A **moved, canceled, or otherwise edited** date is its own event. A moved session stays that one event and changes day. Task 5.1 stores each Google event id in a sync table.
+- A canceled class **stays** on the sync calendar, with the title prefixed `Canceled: `. A deleted class is **removed**.
+- Each event shows the **title, date, start and end time, location, and training groups**.
+- **Hidden** classes are not copied. Only classes marked visible are synced.
+- The separate calendar id and a service-account key path come from the environment (`GOOGLE_CLASS_SYNC_CALENDAR_ID`, `GOOGLE_CLASS_SYNC_CREDENTIALS`). If either is missing, the push is skipped. The class save still succeeds. The public calendar is never written. Confirm the IANA timezone (gym local time) when the task is built.
 
 
 
@@ -769,7 +774,7 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 - [ ] Roster visibility (permission-gated)
 - [ ] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
 - [ ] Private lessons reserve immediately (no approval workflow)
-- [ ] One-way sync to separate Google Calendar
+- [ ] One-way sync to separate Google Calendar (task 5.1, last MVP build task; rules in §6)
 - [ ] Unit test framework + core logic tests
 - [ ] Allow users to message coaches/admins even without the manage_conversations permission. (For asking questions)
 
@@ -815,17 +820,20 @@ These are intentionally unresolved — capture decisions as they come up during 
 
 1. **Roster privacy** — confirmed OK for all members for now; revisit if gym culture changes.
 2. **Training group fallback** — when AthleteProfile group unset, derive from purchase or require admin set?
-3. **Google Calendar sync details** — which separate calendar, sync frequency, what fields map; how canceled vs deleted classes appear. (Task 5.1)
-4. **Success metrics** — define before full release (e.g., beta reservation volume, support tickets, Zen Planner manual entry reduction).
-5. **Launch communication** — member messaging when switching off Zen Planner.
-6. **Walk-in overdraft (parked, not decided)** — potential Phase 2: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
-7. **Automatic discount eligibility** — how military / other non-time-based discounts are verified; whether automatic discounts stack with remaining manual codes. Early-bird window itself is decided: configurable duration.
+3. **Success metrics** — define before full release (e.g., beta reservation volume, support tickets, Zen Planner manual entry reduction).
+4. **Launch communication** — member messaging when switching off Zen Planner.
+5. **Walk-in overdraft (parked, not decided)** — potential Phase 2: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
+6. **Automatic discount eligibility** — how military / other non-time-based discounts are verified; whether automatic discounts stack with remaining manual codes. Early-bird window itself is decided: configurable duration.
 
 ### Resolved (2026-09-27)
 
 - **Private lesson inventory** — not a credit pack in MVP. Dollar-cost class, group credits are not spent. [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §9.
 - **Private lesson payment** — confirm sheet shows the price and the reservation is saved. No PayPal. Staff invoice manually. Real charging is Phase 2+.
 - **Website → credit sync** — one grant inside registration finalize when `useClassPackageCatalog` is on. Flag off and all historical purchases create no grants. No backfill. Invite-only catalog packages stay hidden until a matching invite level. [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §5.
+
+### Resolved (2026-10-21)
+
+- **Google Calendar sync details** — separate calendar, not the public one. Push on create, edit, cancel, restore, and delete. One repeating Google event per weekday and time, with no end date unless the class has one. Edited dates are their own events. Title, time, location, and training groups. Canceled stays, prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied. Calendar id and service-account key path come from the environment; if either is missing, skip the push. The IANA timezone is still confirmed when task 5.1 is built. See §6. Implementation is deferred to the end of the MVP build list.
 
 ---
 
@@ -943,11 +951,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 ### Task 5: Google Calendar outbound sync
 
-- [ ] **5.1 — Separate calendar sync**
-  - One-way push from app/backend to dedicated Google Calendar (not the public one).
-  - Resolve §16 (Google Calendar sync details) during implementation; document config (calendar ID, credentials).
-  - Each event is one series plus one date. Canceled stays, deleted is removed, and a moved session stays one event on the new date. Store the Google event id in a sync table added here.
-  - *Completion notes:*
+Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before dark launch. The rules are in §6. Do not pick it up while an earlier `[ ]` task is still open.
 
 
 
@@ -1046,6 +1050,20 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 - [ ] **12.3 — Message class participants**
   - Integrate with existing messaging system.
+  - *Completion notes:*
+
+
+
+### Task 5: Google Calendar outbound sync
+
+Last MVP build task. Do this after Tasks 6–12 so the schedule and reservations can be tested first. Decisions are in §6 (resolved 2026-10-21).
+
+- [ ] **5.1 — Separate calendar sync**
+  - One-way push from the class system to a separate Google Calendar. The public calendar is not written.
+  - Push on create, edit, cancel, restore, and delete. No scheduled job.
+  - A repeating class is one Google event per weekday and time, with no end date unless the class has one. A one-off is a single event. A moved, canceled, or otherwise edited date is its own event, and a move updates that same event. Store each Google event id in a sync table added here.
+  - Title, date, start and end time, location, and training groups. Canceled stays, with the title prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied.
+  - Read `GOOGLE_CLASS_SYNC_CALENDAR_ID` and `GOOGLE_CLASS_SYNC_CREDENTIALS`. If either is missing, skip the push and still save the class. Confirm the IANA timezone when building.
   - *Completion notes:*
 
 

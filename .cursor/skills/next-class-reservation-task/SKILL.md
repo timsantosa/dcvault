@@ -99,7 +99,7 @@ Follow §19 "After completing a task": check off the §18 item, add completion n
 | --- | --- |
 | 3.1 | CREDIT_INVENTORY.md §5. No member screen. |
 | 4.1, 4.2, 8.1 | Flow G |
-| 5.1 | PRD §6 and §16 item 3. No screen. |
+| 5.1 | PRD §6. Deferred until it is the first open §18 task. No screen. |
 | 6.1, 6.2 | Who sees what, visual language, Flow A |
 | 7.1, 7.2 | Flows A, B, C |
 | 8.2 | Flow D |
