@@ -957,10 +957,10 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 ### Task 6: Schedule tab — permission gate + read-only UI
 
-- [ ] **6.1 — Schedule tab gate**
+- [x] **6.1 — Schedule tab gate**
   - If no `reserve_classes`: existing `CalendarCustom` / Google Calendar view.
   - If yes: new schedule component shell.
-  - *Completion notes:*
+  - *Completion notes:* 2026-10-21. The Schedule tab uses `scheduleTabKind`. With `reserve_classes` it shows `ClassScheduleScreen` ("Class schedule will show here."). Without it, the tab stays `CalendarCustom`. The §15 schedule checkbox stays open until the read-only display (task 6.2).
 
 - [ ] **6.2 — Schedule display (read-only)**
   - Month grid with reserved vs unreserved day markers; scrolling agenda (past dimmed, ~2 weeks back); class details; capacity; eligibility with reason; attendance markers; credit chip (remaining / reserved / N expire date).
