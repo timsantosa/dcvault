@@ -18,28 +18,33 @@ async function listClasses(req, res, db) {
     if (!range.ok) {
       return res.status(400).json({ ok: false, message: range.message });
     }
-    const rows = await db.tables.ClassSeries.findAll({
-      where: { deletedAt: null },
-      include: seriesInclude(db),
-    });
-    const sessions = [];
-    rows.forEach((row) => {
-      const graph = graphFromRow(row);
-      expandClassOccurrences({
-        series: graph.series,
-        slots: graph.slots,
-        occurrences: graph.occurrences,
-        rangeStart: range.value.from,
-        rangeEnd: range.value.to,
-      }).forEach((session) => {
-        sessions.push(session);
-      });
-    });
-    sessions.sort(compareSessions);
+    const sessions = await loadExpandedSessions(db, range.value.from, range.value.to);
     res.json({ ok: true, sessions: sessions });
   } catch (error) {
     sendError(res, error, 'Error in listClasses:');
   }
+}
+
+async function loadExpandedSessions(db, from, to) {
+  const rows = await db.tables.ClassSeries.findAll({
+    where: { deletedAt: null },
+    include: seriesInclude(db),
+  });
+  const sessions = [];
+  rows.forEach((row) => {
+    const graph = graphFromRow(row);
+    expandClassOccurrences({
+      series: graph.series,
+      slots: graph.slots,
+      occurrences: graph.occurrences,
+      rangeStart: from,
+      rangeEnd: to,
+    }).forEach((session) => {
+      sessions.push(session);
+    });
+  });
+  sessions.sort(compareSessions);
+  return sessions;
 }
 
 async function getClass(req, res, db) {
@@ -447,6 +452,7 @@ function sendError(res, error, label) {
 
 module.exports = {
   listClasses,
+  loadExpandedSessions,
   getClass,
   createClass,
   updateClass,

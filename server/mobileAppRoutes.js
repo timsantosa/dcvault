@@ -20,6 +20,7 @@ const notificationRoutes = require('./mobileRoutes/notificationRoutes');
 const vaultAssociationRoutes = require('./mobileRoutes/vaultAssociationRoutes');
 const classPackageRoutes = require('./mobileRoutes/classPackageRoutes');
 const classRoutes = require('./mobileRoutes/classRoutes');
+const memberScheduleRoutes = require('./mobileRoutes/memberScheduleRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -56,6 +57,7 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/vaultAssociations', vaultAssociationRoutes(db));
   app.use('/mobileapp/user/classPackages', checkPermission('manage_classes'), classPackageRoutes(db));
   app.use('/mobileapp/user/classes', checkPermission('manage_classes'), classRoutes(db));
+  app.use('/mobileapp/user/schedule', checkPermission('reserve_classes'), memberScheduleRoutes(db));
 
   // Admin routes
   app.post('/mobileapp/user/jump/verify', checkPermission('verify_jumps'), (req, res) => verifyJump(req, res, db));

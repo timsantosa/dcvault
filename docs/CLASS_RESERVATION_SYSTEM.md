@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-10-21  
+**Last updated:** 2026-10-22  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -136,13 +136,14 @@ Primary interface for viewing the class schedule and reserving/canceling session
 
 ### Calendar day indicators
 
-Class-type color lives on the **list rows**, not as the only calendar signal. The month grid needs a **separate** reserved vs unreserved marker, for example:
+Class-type color lives on the **list rows** and on the month markers. The shape is the reserved signal, so color is not the only way to tell a reserved day from a class day:
 
-- Days with at least one reservation for the selected athlete: filled / ringed / check-style marker.
-- Days that have bookable classes but no reservation for this athlete: a lighter / outline marker.
+- Each class color that day gets one marker, using that class’s color. A class with no color uses the app tint.
+- No reservation for that color: an open ring.
+- A reservation in that color: a filled dot.
 - Days with no classes: no marker.
 
-Exact glyph is a visual-design choice; the requirement is that reserved days are distinguishable at a glance without relying on class-type color.
+Two classes of the same color share one marker. If either is reserved, the marker is filled.
 
 ### Display per class
 
@@ -754,7 +755,7 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 
 ### MVP (dark launch checklist)
 
-- [ ] Permission-gated new Schedule experience; fallback to Google Calendar
+- [x] Permission-gated new Schedule experience; fallback to Google Calendar
 - [ ] Class CRUD with full configuration options (§5), including custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, cancel vs delete
 - [ ] Flexible credit/package model with quarter overlay, start dates, unlimited packages (end unlimited by setting expiration)
 - [ ] Class package catalog, one-time seed, and admin package editor (`manage_classes`)
@@ -962,10 +963,10 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - If yes: new schedule component shell.
   - *Completion notes:* 2026-10-21. The Schedule tab uses `scheduleTabKind`. With `reserve_classes` it shows `ClassScheduleScreen` ("Class schedule will show here."). Without it, the tab stays `CalendarCustom`. The §15 schedule checkbox stays open until the read-only display (task 6.2).
 
-- [ ] **6.2 — Schedule display (read-only)**
+- [x] **6.2 — Schedule display (read-only)**
   - Month grid with reserved vs unreserved day markers; scrolling agenda (past dimmed, ~2 weeks back); class details; capacity; eligibility with reason; attendance markers; credit chip (remaining / reserved / N expire date).
   - Mobile API client + hooks.
-  - *Completion notes:*
+  - *Completion notes:* 2026-10-22. `GET /mobileapp/user/schedule` for `reserve_classes`. The profile must belong to the caller. Hidden classes are omitted. The window is 14 days back through 77 days ahead. The chip uses the existing credit summary with no reservations, so reserved is 0. Reasons we can already know: Canceled, View only, reservations closed, credits that start later, credits that expire before the class, and register to reserve. A class with no credit cost skips the credit reasons. Spots taken stay 0. Month markers are an open ring per class color, and a filled dot when that color is reserved (`reserved` is false until task 7). Past rows are dimmed. Detail is read-only. Group and age eligibility, attendance marks, the roster, and Reserve / Cancel stay on later tasks. §4 calendar markers now use the class color. The §15 permission-gated Schedule box is checked. Reserved-day data, full eligibility, and the chip animation stay open.
 
 
 

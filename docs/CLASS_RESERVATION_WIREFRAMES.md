@@ -94,9 +94,11 @@ Class-type color stays on the **list rows**. The month grid uses a **different**
 
 | Marker | Meaning                                              |
 | ------ | ---------------------------------------------------- |
-| `●`    | This athlete has a reservation that day              |
-| `○`    | Classes exist that day; this athlete has not reserved |
+| Filled dot in the class color | This athlete has a reservation for that class color |
+| Open ring in the class color | That class is on the day, and this athlete has not reserved |
 | (none) | No classes                                           |
+
+A day can show one marker per class color. Two classes that share a color share a marker, and a reservation fills it. A class with no color uses the app tint. The row’s left bar uses the same color.
 
 ---
 
@@ -170,7 +172,7 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
   - **Remaining** = unused credits still available to book.
   - **Reserved** = upcoming spots already pulled for this athlete.
   - **Expiring** = how many of the remaining credits expire on the soonest date (`4 expire Sep 30`), not just the date.
-- Month dots: `●` on the 25th because Emma is reserved that day; `○` on other practice days. Color of the row still means class type.
+- Month markers use the class color. An open ring means the class is that day and Emma has not reserved. A filled dot means she has a reservation in that color. The row’s left bar uses the same color.
 - Past classes stay in the same list, dimmed — no toggle.
 - Ineligible classes stay on the list with a reason. We do not hide them.
 - Meets and breaks show up so the week looks complete, but they are not reservable.
@@ -254,7 +256,7 @@ Cancel cutoff still lives on class detail (“Cancel up to 24 hours before start
 │  └──────────────────────────────┘   │
 ```
 
-Primary action on the row and on detail flips from Reserve to Cancel. The month grid marker for that day becomes `●`.
+Primary action on the row and on detail flips from Reserve to Cancel. The month marker for that class color becomes a filled dot.
 
 ---
 
@@ -371,6 +373,7 @@ Credits bought on the website show up here automatically. Staff no longer need t
 | ------------------------------------- | --------------------------------------------------------- |
 | Reservation cutoff passed             | “Reservations closed 24 hours before start”               |
 | Package start date is in the future   | “Credits start Oct 1 (next quarter)”                      |
+| Credits run out before that class     | “Credits expire before this class”                        |
 | Meet / break / `isReservable = false` | “View only” — no Reserve button                           |
 | Class canceled by staff               | “Canceled” — still on the calendar, not reservable        |
 | Hidden class                          | Does not appear on the member schedule at all             |
