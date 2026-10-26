@@ -1,5 +1,5 @@
 const express = require('express');
-const { getDrill, addOrUpdateDrill, deleteDrill, fetchDrills, pinOrUnpinDrill } = require('../controllers/drillsController');
+const { getDrill, addOrUpdateDrill, deleteDrill, fetchDrills, pinOrUnpinDrill } = require('../controllers/trainingLog/drillsController');
 const { checkOwnAthleteProfileOrPermission } = require('../middlewares/mobileAuthMiddleware');
 
 const drillRoutes = (db) => {

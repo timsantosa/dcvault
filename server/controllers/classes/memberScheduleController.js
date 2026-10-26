@@ -1,7 +1,7 @@
 'use strict';
 
-const { parseScheduleRange } = require('../lib/classSchedule');
-const { memberScheduleRange, presentMemberSchedule } = require('../lib/memberSchedule');
+const { parseScheduleRange } = require('../../lib/classSchedule');
+const { memberScheduleRange, presentMemberSchedule } = require('../../lib/memberSchedule');
 const { loadExpandedSessions } = require('./classesController');
 
 async function getMemberSchedule(req, res, db) {

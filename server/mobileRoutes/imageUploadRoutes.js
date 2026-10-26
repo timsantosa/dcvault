@@ -16,7 +16,7 @@ const {
   verifyPendingLogVideo,
   rejectPendingLogVideo,
   getAllUnverifiedLogVideos,
-} = require('../controllers/logVideoController');
+} = require('../controllers/trainingLog/logVideoController');
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require('../lib/cloudinaryClient');
 const { checkPermission } = require('../middlewares/mobileAuthMiddleware');

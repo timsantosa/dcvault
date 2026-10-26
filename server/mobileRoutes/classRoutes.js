@@ -6,7 +6,7 @@ const {
   updateClass,
   cancelClass,
   deleteClass,
-} = require('../controllers/classesController');
+} = require('../controllers/classes/classesController');
 
 const classRoutes = (db) => {
   const router = express.Router();

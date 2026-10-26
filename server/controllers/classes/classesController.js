@@ -10,7 +10,7 @@ const {
   prepareClassUpdate,
   prepareClassCancel,
   prepareClassDelete,
-} = require('../lib/classSchedule');
+} = require('../../lib/classSchedule');
 
 async function listClasses(req, res, db) {
   try {

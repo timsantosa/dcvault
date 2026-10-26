@@ -1,5 +1,5 @@
 const express = require('express');
-const { setDrillTypes, getDrillTypes } = require('../controllers/drillsController');
+const { setDrillTypes, getDrillTypes } = require('../controllers/trainingLog/drillsController');
 const { checkPermission } = require('../middlewares/mobileAuthMiddleware');
 
 const drillTypeRoutes = (db) => {

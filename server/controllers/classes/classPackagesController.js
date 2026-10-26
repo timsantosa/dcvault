@@ -4,7 +4,7 @@ const {
   normalizeClassPackageInput,
   sortOrdersForSection,
   toClassPackageJson,
-} = require('../lib/classPackageCatalog');
+} = require('../../lib/classPackageCatalog');
 
 async function listClassPackages(req, res, db) {
   try {

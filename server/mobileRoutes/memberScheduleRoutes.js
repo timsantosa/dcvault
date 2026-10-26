@@ -1,5 +1,5 @@
 const express = require('express');
-const { getMemberSchedule } = require('../controllers/memberScheduleController');
+const { getMemberSchedule } = require('../controllers/classes/memberScheduleController');
 
 const memberScheduleRoutes = (db) => {
   const router = express.Router();

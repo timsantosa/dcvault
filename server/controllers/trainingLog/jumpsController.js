@@ -1,12 +1,12 @@
 // import { Request, Response } from 'express';
 
-const rankingCache = require("./athleteRankingCache");
-const { validatePoleBrand } = require("../utils/poleBrandValidation");
-const { getBestOfPersonalRecords } = require("../utils/rankingUtils");
-const { normalizeJumpVaultAssociationId } = require("../constants/vaultAssociations");
-const NotificationUtils = require("../utils/notificationUtils");
-const { getOrCreateDirectConversation, sendMessageInConversation } = require("../utils/messagesUtils");
-const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../lib/cloudinaryMedia");
+const rankingCache = require("../athleteRankingCache");
+const { validatePoleBrand } = require("../../utils/poleBrandValidation");
+const { getBestOfPersonalRecords } = require("../../utils/rankingUtils");
+const { normalizeJumpVaultAssociationId } = require("../../constants/vaultAssociations");
+const NotificationUtils = require("../../utils/notificationUtils");
+const { getOrCreateDirectConversation, sendMessageInConversation } = require("../../utils/messagesUtils");
+const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../../lib/cloudinaryMedia");
 const {
   normalizeStoredVideoLink,
   userCanVerifyLogVideoMedia,
@@ -14,7 +14,7 @@ const {
   destroyPendingLogVideosForJump,
   attachPendingLogVideoToJumpSingle,
   attachPendingLogVideoToJumps,
-} = require('../utils/pendingLogVideo');
+} = require('../../utils/pendingLogVideo');
 
 // Endpoints:
 const addOrUpdateJump = async (req, res, db) => {

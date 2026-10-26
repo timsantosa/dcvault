@@ -4,7 +4,7 @@ const {
   createClassPackage,
   updateClassPackage,
   reorderClassPackages,
-} = require('../controllers/classPackagesController');
+} = require('../controllers/classes/classPackagesController');
 
 const classPackageRoutes = (db) => {
   const router = express.Router();
