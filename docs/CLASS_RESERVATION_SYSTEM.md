@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-10-22  
+**Last updated:** 2026-10-25  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -287,7 +287,7 @@ Canceling a **member’s reservation** is a separate action (see §8 / §9) and 
 
 Staff choose how the class is paid for:
 
-- Credit cost (including 0 for free sign-up items, and half steps such as 0.5 or 1.5). Package grants stay whole numbers. Spending a fractional cost is part of reservation deduction (task 7.1).
+- Credit cost, a whole number, including 0 for free sign-up items. Package grants are whole numbers too.
 - Dollar cost (paid events / lessons).
 - Both, if a class should consume a credit **and** collect money (rare; keep the fields independent so staff are not forced into one model).
 
@@ -467,8 +467,8 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Credit consumption
 
-- Reserving deducts the class credit cost (1, or another configured cost such as 0.5) from the **soonest-expiring eligible package** immediately on tap (no confirm step).
-- A **canceled** class does not count as a credit spent. A moved class keeps the reservation and the credit; the reservation date follows the class.
+- Reserving deducts the class credit cost (a whole number, often 1) from the **soonest-expiring eligible package** immediately on tap (no confirm step).
+- A **canceled** class does not count as a credit spent. The reservation stays and still holds the spot, and the credit hold is paused so the member can use that credit. Restoring the class charges the same amount again from current packages. If any reserved athlete cannot cover it, the restore does nothing. A moved class keeps the reservation and the credit; the reservation date follows the class.
 - Display: remaining count, reserved count, and `N expire [date]` for the soonest relevant expiration (§4), with a brief animation on the chip when the numbers change.
 
 
@@ -941,7 +941,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 - [x] **4.1 — Class schema + recurrence**
   - Models for classes, series, occurrences; all configurable properties from §5 (custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, canceled vs deleted).
-  - *Completion notes:* 2026-10-07. Tables `classSeries`, `classSeriesSlots`, `classOccurrences`, `trainingGroups`, and the coach and group joins are created by `schema.sync()`. Seed the four groups once with `node server/db/seedTrainingGroups.js` (not on startup). Expansion and validation are in `server/lib/classSchedule.js`. A repeating series may set `endsOn`. A camp is that series with an end date and one slot per weekday. A one-off moves by changing `startsOn`. One date of a repeating series moves with `rescheduledFrom` and stays on the series. Credit cost is `DECIMAL(6,2)`. No API.
+  - *Completion notes:* 2026-10-07. Tables `classSeries`, `classSeriesSlots`, `classOccurrences`, `trainingGroups`, and the coach and group joins are created by `schema.sync()`. Seed the four groups once with `node server/db/seedTrainingGroups.js` (not on startup). Expansion and validation are in `server/lib/classSchedule.js`. A repeating series may set `endsOn`. A camp is that series with an end date and one slot per weekday. A one-off moves by changing `startsOn`. One date of a repeating series moves with `rescheduledFrom` and stays on the series. Credit cost is a whole number. No API.
 
 - [x] **4.2 — Class CRUD API + unit tests**
   - Mobile-authenticated routes; permission checks (`manage_classes`).
@@ -972,11 +972,11 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 ### Task 7: Reservations
 
-- [ ] **7.1 — Reservation API + unit tests**
+- [x] **7.1 — Reservation API + unit tests**
   - Reserve, cancel, relative cutoff rules, capacity hard stop, credit deduction/return.
   - Free-text reservation note field (MVP).
-  - A reservation is one series and one date. Credit cost may be fractional. A canceled session does not count as a credit spent. A moved session keeps the reservation, and its date follows the class.
-  - *Completion notes:*
+  - A reservation is one series and one date. Credit cost is a whole number. A canceled session does not count as a credit spent. A moved session keeps the reservation, and its date follows the class.
+  - *Completion notes:* 2026-10-25. `POST /mobileapp/user/reservations` and `POST /mobileapp/user/reservations/cancel` for `reserve_classes`. The profile must belong to the caller. A reservation row is the signup. `creditAllocations` record the tap-time split; grant `quantity` is not edited. `holding` false pauses that split while a class is canceled. Restore re-allocates every paused hold or changes nothing. Deleting a date removes the signup and the hold. A move updates `occursOn` and keeps the hold. Member cancel before the cancellation cutoff deletes the signup and the hold. After that cutoff the request is rejected, and the chip still counts the reservation until the class start. Dollar prices are stored as `paymentStatus: external` and are not charged. Group and age checks, staff cancel of one member, and the Reserve button stay on later tasks. The schedule payload now returns real spots, `reserved`, and `Class is full`.
 
 - [ ] **7.2 — Reservation UI**
   - Reserve from the schedule row in one tap (no confirm sheet); credit chip animates remaining / reserved. Cancel still uses a confirm sheet. Blocked-state messaging, upcoming reservations list.

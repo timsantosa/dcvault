@@ -359,10 +359,13 @@ describe('assertValidClassSeries', () => {
     }, overrides);
   }
 
-  it('accepts a half-credit cost', () => {
+  it('rejects a fractional credit cost', () => {
     expect(() => assertValidClassSeries(validRepeating({
       series: series({ creditCost: 0.5 }),
-    }))).not.toThrow();
+    }))).toThrow(/creditCost/);
+    expect(() => assertValidClassSeries(validRepeating({
+      series: series({ creditCost: 1.5 }),
+    }))).toThrow(/creditCost/);
   });
 
   it('rejects a session moved onto a weekday the series already uses', () => {
@@ -410,12 +413,9 @@ describe('assertValidClassSeries', () => {
     }))).toThrow(/one slot per weekday/);
   });
 
-  it('rejects a negative or three-decimal credit cost', () => {
+  it('rejects a negative credit cost', () => {
     expect(() => assertValidClassSeries(validRepeating({
       series: series({ creditCost: -1 }),
-    }))).toThrow(/creditCost/);
-    expect(() => assertValidClassSeries(validRepeating({
-      series: series({ creditCost: 1.234 }),
     }))).toThrow(/creditCost/);
   });
 
@@ -521,13 +521,13 @@ function expandPrepared(prepared, rangeEnd) {
 describe('prepareClassCreate', () => {
   it('accepts a repeating series and a one-off', () => {
     const repeating = prepareClassCreate(classInput({
-      creditCost: 0.5,
+      creditCost: 2,
       slots: MIXED_SLOTS,
       endsOn: '2026-08-30',
     }), KNOWN);
     expect(repeating.ok).toBe(true);
     expect(repeating.value.series.repeats).toBe(true);
-    expect(repeating.value.series.creditCost).toBe(0.5);
+    expect(repeating.value.series.creditCost).toBe(2);
     expect(repeating.value.series.endsOn).toBe('2026-08-30');
     expect(repeating.value.slots.map((slot) => slot.weekday)).toEqual([0, 2, 4]);
     expect(repeating.value.occurrences).toEqual([]);

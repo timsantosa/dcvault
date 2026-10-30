@@ -11,6 +11,9 @@ const {
   prepareClassCancel,
   prepareClassDelete,
 } = require('../../lib/classSchedule');
+const { day, clock, timestamp } = require('../../lib/dates');
+const { classStartInstant } = require('../../lib/memberSchedule');
+const { reservationEffects, reallocatePaused, sessionOnDate } = require('../../lib/reservations');
 
 async function listClasses(req, res, db) {
   try {
@@ -25,6 +28,7 @@ async function listClasses(req, res, db) {
   }
 }
 
+// (from, to 'YYYY-MM-DD') -> expanded sessions for every live series.
 async function loadExpandedSessions(db, from, to) {
   const rows = await db.tables.ClassSeries.findAll({
     where: { deletedAt: null },
@@ -107,6 +111,7 @@ async function deleteClass(req, res, db) {
   }
 }
 
+// Shared update, cancel, and delete. prepareFor(graph, known) -> { ok, value }.
 async function writeClass(req, res, db, prepareFor) {
   const row = await findLiveSeries(req, res, db);
   if (!row) {
@@ -118,7 +123,11 @@ async function writeClass(req, res, db, prepareFor) {
     res.status(400).json({ ok: false, message: prepared.message });
     return;
   }
-  await savePrepared(db, row, prepared.value);
+  const saved = await savePrepared(db, row, prepared.value);
+  if (!saved.ok) {
+    res.status(saved.status).json({ ok: false, message: saved.message });
+    return;
+  }
   const reloaded = await loadSeries(db, row.id);
   res.json({
     ok: true,
@@ -127,6 +136,7 @@ async function writeClass(req, res, db, prepareFor) {
   });
 }
 
+// Load a non-deleted series, or send 400/404 and return null.
 async function findLiveSeries(req, res, db) {
   const id = parseRouteId(req.params.id);
   if (!id) {
@@ -141,17 +151,52 @@ async function findLiveSeries(req, res, db) {
   return row;
 }
 
-function loadSeries(db, id) {
-  return db.tables.ClassSeries.findByPk(id, { include: seriesInclude(db) });
+// Series row with slots, occurrences, coaches, and groups.
+function loadSeries(db, id, transaction) {
+  const options = { include: seriesInclude(db) };
+  if (transaction) {
+    options.transaction = transaction;
+  }
+  return db.tables.ClassSeries.findByPk(id, options);
 }
 
+// Series id -> { series, slots, occurrences }, or null.
+function loadClassGraph(db, id, transaction) {
+  return loadSeries(db, id, transaction).then((row) => (row ? graphFromRow(row) : null));
+}
+
+// (series row, prepared) -> { ok: true } or { ok: false, status, message }. 404 and 409 stay in that result.
 async function savePrepared(db, row, prepared) {
-  await db.tables.schema.transaction(async (transaction) => {
-    await row.update(prepared.series, { transaction: transaction });
-    await replaceChildren(db, row.id, prepared, transaction);
-  });
+  try {
+    await db.tables.schema.transaction(async (transaction) => {
+      const locked = await db.tables.ClassSeries.findByPk(row.id, {
+        transaction: transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+      if (!locked || locked.deletedAt) {
+        throw coded(404, 'Class not found.');
+      }
+      const fresh = await loadSeries(db, row.id, transaction);
+      const before = graphFromRow(fresh);
+      const after = {
+        series: prepared.series,
+        slots: prepared.slots,
+        occurrences: prepared.occurrences,
+      };
+      await syncReservations(db, fresh.id, before, after, transaction);
+      await fresh.update(prepared.series, { transaction: transaction });
+      await replaceChildren(db, fresh.id, prepared, transaction);
+    });
+  } catch (error) {
+    if (error.status === 409 || error.status === 404) {
+      return { ok: false, status: error.status, message: error.message };
+    }
+    throw error;
+  }
+  return { ok: true };
 }
 
+// prepared: { slots, coachIds, trainingGroupIds, occurrences }. Replaces those child rows.
 async function replaceChildren(db, seriesId, prepared, transaction) {
   const existing = await db.tables.ClassOccurrences.findAll({
     where: { classSeriesId: seriesId },
@@ -234,6 +279,7 @@ async function replaceChildren(db, seriesId, prepared, transaction) {
   }
 }
 
+// body -> { knownCoachIds: number[], knownTrainingGroupIds: number[] }.
 async function loadKnownIds(db, body) {
   const source = body && typeof body === 'object' ? body : {};
   return {
@@ -242,6 +288,7 @@ async function loadKnownIds(db, body) {
   };
 }
 
+// Ids from the list that this table actually has.
 function existingIds(model, ids) {
   if (!ids.length) {
     return Promise.resolve([]);
@@ -252,6 +299,7 @@ function existingIds(model, ids) {
   }).then((rows) => rows.map((row) => row.id));
 }
 
+// Sequelize include for a full series graph.
 function seriesInclude(db) {
   return [
     { model: db.tables.ClassSeriesSlots, as: 'slots' },
@@ -268,6 +316,7 @@ function seriesInclude(db) {
   ];
 }
 
+// Series row -> { series, slots, occurrences }.
 function graphFromRow(row) {
   const plain = row.get({ plain: true });
   return {
@@ -326,6 +375,7 @@ function graphFromRow(row) {
   };
 }
 
+// Graph as the class JSON response.
 function toClassSeriesJson(row) {
   const graph = graphFromRow(row);
   const series = graph.series;
@@ -365,10 +415,12 @@ function toClassSeriesJson(row) {
   };
 }
 
+// Sorted values of one column.
 function idList(rows, key) {
   return (rows || []).map((row) => row[key]).sort((a, b) => a - b);
 }
 
+// Positive integer ids from a request array.
 function listedIds(value) {
   if (!Array.isArray(value)) {
     return [];
@@ -384,6 +436,7 @@ function listedIds(value) {
   return ids;
 }
 
+// Signed-in user id, or null.
 function callerId(req) {
   const id = req.user && req.user.id;
   if (typeof id === 'number' && Number.isInteger(id) && id > 0) {
@@ -392,6 +445,7 @@ function callerId(req) {
   return null;
 }
 
+// Positive integer route id, or null.
 function parseRouteId(value) {
   const id = parseInt(value, 10);
   if (!Number.isInteger(id) || id < 1) {
@@ -400,6 +454,7 @@ function parseRouteId(value) {
   return id;
 }
 
+// Date, then start time, then series id.
 function compareSessions(a, b) {
   if (a.occursOn !== b.occursOn) {
     return a.occursOn < b.occursOn ? -1 : 1;
@@ -410,49 +465,238 @@ function compareSessions(a, b) {
   return a.seriesId - b.seriesId;
 }
 
-function day(value) {
-  if (value == null) {
-    return null;
-  }
-  if (typeof value === 'string') {
-    return value.slice(0, 10);
-  }
-  if (value instanceof Date && !isNaN(value.getTime())) {
-    return value.getFullYear() + '-' + pad(value.getMonth() + 1) + '-' + pad(value.getDate());
-  }
-  return String(value).slice(0, 10);
-}
-
-function clock(value) {
-  if (value == null) {
-    return null;
-  }
-  const text = String(value);
-  return text.length >= 8 ? text.slice(0, 8) : text;
-}
-
-function timestamp(value) {
-  if (value == null) {
-    return null;
-  }
-  if (value instanceof Date) {
-    return value.toISOString();
-  }
-  return value;
-}
-
-function pad(number) {
-  return number < 10 ? '0' + number : String(number);
-}
-
+// Log the error and respond 500.
 function sendError(res, error, label) {
   console.error(label, error);
   res.status(500).json({ ok: false, message: 'Internal server error.' });
 }
 
+// before and after are { series, slots, occurrences }. Applies move, removal, pause, and resume.
+async function syncReservations(db, seriesId, before, after, transaction) {
+  const reservationRows = await db.tables.ClassReservations.findAll({
+    where: { classSeriesId: seriesId },
+    transaction: transaction,
+    lock: transaction.LOCK.UPDATE,
+  });
+  if (!reservationRows.length) {
+    return;
+  }
+  const effects = reservationEffects(before, after, reservationRows.map((row) => row.occursOn));
+  const allocationRows = await db.tables.CreditAllocations.findAll({
+    where: { reservationId: reservationRows.map((row) => row.id) },
+    transaction: transaction,
+  });
+  const planned = prepareReservationRows(reservationRows, effects);
+  const rebuilt = await reallocateResumes(db, planned, allocationRows, after, effects, transaction);
+  if (!rebuilt.ok) {
+    throw coded(409, 'A reserved athlete no longer has the credits for this class.');
+  }
+  await writeReservationEffects(db, seriesId, planned, effects, rebuilt, transaction);
+}
+
+// effects: { moves: [{ from, to }], removals, pauses, resumes } -> [{ id, athleteProfileId, from, occursOn, removed }].
+function prepareReservationRows(reservationRows, effects) {
+  const removed = {};
+  effects.removals.forEach((date) => {
+    removed[date] = true;
+  });
+  const moves = {};
+  effects.moves.forEach((move) => {
+    moves[move.from] = move.to;
+  });
+  return reservationRows.map((row) => {
+    const from = day(row.occursOn);
+    return {
+      id: row.id,
+      athleteProfileId: row.athleteProfileId,
+      from: from,
+      occursOn: moves[from] || from,
+      removed: removed[from] === true,
+    };
+  });
+}
+
+// -> { ok: true, allocations, resumeIds } or { ok: false }. Fails the save when anyone is short.
+async function reallocateResumes(db, planned, allocationRows, after, effects, transaction) {
+  const resumeDates = {};
+  effects.resumes.forEach((date) => {
+    resumeDates[date] = true;
+  });
+  const pauseDates = {};
+  effects.pauses.forEach((date) => {
+    pauseDates[date] = true;
+  });
+  const resumeIds = {};
+  const excluded = {};
+  planned.forEach((row) => {
+    if (row.removed || pauseDates[row.occursOn] || resumeDates[row.occursOn]) {
+      excluded[row.id] = true;
+    }
+    if (!row.removed && resumeDates[row.occursOn]) {
+      resumeIds[row.id] = true;
+    }
+  });
+  const resumeIdList = Object.keys(resumeIds).map(Number);
+  if (!resumeIdList.length) {
+    return { ok: true, allocations: [], resumeIds: [] };
+  }
+
+  const byReservation = {};
+  allocationRows.forEach((row) => {
+    if (!byReservation[row.reservationId]) {
+      byReservation[row.reservationId] = [];
+    }
+    byReservation[row.reservationId].push(row);
+  });
+
+  const resumeList = planned.filter((row) => resumeIds[row.id]);
+  const profiles = await db.tables.AthleteProfiles.findAll({
+    where: { id: resumeList.map((row) => row.athleteProfileId) },
+    transaction: transaction,
+  });
+  const athleteByProfile = {};
+  profiles.forEach((profile) => {
+    athleteByProfile[profile.id] = profile.athleteId;
+  });
+
+  const reservations = [];
+  for (let i = 0; i < resumeList.length; i += 1) {
+    const row = resumeList[i];
+    const creditCost = amountSum(byReservation[row.id] || []);
+    if (creditCost <= 0) {
+      continue;
+    }
+    const session = sessionOnDate(after, row.occursOn);
+    if (!session) {
+      return { ok: false };
+    }
+    reservations.push({
+      id: row.id,
+      athleteId: athleteByProfile[row.athleteProfileId],
+      classStart: classStartInstant(session.occursOn, session.startTime),
+      creditCost: creditCost,
+    });
+  }
+  if (!reservations.length) {
+    return { ok: true, allocations: [], resumeIds: resumeIdList };
+  }
+
+  const athleteIds = reservations.map((row) => row.athleteId).filter((id) => id != null);
+  const grantRows = athleteIds.length
+    ? await db.tables.CreditGrants.findAll({
+      where: { athleteId: athleteIds },
+      transaction: transaction,
+      lock: transaction.LOCK.UPDATE,
+    })
+    : [];
+  const holding = allocationRows
+    .filter((row) => !excluded[row.reservationId] && isHoldingAllocation(row))
+    .map(toHeldAllocation);
+  const result = reallocatePaused({
+    reservations: reservations,
+    grants: grantRows.map(toSyncGrant),
+    holdingAllocations: holding,
+  });
+  if (!result.ok) {
+    return { ok: false };
+  }
+  return { ok: true, allocations: result.allocations, resumeIds: resumeIdList };
+}
+
+// rebuilt: { allocations, resumeIds }. Deletes removals, moves dates, pauses holds, replaces resumed holds.
+async function writeReservationEffects(db, seriesId, planned, effects, rebuilt, transaction) {
+  const removedIds = planned.filter((row) => row.removed).map((row) => row.id);
+  if (removedIds.length) {
+    await db.tables.CreditAllocations.destroy({
+      where: { reservationId: removedIds },
+      transaction: transaction,
+    });
+    await db.tables.ClassReservations.destroy({
+      where: { id: removedIds },
+      transaction: transaction,
+    });
+  }
+  for (let i = 0; i < effects.moves.length; i += 1) {
+    const move = effects.moves[i];
+    await db.tables.ClassReservations.update({
+      occursOn: move.to,
+    }, {
+      where: { classSeriesId: seriesId, occursOn: move.from },
+      transaction: transaction,
+    });
+  }
+  const pauseDates = {};
+  effects.pauses.forEach((date) => {
+    pauseDates[date] = true;
+  });
+  const pauseIds = planned
+    .filter((row) => !row.removed && pauseDates[row.occursOn])
+    .map((row) => row.id);
+  if (pauseIds.length) {
+    await db.tables.CreditAllocations.update({ holding: false }, {
+      where: { reservationId: pauseIds },
+      transaction: transaction,
+    });
+  }
+  if (rebuilt.resumeIds && rebuilt.resumeIds.length) {
+    await db.tables.CreditAllocations.destroy({
+      where: { reservationId: rebuilt.resumeIds },
+      transaction: transaction,
+    });
+  }
+  for (let i = 0; i < rebuilt.allocations.length; i += 1) {
+    const allocation = rebuilt.allocations[i];
+    await db.tables.CreditAllocations.create({
+      reservationId: allocation.reservationId,
+      creditGrantId: allocation.creditGrantId,
+      amount: allocation.amount,
+      holding: true,
+    }, { transaction: transaction });
+  }
+}
+
+// Sum of allocation amounts. Zero is a free signup.
+function amountSum(rows) {
+  return rows.reduce((sum, row) => sum + Number(row.amount), 0);
+}
+
+// A paused hold has holding false.
+function isHoldingAllocation(row) {
+  return row.holding !== false && row.holding !== 0;
+}
+
+// Allocation row -> { reservationId, creditGrantId, amount, holding }.
+function toHeldAllocation(row) {
+  return {
+    reservationId: row.reservationId,
+    creditGrantId: row.creditGrantId,
+    amount: Number(row.amount),
+    holding: row.holding,
+  };
+}
+
+// Grant row -> { id, athleteId, quantity, startsAt, expiresAt }.
+function toSyncGrant(row) {
+  return {
+    id: row.id,
+    athleteId: row.athleteId,
+    quantity: row.quantity == null ? null : Number(row.quantity),
+    startsAt: row.startsAt == null ? null : new Date(row.startsAt),
+    expiresAt: row.expiresAt == null ? null : new Date(row.expiresAt),
+  };
+}
+
+// Error savePrepared turns into that HTTP status.
+function coded(status, message) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
+
 module.exports = {
   listClasses,
   loadExpandedSessions,
+  loadClassGraph,
   getClass,
   createClass,
   updateClass,

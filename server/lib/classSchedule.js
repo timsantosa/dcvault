@@ -421,22 +421,12 @@ function compareSessions(a, b) {
 
 function assertCreditCost(value) {
   if (!isValidCreditCost(value)) {
-    throw new Error('creditCost must be 0 or more with at most two decimal places');
+    throw new Error('creditCost must be a whole number of 0 or more');
   }
 }
 
 function isValidCreditCost(value) {
-  if (typeof value === 'number') {
-    if (!isFinite(value) || value < 0) {
-      return false;
-    }
-    const cents = Math.round(value * 100);
-    return Math.abs(value - cents / 100) < 1e-8 && cents <= 999999;
-  }
-  if (typeof value === 'string' && /^\d+(\.\d{1,2})?$/.test(value)) {
-    return Number(value) <= 9999.99;
-  }
-  return false;
+  return isWholeNumber(value) && Number(value) >= 0;
 }
 
 function assertDollarCost(value) {
@@ -1372,9 +1362,9 @@ function readCapacity(value) {
 
 function readCreditCost(value) {
   if (!isValidCreditCost(value)) {
-    return fail('creditCost must be 0 or more with at most two decimal places');
+    return fail('creditCost must be a whole number of 0 or more');
   }
-  return { ok: true, value: Number(Number(value).toFixed(2)) };
+  return { ok: true, value: Number(value) };
 }
 
 function readDollarCost(value) {

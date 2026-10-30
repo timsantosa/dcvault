@@ -814,7 +814,7 @@ columns.classSeries = {
   isReservable: { type: Sequelize.BOOLEAN, allowNull: false },
   capacity: { type: Sequelize.INTEGER, allowNull: false },
   creditCost: {
-    type: Sequelize.DECIMAL(6, 2),
+    type: Sequelize.INTEGER,
     allowNull: false,
     validate: {
       creditCost(value) {
@@ -875,6 +875,23 @@ columns.classSeriesCoaches = {
 columns.classOccurrenceCoaches = {
   classOccurrenceId: { type: Sequelize.INTEGER, allowNull: false },
   athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
+};
+
+// One signup for one profile, one series, and one date. Not tied to classOccurrences.
+columns.classReservations = {
+  athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
+  classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
+  occursOn: { type: Sequelize.DATEONLY, allowNull: false },
+  note: { type: Sequelize.TEXT, allowNull: true },
+  paymentStatus: { type: Sequelize.STRING, allowNull: true },
+};
+
+// Tap-time split of a reservation across grants. quantity on the grant does not change.
+columns.creditAllocations = {
+  reservationId: { type: Sequelize.INTEGER, allowNull: false },
+  creditGrantId: { type: Sequelize.INTEGER, allowNull: false },
+  amount: { type: Sequelize.INTEGER, allowNull: false },
+  holding: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true },
 };
 
 const syncTables = (schema, force) => {
@@ -1182,6 +1199,33 @@ const syncTables = (schema, force) => {
       },
     ],
   });
+  tables.ClassReservations = schema.define('classReservation', columns.classReservations, {
+    tableName: 'classReservations',
+    indexes: [
+      {
+        unique: true,
+        fields: ['athleteProfileId', 'classSeriesId', 'occursOn'],
+        name: 'class_reservations_profile_series_date',
+      },
+      {
+        fields: ['classSeriesId', 'occursOn'],
+        name: 'class_reservations_series_date',
+      },
+    ],
+  });
+  tables.CreditAllocations = schema.define('creditAllocation', columns.creditAllocations, {
+    tableName: 'creditAllocations',
+    indexes: [
+      {
+        fields: ['reservationId'],
+        name: 'credit_allocations_reservation',
+      },
+      {
+        fields: ['creditGrantId'],
+        name: 'credit_allocations_grant',
+      },
+    ],
+  });
 
   // Associations
   tables.Users.belongsTo(tables.Addresses, {as: 'address'})
@@ -1435,6 +1479,36 @@ const syncTables = (schema, force) => {
     onUpdate: 'CASCADE',
   });
   tables.AthleteProfiles.hasMany(tables.ClassOccurrenceCoaches, { as: 'classOccurrenceCoaching', foreignKey: 'athleteProfileId' });
+
+  tables.ClassReservations.belongsTo(tables.AthleteProfiles, {
+    as: 'athleteProfile',
+    foreignKey: 'athleteProfileId',
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  });
+  tables.AthleteProfiles.hasMany(tables.ClassReservations, { as: 'classReservations', foreignKey: 'athleteProfileId' });
+  tables.ClassReservations.belongsTo(tables.ClassSeries, {
+    as: 'classSeries',
+    foreignKey: 'classSeriesId',
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassSeries.hasMany(tables.ClassReservations, { as: 'reservations', foreignKey: 'classSeriesId' });
+
+  tables.CreditAllocations.belongsTo(tables.ClassReservations, {
+    as: 'reservation',
+    foreignKey: 'reservationId',
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassReservations.hasMany(tables.CreditAllocations, { as: 'allocations', foreignKey: 'reservationId' });
+  tables.CreditAllocations.belongsTo(tables.CreditGrants, {
+    as: 'creditGrant',
+    foreignKey: 'creditGrantId',
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  });
+  tables.CreditGrants.hasMany(tables.CreditAllocations, { as: 'allocations', foreignKey: 'creditGrantId' });
 
   tables.schema = schema;
   return schema.sync({ force: force })

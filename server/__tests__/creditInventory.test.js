@@ -369,6 +369,19 @@ describe('allocateForReservation', () => {
   it('does not allocate for a free or dollar class', () => {
     expect(spend([], { creditCost: 0 })).toEqual({ ok: true, allocations: [] });
   });
+
+  it('rejects a fractional credit cost', () => {
+    const soon = grant({ id: 2, quantity: 1, expiresAt: new Date(2026, 9, 1) });
+    expect(() => spend([soon], { creditCost: 0.5 })).toThrow(/whole number/);
+    expect(() => spend([soon], { creditCost: 1.5 })).toThrow(/whole number/);
+  });
+
+  it('ignores a paused hold when measuring what is left to spend', () => {
+    const pack = grant({ id: 1, quantity: 2, expiresAt: new Date(2026, 11, 1) });
+    const paused = [{ reservationId: 9, creditGrantId: 1, amount: 1, holding: false }];
+    expect(grantBalance(pack, paused)).toBe(2);
+    expect(spend([pack], { allocations: paused, creditCost: 2 }).ok).toBe(true);
+  });
 });
 
 describe('releaseReservation', () => {
@@ -498,6 +511,53 @@ describe('summarizeCredits', () => {
       now: now,
     });
     expect(formatCreditChip(summary)).toBe('8 remaining · 0 reserved');
+  });
+
+  it('keeps a future hold in the reserved count until class start and drops it after', () => {
+    const pack = grant({ id: 1, quantity: 4, expiresAt: new Date(2026, 11, 1) });
+    const allocations = [
+      { reservationId: 1, creditGrantId: 1, amount: 1 },
+      { reservationId: 2, creditGrantId: 1, amount: 1 },
+      { reservationId: 3, creditGrantId: 1, amount: 1, holding: false },
+    ];
+    const beforeStart = summarizeCredits({
+      grants: [pack],
+      allocations: allocations,
+      classStartByReservationId: {
+        1: new Date(2026, 8, 27, 18, 0, 0),
+        2: new Date(2026, 8, 27, 11, 0, 0),
+        3: new Date(2026, 8, 29, 16, 0, 0),
+      },
+      now: now,
+    });
+    expect(beforeStart.reserved).toBe(1);
+    expect(beforeStart.remaining).toBe(2);
+
+    const atStart = summarizeCredits({
+      grants: [pack],
+      allocations: allocations,
+      classStartByReservationId: {
+        1: new Date(2026, 8, 27, 12, 0, 0),
+      },
+      now: now,
+    });
+    expect(atStart.reserved).toBe(0);
+    expect(atStart.remaining).toBe(2);
+  });
+
+  it('counts a free reservation until start when the caller passes reservation rows', () => {
+    const summary = summarizeCredits({
+      grants: [grant({ id: 1, quantity: 4, expiresAt: new Date(2026, 11, 1) })],
+      allocations: [],
+      reservations: [
+        { classStart: new Date(2026, 8, 29, 16, 0, 0), paused: false },
+        { classStart: new Date(2026, 8, 20, 16, 0, 0), paused: false },
+        { classStart: new Date(2026, 8, 29, 16, 0, 0), paused: true },
+      ],
+      now: now,
+    });
+    expect(summary.reserved).toBe(1);
+    expect(summary.remaining).toBe(4);
   });
 
   it('floors a negative finite total at zero and ignores a future start', () => {

@@ -18,6 +18,7 @@ async function listClassPackages(req, res, db) {
   }
 }
 
+// -> [{ id, audience, name }], used to reject duplicates.
 async function loadPackageNames(db) {
   const rows = await db.tables.ClassPackages.findAll({
     attributes: ['id', 'audience', 'name'],
@@ -25,6 +26,7 @@ async function loadPackageNames(db) {
   return rows.map((row) => ({ id: row.id, audience: row.audience, name: row.name }));
 }
 
+// (audience) -> next sort position, starting at 1.
 async function nextSortOrder(db, audience) {
   const max = await db.tables.ClassPackages.max('sortOrder', { where: { audience: audience } });
   if (max == null) {

@@ -149,14 +149,12 @@ function grantBalance(grant, allocations) {
   if (grant.quantity == null) {
     return null;
   }
-  return grant.quantity - heldAmount(grant.id, allocations);
+  return Number(grant.quantity) - heldAmount(grant.id, allocations);
 }
 
 function allocateForReservation(input) {
-  if (!Number.isInteger(input.creditCost) || input.creditCost < 0) {
-    throw new Error('creditCost must be an integer of 0 or more');
-  }
-  if (input.creditCost === 0) {
+  const cost = validatedCreditCost(input.creditCost);
+  if (cost === 0) {
     return { ok: true, allocations: [] };
   }
   assertDate(input.classStart, 'classStart');
@@ -173,12 +171,12 @@ function allocateForReservation(input) {
     return sum + grantBalance(grant, allocations);
   }, 0);
 
-  if (finiteTotal >= input.creditCost) {
+  if (finiteTotal >= cost) {
     const pool = covering
       .filter((grant) => grant.quantity != null && grantBalance(grant, allocations) > 0)
       .sort(compareExpiryThenId);
     const created = [];
-    let remaining = input.creditCost;
+    let remaining = cost;
     pool.forEach((grant) => {
       if (remaining === 0) {
         return;
@@ -191,6 +189,9 @@ function allocateForReservation(input) {
       });
       remaining -= take;
     });
+    if (remaining !== 0) {
+      return { ok: false, reason: 'no_credits' };
+    }
     return { ok: true, allocations: created };
   }
 
@@ -201,7 +202,7 @@ function allocateForReservation(input) {
       allocations: [{
         reservationId: input.reservationId,
         creditGrantId: unlimited[0].id,
-        amount: input.creditCost,
+        amount: cost,
       }],
     };
   }
@@ -221,13 +222,23 @@ function summarizeCredits(input) {
   const reservedIds = {};
 
   allocations.forEach((allocation) => {
+    if (!isHolding(allocation)) {
+      return;
+    }
     const classStart = classStartByReservationId[allocation.reservationId];
     if (classStart != null && classStart > input.now) {
       reservedIds[allocation.reservationId] = true;
     }
   });
 
-  const reserved = Object.keys(reservedIds).length;
+  let reserved = Object.keys(reservedIds).length;
+  if (input.reservations) {
+    reserved = input.reservations.filter((reservation) => {
+      return reservation.paused !== true
+        && reservation.classStart instanceof Date
+        && reservation.classStart > input.now;
+    }).length;
+  }
   const covering = grants.filter((grant) => grantCovers(grant, input.now));
   const unlimited = covering.filter((grant) => grant.quantity == null).sort(compareExpiryThenId);
 
@@ -361,11 +372,22 @@ function grantCovers(grant, instant) {
 
 function heldAmount(grantId, allocations) {
   return (allocations || []).reduce((sum, allocation) => {
-    if (allocation.creditGrantId !== grantId) {
+    if (allocation.creditGrantId !== grantId || !isHolding(allocation)) {
       return sum;
     }
-    return sum + allocation.amount;
+    return sum + Number(allocation.amount);
   }, 0);
+}
+
+function isHolding(allocation) {
+  return allocation.holding !== false && allocation.holding !== 0;
+}
+
+function validatedCreditCost(value) {
+  if (typeof value !== 'number' || !isFinite(value) || value < 0 || Math.floor(value) !== value) {
+    throw new Error('creditCost must be a whole number of 0 or more');
+  }
+  return value;
 }
 
 function compareExpiryThenId(a, b) {

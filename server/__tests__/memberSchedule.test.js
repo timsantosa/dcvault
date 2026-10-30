@@ -129,15 +129,6 @@ describe('presentMemberSchedule', () => {
     expect(presented.sessions[0].dollarCost).toBe(40);
   });
 
-  it('accepts a fractional credit cost the member can cover', () => {
-    const presented = presentMemberSchedule({
-      now: open,
-      grants: [grant({ quantity: 1 })],
-      sessions: [session({ creditCost: 0.5 })],
-    });
-    expect(presented.sessions[0].blockReason).toBeNull();
-  });
-
   it('says when current credits expire before the class', () => {
     const presented = presentMemberSchedule({
       now: open,
@@ -185,5 +176,58 @@ describe('presentMemberSchedule', () => {
     expect(presented.chipText).toBe('Unlimited · 0 reserved');
     expect(presented.needsRegistration).toBe(false);
     expect(presented.sessions[0].blockReason).toBeNull();
+  });
+
+  it('counts spots, marks this profile reserved, and blocks a full class', () => {
+    const presented = presentMemberSchedule({
+      now: open,
+      grants: [grant()],
+      sessions: [
+        session({ seriesId: 1 }),
+        session({ seriesId: 2, occursOn: '2026-07-21', capacity: 2 }),
+      ],
+      signups: [
+        { seriesId: 1, occursOn: '2026-07-20', spotsTaken: 7, reserved: true },
+        { seriesId: 2, occursOn: '2026-07-21', spotsTaken: 2, reserved: false },
+      ],
+    });
+    expect(presented.sessions[0].spotsTaken).toBe(7);
+    expect(presented.sessions[0].reserved).toBe(true);
+    expect(presented.sessions[0].blockReason).toBeNull();
+    expect(presented.sessions[1].blockReason).toBe('Class is full');
+  });
+
+  it('does not tell a member to register for a class they already reserved', () => {
+    const presented = presentMemberSchedule({
+      now: open,
+      grants: [grant({ quantity: 1 })],
+      allocations: [{ reservationId: 4, creditGrantId: 1, amount: 1, holding: true }],
+      sessions: [session()],
+      signups: [{ seriesId: 1, occursOn: '2026-07-20', spotsTaken: 1, reserved: true }],
+    });
+    expect(presented.sessions[0].reserved).toBe(true);
+    expect(presented.sessions[0].blockReason).toBeNull();
+  });
+
+  it('keeps a reserved count until start and leaves a paused hold out of it', () => {
+    const now = new Date('2026-07-20T18:00:00.000Z');
+    const presented = presentMemberSchedule({
+      now: now,
+      grants: [grant({ quantity: 4 })],
+      sessions: [session()],
+      allocations: [
+        { reservationId: 9, creditGrantId: 1, amount: 1, holding: true },
+      ],
+      classStartByReservationId: {
+        9: new Date('2026-07-20T20:00:00.000Z'),
+      },
+      chipReservations: [
+        { classStart: new Date('2026-07-20T20:00:00.000Z'), paused: false },
+        { classStart: new Date('2026-07-20T16:00:00.000Z'), paused: false },
+        { classStart: new Date('2026-07-21T20:00:00.000Z'), paused: true },
+      ],
+    });
+    expect(presented.chipText).toContain('1 reserved');
+    expect(presented.chipText).toContain('3 remaining');
   });
 });

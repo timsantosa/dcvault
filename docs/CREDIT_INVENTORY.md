@@ -178,7 +178,7 @@ An allocation exists only while that reservation is holding the credit. Check-in
 
 Dollar-only and free classes (`creditCost = 0`) do not create allocations.
 
-For `creditCost >= 1`, inside a transaction that locks the athlete’s grants:
+For a whole-number credit cost above 0, inside a transaction that locks the athlete’s grants:
 
 1. If the finite total `>= creditCost`, allocate from finite grants with balance `> 0`, soonest `expiresAt` first (null expirations last), then oldest `id`. One reservation may split across those grants.
 2. If the finite total `< creditCost` and a spendable unlimited grant exists, allocate the **whole** cost to unlimited. Finite grants are left as they are. Pick the unlimited grant with the soonest `expiresAt`, then oldest `id`.
@@ -186,9 +186,9 @@ For `creditCost >= 1`, inside a transaction that locks the athlete’s grants:
 
 Unlimited is last so a finite pack is used up before the open-ended one. A single reservation is not split across the finite pool and unlimited. Splits happen only inside the finite pool.
 
-Task 7 persists allocations (`creditAllocations`: `reservationId`, `creditGrantId`, `amount`). Task 2.3 tests the function with an in-memory allocation list, before that table exists.
+Task 7 persists allocations (`creditAllocations`: `reservationId`, `creditGrantId`, `amount`, `holding`). Task 2.3 tests the function with an in-memory allocation list. `holding` false means the row still names the grants and amounts, but the balance and the reserved count skip it. That is how a canceled class pauses the hold. Restore either replaces those rows with a new holding split or leaves the class canceled.
 
-**Cancel inside the cutoff.** Delete that reservation’s allocations. The balance goes back up because the sum no longer includes them. If the grant has since been ended, the returned amount sits on a grant that is no longer spendable. Staff add a new grant if the member should be able to book again.
+**Cancel inside the cutoff.** Delete that reservation’s allocations. The balance goes back up because the sum no longer includes them. The grant row is not modified. If the grant has since been ended, the returned amount sits on a grant that is no longer spendable. Staff add a new grant if the member should be able to book again.
 
 **Cancel after the cutoff.** Leave the allocations. Staff who excuse it add a grant.
 
@@ -200,7 +200,7 @@ No active unlimited grant:
 
 `8 remaining · 3 reserved · 4 expire Sep 30`
 
-`remaining` is `max(0, finite total)` for grants whose window covers now. `N expire [date]` is the sum of positive balances on grants that share the soonest `expiresAt`. Omit that clause when `remaining` is 0, and when every remaining credit has no `expiresAt`.
+`remaining` is `max(0, finite total)` for grants whose window covers now. `N expire [date]` is the sum of positive balances on grants that share the soonest `expiresAt`. Omit that clause when `remaining` is 0, and when every remaining credit has no `expiresAt`. The reserved count includes a holding signup until that class’s start time. The cancellation cutoff does not remove it. A paused hold is left out.
 
 The date is the last local calendar day a class can still start. `expiresAt` at local midnight displays the previous day (Dec 1 displays Nov 30; Mar 1 displays Feb 28, or Feb 29 in a leap year). Any other time displays that calendar day, so a grant ended at 3:00pm on Sep 27 displays Sep 27.
 
@@ -259,5 +259,5 @@ Do not add these columns or tables in Task 2.2.
 | **2.3** | Done. `server/lib/creditInventory.js`: add, remove, end-grant, quarter window resolver, deduct, return-on-cancel, chip, and history lines. Unit tests cover soonest-expiring order, start and expiration, negative remove grants, unlimited last, end-by-expiration, and purchase idempotency. Allocations stay in memory. |
 | **2.4** | Done. Mobile package editor, `manage_classes`. Create and edit catalog rows, including invite level. Deactivate hides the product and leaves grants. Reorder is per audience. |
 | **3.1** | Done. When the flag is on, registration lists the catalog (public, plus invite-level matches) and finalize creates one grant. Flag off: no grant. No backfill. |
-| **7.x** | Persist allocations. Dollar classes use the fake price confirm and skip deduct. |
+| **7.1** | Done. Reservation and allocation tables. Reserve and member cancel. Whole-credit deduct, pause on class cancel, restore that fails for everyone if anyone is short, move keeps the hold, delete returns it. Schedule spots, reserved, and full reason. Dollar confirm UI is still 8.2. |
 | **9.x** | Add, remove, and end-grant UI. Notify on all three. |

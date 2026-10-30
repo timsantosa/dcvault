@@ -3,7 +3,7 @@
 // Read-only member schedule. Callers load sessions and grants. Dates on a class
 // are wall-clock America/New_York. Grants are Date instants. No database.
 
-const { summarizeCredits, formatCreditChip } = require('./creditInventory');
+const { summarizeCredits, formatCreditChip, grantBalance } = require('./creditInventory');
 
 const TIME_ZONE = 'America/New_York';
 const DAYS_BEHIND = 14;
@@ -34,14 +34,23 @@ function classStartInstant(occursOn, startTime) {
 function presentMemberSchedule(input) {
   const now = input.now;
   const grants = input.grants || [];
+  const allocations = input.allocations || [];
   const summary = summarizeCredits({
     now: now,
     grants: grants,
-    allocations: [],
+    allocations: allocations,
+    classStartByReservationId: input.classStartByReservationId || {},
+    reservations: input.chipReservations,
+  });
+  const signups = {};
+  (input.signups || []).forEach((signup) => {
+    signups[signup.seriesId + '|' + signup.occursOn] = signup;
   });
   const sessions = (input.sessions || [])
     .filter((session) => !isOff(session.visible))
-    .map((session) => presentSession(session, grants, now))
+    .map((session) => {
+      return presentSession(session, grants, now, allocations, signups[session.seriesId + '|' + session.occursOn]);
+    })
     .sort(compareSessions);
 
   return {
@@ -52,8 +61,10 @@ function presentMemberSchedule(input) {
   };
 }
 
-function presentSession(session, grants, now) {
+function presentSession(session, grants, now, allocations, signup) {
   const creditCost = numericCost(session.creditCost);
+  const spotsTaken = signup ? Number(signup.spotsTaken) : 0;
+  const reserved = signup ? signup.reserved === true : false;
   return {
     seriesId: session.seriesId,
     occursOn: session.occursOn,
@@ -65,20 +76,20 @@ function presentSession(session, grants, now) {
     note: session.note == null ? null : session.note,
     color: session.color == null || session.color === '' ? null : session.color,
     capacity: Number(session.capacity),
-    spotsTaken: 0,
+    spotsTaken: spotsTaken,
     status: session.status,
     isReservable: !isOff(session.isReservable),
     creditCost: creditCost,
     dollarCost: session.dollarCost == null || session.dollarCost === '' ? null : Number(session.dollarCost),
     reservationCutoffMinutes: Number(session.reservationCutoffMinutes),
     cancellationCutoffMinutes: Number(session.cancellationCutoffMinutes),
-    blockReason: blockReason(session, grants, now, creditCost),
+    blockReason: blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved),
     cancellationNote: cancellationNote(session),
-    reserved: false,
+    reserved: reserved,
   };
 }
 
-function blockReason(session, grants, now, creditCost) {
+function blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved) {
   if (session.status === 'canceled') {
     return 'Canceled';
   }
@@ -90,17 +101,20 @@ function blockReason(session, grants, now, creditCost) {
   if (now.getTime() >= start.getTime() - cutoffMs) {
     return closedReason(Number(session.reservationCutoffMinutes));
   }
-  if (creditCost === 0) {
+  if (!reserved && spotsTaken >= Number(session.capacity)) {
+    return 'Class is full';
+  }
+  if (reserved || creditCost === 0) {
     return null;
   }
-  if (canAfford(creditCost, grants, start)) {
+  if (canAfford(creditCost, grants, start, allocations)) {
     return null;
   }
-  const futureStart = soonestFutureStart(grants, start);
+  const futureStart = soonestFutureStart(grants, start, allocations);
   if (futureStart) {
     return 'Credits start ' + nyMonthDay(futureStart);
   }
-  if (creditsCoverNow(grants, now)) {
+  if (creditsCoverNow(grants, now, allocations)) {
     return 'Credits expire before this class';
   }
   return 'Register to reserve';
@@ -132,20 +146,20 @@ function durationLabel(minutes) {
   return minutes === 1 ? '1 minute' : minutes + ' minutes';
 }
 
-function canAfford(creditCost, grants, classStart) {
-  const pool = coveredPool(grants, classStart);
+function canAfford(creditCost, grants, classStart, allocations) {
+  const pool = coveredPool(grants, classStart, allocations);
   if (pool.finite >= creditCost) {
     return true;
   }
   return pool.unlimited;
 }
 
-function creditsCoverNow(grants, now) {
-  const pool = coveredPool(grants, now);
+function creditsCoverNow(grants, now, allocations) {
+  const pool = coveredPool(grants, now, allocations);
   return pool.unlimited || pool.finite > 0;
 }
 
-function coveredPool(grants, instant) {
+function coveredPool(grants, instant, allocations) {
   let finite = 0;
   let unlimited = false;
   grants.forEach((grant) => {
@@ -156,12 +170,12 @@ function coveredPool(grants, instant) {
       unlimited = true;
       return;
     }
-    finite += Number(grant.quantity);
+    finite += grantBalance(grant, allocations);
   });
   return { finite: finite, unlimited: unlimited };
 }
 
-function soonestFutureStart(grants, classStart) {
+function soonestFutureStart(grants, classStart, allocations) {
   let soonest = null;
   grants.forEach((grant) => {
     if (grant.startsAt == null || grant.startsAt <= classStart) {
@@ -170,7 +184,7 @@ function soonestFutureStart(grants, classStart) {
     if (grant.expiresAt != null && grant.startsAt >= grant.expiresAt) {
       return;
     }
-    if (grant.quantity != null && Number(grant.quantity) <= 0) {
+    if (grant.quantity != null && grantBalance(grant, allocations) <= 0) {
       return;
     }
     if (soonest == null || grant.startsAt < soonest) {
