@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-10-25  
+**Last updated:** 2026-11-01  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -761,9 +761,9 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 - [ ] Class package catalog, one-time seed, and admin package editor (`manage_classes`)
 - [ ] Staff credit add/remove as **new records** (history preserved); end-grant sets expiration
 - [x] Website purchase → credit sync when the catalog flag is on (no backfill)
-- [ ] Reserve from schedule row in **one tap** (no confirm sheet); credit chip animates remaining / reserved
-- [ ] Credit chip: remaining, reserved, `N expire [date]`
-- [ ] Calendar reserved vs unreserved day markers (independent of class-type color)
+- [x] Reserve from schedule row in **one tap** (no confirm sheet); credit chip animates remaining / reserved
+- [x] Credit chip: remaining, reserved, `N expire [date]`
+- [x] Calendar reserved vs unreserved day markers (independent of class-type color)
 - [ ] Scrolling agenda (past dimmed; ~2 weeks of past loaded by default)
 - [ ] Eligibility visible-with-reason
 - [ ] Multi-package deduction (soonest expiring)
@@ -978,10 +978,10 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - A reservation is one series and one date. Credit cost is a whole number. A canceled session does not count as a credit spent. A moved session keeps the reservation, and its date follows the class.
   - *Completion notes:* 2026-10-25. `POST /mobileapp/user/reservations` and `POST /mobileapp/user/reservations/cancel` for `reserve_classes`. The profile must belong to the caller. A reservation row is the signup. `creditAllocations` record the tap-time split; grant `quantity` is not edited. `holding` false pauses that split while a class is canceled. Restore re-allocates every paused hold or changes nothing. Deleting a date removes the signup and the hold. A move updates `occursOn` and keeps the hold. Member cancel before the cancellation cutoff deletes the signup and the hold. After that cutoff the request is rejected, and the chip still counts the reservation until the class start. Dollar prices are stored as `paymentStatus: external` and are not charged. Group and age checks, staff cancel of one member, and the Reserve button stay on later tasks. The schedule payload now returns real spots, `reserved`, and `Class is full`.
 
-- [ ] **7.2 — Reservation UI**
+- [x] **7.2 — Reservation UI**
   - Reserve from the schedule row in one tap (no confirm sheet); credit chip animates remaining / reserved. Cancel still uses a confirm sheet. Blocked-state messaging, upcoming reservations list.
   - Chip updates immediately on reserve/cancel.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-01. Reserve and Cancel are on the schedule row, the class screen, and Upcoming classes. A credit class, including a free one, reserves in one tap. A dollar class confirms the price first and is not charged; that confirm is the one task 8.2 described, so 8.2 should not build it again. Cancel confirms and shows the credits coming back. Past the cancellation cutoff, the button is replaced with the closed message. A full class says "Class is full". Pull to refresh reloads the list. The chip reloads from the server and pulses when the text changes. The athlete can type an optional note on the class screen; the row sends none. Upcoming classes lists this athlete’s reserved sessions in the loaded window, from the schedule and from their own profile. `cancellationBlock` is on the schedule payload. Group and age eligibility, the roster, and the profile meter stay on later tasks.
 
 
 
@@ -992,7 +992,7 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - *Completion notes:*
 
 - [ ] **8.2 — Private lessons as immediate reserve**
-  - No request/approve UI in MVP. Lesson slots reserve immediately. Dollar-cost classes show a confirm sheet with the price and do not call PayPal (see §7 and CREDIT_INVENTORY.md §9).
+  - No request/approve UI in MVP. Lesson slots reserve immediately. The dollar-price confirm shipped in task 7.2; do not build a second one. It does not call PayPal (see §7 and CREDIT_INVENTORY.md §9).
   - Approval workflow and real card charging are Phase 2+ — do not build them in this task.
   - *Completion notes:*
 

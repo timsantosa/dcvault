@@ -320,7 +320,6 @@ The class is never silently missing. The member can open it and read why they ca
 │                                     │
 │  ┌─────────────────────────────┐    │
 │  │      Class is full          │    │
-│  │      No waitlist            │    │
 │  └─────────────────────────────┘    │
 ```
 

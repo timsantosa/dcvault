@@ -85,6 +85,7 @@ function presentSession(session, grants, now, allocations, signup) {
     cancellationCutoffMinutes: Number(session.cancellationCutoffMinutes),
     blockReason: blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved),
     cancellationNote: cancellationNote(session),
+    cancellationBlock: cancellationBlock(session, now, reserved),
     reserved: reserved,
   };
 }
@@ -95,6 +96,9 @@ function blockReason(session, grants, now, creditCost, allocations, spotsTaken, 
   }
   if (isOff(session.isReservable)) {
     return 'View only';
+  }
+  if (reserved) {
+    return null;
   }
   const start = classStartInstant(session.occursOn, session.startTime);
   const cutoffMs = Number(session.reservationCutoffMinutes) * 60 * 1000;
@@ -129,6 +133,20 @@ function cancellationNote(session) {
     return 'Cancel before start to keep your credit';
   }
   return 'Cancel up to ' + durationLabel(minutes) + ' before start to keep your credit';
+}
+
+function cancellationBlock(session, now, reserved) {
+  if (!reserved || session.status === 'canceled' || isOff(session.isReservable)) {
+    return null;
+  }
+  const start = classStartInstant(session.occursOn, session.startTime);
+  const minutes = Number(session.cancellationCutoffMinutes);
+  if (now.getTime() >= start.getTime() - minutes * 60 * 1000) {
+    return minutes === 0
+      ? 'Cancellation closed at start'
+      : 'Cancellation closed ' + durationLabel(minutes) + ' before start';
+  }
+  return null;
 }
 
 function closedReason(minutes) {

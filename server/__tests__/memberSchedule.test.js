@@ -207,6 +207,46 @@ describe('presentMemberSchedule', () => {
     });
     expect(presented.sessions[0].reserved).toBe(true);
     expect(presented.sessions[0].blockReason).toBeNull();
+    expect(presented.sessions[0].cancellationBlock).toBeNull();
+  });
+
+  it('leaves cancel open after the reservation cutoff and closes it at the cancellation cutoff', () => {
+    const reserved = [{ seriesId: 1, occursOn: '2026-07-20', spotsTaken: 1, reserved: true }];
+    const stillOpen = presentMemberSchedule({
+      now: new Date('2026-07-19T12:00:00.000Z'),
+      grants: [grant()],
+      sessions: [session({ reservationCutoffMinutes: 2880, cancellationCutoffMinutes: 1440 })],
+      signups: reserved,
+    });
+    expect(stillOpen.sessions[0].blockReason).toBeNull();
+    expect(stillOpen.sessions[0].cancellationBlock).toBeNull();
+
+    const closed = presentMemberSchedule({
+      now: new Date('2026-07-19T20:00:00.000Z'),
+      grants: [grant()],
+      sessions: [session()],
+      signups: reserved,
+    });
+    expect(closed.sessions[0].blockReason).toBeNull();
+    expect(closed.sessions[0].cancellationBlock).toBe('Cancellation closed 24 hours before start');
+
+    const atStart = presentMemberSchedule({
+      now: new Date('2026-07-20T20:00:00.000Z'),
+      grants: [grant()],
+      sessions: [session({ reservationCutoffMinutes: 0, cancellationCutoffMinutes: 0 })],
+      signups: reserved,
+    });
+    expect(atStart.sessions[0].cancellationBlock).toBe('Cancellation closed at start');
+  });
+
+  it('does not close cancellation for a class this athlete has not reserved', () => {
+    const presented = presentMemberSchedule({
+      now: new Date('2026-07-19T20:00:00.000Z'),
+      grants: [grant()],
+      sessions: [session()],
+    });
+    expect(presented.sessions[0].cancellationBlock).toBeNull();
+    expect(presented.sessions[0].blockReason).toBe('Reservations closed 24 hours before start');
   });
 
   it('keeps a reserved count until start and leaves a paused hold out of it', () => {
