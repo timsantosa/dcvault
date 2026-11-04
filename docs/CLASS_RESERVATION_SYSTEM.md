@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-01  
+**Last updated:** 2026-11-03  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -485,8 +485,8 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 - No structured pole-selection system for MVP.
 - Class may include a **note/suggestion field** (e.g., "Bring 14' pole for step 5").
-- Member reservation may include a **free-text note** field (storage TBD in engineering design).
-- **Future:** structured pole selection, multi-pole preference order, bulk series updates, pinned-pole quick-select.
+- Member reservation may include a **free-text note** field (storage TBD in engineering design). In the MVP the note is sent with the reserve request and cannot be changed afterward.
+- **Future:** the member can add or change that note on a reservation they already hold (Phase 2+, outside the MVP). Also later: structured pole selection, multi-pole preference order, bulk series updates, pinned-pole quick-select.
 
 
 
@@ -787,6 +787,7 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 - Waitlist
 - Meets reservation workflows
 - Structured pole selection + bulk series updates
+- **Update a reservation note** — after reserving, the member can add or change the free-text note on that reservation. The MVP only accepts the note on the reserve request. Outside the MVP build list.
 - Bulk/multi-class reservation
 - Override cutoff and eligibility (admin)
 - Audit log and action notes
