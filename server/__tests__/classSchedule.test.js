@@ -404,6 +404,18 @@ describe('assertValidClassSeries', () => {
     }))).toThrow(/endsOn must be on or after startsOn/);
   });
 
+  it('rejects an end date that includes no class, and accepts the first class date', () => {
+    const sunday = [{ weekday: 0, startTime: '11:30:00', endTime: '13:00:00' }];
+    expect(() => assertValidClassSeries(validRepeating({
+      series: series({ startsOn: '2026-08-25', endsOn: '2026-08-29' }),
+      slots: sunday,
+    }))).toThrow(/endsOn must include at least one class/);
+    expect(() => assertValidClassSeries(validRepeating({
+      series: series({ startsOn: '2026-08-25', endsOn: '2026-08-30' }),
+      slots: sunday,
+    }))).not.toThrow();
+  });
+
   it('rejects two slots on the same weekday', () => {
     expect(() => assertValidClassSeries(validRepeating({
       slots: [
@@ -539,6 +551,29 @@ describe('prepareClassCreate', () => {
     expect(single.value.series.startsOn).toBe('2026-08-25');
     expect(single.value.series.startTime).toBe('16:00:00');
     expect(single.value.slots).toEqual([]);
+    expect(single.value.series.locationAddress).toBeNull();
+  });
+
+  it('keeps a map address separate from the place name', () => {
+    const prepared = prepareClassCreate(oneOffInput({
+      location: 'DC Vault',
+      locationAddress: {
+        line1: '123 Main St',
+        city: 'Washington',
+        state: 'DC',
+        zip: '20001',
+        country: 'United States of America',
+      },
+    }), KNOWN);
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.series.location).toBe('DC Vault');
+    expect(prepared.value.series.locationAddress).toEqual({
+      line1: '123 Main St',
+      city: 'Washington',
+      state: 'DC',
+      zip: '20001',
+      country: 'United States of America',
+    });
   });
 
   it('rejects a missing title, an unknown coach, and a duplicate coach', () => {

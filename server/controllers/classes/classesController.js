@@ -51,13 +51,55 @@ async function loadExpandedSessions(db, from, to) {
   return sessions;
 }
 
+async function listTrainingGroups(req, res, db) {
+  try {
+    const rows = await db.tables.TrainingGroups.findAll({
+      order: [['id', 'ASC']],
+    });
+    res.json({
+      ok: true,
+      trainingGroups: rows.map((row) => ({
+        id: row.id,
+        key: row.key,
+        label: row.label,
+      })),
+    });
+  } catch (error) {
+    sendError(res, error, 'Error in listTrainingGroups:');
+  }
+}
+
 async function getClass(req, res, db) {
   try {
     const row = await findLiveSeries(req, res, db);
     if (!row) {
       return;
     }
-    res.json({ ok: true, classSeries: toClassSeriesJson(row) });
+    const classSeries = toClassSeriesJson(row);
+    if (req.query.on == null || req.query.on === '') {
+      res.json({ ok: true, classSeries: classSeries });
+      return;
+    }
+    const graph = graphFromRow(row);
+    let sessions;
+    try {
+      sessions = expandClassOccurrences({
+        series: graph.series,
+        slots: graph.slots,
+        occurrences: graph.occurrences,
+        rangeStart: req.query.on,
+        rangeEnd: req.query.on,
+      });
+    } catch (error) {
+      res.status(400).json({ ok: false, message: error.message });
+      return;
+    }
+    const session = sessions.filter((item) => item.occursOn === req.query.on)[0];
+    if (!session) {
+      res.status(400).json({ ok: false, message: 'That date is not on this series.' });
+      return;
+    }
+    res.json({ ok: true, classSeries: classSeries, session: session });
   } catch (error) {
     sendError(res, error, 'Error in getClass:');
   }
@@ -325,6 +367,7 @@ function graphFromRow(row) {
       title: plain.title,
       description: plain.description,
       location: plain.location,
+      locationAddress: plain.locationAddress,
       startsOn: day(plain.startsOn),
       repeats: plain.repeats,
       endsOn: day(plain.endsOn),
@@ -384,6 +427,7 @@ function toClassSeriesJson(row) {
     title: series.title,
     description: series.description,
     location: series.location,
+    locationAddress: series.locationAddress,
     startsOn: series.startsOn,
     repeats: series.repeats,
     endsOn: series.endsOn,
@@ -695,6 +739,7 @@ function coded(status, message) {
 
 module.exports = {
   listClasses,
+  listTrainingGroups,
   loadExpandedSessions,
   loadClassGraph,
   getClass,

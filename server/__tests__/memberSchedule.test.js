@@ -70,6 +70,22 @@ describe('presentMemberSchedule', () => {
     expect(presented.sessions[0].blockReason).toBe('Canceled');
     expect(presented.sessions[0].spotsTaken).toBe(0);
     expect(presented.sessions[0].reserved).toBe(false);
+    expect(presented.sessions[0].hidden).toBe(false);
+  });
+
+  it('keeps hidden sessions when includeHidden is set', () => {
+    const presented = presentMemberSchedule({
+      now: open,
+      grants: [grant()],
+      includeHidden: true,
+      sessions: [
+        session({ seriesId: 1, visible: false, title: 'Hidden' }),
+        session({ seriesId: 2, title: 'Open' }),
+      ],
+    });
+    expect(presented.sessions.map((item) => item.title)).toEqual(['Hidden', 'Open']);
+    expect(presented.sessions[0].hidden).toBe(true);
+    expect(presented.sessions[1].hidden).toBe(false);
   });
 
   it('uses the first matching reason', () => {

@@ -469,7 +469,7 @@ const deleteProfile = async (req, res, db) => {
 
 const getProfiles = async (req, res, db) => {
   try {
-    const { userId, athleteProfileIds, search } = req.query;
+    const { userId, athleteProfileIds, search, role } = req.query;
     
     // Validate inputs
     if (userId && !helpers.isValidId(parseInt(userId))) {
@@ -493,6 +493,37 @@ const getProfiles = async (req, res, db) => {
       whereClause.id = {
         [db.tables.schema.Sequelize.Op.in]: ids
       };
+    }
+
+    const roleName = typeof role === 'string' ? role.trim() : '';
+    if (roleName) {
+      const roleRow = await db.tables.Roles.findOne({ where: { roleName: roleName } });
+      if (!roleRow) {
+        return res.json({ ok: true, athleteProfiles: [] });
+      }
+      const links = await db.tables.User_Roles.findAll({
+        where: { roleId: roleRow.id },
+        attributes: ['userId'],
+      });
+      const roleUserIds = [];
+      links.forEach((link) => {
+        if (link.userId != null) {
+          roleUserIds.push(link.userId);
+        }
+      });
+      if (!roleUserIds.length) {
+        return res.json({ ok: true, athleteProfiles: [] });
+      }
+      const requestedUserId = whereClause.userId == null ? null : Number(whereClause.userId);
+      const userHasRole = requestedUserId != null && roleUserIds.some((id) => Number(id) === requestedUserId);
+      if (requestedUserId != null && !userHasRole) {
+        return res.json({ ok: true, athleteProfiles: [] });
+      }
+      if (whereClause.userId == null) {
+        whereClause.userId = {
+          [db.tables.schema.Sequelize.Op.in]: roleUserIds,
+        };
+      }
     }
 
     // Add search conditions if search term exists

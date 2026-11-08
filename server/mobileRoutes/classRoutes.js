@@ -1,6 +1,7 @@
 const express = require('express');
 const {
   listClasses,
+  listTrainingGroups,
   getClass,
   createClass,
   updateClass,
@@ -11,6 +12,7 @@ const {
 const classRoutes = (db) => {
   const router = express.Router();
 
+  router.get('/training-groups', (req, res) => listTrainingGroups(req, res, db));
   router.get('/', (req, res) => listClasses(req, res, db));
   router.post('/', (req, res) => createClass(req, res, db));
   router.get('/:id', (req, res) => getClass(req, res, db));

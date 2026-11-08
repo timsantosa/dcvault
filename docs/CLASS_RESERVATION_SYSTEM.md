@@ -756,7 +756,7 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 ### MVP (dark launch checklist)
 
 - [x] Permission-gated new Schedule experience; fallback to Google Calendar
-- [ ] Class CRUD with full configuration options (§5), including custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, cancel vs delete
+- [x] Class CRUD with full configuration options (§5), including custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, cancel vs delete
 - [ ] Flexible credit/package model with quarter overlay, start dates, unlimited packages (end unlimited by setting expiration)
 - [ ] Class package catalog, one-time seed, and admin package editor (`manage_classes`)
 - [ ] Staff credit add/remove as **new records** (history preserved); end-grant sets expiration
@@ -988,9 +988,9 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 ### Task 8: Admin class management UI
 
-- [ ] **8.1 — Create/edit class bottom sheet**
+- [x] **8.1 — Create/edit class bottom sheet**
   - All §5 properties; copy from existing class; series edit scope; relative cutoffs; custom recurrence; cost as credits and/or money; cancel vs delete with confirmation.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-03. Staff with `manage_classes` get **+** on the schedule and **Edit** on class detail. The form writes the existing class API: one-off or custom weekday rows, optional end date, credits and/or a dollar price, training groups, ages, cutoffs, color, note, and notify-coach-on-reserve. Saving a repeating class asks this date or the whole series. Turning repeat off asks before the other weeks are removed. Cancel stays on the calendar and can be restored. Delete requires typing DELETE. Copy from fills a new class from a series already on the schedule. Coaches use the existing profile search with `role=Coach` (`view_profiles`). Hidden classes stay on the staff schedule, labeled Hidden from members. Notify is still only a flag (task 12.2). §15 class CRUD is checked.
 
 - [ ] **8.2 — Private lessons as immediate reserve**
   - No request/approve UI in MVP. Lesson slots reserve immediately. The dollar-price confirm shipped in task 7.2; do not build a second one. It does not call PayPal (see §7 and CREDIT_INVENTORY.md §9).

@@ -805,6 +805,7 @@ columns.classSeries = {
   title: { type: Sequelize.STRING, allowNull: false },
   description: { type: Sequelize.TEXT, allowNull: true },
   location: { type: Sequelize.STRING, allowNull: true },
+  locationAddress: { type: Sequelize.JSON, allowNull: true },
   startsOn: { type: Sequelize.DATEONLY, allowNull: false },
   repeats: { type: Sequelize.BOOLEAN, allowNull: false },
   endsOn: { type: Sequelize.DATEONLY, allowNull: true },

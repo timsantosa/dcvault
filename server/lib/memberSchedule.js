@@ -47,7 +47,7 @@ function presentMemberSchedule(input) {
     signups[signup.seriesId + '|' + signup.occursOn] = signup;
   });
   const sessions = (input.sessions || [])
-    .filter((session) => !isOff(session.visible))
+    .filter((session) => input.includeHidden || !isOff(session.visible))
     .map((session) => {
       return presentSession(session, grants, now, allocations, signups[session.seriesId + '|' + session.occursOn]);
     })
@@ -73,6 +73,7 @@ function presentSession(session, grants, now, allocations, signup) {
     title: session.title,
     description: session.description == null ? null : session.description,
     location: session.location == null ? null : session.location,
+    locationAddress: session.locationAddress == null ? null : session.locationAddress,
     note: session.note == null ? null : session.note,
     color: session.color == null || session.color === '' ? null : session.color,
     capacity: Number(session.capacity),
@@ -87,6 +88,7 @@ function presentSession(session, grants, now, allocations, signup) {
     cancellationNote: cancellationNote(session),
     cancellationBlock: cancellationBlock(session, now, reserved),
     reserved: reserved,
+    hidden: isOff(session.visible),
   };
 }
 

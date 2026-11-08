@@ -62,6 +62,7 @@ async function getMemberSchedule(req, res, db) {
       }
       allocationsByReservation[row.reservationId].push(row);
     });
+    const permissions = req.user && req.user.permissions;
     const presented = presentMemberSchedule({
       sessions: sessions,
       grants: grantRows.map(toGrant),
@@ -72,6 +73,7 @@ async function getMemberSchedule(req, res, db) {
         paused: isPaused(allocationsByReservation[row.id] || []),
       })),
       now: now,
+      includeHidden: Array.isArray(permissions) && permissions.indexOf('manage_classes') !== -1,
     });
 
     res.json({

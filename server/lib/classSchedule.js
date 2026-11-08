@@ -10,6 +10,7 @@ const OVERRIDE_FIELDS = [
   'title',
   'description',
   'location',
+  'locationAddress',
   'startTime',
   'endTime',
   'visible',
@@ -30,6 +31,7 @@ const SESSION_FIELDS = [
   'title',
   'description',
   'location',
+  'locationAddress',
   'visible',
   'isReservable',
   'capacity',
@@ -130,6 +132,13 @@ function assertValidClassSeries(input) {
     }
     weekdays[slot.weekday] = true;
   });
+
+  if (series.repeats && series.endsOn != null) {
+    const first = firstClassDate(asIsoDate(series.startsOn, 'startsOn'), Object.keys(weekdays).map(Number));
+    if (first && asIsoDate(series.endsOn, 'endsOn') < first) {
+      throw new Error('endsOn must include at least one class');
+    }
+  }
 
   const occursOnSeen = {};
   const rescheduledFromSeen = {};
@@ -529,6 +538,20 @@ function weekdayOf(iso) {
   return parseUtc(iso).getUTCDay();
 }
 
+function firstClassDate(startsOn, weekdays) {
+  const wanted = {};
+  weekdays.forEach((weekday) => {
+    wanted[weekday] = true;
+  });
+  for (let i = 0; i < 7; i += 1) {
+    const day = addDays(startsOn, i);
+    if (wanted[weekdayOf(day)]) {
+      return day;
+    }
+  }
+  return null;
+}
+
 function addDays(iso, days) {
   const utc = parseUtc(iso);
   utc.setUTCDate(utc.getUTCDate() + days);
@@ -557,6 +580,7 @@ const SERIES_COLUMNS = [
   'title',
   'description',
   'location',
+  'locationAddress',
   'startsOn',
   'repeats',
   'endsOn',
@@ -962,6 +986,9 @@ function buildOverrides(series, times, fields) {
 }
 
 function sameField(field, left, right) {
+  if (field === 'locationAddress') {
+    return sameAddress(left, right);
+  }
   if (field === 'creditCost' || field === 'dollarCost' || field === 'capacity'
     || field === 'minAge' || field === 'maxAge'
     || field === 'reservationCutoffMinutes' || field === 'cancellationCutoffMinutes') {
@@ -1064,6 +1091,7 @@ function normalizeStoredSeries(series) {
     title: series.title,
     description: series.description == null ? null : series.description,
     location: series.location == null ? null : series.location,
+    locationAddress: series.locationAddress == null ? null : series.locationAddress,
     startsOn: asIsoDate(series.startsOn, 'startsOn'),
     repeats: series.repeats,
     endsOn: series.endsOn == null || series.endsOn === '' ? null : asIsoDate(series.endsOn, 'endsOn'),
@@ -1259,6 +1287,10 @@ function readScalars(input) {
   if (!location.ok) {
     return location;
   }
+  const locationAddress = readAddress(input.locationAddress, 'locationAddress');
+  if (!locationAddress.ok) {
+    return locationAddress;
+  }
   const color = readOptionalText(input.color, 'color');
   if (!color.ok) {
     return color;
@@ -1273,6 +1305,7 @@ function readScalars(input) {
       title: title,
       description: description.value,
       location: location.value,
+      locationAddress: locationAddress.value,
       visible: visible.value,
       isReservable: isReservable.value,
       capacity: capacity.value,
@@ -1333,6 +1366,58 @@ function readIdList(value, label, knownIds) {
   }
   ids.sort((a, b) => a - b);
   return { ok: true, ids: ids };
+}
+
+const ADDRESS_KEYS = ['line1', 'line2', 'city', 'state', 'zip', 'country'];
+
+function sameAddress(left, right) {
+  if (left == null && right == null) {
+    return true;
+  }
+  if (left == null || right == null || typeof left !== 'object' || typeof right !== 'object') {
+    return false;
+  }
+  return ADDRESS_KEYS.every((key) => String(left[key] || '') === String(right[key] || ''));
+}
+
+function readAddress(value, name) {
+  if (value == null || value === '') {
+    return { ok: true, value: null };
+  }
+  if (typeof value !== 'object' || Array.isArray(value)) {
+    return fail(name + ' must be an address');
+  }
+  const address = {};
+  const keys = Object.keys(value);
+  for (let i = 0; i < keys.length; i += 1) {
+    if (ADDRESS_KEYS.indexOf(keys[i]) === -1) {
+      return fail(name + ' has an unknown field');
+    }
+  }
+  let any = false;
+  ADDRESS_KEYS.forEach((key) => {
+    if (any === 'invalid' || value[key] == null || value[key] === '') {
+      return;
+    }
+    if (typeof value[key] !== 'string') {
+      any = 'invalid';
+      return;
+    }
+    const trimmed = value[key].trim();
+    if (trimmed) {
+      address[key] = trimmed;
+      if (key !== 'country') {
+        any = true;
+      }
+    }
+  });
+  if (any === 'invalid') {
+    return fail(name + ' must be text');
+  }
+  if (!any) {
+    return { ok: true, value: null };
+  }
+  return { ok: true, value: address };
 }
 
 function readOptionalText(value, name) {
