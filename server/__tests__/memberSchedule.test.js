@@ -112,8 +112,46 @@ describe('presentMemberSchedule', () => {
       sessions: [session()],
     });
     expect(presented.sessions[0].blockReason).toBeNull();
+    expect(presented.sessions[0].reserved).toBe(false);
     expect(presented.sessions[0].cancellationNote).toBe(
+      'Can reserve up to 24 hours before start'
+    );
+  });
+
+  it('switches the cutoff note once this athlete has reserved', () => {
+    const openHour = presentMemberSchedule({
+      now: open,
+      grants: [grant()],
+      sessions: [session({ reservationCutoffMinutes: 60, cancellationCutoffMinutes: 1440 })],
+    });
+    expect(openHour.sessions[0].cancellationNote).toBe('Can reserve up to 1 hour before start');
+
+    const reserved = presentMemberSchedule({
+      now: open,
+      grants: [grant()],
+      sessions: [session({ reservationCutoffMinutes: 60, cancellationCutoffMinutes: 1440 })],
+      signups: [{ seriesId: 1, occursOn: '2026-07-20', spotsTaken: 1, reserved: true }],
+    });
+    expect(reserved.sessions[0].cancellationNote).toBe(
       'Cancel up to 24 hours before start to keep your credit'
+    );
+
+    const untilStart = presentMemberSchedule({
+      now: new Date('2026-07-20T19:00:00.000Z'),
+      grants: [grant()],
+      sessions: [session({ reservationCutoffMinutes: 0, cancellationCutoffMinutes: 0 })],
+    });
+    expect(untilStart.sessions[0].blockReason).toBeNull();
+    expect(untilStart.sessions[0].cancellationNote).toBe('Can reserve until start');
+
+    const reservedUntilStart = presentMemberSchedule({
+      now: new Date('2026-07-20T19:00:00.000Z'),
+      grants: [grant()],
+      sessions: [session({ reservationCutoffMinutes: 60, cancellationCutoffMinutes: 0 })],
+      signups: [{ seriesId: 1, occursOn: '2026-07-20', spotsTaken: 1, reserved: true }],
+    });
+    expect(reservedUntilStart.sessions[0].cancellationNote).toBe(
+      'Cancel before start to keep your credit'
     );
   });
 

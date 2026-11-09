@@ -85,7 +85,7 @@ function presentSession(session, grants, now, allocations, signup) {
     reservationCutoffMinutes: Number(session.reservationCutoffMinutes),
     cancellationCutoffMinutes: Number(session.cancellationCutoffMinutes),
     blockReason: blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved),
-    cancellationNote: cancellationNote(session),
+    cancellationNote: cancellationNote(session, reserved),
     cancellationBlock: cancellationBlock(session, now, reserved),
     reserved: reserved,
     hidden: isOff(session.visible),
@@ -126,9 +126,16 @@ function blockReason(session, grants, now, creditCost, allocations, spotsTaken, 
   return 'Register to reserve';
 }
 
-function cancellationNote(session) {
+function cancellationNote(session, reserved) {
   if (session.status === 'canceled' || isOff(session.isReservable)) {
     return null;
+  }
+  if (!reserved) {
+    const minutes = Number(session.reservationCutoffMinutes);
+    if (minutes === 0) {
+      return 'Can reserve until start';
+    }
+    return 'Can reserve up to ' + durationLabel(minutes) + ' before start';
   }
   const minutes = Number(session.cancellationCutoffMinutes);
   if (minutes === 0) {
