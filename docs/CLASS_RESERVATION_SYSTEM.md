@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-09  
+**Last updated:** 2026-11-10  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -410,8 +410,8 @@ Adding or removing credits is **not** a silent edit of the existing package’s 
 
 - Each add or remove creates a **new credit grant** so purchase/adjustment history stays intact (e.g. “+1 makeup credit” appears as its own line rather than rewriting “16 → 17” on the original quarterly package). A removal is a new grant with a negative count. It does not edit the original grant.
 - How many credits are left is **computed**: grant quantity minus reservations that are still holding a credit. It is not a stored column. Check-in and no-shows do not change the balance; the credit was already taken when they reserved.
-- **End package** is the exception: it sets that grant’s expiration to now and does not insert another row. An early end is visible because that date no longer matches the expiration stored at creation. Use it to take an unlimited package away, or to stop an entire grant early.
-- Staff still pick which period / expiration a new add or remove should use (typically matching the current quarter).
+- **End package** is the exception: it sets that grant’s expiration to now and does not insert another row. An early end is visible because that date no longer matches the expiration stored at creation. Use it to take an unlimited package away, or to stop an entire finite grant early. It does not apply to a credit removal. Ending a removal would drop the negative count and give the credits back.
+- Staff pick the window for a new add or remove. The default is the current quarter. They can pick another season, a custom start and last day, or no expiration. No expiration is usable immediately and stays until someone ends that grant. An unlimited package is a separate choice on the add form. Leaving the amount blank does not create one.
 - Members still see a **summed** remaining count, or `Unlimited` when a spendable unlimited grant exists. History shows each grant, removal, and early end separately.
 
 
@@ -769,7 +769,7 @@ The athlete needs a place they can open and read those notices. The shape stays 
 - [x] Class CRUD with full configuration options (§5), including custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, cancel vs delete
 - [ ] Flexible credit/package model with quarter overlay, start dates, unlimited packages (end unlimited by setting expiration)
 - [ ] Class package catalog, one-time seed, and admin package editor (`manage_classes`)
-- [ ] Staff credit add/remove as **new records** (history preserved); end-grant sets expiration
+- [x] Staff credit add/remove as **new records** (history preserved); end-grant sets expiration
 - [x] Website purchase → credit sync when the catalog flag is on (no backfill)
 - [x] Reserve from schedule row in **one tap** (no confirm sheet); credit chip animates remaining / reserved
 - [x] Credit chip: remaining, reserved, `N expire [date]`
@@ -1015,10 +1015,10 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Add/remove credits as new records; end a grant by setting `expiresAt` to now. Notify member on change.
   - *Completion notes:* 2026-11-09. `manage_credits` routes under `/mobileapp/user/credits`. List an athlete’s grants, add or remove as a new row, and end a grant by setting `expiresAt` to now. Add and remove default to the current quarter; both dates may be sent together. Labels are `Credit added` and `Credit removed`. A profile with no `athleteId` is 409 and does not create an athlete. `notifyRequested` is true only when a row is inserted or an end changes `expiresAt`. Nothing is sent (task 12.4). The §15 staff-credit and admin-credit boxes stay open until the UI (task 9.2). Staff cancel of a reservation stays on `manage_classes`.
 
-- [ ] **9.2 — manage_credits UI**
+- [x] **9.2 — manage_credits UI**
   - Entry points: athlete profile, class roster.
   - Add, remove, and **End package** (required for unlimited). Ending sets expiration and keeps the grant.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-10. **Adjust Credits** on someone else’s profile, for `manage_credits`. Add and remove insert `Credit added` / `Credit removed`. The window defaults to the current season and can be another season, custom dates, or no expiration. End package sets `expiresAt` to now. A credit removal has no End package button. The header uses the schedule chip, including reserved. A profile with no athlete explains that staff should edit the profile and choose an Associated Athlete. The roster ⋯ menu waits for task 12.1. Nothing is sent (task 12.4). §15 staff-credit box is checked. Admin cancel of a reservation stays open.
 
 
 

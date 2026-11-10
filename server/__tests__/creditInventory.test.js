@@ -11,6 +11,7 @@ const {
   prepareStaffCreditAction,
   prepareEndGrant,
   presentStaffCredits,
+  staffPeriods,
   grantBalance,
   allocateForReservation,
   releaseReservation,
@@ -277,6 +278,17 @@ describe('endGrant', () => {
     const again = endGrant(alreadyEnded, now);
     expect(again.changed).toBe(false);
     expect(alreadyEnded.expiresAt.getTime()).toBe(new Date(2026, 8, 1).getTime());
+  });
+
+  it('does not end a credit removal, which would give those credits back', () => {
+    const removal = grant({
+      quantity: -1,
+      expiresAt: new Date(2026, 11, 1),
+      originalExpiresAt: new Date(2026, 11, 1),
+    });
+    const ended = endGrant(removal, now);
+    expect(ended.changed).toBe(false);
+    expect(ended.grant).toBe(removal);
   });
 });
 
@@ -692,6 +704,93 @@ describe('prepareStaffCreditAction', () => {
     expect(prepare({ startsAt: 'nope', expiresAt: 'also nope' }).message).toMatch(/startsAt/);
     expect(prepare({ action: 'end' }).ok).toBe(false);
   });
+
+  it('saves a later season from the season name', () => {
+    const prepared = prepare({ season: 'winter' });
+    expect(prepared.ok).toBe(true);
+    expectLocalMidnight(prepared.grant.startsAt, 2026, 11, 1);
+    expectLocalMidnight(prepared.grant.expiresAt, 2027, 2, 1);
+    expect(prepared.grant.originalExpiresAt.getTime()).toBe(prepared.grant.expiresAt.getTime());
+  });
+
+  it('turns an inclusive custom day into the next midnight', () => {
+    const prepared = prepare({ startsOn: '2026-09-10', endsOn: '2026-09-10' });
+    expect(prepared.ok).toBe(true);
+    expectLocalMidnight(prepared.grant.startsAt, 2026, 8, 10);
+    expectLocalMidnight(prepared.grant.expiresAt, 2026, 8, 11);
+  });
+
+  it('rejects a custom range that ends before it starts', () => {
+    const prepared = prepare({ startsOn: '2026-09-15', endsOn: '2026-09-10' });
+    expect(prepared.ok).toBe(false);
+    expect(prepared.message).toMatch(/endsOn/);
+  });
+
+  it('stores a grant with no expiration when asked', () => {
+    const prepared = prepare({ expiration: 'none' });
+    expect(prepared.ok).toBe(true);
+    expect(prepared.grant.startsAt).toBeNull();
+    expect(prepared.grant.expiresAt).toBeNull();
+    expect(prepared.grant.originalExpiresAt).toBeNull();
+    expect(prepared.grant.quantity).toBe(1);
+  });
+
+  it('adds an unlimited package only when unlimited is true', () => {
+    const prepared = prepareStaffCreditAction({
+      action: 'add',
+      unlimited: true,
+      today: today,
+      athleteId: 4,
+      createdByUserId: 9,
+    });
+    expect(prepared.ok).toBe(true);
+    expect(prepared.grant).toMatchObject({
+      source: 'staff_add',
+      label: 'Unlimited',
+      quantity: null,
+    });
+    expectLocalMidnight(prepared.grant.startsAt, 2026, 8, 1);
+    expectLocalMidnight(prepared.grant.expiresAt, 2026, 11, 1);
+  });
+
+  it('does not treat a missing amount as unlimited', () => {
+    const missing = prepareStaffCreditAction({
+      action: 'add',
+      today: today,
+      athleteId: 4,
+      createdByUserId: 9,
+    });
+    expect(missing.ok).toBe(false);
+    expect(missing.message).toMatch(/quantity/);
+
+    expect(prepare({ unlimited: true }).ok).toBe(false);
+    expect(prepare({ action: 'remove', unlimited: true, quantity: undefined }).ok).toBe(false);
+  });
+});
+
+describe('staffPeriods', () => {
+  it('lists the current season first, then the next three', () => {
+    const periods = staffPeriods(new Date(2026, 8, 27, 15, 0, 0));
+    expect(periods.map((period) => period.season)).toEqual(['fall', 'winter', 'spring', 'summer']);
+    expect(periods[0]).toMatchObject({
+      current: true,
+      label: 'End of current quarter',
+      rangeText: 'Sep 1 \u2013 Nov 30',
+      startsOn: '2026-09-01',
+      endsOn: '2026-11-30',
+    });
+    expect(periods[1]).toMatchObject({
+      current: false,
+      label: 'Winter',
+      rangeText: 'Dec 1 \u2013 Feb 28',
+      startsOn: '2026-12-01',
+      endsOn: '2027-02-28',
+    });
+    expect(periods[2].startsOn).toBe('2027-03-01');
+    expect(periods[2].endsOn).toBe('2027-05-31');
+    expect(periods[3].startsOn).toBe('2027-06-01');
+    expect(periods[3].endsOn).toBe('2027-08-31');
+  });
 });
 
 describe('prepareEndGrant', () => {
@@ -771,15 +870,16 @@ describe('presentStaffCredits', () => {
       quantity: -1,
       balance: -1,
       historyLine: '\u22121 · exp Nov 30',
-      canEnd: true,
+      canEnd: false,
     });
     expect(presented.summary).toMatchObject({
       unlimited: true,
       remaining: null,
+      reserved: 0,
       expiringCount: null,
       expiringOn: null,
+      summaryText: 'Unlimited · 0 reserved · through Nov 30',
     });
-    expect(presented.summary.reserved).toBeUndefined();
     expectLocalMidnight(presented.summary.through, 2026, 10, 30);
   });
 
@@ -814,11 +914,45 @@ describe('presentStaffCredits', () => {
     expect(presented.summary).toMatchObject({
       unlimited: false,
       remaining: 7,
+      reserved: 0,
       expiringCount: 8,
+      summaryText: '7 remaining · 0 reserved · 8 expire Nov 30',
     });
-    expect(presented.summary.reserved).toBeUndefined();
     expectLocalMidnight(presented.summary.expiringOn, 2026, 10, 30);
     expect(presented.grants[2].canEnd).toBe(false);
     expect(presented.grants[2].historyLine).toBe('Unlimited · ended Sep 1');
+  });
+
+  it('counts a future reservation and skips a paused or started class', () => {
+    const pack = grant(Object.assign({
+      id: 1,
+      source: 'website_purchase',
+      label: '8 Classes',
+      quantity: 8,
+    }, quarter));
+    const future = presentStaffCredits({
+      grants: [pack],
+      allocations: [{ reservationId: 9, creditGrantId: 1, amount: 1, holding: true }],
+      reservations: [{ classStart: new Date(2026, 8, 29, 18, 0, 0), paused: false }],
+      now: now,
+    });
+    expect(future.summary.reserved).toBe(1);
+    expect(future.summary.summaryText).toBe('7 remaining · 1 reserved · 7 expire Nov 30');
+
+    const paused = presentStaffCredits({
+      grants: [pack],
+      allocations: [],
+      reservations: [{ classStart: new Date(2026, 8, 29, 18, 0, 0), paused: true }],
+      now: now,
+    });
+    expect(paused.summary.reserved).toBe(0);
+
+    const started = presentStaffCredits({
+      grants: [pack],
+      allocations: [],
+      reservations: [{ classStart: new Date(2026, 8, 27, 14, 0, 0), paused: false }],
+      now: now,
+    });
+    expect(started.summary.reserved).toBe(0);
   });
 });

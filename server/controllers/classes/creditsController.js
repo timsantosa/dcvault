@@ -4,7 +4,9 @@ const {
   prepareStaffCreditAction,
   prepareEndGrant,
   presentStaffCredits,
+  staffPeriods,
 } = require('../../lib/creditInventory');
+const { classStartsFor, isPaused } = require('./memberScheduleController');
 
 async function listStaffCredits(req, res, db) {
   try {
@@ -12,17 +14,14 @@ async function listStaffCredits(req, res, db) {
     if (!profile.ok) {
       return res.status(profile.status).json({ ok: false, message: profile.message });
     }
-    const loaded = await loadCredits(db, profile.profile.athleteId);
-    const presented = presentStaffCredits({
-      grants: loaded.grants,
-      allocations: loaded.allocations,
-      now: new Date(),
-    });
+    const now = new Date();
+    const presented = await loadPresented(db, profile.profile, now);
     res.json({
       ok: true,
       athleteId: profile.profile.athleteId,
       summary: presented.summary,
       grants: presented.grants,
+      periods: staffPeriods(now),
     });
   } catch (error) {
     sendError(res, error, 'Error in listStaffCredits:');
@@ -46,6 +45,11 @@ async function adjustStaffCredits(req, res, db) {
       quantity: body.quantity,
       startsAt: body.startsAt,
       expiresAt: body.expiresAt,
+      season: body.season,
+      startsOn: body.startsOn,
+      endsOn: body.endsOn,
+      expiration: body.expiration,
+      unlimited: body.unlimited,
       today: now,
       athleteId: profile.profile.athleteId,
       createdByUserId: userId,
@@ -55,12 +59,7 @@ async function adjustStaffCredits(req, res, db) {
     }
 
     const created = await db.tables.CreditGrants.create(prepared.grant);
-    const loaded = await loadCredits(db, profile.profile.athleteId);
-    const presented = presentStaffCredits({
-      grants: loaded.grants,
-      allocations: loaded.allocations,
-      now: now,
-    });
+    const presented = await loadPresented(db, profile.profile, now);
     const grant = presented.grants.find((row) => row.id === created.id);
     res.status(201).json({
       ok: true,
@@ -79,13 +78,17 @@ async function endStaffGrant(req, res, db) {
     if (!Number.isInteger(grantId) || grantId < 1) {
       return res.status(400).json({ ok: false, message: 'Invalid grant id.' });
     }
+    const profile = await loadProfile(db, (req.body || {}).athleteProfileId);
+    if (!profile.ok) {
+      return res.status(profile.status).json({ ok: false, message: profile.message });
+    }
     const now = new Date();
     const result = await db.tables.schema.transaction(async (transaction) => {
       const row = await db.tables.CreditGrants.findByPk(grantId, {
         transaction: transaction,
         lock: transaction.LOCK.UPDATE,
       });
-      if (!row) {
+      if (!row || row.athleteId !== profile.profile.athleteId) {
         throw coded(404, 'Grant not found.');
       }
       const prepared = prepareEndGrant(toGrant(row), now);
@@ -132,6 +135,31 @@ async function loadProfile(db, rawId) {
     return { ok: false, status: 409, message: 'This profile is not linked to an athlete.' };
   }
   return { ok: true, profile: profile };
+}
+
+async function loadPresented(db, profile, now) {
+  const loaded = await loadCredits(db, profile.athleteId);
+  const reservationRows = await db.tables.ClassReservations.findAll({
+    where: { athleteProfileId: profile.id },
+  });
+  const starts = await classStartsFor(db, reservationRows);
+  const allocationsByReservation = {};
+  loaded.allocations.forEach((allocation) => {
+    if (!allocationsByReservation[allocation.reservationId]) {
+      allocationsByReservation[allocation.reservationId] = [];
+    }
+    allocationsByReservation[allocation.reservationId].push(allocation);
+  });
+  const reservations = reservationRows.map((row) => ({
+    classStart: starts[row.id] || null,
+    paused: isPaused(allocationsByReservation[row.id] || []),
+  }));
+  return presentStaffCredits({
+    grants: loaded.grants,
+    allocations: loaded.allocations,
+    reservations: reservations,
+    now: now,
+  });
 }
 
 async function loadCredits(db, athleteId) {

@@ -2,7 +2,7 @@
 
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Status:** Decided (Task 2.1). Tasks 2.2+ implement this file.  
-**Last updated:** 2026-10-02
+**Last updated:** 2026-11-10
 
 This is the schema and spending model for class credits. The PRD remains the product source of truth. If this file and the PRD disagree, update the PRD first, then this file.
 
@@ -148,11 +148,11 @@ Private lessons are not a website package. They are paid at reserve (§8).
 
 Permission: `manage_credits`.
 
-**Add N credits.** Insert a grant: `source = staff_add`, `quantity = N`. Staff pick `startsAt` / `expiresAt` (default: current quarter window) and set `originalExpiresAt` to that same `expiresAt`. This does not change the original purchase grant’s `quantity`.
+**Add N credits.** Insert a grant: `source = staff_add`, `quantity = N`. Staff pick the window and `originalExpiresAt` is set to that same `expiresAt`. The default is the quarter that contains today. They can name another season, send inclusive `startsOn` / `endsOn` (the last day a class can start; `expiresAt` is the next midnight), or send `expiration: 'none'` (`startsAt` and `expiresAt` both null). Sending `unlimited: true` and omitting `quantity` inserts an unlimited grant (`quantity` null, label `Unlimited`). A missing quantity without that flag is rejected. This does not change the original purchase grant’s `quantity`.
 
-**Remove N credits.** Insert a grant: `source = staff_remove`, `quantity = -N`. Same date window, usually the current quarter. The original grant is not edited. The member-facing total drops because the sum includes this row.
+**Remove N credits.** Insert a grant: `source = staff_remove`, `quantity = -N`. Same windows as an add. The original grant is not edited. The member-facing total drops because the sum includes this row. A removal is not ended. Ending it would drop the negative count and give the credits back.
 
-**End a grant** (the way to take unlimited away, and the way to end any whole grant early). Do not delete the row. Do not insert a cancel row. If `expiresAt` is null or still in the future, set `expiresAt` to now. Leave `originalExpiresAt` and `quantity` alone. If the grant has already reached its original end, do nothing.
+**End a grant** (the way to take unlimited away, and the way to end a finite package early). Do not delete the row. Do not insert a cancel row. Do not end a negative grant. If `expiresAt` is null or still in the future, set `expiresAt` to now. Leave `originalExpiresAt` and `quantity` alone. If the grant has already reached its original end, do nothing. The end request includes `athleteProfileId`, and the grant must belong to that athlete.
 
 The grant is then unusable because `expiresAt` is in the past. History shows an early end because `expiresAt` differs from `originalExpiresAt`. Upcoming reservations that already used the grant stay. Staff cancel those separately if the spot should be released. Replacing unlimited with a few classes is two actions: end the unlimited grant, then add a finite grant.
 

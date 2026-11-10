@@ -940,8 +940,8 @@ Admin has every permission above, plus credit and training-group tools. Coaches 
 ## Flow I — Add or remove credits
 
 **Permission:** `manage_credits`  
-**Entry:** athlete profile (staff view) or class roster ⋯ menu.  
-**MVP:** add/remove only. No cutoff override, no required reason field, no audit log UI. The member gets a notification.
+**Entry:** athlete profile (someone else’s). The class roster ⋯ menu opens this same screen once the roster exists (task 12.1).  
+**MVP:** add/remove only. No cutoff override, no required reason field, no audit log UI. The screen says the member will get a notification. Sending it is task 12.4.
 
 Each add or remove is a **new package / credit record** so history stays honest. It does **not** silently rewrite the original quarterly purchase.
 
@@ -967,12 +967,14 @@ These sit with the existing staff buttons (View Contact, View Jumps, Edit Roles)
 
 ### I2. Adjust credits sheet
 
+The credits screen shows the chip and the package list. **Adjust credits** opens the add/remove form. Saving closes it and the list shows the new line. Add can turn on **Unlimited**. That is the only way to grant an unlimited package. A blank amount is rejected.
+
 ```
 ┌─────────────────────────────────────┐
 │  ←         Adjust credits           │
 ├─────────────────────────────────────┤
 │  Emma Dunne                         │
-│  7 remaining  ·  4 expire Sep 30    │
+│  7 remaining · 1 reserved · 4 expire Sep 30 │
 │                                     │
 │  PACKAGES                           │
 │  Quarterly · 7 of 16 left           │
@@ -993,6 +995,9 @@ These sit with the existing staff buttons (View Contact, View Jumps, Edit Roles)
 │                                     │
 │  Expiration                         │
 │  End of current quarter      [▾]    │
+│  Sep 1 – Nov 30                     │
+│  Other seasons, Custom dates,       │
+│  or No expiration                   │
 │                                     │
 │  Emma will get a notification.      │
 │                                     │
@@ -1004,9 +1009,11 @@ These sit with the existing staff buttons (View Contact, View Jumps, Edit Roles)
 
 Typical uses: excused late cancel, walk-in with no credits, goodwill makeup, fixing a website sync mistake.
 
-### I3. End a package (unlimited, or the whole grant)
+If the profile is not linked to an athlete, the screen does not show the form. It tells staff to edit the profile and choose an **Associated Athlete** (the website registration), with a button that opens Edit Profile.
 
-Add and remove still create a new history line. They cannot take an unlimited package away, because there is no count to subtract. **End package** sets that grant’s expiration to now and keeps the row.
+### I3. End a package (unlimited, or a finite grant)
+
+Add and remove still create a new history line. They cannot take an unlimited package away, because there is no count to subtract. **End package** sets that grant’s expiration to now and keeps the row. A **Credit removed** line has no End package button.
 
 ```
 │  Unlimited Classes                  │

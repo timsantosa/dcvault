@@ -207,4 +207,6 @@ function callerId(req) {
 
 module.exports = {
   getMemberSchedule,
+  classStartsFor,
+  isPaused,
 };

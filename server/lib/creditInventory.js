@@ -69,6 +69,29 @@ function buildStaffRemoveGrant(input) {
   return buildStaffGrant('staff_remove', input, -1);
 }
 
+function buildStaffUnlimitedGrant(input) {
+  if (!input.label) {
+    throw new Error('label is required');
+  }
+  if (input.athleteId == null) {
+    throw new Error('athleteId is required');
+  }
+  const startsAt = copyDate(input.startsAt, 'startsAt');
+  const expiresAt = copyDate(input.expiresAt, 'expiresAt');
+  return {
+    athleteId: input.athleteId,
+    classPackageId: null,
+    purchaseId: null,
+    source: 'staff_add',
+    label: input.label,
+    quantity: null,
+    startsAt: startsAt,
+    expiresAt: expiresAt,
+    originalExpiresAt: expiresAt == null ? null : new Date(expiresAt.getTime()),
+    createdByUserId: input.createdByUserId == null ? null : input.createdByUserId,
+  };
+}
+
 function buildStaffGrant(source, input, sign) {
   assertPositiveInteger(input.quantity, 'quantity');
   if (!input.label) {
@@ -133,6 +156,9 @@ function buildWebsitePurchaseGrant(input) {
 
 function endGrant(grant, now) {
   assertDate(now, 'now');
+  if (grant.quantity != null && Number(grant.quantity) < 0) {
+    return { changed: false, grant: grant };
+  }
   if (grant.originalExpiresAt != null && now >= grant.originalExpiresAt) {
     return { changed: false, grant: grant };
   }
@@ -148,34 +174,47 @@ function endGrant(grant, now) {
 const STAFF_LABELS = {
   add: 'Credit added',
   remove: 'Credit removed',
+  unlimited: 'Unlimited',
 };
 
-// Add or remove. Dates default to the quarter that contains today.
+// Add or remove. The window is a season, inclusive custom dates, no expiration,
+// or explicit instants. Omitting the window uses the quarter that contains today.
+// Unlimited is a separate true flag. A missing quantity is not unlimited.
 // { ok: true, grant, notifyRequested } or { ok: false, message }.
 function prepareStaffCreditAction(input) {
   const action = input && input.action;
   if (action !== 'add' && action !== 'remove') {
     return { ok: false, message: 'action must be add or remove' };
   }
-  if (!isPositiveInteger(input.quantity)) {
+  const unlimited = input.unlimited === true;
+  if (input.unlimited != null && input.unlimited !== false && !unlimited) {
+    return { ok: false, message: 'unlimited must be true or omitted' };
+  }
+  if (unlimited && action !== 'add') {
+    return { ok: false, message: 'unlimited can only be added' };
+  }
+  if (unlimited && input.quantity != null && input.quantity !== '') {
+    return { ok: false, message: 'quantity must be omitted when unlimited is set' };
+  }
+  if (!unlimited && !isPositiveInteger(input.quantity)) {
     return { ok: false, message: 'quantity must be an integer of 1 or more' };
   }
   const window = staffWindow(input);
   if (!window.ok) {
     return window;
   }
-  const build = action === 'add' ? buildStaffAddGrant : buildStaffRemoveGrant;
+  const grantInput = {
+    athleteId: input.athleteId,
+    label: unlimited ? STAFF_LABELS.unlimited : STAFF_LABELS[action],
+    startsAt: window.startsAt,
+    expiresAt: window.expiresAt,
+    createdByUserId: input.createdByUserId,
+    quantity: input.quantity,
+  };
   return {
     ok: true,
     notifyRequested: true,
-    grant: build({
-      athleteId: input.athleteId,
-      quantity: input.quantity,
-      label: STAFF_LABELS[action],
-      startsAt: window.startsAt,
-      expiresAt: window.expiresAt,
-      createdByUserId: input.createdByUserId,
-    }),
+    grant: unlimited ? buildStaffUnlimitedGrant(grantInput) : (action === 'add' ? buildStaffAddGrant : buildStaffRemoveGrant)(grantInput),
   };
 }
 
@@ -190,19 +229,27 @@ function prepareEndGrant(grant, now) {
   };
 }
 
-// Staff list. Summary omits reserved; that count needs class start times.
+// Staff list. Pass reservations (class start and paused) so reserved matches the schedule chip.
 function presentStaffCredits(input) {
   const now = input.now;
   const allocations = input.allocations || [];
   const grants = (input.grants || []).slice().sort((a, b) => (a.id || 0) - (b.id || 0));
-  const summary = summarizeCredits({ grants: grants, allocations: allocations, now: now });
+  const summary = summarizeCredits({
+    grants: grants,
+    allocations: allocations,
+    now: now,
+    classStartByReservationId: input.classStartByReservationId || {},
+    reservations: input.reservations,
+  });
   return {
     summary: {
       unlimited: summary.unlimited,
       remaining: summary.remaining,
+      reserved: summary.reserved,
       expiringCount: summary.expiringCount,
       expiringOn: summary.expiringOn,
       through: summary.through,
+      summaryText: formatCreditChip(summary),
     },
     grants: grants.map((row) => ({
       id: row.id,
@@ -487,7 +534,55 @@ function sameInstant(a, b) {
   return a.getTime() === b.getTime();
 }
 
+// Current season first, then the next three. endsOn is the last day a class can start.
+function staffPeriods(today) {
+  assertDate(today, 'today');
+  const current = seasonOf(today);
+  const start = SEASONS.indexOf(current);
+  return [0, 1, 2, 3].map((offset) => {
+    const season = SEASONS[(start + offset) % 4];
+    const window = resolveSeasonWindow(season, today);
+    const endsOn = lastInclusiveDay(window.expiresAt);
+    return {
+      season: season,
+      current: season === current,
+      label: season === current ? 'End of current quarter' : seasonName(season),
+      rangeText: formatMonthDay(window.startsAt) + ' \u2013 ' + formatMonthDay(endsOn),
+      startsOn: formatIsoDate(window.startsAt),
+      endsOn: formatIsoDate(endsOn),
+    };
+  });
+}
+
+function seasonName(season) {
+  return season.charAt(0).toUpperCase() + season.slice(1);
+}
+
+function formatIsoDate(date) {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return date.getFullYear() + '-' + month + '-' + day;
+}
+
 function staffWindow(input) {
+  if (input.expiration != null && input.expiration !== '') {
+    if (input.expiration !== 'none') {
+      return { ok: false, message: 'expiration must be none' };
+    }
+    return { ok: true, startsAt: null, expiresAt: null };
+  }
+  if (hasText(input.startsOn) || hasText(input.endsOn)) {
+    return inclusiveWindow(input.startsOn, input.endsOn);
+  }
+  if (hasText(input.season)) {
+    if (SEASONS.indexOf(input.season) === -1) {
+      return { ok: false, message: 'season must be fall, winter, spring, or summer' };
+    }
+    assertDate(input.today, 'today');
+    const window = resolveSeasonWindow(input.season, input.today);
+    return { ok: true, startsAt: window.startsAt, expiresAt: window.expiresAt };
+  }
+
   const starts = readInstant(input.startsAt, 'startsAt');
   if (starts.ok === false) {
     return { ok: false, message: starts.message };
@@ -508,6 +603,39 @@ function staffWindow(input) {
     return { ok: false, message: 'startsAt must be before expiresAt' };
   }
   return { ok: true, startsAt: starts.date, expiresAt: expires.date };
+}
+
+// startsOn and endsOn are YYYY-MM-DD. endsOn is the last day a class can start.
+function inclusiveWindow(startsOn, endsOn) {
+  const start = parseIsoDate(startsOn, 'startsOn');
+  if (!start.ok) {
+    return start;
+  }
+  const end = parseIsoDate(endsOn, 'endsOn');
+  if (!end.ok) {
+    return end;
+  }
+  if (end.date.getTime() < start.date.getTime()) {
+    return { ok: false, message: 'endsOn must be on or after startsOn' };
+  }
+  const expiresAt = new Date(end.date.getFullYear(), end.date.getMonth(), end.date.getDate() + 1);
+  return { ok: true, startsAt: start.date, expiresAt: expiresAt };
+}
+
+function parseIsoDate(value, label) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return { ok: false, message: label + ' must be YYYY-MM-DD' };
+  }
+  const parts = value.split('-').map(Number);
+  const date = new Date(parts[0], parts[1] - 1, parts[2]);
+  if (date.getFullYear() !== parts[0] || date.getMonth() !== parts[1] - 1 || date.getDate() !== parts[2]) {
+    return { ok: false, message: label + ' must be YYYY-MM-DD' };
+  }
+  return { ok: true, date: date };
+}
+
+function hasText(value) {
+  return value != null && value !== '';
 }
 
 function readInstant(value, label) {
@@ -560,6 +688,7 @@ module.exports = {
   prepareStaffCreditAction,
   prepareEndGrant,
   presentStaffCredits,
+  staffPeriods,
   grantBalance,
   allocateForReservation,
   releaseReservation,
