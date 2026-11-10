@@ -1228,6 +1228,7 @@ Call these out so the review stays on launch scope:
 - Refunds in-app (coach handles money; admin adjusts credits)
 - Email / SMS / 24-hour class reminders
 - Auto-delete of messages (class conversations ~2 weeks; other types 6 months)
+- A place to read personal notices that are not a class conversation (reservation canceled, credits changed, lesson reserved). Shape is later; one option is a faux conversation for that athlete only (task 12.4)
 - Personal Apple/Google calendar subscription
 - Progress meter flipping to next quarter when this quarter is empty
 - Replacing the public website calendar or turning off Zen Planner for everyone

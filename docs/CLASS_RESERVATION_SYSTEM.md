@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-03  
+**Last updated:** 2026-11-09  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -251,7 +251,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 | ------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Open / all-ages classes         | Reservable; group restrictions via config                                                           |
 | Age-restricted / group-specific | Reservable; eligibility enforced                                                                    |
-| Private lessons                 | Reservable **immediately** (same as group classes). No request/approve in MVP. Payment model TBD §7 |
+| Private lessons                 | Reservable **immediately** (same as group classes). No request/approve in MVP. Price confirm, no card charge, no group credits (§7) |
 | Semi-private lessons            | Same as private; staff increases capacity as needed                                                 |
 | Meets                           | **Visible only, not reservable**                                                                    |
 | DC Vault hosted events          | Configurable credit and/or dollar cost; reservable if `isReservable`                                |
@@ -457,7 +457,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Prerequisites to reserve
 
-1. Selected athlete has **unused, non-expired credits** of the applicable type (group credits for group classes; private lesson payment rules TBD).
+1. Selected athlete has **unused, non-expired credits** of the applicable type (group credits for group classes). A dollar-priced lesson does not spend group credits; the member confirms the price and is not charged (§7).
 2. Current time is **before reservation cutoff** (cutoff = configured duration before class start).
 3. Athlete meets **eligibility** (training group, age, etc.).
 4. Class is `isReservable = true`, **not full**, and **not canceled**.
@@ -679,6 +679,16 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 
 
 
+### Member notification place (task 12.4)
+
+Class threads (tasks 12.2 and 12.3) are not a place to read a notice that is not about one class conversation: a coach canceled that athlete’s reservation, credits changed, or a lesson was reserved.
+
+The athlete needs a place they can open and read those notices. The shape stays open. One candidate is a faux conversation that belongs only to that athlete and holds their notifications.
+
+`notifyCoachOnReserve` stays a stored flag until this work sends it. Class change notices stay on task 12.2.
+
+
+
 ### Skeleton for later
 
 - Code structure should accommodate **email** and **SMS** channels (TODO stubs, not MVP implementation).
@@ -774,7 +784,7 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 - [ ] Class participant messaging
 - [ ] Roster visibility (permission-gated)
 - [ ] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
-- [ ] Private lessons reserve immediately (no approval workflow)
+- [x] Private lessons reserve immediately (no approval workflow)
 - [ ] One-way sync to separate Google Calendar (task 5.1, last MVP build task; rules in §6)
 - [ ] Unit test framework + core logic tests
 - [ ] Allow users to message coaches/admins even without the manage_conversations permission. (For asking questions)
@@ -990,12 +1000,12 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 - [x] **8.1 — Create/edit class bottom sheet**
   - All §5 properties; copy from existing class; series edit scope; relative cutoffs; custom recurrence; cost as credits and/or money; cancel vs delete with confirmation.
-  - *Completion notes:* 2026-11-03. Staff with `manage_classes` get **+** on the schedule and **Edit** on class detail. The form writes the existing class API: one-off or custom weekday rows, optional end date, credits and/or a dollar price, training groups, ages, cutoffs, color, note, and notify-coach-on-reserve. Saving a repeating class asks this date or the whole series. Turning repeat off asks before the other weeks are removed. Cancel stays on the calendar and can be restored. Delete requires typing DELETE. Copy from fills a new class from a series already on the schedule. Coaches use the existing profile search with `role=Coach` (`view_profiles`). Hidden classes stay on the staff schedule, labeled Hidden from members. Notify is still only a flag (task 12.2). §15 class CRUD is checked.
+  - *Completion notes:* 2026-11-03. Staff with `manage_classes` get **+** on the schedule and **Edit** on class detail. The form writes the existing class API: one-off or custom weekday rows, optional end date, credits and/or a dollar price, training groups, ages, cutoffs, color, note, and notify-coach-on-reserve. Saving a repeating class asks this date or the whole series. Turning repeat off asks before the other weeks are removed. Cancel stays on the calendar and can be restored. Delete requires typing DELETE. Copy from fills a new class from a series already on the schedule. Coaches use the existing profile search with `role=Coach` (`view_profiles`). Hidden classes stay on the staff schedule, labeled Hidden from members. Notify is still only a flag (task 12.4). §15 class CRUD is checked.
 
-- [ ] **8.2 — Private lessons as immediate reserve**
+- [x] **8.2 — Private lessons as immediate reserve**
   - No request/approve UI in MVP. Lesson slots reserve immediately. The dollar-price confirm shipped in task 7.2; do not build a second one. It does not call PayPal (see §7 and CREDIT_INVENTORY.md §9).
   - Approval workflow and real card charging are Phase 2+ — do not build them in this task.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-09. Already shipped in 7.1, 7.2, and 8.1. A dollar class confirms the price, then reserves immediately with `paymentStatus: external`. `creditCost` 0 spends no group credits. There is no approval state and no PayPal call. Do not rebuild the confirm. `notifyCoachOnReserve` is still only stored (task 12.4). §15 private-lesson box is checked.
 
 
 
@@ -1052,6 +1062,11 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 - [ ] **12.3 — Message class participants**
   - Integrate with existing messaging system.
+  - *Completion notes:*
+
+- [ ] **12.4 — Member notification place**
+  - A place the athlete can open and read notices that are not a class conversation (reservation canceled by staff, credit changes, a lesson reserved). The shape stays open. One candidate: a faux conversation that belongs only to that athlete and holds their notifications.
+  - `notifyCoachOnReserve` is stored and does not send until this task. Class change notices stay on 12.2.
   - *Completion notes:*
 
 
