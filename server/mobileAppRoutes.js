@@ -22,6 +22,7 @@ const classPackageRoutes = require('./mobileRoutes/classPackageRoutes');
 const classRoutes = require('./mobileRoutes/classRoutes');
 const memberScheduleRoutes = require('./mobileRoutes/memberScheduleRoutes');
 const reservationRoutes = require('./mobileRoutes/reservationRoutes');
+const creditRoutes = require('./mobileRoutes/creditRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -60,6 +61,7 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/classes', checkPermission('manage_classes'), classRoutes(db));
   app.use('/mobileapp/user/schedule', checkPermission('reserve_classes'), memberScheduleRoutes(db));
   app.use('/mobileapp/user/reservations', checkPermission('reserve_classes'), reservationRoutes(db));
+  app.use('/mobileapp/user/credits', checkPermission('manage_credits'), creditRoutes(db));
 
   // Admin routes
   app.post('/mobileapp/user/jump/verify', checkPermission('verify_jumps'), (req, res) => verifyJump(req, res, db));

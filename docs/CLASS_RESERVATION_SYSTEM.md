@@ -685,7 +685,7 @@ Class threads (tasks 12.2 and 12.3) are not a place to read a notice that is not
 
 The athlete needs a place they can open and read those notices. The shape stays open. One candidate is a faux conversation that belongs only to that athlete and holds their notifications.
 
-`notifyCoachOnReserve` stays a stored flag until this work sends it. Class change notices stay on task 12.2.
+`notifyCoachOnReserve` stays a stored flag until this work sends it. Class change notices stay on task 12.2. Credit add, remove, and end return `notifyRequested` and do not send until this task.
 
 
 
@@ -1011,9 +1011,9 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 ### Task 9: Admin credits UI
 
-- [ ] **9.1 — manage_credits API** (if not fully covered in Task 2)
+- [x] **9.1 — manage_credits API** (if not fully covered in Task 2)
   - Add/remove credits as new records; end a grant by setting `expiresAt` to now. Notify member on change.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-09. `manage_credits` routes under `/mobileapp/user/credits`. List an athlete’s grants, add or remove as a new row, and end a grant by setting `expiresAt` to now. Add and remove default to the current quarter; both dates may be sent together. Labels are `Credit added` and `Credit removed`. A profile with no `athleteId` is 409 and does not create an athlete. `notifyRequested` is true only when a row is inserted or an end changes `expiresAt`. Nothing is sent (task 12.4). The §15 staff-credit and admin-credit boxes stay open until the UI (task 9.2). Staff cancel of a reservation stays on `manage_classes`.
 
 - [ ] **9.2 — manage_credits UI**
   - Entry points: athlete profile, class roster.

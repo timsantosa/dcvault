@@ -8,6 +8,9 @@ const {
   buildStaffRemoveGrant,
   buildWebsitePurchaseGrant,
   endGrant,
+  prepareStaffCreditAction,
+  prepareEndGrant,
+  presentStaffCredits,
   grantBalance,
   allocateForReservation,
   releaseReservation,
@@ -622,5 +625,200 @@ describe('formatHistoryLine', () => {
       expiresAt: new Date(2028, 2, 1),
       originalExpiresAt: new Date(2028, 2, 1),
     }))).toBe('Unlimited · through Feb 29');
+  });
+});
+
+describe('prepareStaffCreditAction', () => {
+  const today = new Date(2026, 8, 27, 15, 0, 0);
+
+  function prepare(extra) {
+    return prepareStaffCreditAction(Object.assign({
+      action: 'add',
+      quantity: 1,
+      today: today,
+      athleteId: 4,
+      createdByUserId: 9,
+    }, extra));
+  }
+
+  it('adds a fixed-label grant on the current quarter and asks to notify', () => {
+    const prepared = prepare({ label: 'Makeup credit' });
+    expect(prepared.ok).toBe(true);
+    expect(prepared.notifyRequested).toBe(true);
+    expect(prepared.grant).toMatchObject({
+      athleteId: 4,
+      classPackageId: null,
+      purchaseId: null,
+      source: 'staff_add',
+      label: 'Credit added',
+      quantity: 1,
+      createdByUserId: 9,
+    });
+    expectLocalMidnight(prepared.grant.startsAt, 2026, 8, 1);
+    expectLocalMidnight(prepared.grant.expiresAt, 2026, 11, 1);
+    expect(prepared.grant.originalExpiresAt.getTime()).toBe(prepared.grant.expiresAt.getTime());
+  });
+
+  it('removes as a new negative grant and keeps an explicit window', () => {
+    const startsAt = '2026-01-01T05:00:00.000Z';
+    const expiresAt = '2026-04-01T04:00:00.000Z';
+    const prepared = prepare({
+      action: 'remove',
+      quantity: 3,
+      startsAt: startsAt,
+      expiresAt: expiresAt,
+    });
+    expect(prepared.ok).toBe(true);
+    expect(prepared.notifyRequested).toBe(true);
+    expect(prepared.grant.source).toBe('staff_remove');
+    expect(prepared.grant.label).toBe('Credit removed');
+    expect(prepared.grant.quantity).toBe(-3);
+    expect(prepared.grant.startsAt.toISOString()).toBe(startsAt);
+    expect(prepared.grant.expiresAt.toISOString()).toBe(expiresAt);
+    expect(prepared.grant.expiresAt.getMonth()).not.toBe(11);
+  });
+
+  it('rejects a bad quantity, half a window, and an unknown action', () => {
+    [null, 0, -1, 1.5, '1'].forEach((quantity) => {
+      const prepared = prepare({ quantity: quantity });
+      expect(prepared.ok).toBe(false);
+      expect(prepared.message).toMatch(/quantity/);
+    });
+    expect(prepare({ startsAt: new Date(2026, 8, 1) }).message).toMatch(/both be set/);
+    expect(prepare({
+      startsAt: new Date(2026, 11, 1),
+      expiresAt: new Date(2026, 11, 1),
+    }).message).toMatch(/before/);
+    expect(prepare({ startsAt: 'nope', expiresAt: 'also nope' }).message).toMatch(/startsAt/);
+    expect(prepare({ action: 'end' }).ok).toBe(false);
+  });
+});
+
+describe('prepareEndGrant', () => {
+  const now = new Date(2026, 8, 27, 15, 0, 0);
+
+  it('asks to notify only when the expiration moves', () => {
+    const open = grant({
+      quantity: null,
+      expiresAt: new Date(2026, 11, 1),
+      originalExpiresAt: new Date(2026, 11, 1),
+    });
+    const ended = prepareEndGrant(open, now);
+    expect(ended.changed).toBe(true);
+    expect(ended.notifyRequested).toBe(true);
+    expect(ended.grant.expiresAt.getTime()).toBe(now.getTime());
+    expect(ended.grant.originalExpiresAt.getTime()).toBe(new Date(2026, 11, 1).getTime());
+    expect(open.expiresAt.getTime()).toBe(new Date(2026, 11, 1).getTime());
+
+    const again = prepareEndGrant(ended.grant, now);
+    expect(again.changed).toBe(false);
+    expect(again.notifyRequested).toBe(false);
+    expect(again.grant).toBe(ended.grant);
+  });
+});
+
+describe('presentStaffCredits', () => {
+  const now = new Date(2026, 8, 27, 15, 0, 0);
+  const quarter = {
+    startsAt: new Date(2026, 8, 1),
+    expiresAt: new Date(2026, 11, 1),
+    originalExpiresAt: new Date(2026, 11, 1),
+  };
+
+  it('lists every grant oldest first, including a removal and unlimited', () => {
+    const pack = grant(Object.assign({
+      id: 2,
+      source: 'website_purchase',
+      label: '8 Classes',
+      quantity: 8,
+    }, quarter));
+    const unlimited = grant(Object.assign({
+      id: 3,
+      source: 'website_purchase',
+      label: 'Unlimited',
+      quantity: null,
+    }, quarter));
+    const removal = grant(Object.assign({
+      id: 4,
+      source: 'staff_remove',
+      label: 'Credit removed',
+      quantity: -1,
+    }, quarter));
+    const presented = presentStaffCredits({
+      grants: [unlimited, removal, pack],
+      allocations: [
+        { reservationId: 9, creditGrantId: 2, amount: 1, holding: true },
+        { reservationId: 10, creditGrantId: 2, amount: 5, holding: false },
+      ],
+      now: now,
+    });
+
+    expect(presented.grants.map((row) => row.id)).toEqual([2, 3, 4]);
+    expect(presented.grants[0]).toMatchObject({
+      balance: 7,
+      historyLine: '+8 · exp Nov 30',
+      canEnd: true,
+    });
+    expect(presented.grants[1]).toMatchObject({
+      quantity: null,
+      balance: null,
+      historyLine: 'Unlimited · through Nov 30',
+      canEnd: true,
+    });
+    expect(presented.grants[2]).toMatchObject({
+      source: 'staff_remove',
+      label: 'Credit removed',
+      quantity: -1,
+      balance: -1,
+      historyLine: '\u22121 · exp Nov 30',
+      canEnd: true,
+    });
+    expect(presented.summary).toMatchObject({
+      unlimited: true,
+      remaining: null,
+      expiringCount: null,
+      expiringOn: null,
+    });
+    expect(presented.summary.reserved).toBeUndefined();
+    expectLocalMidnight(presented.summary.through, 2026, 10, 30);
+  });
+
+  it('drops the remaining total by a negative grant and refuses to end one already closed', () => {
+    const pack = grant(Object.assign({
+      id: 1,
+      source: 'website_purchase',
+      label: '8 Classes',
+      quantity: 8,
+    }, quarter));
+    const removal = grant(Object.assign({
+      id: 2,
+      source: 'staff_remove',
+      label: 'Credit removed',
+      quantity: -1,
+    }, quarter));
+    const closed = grant({
+      id: 3,
+      source: 'website_purchase',
+      label: 'Unlimited',
+      quantity: null,
+      startsAt: new Date(2026, 8, 1),
+      expiresAt: new Date(2026, 8, 1, 15, 0, 0),
+      originalExpiresAt: new Date(2026, 11, 1),
+    });
+    const presented = presentStaffCredits({
+      grants: [closed, removal, pack],
+      allocations: [],
+      now: now,
+    });
+
+    expect(presented.summary).toMatchObject({
+      unlimited: false,
+      remaining: 7,
+      expiringCount: 8,
+    });
+    expect(presented.summary.reserved).toBeUndefined();
+    expectLocalMidnight(presented.summary.expiringOn, 2026, 10, 30);
+    expect(presented.grants[2].canEnd).toBe(false);
+    expect(presented.grants[2].historyLine).toBe('Unlimited · ended Sep 1');
   });
 });

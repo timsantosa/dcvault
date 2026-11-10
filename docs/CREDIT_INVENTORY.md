@@ -158,7 +158,7 @@ The grant is then unusable because `expiresAt` is in the past. History shows an 
 
 A negative count cannot end unlimited, because there is no count to subtract.
 
-Notify the member on add, remove, and end (same path as other credit changes; Task 9.1).
+Notify the member on add, remove, and end. Task 9.1 returns `notifyRequested` when the inventory changes and does not send. Task 12.4 is the place the member reads it.
 
 ---
 
@@ -260,4 +260,5 @@ Do not add these columns or tables in Task 2.2.
 | **2.4** | Done. Mobile package editor, `manage_classes`. Create and edit catalog rows, including invite level. Deactivate hides the product and leaves grants. Reorder is per audience. |
 | **3.1** | Done. When the flag is on, registration lists the catalog (public, plus invite-level matches) and finalize creates one grant. Flag off: no grant. No backfill. |
 | **7.1** | Done. Reservation and allocation tables. Reserve and member cancel. Whole-credit deduct, pause on class cancel, restore that fails for everyone if anyone is short, move keeps the hold, delete returns it. Schedule spots, reserved, and full reason. Dollar confirm UI is still 8.2. |
-| **9.x** | Add, remove, and end-grant UI. Notify on all three. |
+| **9.1** | Done. `manage_credits` routes: list, add, remove, and end-grant. `notifyRequested` when the inventory changes. Nothing is sent. |
+| **9.2** | Add, remove, and end-grant UI. |

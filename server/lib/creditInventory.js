@@ -145,6 +145,80 @@ function endGrant(grant, now) {
   };
 }
 
+const STAFF_LABELS = {
+  add: 'Credit added',
+  remove: 'Credit removed',
+};
+
+// Add or remove. Dates default to the quarter that contains today.
+// { ok: true, grant, notifyRequested } or { ok: false, message }.
+function prepareStaffCreditAction(input) {
+  const action = input && input.action;
+  if (action !== 'add' && action !== 'remove') {
+    return { ok: false, message: 'action must be add or remove' };
+  }
+  if (!isPositiveInteger(input.quantity)) {
+    return { ok: false, message: 'quantity must be an integer of 1 or more' };
+  }
+  const window = staffWindow(input);
+  if (!window.ok) {
+    return window;
+  }
+  const build = action === 'add' ? buildStaffAddGrant : buildStaffRemoveGrant;
+  return {
+    ok: true,
+    notifyRequested: true,
+    grant: build({
+      athleteId: input.athleteId,
+      quantity: input.quantity,
+      label: STAFF_LABELS[action],
+      startsAt: window.startsAt,
+      expiresAt: window.expiresAt,
+      createdByUserId: input.createdByUserId,
+    }),
+  };
+}
+
+// End a grant. notifyRequested is true only when expiresAt moves.
+function prepareEndGrant(grant, now) {
+  const ended = endGrant(grant, now);
+  return {
+    ok: true,
+    grant: ended.grant,
+    changed: ended.changed,
+    notifyRequested: ended.changed,
+  };
+}
+
+// Staff list. Summary omits reserved; that count needs class start times.
+function presentStaffCredits(input) {
+  const now = input.now;
+  const allocations = input.allocations || [];
+  const grants = (input.grants || []).slice().sort((a, b) => (a.id || 0) - (b.id || 0));
+  const summary = summarizeCredits({ grants: grants, allocations: allocations, now: now });
+  return {
+    summary: {
+      unlimited: summary.unlimited,
+      remaining: summary.remaining,
+      expiringCount: summary.expiringCount,
+      expiringOn: summary.expiringOn,
+      through: summary.through,
+    },
+    grants: grants.map((row) => ({
+      id: row.id,
+      source: row.source,
+      label: row.label,
+      quantity: row.quantity == null ? null : Number(row.quantity),
+      balance: grantBalance(row, allocations),
+      startsAt: row.startsAt == null ? null : row.startsAt,
+      expiresAt: row.expiresAt == null ? null : row.expiresAt,
+      originalExpiresAt: row.originalExpiresAt == null ? null : row.originalExpiresAt,
+      historyLine: formatHistoryLine(row),
+      canEnd: endGrant(row, now).changed,
+    })),
+  };
+}
+
 function grantBalance(grant, allocations) {
   if (grant.quantity == null) {
     return null;
@@ -413,6 +487,45 @@ function sameInstant(a, b) {
   return a.getTime() === b.getTime();
 }
 
+function staffWindow(input) {
+  const starts = readInstant(input.startsAt, 'startsAt');
+  if (starts.ok === false) {
+    return { ok: false, message: starts.message };
+  }
+  const expires = readInstant(input.expiresAt, 'expiresAt');
+  if (expires.ok === false) {
+    return { ok: false, message: expires.message };
+  }
+  if (starts.omitted && expires.omitted) {
+    assertDate(input.today, 'today');
+    const window = resolveSeasonWindow(seasonOf(input.today), input.today);
+    return { ok: true, startsAt: window.startsAt, expiresAt: window.expiresAt };
+  }
+  if (starts.omitted || expires.omitted) {
+    return { ok: false, message: 'startsAt and expiresAt must both be set' };
+  }
+  if (starts.date.getTime() >= expires.date.getTime()) {
+    return { ok: false, message: 'startsAt must be before expiresAt' };
+  }
+  return { ok: true, startsAt: starts.date, expiresAt: expires.date };
+}
+
+function readInstant(value, label) {
+  if (value == null || value === '') {
+    return { omitted: true };
+  }
+  let date = null;
+  if (value instanceof Date) {
+    date = new Date(value.getTime());
+  } else if (typeof value === 'string') {
+    date = new Date(value);
+  }
+  if (date == null || isNaN(date.getTime())) {
+    return { omitted: false, ok: false, message: label + ' must be a valid date' };
+  }
+  return { omitted: false, ok: true, date: date };
+}
+
 function copyDate(value, label) {
   if (value == null) {
     return null;
@@ -444,6 +557,9 @@ module.exports = {
   buildStaffRemoveGrant,
   buildWebsitePurchaseGrant,
   endGrant,
+  prepareStaffCreditAction,
+  prepareEndGrant,
+  presentStaffCredits,
   grantBalance,
   allocateForReservation,
   releaseReservation,
