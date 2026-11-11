@@ -634,6 +634,10 @@ Export (PDF/CSV): **later**.
 - Athlete showed up but has no reservation: staff can **add them to the class** and **deduct a credit**.
 - If athlete has no credits: **two steps, one flow** — staff with `manage_credits` add a credit (new record per §7), then sign them in, without dumping the coach back to a disconnected screen. Staff without `manage_credits` are told to ask an admin.
 - **Not MVP / not decided:** allowing the athlete to go **negative** so the next purchase automatically pays back the debt. Keep as a potential Phase 2 item so it is not lost (§16).
+- Check-in and walk-in are allowed on the session’s America/New_York calendar day and any later day. A future session is rejected (`Check-in is not open yet`). There is no cutoff after the class.
+- A canceled session cannot be checked in or walked into.
+- A walk-in stops when the class is full. It does not use the reservation cutoff. Staff can check in a hidden class. A view-only class rejects a new walk-in; an existing reservation can still be marked present.
+- Undo clears present and leaves the reservation and its credit. Removing a walk-in is a staff cancel.
 
 
 
@@ -1024,9 +1028,9 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 ### Task 10: Check-in
 
-- [ ] **10.1 — Check-in API + unit tests**
+- [x] **10.1 — Check-in API + unit tests**
   - Mark present; walk-in add + credit deduct; tie to reservation.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-10. `manage_attendance` routes under `/mobileapp/user/check-in`. Mark present and undo write `checkedInAt` on the existing signup and do not move a credit. A walk-in inserts a signup with `walkIn` and spends credits the same way reserve does, including a dollar class stored as `external` and not charged. Walk-in ignores the reservation cutoff and still rejects a full, view-only, canceled, future, or already reserved session. Hidden classes are allowed. The list returns names plus reserved, walk-in, and present counts. Undo does not remove a walk-in. Zero credits stay a 409; the two-step grant is task 10.2. §15 check-in box stays open until the UI.
 
 - [ ] **10.2 — Check-in UI**
   - Fast tap interface per class session.

@@ -275,4 +275,6 @@ function sendError(res, error, label) {
 module.exports = {
   reserveClass,
   cancelReservation,
+  lockedSession,
+  takeCredits,
 };

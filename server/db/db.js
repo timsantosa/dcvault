@@ -879,12 +879,16 @@ columns.classOccurrenceCoaches = {
 };
 
 // One signup for one profile, one series, and one date. Not tied to classOccurrences.
+// checkedInAt null means reserved and not present. walkIn is a signup created at
+// check-in. schema.sync() does not add columns to an existing table.
 columns.classReservations = {
   athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
   classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
   occursOn: { type: Sequelize.DATEONLY, allowNull: false },
   note: { type: Sequelize.TEXT, allowNull: true },
   paymentStatus: { type: Sequelize.STRING, allowNull: true },
+  checkedInAt: { type: Sequelize.DATE, allowNull: true },
+  walkIn: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
 };
 
 // Tap-time split of a reservation across grants. quantity on the grant does not change.
