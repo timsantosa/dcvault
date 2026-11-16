@@ -1,0 +1,896 @@
+/* ==========================================================================
+   DC Vault — Registration visual redesign
+   Scoped to the registration page via `.reg-redesign-page` (navbar/footer)
+   and `.reg-redesign` (React-rendered content). Derived from the Figma
+   redesign ("Registration · matched to site").
+   ========================================================================== */
+
+.reg-redesign-page,
+.reg-redesign {
+  --rd-red: #b80101;
+  --rd-red-tint: #fff5f5;
+  --rd-red-shadow: rgba(217, 26, 33, 0.18);
+  --rd-ink: #1a1a1a;
+  --rd-ink-soft: #1f2937;
+  --rd-muted: #6b7280;
+  --rd-muted-light: #9ca3af;
+  --rd-border: #e5e7eb;
+  --rd-border-soft: #f3f4f6;
+  --rd-radio-border: #767676;
+  --rd-surface: #f9fafb;
+  --rd-footer: #272626;
+  --rd-page: #f4f4f5;
+
+  --rd-font-display: 'Archivo Black', 'Arial Black', sans-serif;
+  --rd-font-body: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Navbar (dark, scoped override of the shared Bootstrap navbar)
+   -------------------------------------------------------------------------- */
+.reg-redesign-page #mainNav {
+  background-color: var(--rd-ink);
+  border: 0;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.reg-redesign-page #mainNav .navbar-brand {
+  display: flex;
+  align-items: center;
+  height: 88px;
+  padding: 14px 0;
+}
+
+.reg-redesign-page #mainNav .nav-logo {
+  height: 60px;
+  width: auto;
+}
+
+.reg-redesign-page #mainNav .navbar-nav > li > a {
+  font-family: var(--rd-font-body);
+  font-weight: 500;
+  font-size: 15px;
+  color: #ffffff;
+  text-transform: none;
+  letter-spacing: 0;
+  transition: color 0.15s ease;
+}
+
+.reg-redesign-page #mainNav .navbar-nav > li > a:hover,
+.reg-redesign-page #mainNav .navbar-nav > li > a:focus {
+  color: var(--rd-red);
+}
+
+.reg-redesign-page #mainNav .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+/* Account / login icon pill */
+.reg-redesign-page .rd-account {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  color: #ffffff;
+  margin-top: 6px;
+}
+
+.reg-redesign-page .rd-account:hover {
+  border-color: var(--rd-red);
+  color: var(--rd-red);
+}
+
+/* --------------------------------------------------------------------------
+   Page shell
+   -------------------------------------------------------------------------- */
+.reg-redesign {
+  font-family: var(--rd-font-body);
+  background-color: var(--rd-page);
+  min-height: 90vh;
+}
+
+.reg-redesign *,
+.reg-redesign *::before,
+.reg-redesign *::after {
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Progress stepper
+   -------------------------------------------------------------------------- */
+.reg-stepper {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--rd-border);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  padding: 24px 16px;
+}
+
+.reg-stepper__track {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+/* connector line behind the circles */
+.reg-stepper__track::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  right: 40px;
+  height: 4px;
+  background-color: var(--rd-border);
+  border-radius: 999px;
+  z-index: 0;
+}
+
+.reg-step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  text-align: center;
+}
+
+.reg-step__circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background-color: var(--rd-border);
+  color: var(--rd-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--rd-font-display);
+  font-size: 18px;
+  box-shadow: 0 0 0 4px #ffffff;
+}
+
+.reg-step__label {
+  margin-top: 16px;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--rd-muted-light);
+}
+
+.reg-step--active .reg-step__circle {
+  background-color: var(--rd-red);
+  color: #ffffff;
+  box-shadow: 0 0 0 4px #ffffff, 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.reg-step--active .reg-step__label {
+  color: var(--rd-ink);
+}
+
+.reg-step--done .reg-step__circle {
+  background-color: var(--rd-red);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Two-column split (hero + form) for the Packages step
+   -------------------------------------------------------------------------- */
+.reg-split {
+  display: flex;
+  align-items: stretch;
+  min-height: 70vh;
+}
+
+.reg-hero {
+  position: relative;
+  flex: 0 0 40%;
+  max-width: 40%;
+  background-color: var(--rd-ink);
+  background-image: url('../img/register/hero-vaulter.jpg');
+  background-size: cover;
+  background-position: center 20%;
+  overflow: hidden;
+}
+
+.reg-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 17, 17, 0.78) 0%,
+    rgba(17, 17, 17, 0.4) 32%,
+    rgba(17, 17, 17, 0) 55%
+  );
+}
+
+.reg-hero__content {
+  position: relative;
+  z-index: 1;
+  padding: 72px;
+  color: #ffffff;
+}
+
+.reg-hero__title {
+  font-family: var(--rd-font-display);
+  font-size: 60px;
+  line-height: 60px;
+  letter-spacing: 1.5px;
+  margin: 0 0 24px 0;
+  color: #ffffff;
+}
+
+.reg-hero__sub {
+  font-family: var(--rd-font-body);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: #e5e7eb;
+  margin: 0 0 28px 0;
+  max-width: 360px;
+}
+
+.reg-hero__features {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 24px;
+  border-left: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+.reg-hero__features li {
+  display: flex;
+  align-items: center;
+  font-family: var(--rd-font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.reg-hero__features li:last-child {
+  margin-bottom: 0;
+}
+
+.reg-hero__features .fa {
+  color: var(--rd-red);
+  background: #ffffff;
+  border-radius: 999px;
+  font-size: 16px;
+  margin-right: 12px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+}
+
+.reg-form-col {
+  flex: 1 1 60%;
+  max-width: 60%;
+  background-color: #ffffff;
+  padding: 64px 96px;
+  overflow: auto;
+}
+
+/* Centered form (steps that don't use the hero) */
+.reg-center {
+  padding: 56px 20px 80px;
+}
+
+.reg-center .reg-form {
+  max-width: 620px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 48px;
+  border-radius: 16px;
+  border: 2px solid var(--rd-border-soft);
+  box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   Form elements
+   -------------------------------------------------------------------------- */
+.reg-form {
+  text-align: left;
+}
+
+.reg-form__title {
+  font-family: var(--rd-font-display);
+  font-size: 24px;
+  text-transform: uppercase;
+  color: var(--rd-ink);
+  margin: 0 0 28px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--rd-red);
+  display: inline-block;
+}
+
+.reg-section {
+  margin-bottom: 32px;
+}
+
+.reg-section--divider {
+  border-top: 1px solid var(--rd-border);
+  padding-top: 32px;
+}
+
+.reg-heading {
+  font-family: var(--rd-font-display);
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--rd-ink);
+  margin: 0 0 6px 0;
+}
+
+.reg-heading .rd-req {
+  color: var(--rd-red);
+  margin-left: 6px;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+}
+
+.reg-subnote {
+  font-family: var(--rd-font-body);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rd-muted);
+  margin: 0 0 16px 0;
+}
+
+.reg-field {
+  margin-bottom: 18px;
+}
+
+.reg-field > label {
+  display: block;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--rd-ink-soft);
+  margin-bottom: 6px;
+}
+
+.reg-field .rd-req {
+  color: var(--rd-red);
+  margin-left: 2px;
+}
+
+.reg-input,
+.reg-form input[type='text'],
+.reg-form input[type='email'],
+.reg-form select,
+.reg-form textarea {
+  width: 100%;
+  font-family: var(--rd-font-body);
+  font-size: 14px;
+  color: var(--rd-ink-soft);
+  background-color: #ffffff;
+  border: 2px solid var(--rd-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.reg-form input[type='text']:focus,
+.reg-form input[type='email']:focus,
+.reg-form select:focus,
+.reg-form textarea:focus {
+  outline: none;
+  border-color: var(--rd-red);
+  box-shadow: 0 0 0 3px var(--rd-red-shadow);
+}
+
+.reg-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Option cards (session, location — radio-backed selectable cards)
+   -------------------------------------------------------------------------- */
+.reg-option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.reg-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 14px 44px 14px 16px;
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.reg-option input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.reg-option__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.reg-option__title {
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  text-transform: uppercase;
+  color: var(--rd-ink-soft);
+}
+
+.reg-option__sub {
+  font-family: var(--rd-font-body);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rd-muted);
+}
+
+.reg-option__check {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rd-red);
+  font-size: 20px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.reg-option--selected {
+  border-color: var(--rd-red);
+  background-color: var(--rd-red-tint);
+  box-shadow: 0 4px 6px -1px rgba(217, 26, 33, 0.1),
+    0 2px 4px -1px rgba(217, 26, 33, 0.06);
+}
+
+.reg-option--selected .reg-option__check {
+  opacity: 1;
+}
+
+.reg-option--center {
+  justify-content: center;
+  text-align: center;
+  padding-right: 16px;
+}
+
+.reg-option--center .reg-option__check {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Radio rows (training group, class options, apparel)
+   -------------------------------------------------------------------------- */
+.reg-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.reg-radio input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.reg-radio__dot {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--rd-radio-border);
+  border-radius: 999px;
+  background-color: #ffffff;
+  position: relative;
+  transition: border-color 0.15s ease;
+}
+
+.reg-radio input:checked + .reg-radio__dot {
+  border-color: var(--rd-red);
+}
+
+.reg-radio input:checked + .reg-radio__dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background-color: var(--rd-red);
+}
+
+.reg-radio__label {
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--rd-ink-soft);
+}
+
+.reg-radio__label small {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--rd-muted);
+}
+
+/* Training-group rows render as full-width bordered cards */
+.reg-radio-card {
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.reg-radio-card.reg-radio--selected {
+  border-color: var(--rd-red);
+  background-color: var(--rd-red-tint);
+  box-shadow: 0 4px 6px -1px rgba(217, 26, 33, 0.1),
+    0 2px 4px -1px rgba(217, 26, 33, 0.06);
+}
+
+/* --------------------------------------------------------------------------
+   Promo / invite callout
+   -------------------------------------------------------------------------- */
+.reg-callout {
+  background-color: var(--rd-surface);
+  border: 1px solid var(--rd-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-family: var(--rd-font-body);
+  font-size: 14px;
+  line-height: 20px;
+  color: #374151;
+}
+
+.reg-callout a,
+.reg-link {
+  color: var(--rd-red);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reg-callout .reg-callout__sub {
+  font-size: 12px;
+  color: var(--rd-muted);
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Apparel card
+   -------------------------------------------------------------------------- */
+.reg-apparel-card {
+  background-color: var(--rd-surface);
+  border: 1px solid var(--rd-border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.reg-apparel-card__img {
+  width: 208px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.reg-apparel-card__options {
+  flex: 1;
+  min-width: 160px;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.reg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--rd-font-display);
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: var(--rd-red);
+  border: 0;
+  border-radius: 100px;
+  padding: 16px 40px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+.reg-btn:hover {
+  background-color: #9c0101;
+}
+
+.reg-btn:active {
+  transform: translateY(1px);
+}
+
+.reg-btn--block {
+  width: 100%;
+}
+
+.reg-btn--ghost {
+  background-color: transparent;
+  color: var(--rd-red);
+  border: 2px solid var(--rd-red);
+}
+
+.reg-btn--ghost:hover {
+  background-color: var(--rd-red-tint);
+}
+
+/* --------------------------------------------------------------------------
+   Price summary / waiver / misc shared bits
+   -------------------------------------------------------------------------- */
+.reg-price {
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--rd-ink-soft);
+  margin: 6px 0;
+}
+
+.reg-price span {
+  color: var(--rd-red);
+}
+
+.reg-waiver-img {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+}
+
+.reg-error {
+  background-color: var(--rd-red-tint);
+  border: 1px solid var(--rd-red);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 16px 0;
+}
+
+.reg-error p {
+  color: var(--rd-red);
+  font-size: 13px;
+  margin: 2px 0;
+}
+
+/* --------------------------------------------------------------------------
+   Existing-athlete selector cards (carried over, restyled)
+   -------------------------------------------------------------------------- */
+.reg-athlete-card {
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.reg-athlete-card--selected {
+  border-color: var(--rd-red);
+  background-color: var(--rd-red-tint);
+}
+
+/* --------------------------------------------------------------------------
+   Footer (dark, scoped)
+   -------------------------------------------------------------------------- */
+.reg-redesign-page #contact {
+  background-color: var(--rd-footer);
+  padding: 68px 0 32px;
+}
+
+.reg-redesign-page .rd-footer-cols {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+  padding-bottom: 64px;
+}
+
+.reg-redesign-page .rd-footer-brand {
+  flex: 1 1 280px;
+}
+
+.reg-redesign-page .rd-footer-logo {
+  height: 88px;
+  width: auto;
+  margin-bottom: 20px;
+}
+
+.reg-redesign-page .rd-footer-find {
+  font-family: var(--rd-font-body);
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.reg-redesign-page .rd-social {
+  display: flex;
+  gap: 10px;
+}
+
+.reg-redesign-page .rd-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background-color: #646b78;
+}
+
+.reg-redesign-page .rd-social img {
+  width: 18px;
+  height: 18px;
+}
+
+.reg-redesign-page .rd-footer-col {
+  flex: 1 1 280px;
+}
+
+.reg-redesign-page .rd-footer-title {
+  font-family: var(--rd-font-display);
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+.reg-redesign-page .rd-footer-links {
+  display: flex;
+  gap: 48px;
+}
+
+.reg-redesign-page .rd-footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reg-redesign-page .rd-footer-links li {
+  margin-bottom: 10px;
+}
+
+.reg-redesign-page .rd-footer-links a {
+  font-family: var(--rd-font-body);
+  font-size: 14px;
+  color: #d1d5db;
+  text-decoration: none;
+}
+
+.reg-redesign-page .rd-footer-links a:hover {
+  color: #ffffff;
+}
+
+.reg-redesign-page .rd-footer-contact {
+  flex: 1 1 280px;
+  text-align: right;
+  font-family: var(--rd-font-body);
+}
+
+.reg-redesign-page .rd-footer-contact .rd-footer-title {
+  margin-top: 0;
+}
+
+.reg-redesign-page .rd-footer-contact p {
+  color: #d1d5db;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.reg-redesign-page .rd-footer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--rd-font-display);
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: var(--rd-red);
+  border-radius: 999px;
+  padding: 18px 40px;
+  cursor: pointer;
+}
+
+.reg-redesign-page .rd-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  padding-top: 24px;
+  font-family: var(--rd-font-body);
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  .reg-split {
+    flex-direction: column;
+  }
+  .reg-hero,
+  .reg-form-col {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  .reg-hero {
+    min-height: 320px;
+  }
+  .reg-hero__content {
+    padding: 48px;
+  }
+  .reg-form-col {
+    padding: 48px;
+  }
+}
+
+@media (max-width: 767px) {
+  .reg-stepper__track::before {
+    left: 24px;
+    right: 24px;
+  }
+  .reg-step__label {
+    font-size: 10px;
+  }
+  .reg-option-grid,
+  .reg-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .reg-hero__title {
+    font-size: 44px;
+    line-height: 46px;
+  }
+  .reg-form-col,
+  .reg-hero__content {
+    padding: 32px 24px;
+  }
+  .reg-center .reg-form {
+    padding: 28px 20px;
+  }
+  .reg-redesign-page .rd-footer-contact {
+    text-align: left;
+  }
+  .reg-redesign-page .rd-footer-bottom {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
