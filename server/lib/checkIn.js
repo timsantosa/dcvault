@@ -1,5 +1,7 @@
 'use strict';
 
+const { grantBalance, allocateForReservation, seasonOf, resolveSeasonWindow } = require('./creditInventory');
+
 // Check-in rules. Callers load rows and write them. Dates on a class are
 // YYYY-MM-DD in America/New_York. Marking present does not move a credit.
 // A walk-in is a new signup, and the caller spends credits for that signup.
@@ -70,9 +72,10 @@ function decideWalkIn(input) {
 }
 
 // List counts for one session. reservations carry id, athleteProfileId,
-// firstName, lastName, walkIn, and checkedInAt. reservedCount leaves walk-ins
-// out. presentCount includes a walk-in who is checked in. Athletes are the
-// reserved people first, then walk-ins, by last name, first name, and id.
+// firstName, lastName, profileImage, walkIn, and checkedInAt. reservedCount
+// leaves walk-ins out. presentCount includes a walk-in who is checked in.
+// Athletes are the reserved people first, then walk-ins, by last name, first
+// name, and id.
 function presentCheckIn(reservations) {
   const athletes = (reservations || []).map(toAthlete);
   athletes.sort(byListOrder);
@@ -104,6 +107,7 @@ function toAthlete(row) {
     athleteProfileId: row.athleteProfileId,
     firstName: row.firstName || '',
     lastName: row.lastName || '',
+    profileImage: row.profileImage || null,
     walkIn: isOn(row.walkIn),
     present: checkedInAt != null,
     checkedInAt: checkedInAt,
@@ -137,6 +141,126 @@ function compareText(left, right) {
   return 0;
 }
 
+// Credits this athlete can spend on this class. athleteId is null when the
+// profile is not linked. grants are that athlete's grants. allocations may
+// include paused holds; those do not reduce the balance. classStart is the
+// class instant. Returns { linked, alreadyReserved, unlimited, usable,
+// shortfall }. usable is null when an unlimited grant covers the class.
+// shortfall is how many credits to add so the walk-in can succeed, including
+// enough to offset a negative removal grant. 0 when they already cover it.
+function walkInCreditOffer(input) {
+  const alreadyReserved = input.alreadyReserved === true;
+  if (input.athleteId == null) {
+    return {
+      linked: false,
+      alreadyReserved: alreadyReserved,
+      unlimited: false,
+      usable: 0,
+      shortfall: 0,
+    };
+  }
+  const cost = wholeCost(input.creditCost);
+  const grants = input.grants || [];
+  const allocations = input.allocations || [];
+  const finiteTotal = coveringFiniteTotal(grants, allocations, input.classStart);
+  const usable = Math.max(0, finiteTotal);
+  if (cost === 0) {
+    return {
+      linked: true,
+      alreadyReserved: alreadyReserved,
+      unlimited: false,
+      usable: usable,
+      shortfall: 0,
+    };
+  }
+  const allocated = allocateForReservation({
+    grants: grants,
+    allocations: allocations,
+    classStart: input.classStart,
+    creditCost: cost,
+    reservationId: 0,
+  });
+  if (allocated.ok && spentUnlimited(grants, allocated.allocations)) {
+    return {
+      linked: true,
+      alreadyReserved: alreadyReserved,
+      unlimited: true,
+      usable: null,
+      shortfall: 0,
+    };
+  }
+  if (allocated.ok) {
+    return {
+      linked: true,
+      alreadyReserved: alreadyReserved,
+      unlimited: false,
+      usable: usable,
+      shortfall: 0,
+    };
+  }
+  return {
+    linked: true,
+    alreadyReserved: alreadyReserved,
+    unlimited: false,
+    usable: usable,
+    shortfall: cost - finiteTotal,
+  };
+}
+
+// Inclusive season window that contains this class date. startsOn and endsOn
+// are the dates the credits add already accepts. The class date is the day
+// that has to be inside the window, including a session from the previous season.
+function walkInGrantWindow(occursOn) {
+  if (typeof occursOn !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(occursOn)) {
+    throw new Error('occursOn must be YYYY-MM-DD');
+  }
+  const parts = occursOn.split('-').map(Number);
+  const date = new Date(parts[0], parts[1] - 1, parts[2]);
+  const window = resolveSeasonWindow(seasonOf(date), date);
+  const end = new Date(window.expiresAt.getFullYear(), window.expiresAt.getMonth(), window.expiresAt.getDate() - 1);
+  return {
+    startsOn: isoDate(window.startsAt),
+    endsOn: isoDate(end),
+  };
+}
+
+function coveringFiniteTotal(grants, allocations, classStart) {
+  return grants.reduce((sum, grant) => {
+    if (grant.quantity == null || !grantCovers(grant, classStart)) {
+      return sum;
+    }
+    return sum + grantBalance(grant, allocations);
+  }, 0);
+}
+
+function grantCovers(grant, instant) {
+  if (instant == null) {
+    return false;
+  }
+  if (grant.startsAt != null && instant < grant.startsAt) {
+    return false;
+  }
+  if (grant.expiresAt != null && instant >= grant.expiresAt) {
+    return false;
+  }
+  return true;
+}
+
+function spentUnlimited(grants, allocations) {
+  return allocations.some((allocation) => {
+    const grant = grants.find((row) => row.id === allocation.creditGrantId);
+    return grant != null && grant.quantity == null;
+  });
+}
+
+function isoDate(date) {
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return date.getFullYear() + '-'
+    + (month < 10 ? '0' : '') + month + '-'
+    + (day < 10 ? '0' : '') + day;
+}
+
 function wholeCost(value) {
   const cost = Number(value);
   if (!isFinite(cost) || cost < 0 || Math.floor(cost) !== cost) {
@@ -161,4 +285,6 @@ module.exports = {
   decideCheckIn,
   decideWalkIn,
   presentCheckIn,
+  walkInCreditOffer,
+  walkInGrantWindow,
 };

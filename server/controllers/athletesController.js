@@ -1,5 +1,6 @@
 const helpers = require('../lib/helpers');
 const rankingCache = require('./athleteRankingCache');
+const { parseWalkInSearch, loadWalkInOffers } = require('./classes/checkInController');
 const {
   getBestOfPersonalRecords,
   getPersonalBestForVaultScope,
@@ -53,6 +54,20 @@ async function hydrateUsatfForProfiles(profiles, db) {
     }
   }
   return result;
+}
+
+// First name, last name, and "first last" matches. getProfiles and getRankedProfiles both use this.
+function profileNameSearch(sequelize, search) {
+  const like = '%' + String(search).toLowerCase() + '%';
+  const match = (expression) => sequelize.where(expression, { [sequelize.Op.like]: like });
+  return [
+    match(sequelize.fn('LOWER', sequelize.col('firstName'))),
+    match(sequelize.fn('LOWER', sequelize.col('lastName'))),
+    match(sequelize.fn(
+      'LOWER',
+      sequelize.fn('concat', sequelize.col('firstName'), ' ', sequelize.col('lastName'))
+    )),
+  ];
 }
 
 // Omit empty athletic IDs from list/bulk profile responses (used by getProfiles, getRankedProfiles).
@@ -483,6 +498,18 @@ const getProfiles = async (req, res, db) => {
       }
     }
 
+    const walkInSearch = parseWalkInSearch(req.query);
+    if (!walkInSearch.ok) {
+      return res.status(400).json({ ok: false, message: walkInSearch.message });
+    }
+    if (walkInSearch.active) {
+      const permissions = req.user && req.user.permissions;
+      const canCheckIn = Array.isArray(permissions) && permissions.indexOf('manage_attendance') !== -1;
+      if (!canCheckIn) {
+        return res.status(403).json({ ok: false, message: 'Forbidden: Insufficient permissions' });
+      }
+    }
+
     // Build where clause
     let whereClause = {};
     if (userId) {
@@ -526,32 +553,8 @@ const getProfiles = async (req, res, db) => {
       }
     }
 
-    // Add search conditions if search term exists
     if (search) {
-      const searchTerm = search.toLowerCase();
-      whereClause[db.tables.schema.Sequelize.Op.or] = [
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        // Search in full name (for cases like "John Do")
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn(
-            'LOWER',
-            db.tables.schema.Sequelize.fn(
-              'concat',
-              db.tables.schema.Sequelize.col('firstName'),
-              ' ',
-              db.tables.schema.Sequelize.col('lastName')
-            )
-          ),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        )
-      ];
+      whereClause[db.tables.schema.Sequelize.Op.or] = profileNameSearch(db.tables.schema.Sequelize, search);
     }
 
     const profiles = await db.tables.AthleteProfiles.findAll({
@@ -560,6 +563,17 @@ const getProfiles = async (req, res, db) => {
     });
 
     const usatfMap = await hydrateUsatfForProfiles(profiles, db);
+    let walkInOffers = null;
+    if (walkInSearch.active) {
+      try {
+        walkInOffers = await loadWalkInOffers(db, profiles, walkInSearch.seriesId, walkInSearch.occursOn);
+      } catch (error) {
+        if (error.status) {
+          return res.status(error.status).json({ ok: false, message: error.message });
+        }
+        throw error;
+      }
+    }
 
     // Get medal counts for all profiles in bulk
     // const profileIdsForMedals = profiles.map(profile => profile.id);
@@ -589,10 +603,18 @@ const getProfiles = async (req, res, db) => {
         vaultAssociationId: profile.vaultAssociationId ?? undefined,
         vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
       };
-      return attachAthleticIds(athleteProfile, profile, usatfMap);
+      const listed = attachAthleticIds(athleteProfile, profile, usatfMap);
+      if (walkInOffers) {
+        listed.checkIn = walkInOffers.offers[profile.id];
+      }
+      return listed;
     });
 
-    res.json({ ok: true, athleteProfiles });
+    const payload = { ok: true, athleteProfiles };
+    if (walkInOffers) {
+      payload.checkInGrant = walkInOffers.checkInGrant;
+    }
+    res.json(payload);
   } catch (err) {
     console.error(err);
     res.status(500).json({ ok: false, message: 'Failed to fetch athlete profiles' });
@@ -677,38 +699,11 @@ const getRankedProfiles = async (req, res, db) => {
     // Build base where clause
     const baseWhereClause = buildBaseWhereClause(athleteActiveStatus);
 
-    // Add search conditions if search term exists
     let whereClause = { ...baseWhereClause };
     if (search) {
-      const searchTerm = search.toLowerCase();
-      const searchConditions = [
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        // Search in full name (for cases like "John Do")
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn(
-            'LOWER',
-            db.tables.schema.Sequelize.fn(
-              'concat',
-              db.tables.schema.Sequelize.col('firstName'),
-              ' ',
-              db.tables.schema.Sequelize.col('lastName')
-            )
-          ),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        )
-      ];
-
-      // Combine base conditions with search conditions using AND
       whereClause[db.tables.schema.Sequelize.Op.and] = [
         baseWhereClause,
-        { [db.tables.schema.Sequelize.Op.or]: searchConditions }
+        { [db.tables.schema.Sequelize.Op.or]: profileNameSearch(db.tables.schema.Sequelize, search) }
       ];
     }
 

@@ -1,6 +1,12 @@
 'use strict';
 
-const { decideCheckIn, decideWalkIn, presentCheckIn } = require('../lib/checkIn');
+const {
+  decideCheckIn,
+  decideWalkIn,
+  presentCheckIn,
+  walkInCreditOffer,
+  walkInGrantWindow,
+} = require('../lib/checkIn');
 
 const NOW = new Date('2026-08-25T20:05:00.000Z');
 const EARLIER = new Date('2026-08-25T20:00:00.000Z');
@@ -155,6 +161,7 @@ describe('presentCheckIn', () => {
         athleteProfileId: 5,
         firstName: 'Emma',
         lastName: 'Dunne',
+        profileImage: 'https://example.com/emma.jpg',
         walkIn: 0,
         checkedInAt: EARLIER,
       },
@@ -164,8 +171,18 @@ describe('presentCheckIn', () => {
     expect(listed.walkInCount).toBe(1);
     expect(listed.presentCount).toBe(2);
     expect(listed.athletes.map((athlete) => athlete.lastName)).toEqual(['Dunne', 'Lee', 'Ruiz']);
-    expect(listed.athletes[0]).toMatchObject({ present: true, walkIn: false, checkedInAt: EARLIER });
-    expect(listed.athletes[1]).toMatchObject({ present: false, walkIn: false, checkedInAt: null });
+    expect(listed.athletes[0]).toMatchObject({
+      present: true,
+      walkIn: false,
+      checkedInAt: EARLIER,
+      profileImage: 'https://example.com/emma.jpg',
+    });
+    expect(listed.athletes[1]).toMatchObject({
+      present: false,
+      walkIn: false,
+      checkedInAt: null,
+      profileImage: null,
+    });
     expect(listed.athletes[2]).toMatchObject({
       present: true,
       walkIn: true,
@@ -180,6 +197,129 @@ describe('presentCheckIn', () => {
       walkInCount: 0,
       presentCount: 0,
       athletes: [],
+    });
+  });
+});
+
+const CLASS_START = new Date(2026, 7, 25, 16, 0, 0);
+
+function coveringGrant(overrides) {
+  return Object.assign({
+    id: 1,
+    quantity: 4,
+    startsAt: new Date(2026, 5, 1),
+    expiresAt: new Date(2026, 8, 1),
+  }, overrides);
+}
+
+function creditOffer(overrides) {
+  return walkInCreditOffer(Object.assign({
+    athleteId: 9,
+    alreadyReserved: false,
+    creditCost: 1,
+    classStart: CLASS_START,
+    grants: [coveringGrant()],
+    allocations: [],
+  }, overrides));
+}
+
+describe('walkInCreditOffer', () => {
+  it('reports the usable count after credits already held', () => {
+    expect(creditOffer({
+      allocations: [{ reservationId: 3, creditGrantId: 1, amount: 1, holding: true }],
+    })).toMatchObject({
+      linked: true,
+      unlimited: false,
+      usable: 3,
+      shortfall: 0,
+    });
+  });
+
+  it('ignores a paused hold', () => {
+    expect(creditOffer({
+      allocations: [{ reservationId: 3, creditGrantId: 1, amount: 3, holding: false }],
+    }).usable).toBe(4);
+  });
+
+  it('asks for the gap when the finite total is short or negative', () => {
+    expect(creditOffer({
+      creditCost: 2,
+      grants: [coveringGrant({ quantity: 1 })],
+    })).toMatchObject({ usable: 1, shortfall: 1, unlimited: false });
+
+    expect(creditOffer({
+      grants: [coveringGrant({ id: 2, quantity: -2 })],
+    })).toMatchObject({ usable: 0, shortfall: 3, unlimited: false });
+  });
+
+  it('does not add credits when an unlimited grant covers the class', () => {
+    expect(creditOffer({
+      creditCost: 2,
+      grants: [coveringGrant({ id: 8, quantity: null })],
+    })).toMatchObject({
+      unlimited: true,
+      usable: null,
+      shortfall: 0,
+    });
+
+    expect(creditOffer({
+      grants: [
+        coveringGrant({ quantity: 5 }),
+        coveringGrant({ id: 8, quantity: null }),
+      ],
+    })).toMatchObject({
+      unlimited: false,
+      usable: 5,
+      shortfall: 0,
+    });
+  });
+
+  it('ignores a grant that does not cover the class', () => {
+    expect(creditOffer({
+      grants: [coveringGrant({ startsAt: new Date(2026, 8, 1) })],
+    })).toMatchObject({ usable: 0, shortfall: 1 });
+  });
+
+  it('does not ask for credits on a free class', () => {
+    expect(creditOffer({
+      creditCost: 0,
+      grants: [],
+    })).toMatchObject({
+      linked: true,
+      unlimited: false,
+      usable: 0,
+      shortfall: 0,
+    });
+  });
+
+  it('reports an unlinked profile and keeps an existing signup', () => {
+    expect(creditOffer({
+      athleteId: null,
+      alreadyReserved: true,
+      grants: [],
+    })).toEqual({
+      linked: false,
+      alreadyReserved: true,
+      unlimited: false,
+      usable: 0,
+      shortfall: 0,
+    });
+  });
+});
+
+describe('walkInGrantWindow', () => {
+  it('uses the season that contains the class date, including the previous season', () => {
+    expect(walkInGrantWindow('2026-08-25')).toEqual({
+      startsOn: '2026-06-01',
+      endsOn: '2026-08-31',
+    });
+    expect(walkInGrantWindow('2026-11-10')).toEqual({
+      startsOn: '2026-09-01',
+      endsOn: '2026-11-30',
+    });
+    expect(walkInGrantWindow('2026-01-15')).toEqual({
+      startsOn: '2025-12-01',
+      endsOn: '2026-02-28',
     });
   });
 });

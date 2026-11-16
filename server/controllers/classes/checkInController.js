@@ -1,7 +1,13 @@
 'use strict';
 
-const { decideCheckIn, decideWalkIn, presentCheckIn } = require('../../lib/checkIn');
-const { memberScheduleRange } = require('../../lib/memberSchedule');
+const {
+  decideCheckIn,
+  decideWalkIn,
+  presentCheckIn,
+  walkInCreditOffer,
+  walkInGrantWindow,
+} = require('../../lib/checkIn');
+const { memberScheduleRange, classStartInstant } = require('../../lib/memberSchedule');
 const { sessionOnDate } = require('../../lib/reservations');
 const { loadClassGraph } = require('./classesController');
 const { lockedSession, takeCredits } = require('./reservationsController');
@@ -21,7 +27,7 @@ async function listCheckIn(req, res, db) {
       include: [{
         model: db.tables.AthleteProfiles,
         as: 'athleteProfile',
-        attributes: ['firstName', 'lastName'],
+        attributes: ['firstName', 'lastName', 'profileImage'],
       }],
     });
     const listed = presentCheckIn(rows.map(toListed));
@@ -180,6 +186,7 @@ function toListed(row) {
     athleteProfileId: row.athleteProfileId,
     firstName: profile.firstName,
     lastName: profile.lastName,
+    profileImage: profile.profileImage,
     walkIn: row.walkIn,
     checkedInAt: row.checkedInAt,
   };
@@ -274,6 +281,110 @@ function readProfile(body) {
   return { ok: true, athleteProfileId: athleteProfileId };
 }
 
+// (query) -> { ok:true, active:false }, { ok:true, active:true, seriesId, occursOn },
+// or { ok:false, message }. No class params means the profile search is unchanged.
+function parseWalkInSearch(query) {
+  const source = query || {};
+  const hasSeries = source.seriesId != null && String(source.seriesId) !== '';
+  const hasDate = source.occursOn != null && String(source.occursOn) !== '';
+  if (!hasSeries && !hasDate) {
+    return { ok: true, active: false };
+  }
+  const session = readSession(source);
+  if (!session.ok) {
+    return session;
+  }
+  return {
+    ok: true,
+    active: true,
+    seriesId: session.seriesId,
+    occursOn: session.occursOn,
+  };
+}
+
+// Profiles from the name search. Returns { offers, checkInGrant }. offers is
+// keyed by profile id. Throws 404 when the class does not exist.
+async function loadWalkInOffers(db, profiles, seriesId, occursOn) {
+  const session = await openSession(db, seriesId, occursOn);
+  const signups = await db.tables.ClassReservations.findAll({
+    where: { classSeriesId: seriesId, occursOn: occursOn },
+    attributes: ['athleteProfileId'],
+  });
+  const reserved = {};
+  signups.forEach((row) => {
+    reserved[row.athleteProfileId] = true;
+  });
+
+  const athleteIds = [];
+  (profiles || []).forEach((profile) => {
+    if (profile.athleteId != null && athleteIds.indexOf(profile.athleteId) === -1) {
+      athleteIds.push(profile.athleteId);
+    }
+  });
+  const Op = db.tables.schema.Sequelize.Op;
+  const grantRows = athleteIds.length
+    ? await db.tables.CreditGrants.findAll({
+      where: { athleteId: { [Op.in]: athleteIds } },
+    })
+    : [];
+  const grants = grantRows.map(toOfferGrant);
+  const grantIds = grants.map((grant) => grant.id);
+  const allocationRows = grantIds.length
+    ? await db.tables.CreditAllocations.findAll({
+      where: { creditGrantId: { [Op.in]: grantIds } },
+    })
+    : [];
+  const allocations = allocationRows.map(toOfferAllocation);
+  const grantsByAthlete = {};
+  grants.forEach((grant) => {
+    if (!grantsByAthlete[grant.athleteId]) {
+      grantsByAthlete[grant.athleteId] = [];
+    }
+    grantsByAthlete[grant.athleteId].push(grant);
+  });
+
+  const classStart = classStartInstant(session.occursOn, session.startTime);
+  const offers = {};
+  (profiles || []).forEach((profile) => {
+    const athleteGrants = profile.athleteId == null ? [] : (grantsByAthlete[profile.athleteId] || []);
+    const ids = {};
+    athleteGrants.forEach((grant) => {
+      ids[grant.id] = true;
+    });
+    offers[profile.id] = walkInCreditOffer({
+      athleteId: profile.athleteId == null ? null : profile.athleteId,
+      alreadyReserved: reserved[profile.id] === true,
+      creditCost: session.creditCost,
+      classStart: classStart,
+      grants: athleteGrants,
+      allocations: allocations.filter((row) => ids[row.creditGrantId] === true),
+    });
+  });
+  return {
+    offers: offers,
+    checkInGrant: walkInGrantWindow(session.occursOn),
+  };
+}
+
+function toOfferGrant(row) {
+  return {
+    id: row.id,
+    athleteId: row.athleteId,
+    quantity: row.quantity == null ? null : Number(row.quantity),
+    startsAt: row.startsAt == null ? null : new Date(row.startsAt),
+    expiresAt: row.expiresAt == null ? null : new Date(row.expiresAt),
+  };
+}
+
+function toOfferAllocation(row) {
+  return {
+    reservationId: row.reservationId,
+    creditGrantId: row.creditGrantId,
+    amount: Number(row.amount),
+    holding: row.holding,
+  };
+}
+
 function coded(status, message) {
   const error = new Error(message);
   error.status = status;
@@ -304,4 +415,6 @@ module.exports = {
   listCheckIn,
   markPresent,
   addWalkIn,
+  parseWalkInSearch,
+  loadWalkInOffers,
 };

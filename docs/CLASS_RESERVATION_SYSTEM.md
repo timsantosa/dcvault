@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-10  
+**Last updated:** 2026-11-11  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -782,7 +782,7 @@ The athlete needs a place they can open and read those notices. The shape stays 
 - [ ] Eligibility visible-with-reason
 - [ ] Multi-package deduction (soonest expiring)
 - [ ] Multi-athlete per user via profile switching
-- [ ] Check-in with walk-in support (two steps, one flow when granting a credit)
+- [x] Check-in with walk-in support (two steps, one flow when granting a credit)
 - [ ] Admin credit add/remove; admin cancel reservation
 - [ ] Class change notices via class messaging, with option to save silently
 - [ ] Class participant messaging
@@ -1032,10 +1032,10 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Mark present; walk-in add + credit deduct; tie to reservation.
   - *Completion notes:* 2026-11-10. `manage_attendance` routes under `/mobileapp/user/check-in`. Mark present and undo write `checkedInAt` on the existing signup and do not move a credit. A walk-in inserts a signup with `walkIn` and spends credits the same way reserve does, including a dollar class stored as `external` and not charged. Walk-in ignores the reservation cutoff and still rejects a full, view-only, canceled, future, or already reserved session. Hidden classes are allowed. The list returns names plus reserved, walk-in, and present counts. Undo does not remove a walk-in. Zero credits stay a 409; the two-step grant is task 10.2. §15 check-in box stays open until the UI.
 
-- [ ] **10.2 — Check-in UI**
+- [x] **10.2 — Check-in UI**
   - Fast tap interface per class session.
   - Walk-in with zero credits: two steps, one flow (add credit record, then check in) when the coach has `manage_credits`.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-11. **Check in** on class detail for `manage_attendance`, today or earlier, not canceled. Tap marks present and tap again undoes it. Walk-in uses the existing athlete search. `seriesId` and `occursOn` add a `checkIn` offer and the season window for that class date; that read also requires `manage_attendance`. The name match is shared with the ranked profile search. A shortfall adds that many credits for the class’s season, then checks them in. Without `manage_credits`, the screen says to ask an admin. A dollar class confirms the price and is not charged. No group line until task 11.1. Removing a walk-in stays a staff cancel.
 
 
 

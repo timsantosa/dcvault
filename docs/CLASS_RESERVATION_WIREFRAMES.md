@@ -297,11 +297,10 @@ Reserve/Cancel is replaced with an explanation. The credit is already spent. The
 
 ```
 │  Cancellation closed 24 hours       │
-│  before start.                      │
-│  Credit has been used.              │
-│  Ask a coach if this should be      │
-│  excused.                           │
+│  before start                       │
 ```
+
+A cutoff of 0 minutes says **Cancellation closed at start**.
 
 ---
 
@@ -580,7 +579,7 @@ Hidden unless the user has the matching permission. Coaches still use the same S
 
 ### F1. Entry from class detail
 
-On a class the coach can manage, detail gains a **Check in** button (and Create/Edit if they also have `manage_classes`).
+On a class the coach can manage, detail gains **Check members in** below the reserve button (and Edit if they also have `manage_classes`). The schedule row has a shorter **Check in** button to the right of the spots count.
 
 ```
 ┌─────────────────────────────────────┐
@@ -589,11 +588,11 @@ On a class the coach can manage, detail gains a **Check in** button (and Create/
 │  Tuesday, Aug 25 · 4:00–6:00 PM     │
 │  7 reserved · 2 checked in          │
 │                                     │
-│  ┌─────────────────────────────┐    │
-│  │         CHECK IN            │    │
-│  └─────────────────────────────┘    │
-│                                     │
+│  [ Reserve / Cancel reservation ]   │
 │  [ Edit class ]  [ Message all ]    │  ← manage_classes / messaging
+│  ┌─────────────────────────────┐    │
+│  │      CHECK MEMBERS IN       │    │
+│  └─────────────────────────────┘    │
 │                                     │
 │  GOING (7)                          │
 │  ...roster...                       │
@@ -611,28 +610,25 @@ On a class the coach can manage, detail gains a **Check in** button (and Create/
 │  Tue Aug 25 · 4:00–6:00 PM          │
 │  2 of 7 present                     │
 │                                     │
-│  ┌─────────────────────────────┐    │
-│  │ + Walk-in                   │    │
-│  └─────────────────────────────┘    │
-│                                     │
 │  RESERVED                           │
 │  ┌─────────────────────────────┐    │
-│  │ [ED] Emma Dunne             │    │
-│  │      Open / All Ages        │    │
+│  │ (photo) Emma Dunne          │    │
 │  │                      [ ✓ ]  │    │
 │  └─────────────────────────────┘    │
 │  ┌─────────────────────────────┐    │
-│  │ [JM] Jordan Miles           │    │
+│  │ (photo) Jordan Miles        │    │
 │  │                      [ ✓ ]  │    │
 │  └─────────────────────────────┘    │
 │  ┌─────────────────────────────┐    │
-│  │ [AK] Aisha Khan             │    │
+│  │ (photo) Aisha Khan          │    │
 │  │                      [  ]   │    │
 │  └─────────────────────────────┘    │
 │  ┌─────────────────────────────┐    │
 │  │ [BL] Ben Lee                │    │
 │  │                      [  ]   │    │
 │  └─────────────────────────────┘    │
+│                                     │
+│  [ + Walk-in ]                      │
 │                                     │
 │  WALK-INS                           │
 │  ┌─────────────────────────────┐    │
@@ -643,7 +639,7 @@ On a class the coach can manage, detail gains a **Check in** button (and Create/
 └─────────────────────────────────────┘
 ```
 
-**Interaction:** tap the row (or the checkbox) to mark present. Tap again to undo if they tapped the wrong person. Large targets, no extra confirm on the happy path.
+**Interaction:** tap the row (or the checkbox) to mark present. Tap again to undo if they tapped the wrong person. Large targets, no extra confirm on the happy path. Each row shows the athlete’s profile photo, or initials when they have none. **+ Walk-in** is a secondary button under the reserved list. The group line under a name waits for task 11.1. A walk-in row shows when they were added and the class cost.
 
 Someone who reserved and is never checked in is a **no-show**. There is no separate “mark no-show” button — the credit was already taken at reserve time.
 
