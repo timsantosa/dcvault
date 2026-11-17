@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-11  
+**Last updated:** 2026-11-16  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -559,6 +559,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 ### Training group
 
 - An athlete profile can belong to **more than one training group**, using the same group list as class eligibility (`fly-kids`, `adult`, `allages`, `elite`). This is a join, not a single column. Task 11.1 adds the profile side. No groups means no group limit on a class.
+- Those four names are the seed, not a fixed set. Staff with `manage_classes` edit the catalog (task 8.3). `edit_training_group` only assigns groups on an athlete’s Edit Profile.
 - **Not editable by the athlete/user themselves.**
 - Shown and edited on the existing **Edit Profile** screen (not a standalone “Edit Training Group” flow). The field is only writable for users with a dedicated permission (e.g. `edit_training_group` — may or may not be assigned to coach role).
 - If unset, fall back to group from latest purchase or a default (engineering TBD).
@@ -981,7 +982,7 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 - [x] **6.2 — Schedule display (read-only)**
   - Month grid with reserved vs unreserved day markers; scrolling agenda (past dimmed, ~2 weeks back); class details; capacity; eligibility with reason; attendance markers; credit chip (remaining / reserved / N expire date).
   - Mobile API client + hooks.
-  - *Completion notes:* 2026-10-22. `GET /mobileapp/user/schedule` for `reserve_classes`. The profile must belong to the caller. Hidden classes are omitted. The window is 14 days back through 77 days ahead. The chip uses the existing credit summary with no reservations, so reserved is 0. Reasons we can already know: Canceled, View only, reservations closed, credits that start later, credits that expire before the class, and register to reserve. A class with no credit cost skips the credit reasons. Spots taken stay 0. Month markers are an open ring per class color, and a filled dot when that color is reserved (`reserved` is false until task 7). Past rows are dimmed. Detail is read-only. Group and age eligibility, attendance marks, the roster, and Reserve / Cancel stay on later tasks. §4 calendar markers now use the class color. The §15 permission-gated Schedule box is checked. Reserved-day data, full eligibility, and the chip animation stay open.
+  - *Completion notes:* 2026-10-22. `GET /mobileapp/user/schedule` for `reserve_classes`. The profile must belong to the caller. Hidden classes are omitted. The window is 14 days back through 77 days ahead. The chip uses the existing credit summary with no reservations, so reserved is 0. Reasons we can already know: Canceled, View only, reservations closed, credits that start later, credits that expire before the class, and register to reserve. A class with no credit cost skips the credit reasons. Spots taken stay 0. Month markers are an open ring per class color, and a filled dot when that color is reserved (`reserved` is false until task 7). Past rows are dimmed. Detail is read-only. Group and age eligibility are task 7.3. Attendance marks, the roster, and Reserve / Cancel stay on later tasks. §4 calendar markers now use the class color. The §15 permission-gated Schedule box is checked. Reserved-day data, full eligibility, and the chip animation stay open.
 
 
 
@@ -991,12 +992,21 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Reserve, cancel, relative cutoff rules, capacity hard stop, credit deduction/return.
   - Free-text reservation note field (MVP).
   - A reservation is one series and one date. Credit cost is a whole number. A canceled session does not count as a credit spent. A moved session keeps the reservation, and its date follows the class.
-  - *Completion notes:* 2026-10-25. `POST /mobileapp/user/reservations` and `POST /mobileapp/user/reservations/cancel` for `reserve_classes`. The profile must belong to the caller. A reservation row is the signup. `creditAllocations` record the tap-time split; grant `quantity` is not edited. `holding` false pauses that split while a class is canceled. Restore re-allocates every paused hold or changes nothing. Deleting a date removes the signup and the hold. A move updates `occursOn` and keeps the hold. Member cancel before the cancellation cutoff deletes the signup and the hold. After that cutoff the request is rejected, and the chip still counts the reservation until the class start. Dollar prices are stored as `paymentStatus: external` and are not charged. Group and age checks, staff cancel of one member, and the Reserve button stay on later tasks. The schedule payload now returns real spots, `reserved`, and `Class is full`.
+  - *Completion notes:* 2026-10-25. `POST /mobileapp/user/reservations` and `POST /mobileapp/user/reservations/cancel` for `reserve_classes`. The profile must belong to the caller. A reservation row is the signup. `creditAllocations` record the tap-time split; grant `quantity` is not edited. `holding` false pauses that split while a class is canceled. Restore re-allocates every paused hold or changes nothing. Deleting a date removes the signup and the hold. A move updates `occursOn` and keeps the hold. Member cancel before the cancellation cutoff deletes the signup and the hold. After that cutoff the request is rejected, and the chip still counts the reservation until the class start. Dollar prices are stored as `paymentStatus: external` and are not charged. Group and age checks are task 7.3. Staff cancel of one member, and the Reserve button, stay on later tasks. The schedule payload now returns real spots, `reserved`, and `Class is full`.
 
 - [x] **7.2 — Reservation UI**
   - Reserve from the schedule row in one tap (no confirm sheet); credit chip animates remaining / reserved. Cancel still uses a confirm sheet. Blocked-state messaging, upcoming reservations list.
   - Chip updates immediately on reserve/cancel.
-  - *Completion notes:* 2026-11-01. Reserve and Cancel are on the schedule row, the class screen, and Upcoming classes. A credit class, including a free one, reserves in one tap. A dollar class confirms the price first and is not charged; that confirm is the one task 8.2 described, so 8.2 should not build it again. Cancel confirms and shows the credits coming back. Past the cancellation cutoff, the button is replaced with the closed message. A full class says "Class is full". Pull to refresh reloads the list. The chip reloads from the server and pulses when the text changes. The athlete can type an optional note on the class screen; the row sends none. Upcoming classes lists this athlete’s reserved sessions in the loaded window, from the schedule and from their own profile. `cancellationBlock` is on the schedule payload. Group and age eligibility, the roster, and the profile meter stay on later tasks.
+  - *Completion notes:* 2026-11-01. Reserve and Cancel are on the schedule row, the class screen, and Upcoming classes. A credit class, including a free one, reserves in one tap. A dollar class confirms the price first and is not charged; that confirm is the one task 8.2 described, so 8.2 should not build it again. Cancel confirms and shows the credits coming back. Past the cancellation cutoff, the button is replaced with the closed message. A full class says "Class is full". Pull to refresh reloads the list. The chip reloads from the server and pulses when the text changes. The athlete can type an optional note on the class screen; the row sends none. Upcoming classes lists this athlete’s reserved sessions in the loaded window, from the schedule and from their own profile. `cancellationBlock` is on the schedule payload. Group and age eligibility are task 7.3. The roster and the profile meter stay on later tasks.
+
+- [ ] **7.3 — Group and age eligibility**
+  - The class stays visible. The schedule row and class detail say why the selected athlete cannot reserve (Flow C2). Reserve rejects that same case. The blocked label is **Not eligible**.
+  - A class with no training groups has no group limit (§10). A class that lists groups is open to an athlete in at least one of those groups. The reason names the athlete’s groups and the class’s groups.
+  - Age uses the class minimum and maximum. No minimum and no maximum means no age limit. Outside that range is the same **Not eligible** block, and the reason says the age.
+  - A new walk-in uses the same checks. Marking someone present does not. Overriding eligibility is Phase 2 (§9).
+  - An athlete with no groups is still §16 #2. Do not derive a group from a purchase in this task. Ask before deciding that case.
+  - The roster, attendance marks, and the profile meter stay on their own tasks. The §15 eligibility box stays open until this task is done and any remaining gap is noted.
+  - *Completion notes:*
 
 
 
@@ -1010,6 +1020,14 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - No request/approve UI in MVP. Lesson slots reserve immediately. The dollar-price confirm shipped in task 7.2; do not build a second one. It does not call PayPal (see §7 and CREDIT_INVENTORY.md §9).
   - Approval workflow and real card charging are Phase 2+ — do not build them in this task.
   - *Completion notes:* 2026-11-09. Already shipped in 7.1, 7.2, and 8.1. A dollar class confirms the price, then reserves immediately with `paymentStatus: external`. `creditCost` 0 spends no group credits. There is no approval state and no PayPal call. Do not rebuild the confirm. `notifyCoachOnReserve` is still only stored (task 12.4). §15 private-lesson box is checked.
+
+- [ ] **8.3 — Training group catalog**
+  - Admin screen to add a training group and edit its label. Entry is More → Administrator, beside Class packages. Permission: `manage_classes`. No wireframe; do not copy the package editor past that entry.
+  - The key is set when the group is created and is not edited later. The label is the editable name.
+  - Do not delete a group that a class or an athlete profile still uses.
+  - Give training groups their own controller. Move the current list handler out of `classesController`. `GET /mobileapp/user/training-groups` stays available to any signed-in user. Create and update require `manage_classes`.
+  - Assigning groups on Edit Profile stays task 11.1. Eligibility stays task 7.3.
+  - *Completion notes:*
 
 
 
@@ -1041,10 +1059,10 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 ### Task 11: Athlete profile updates
 
-- [ ] **11.1 — trainingGroup on AthleteProfile**
+- [x] **11.1 — trainingGroup on AthleteProfile**
   - Schema, API, `edit_training_group` permission gate on **Edit Profile** (no standalone training-group screen).
   - Join profiles to `trainingGroups` (many groups per profile). Do not add a single `trainingGroup` column. The group rows are seeded in task 4.1.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-16. Join table `athleteProfileTrainingGroups`. Edit Profile shows multi-select chips only with `edit_training_group`. Omitting the field, or sending it without that permission, leaves the links alone. A list replaces them; `[]` clears them. Unknown or duplicate ids are a 400 and change nothing. The group catalog is `GET /mobileapp/user/training-groups` for any signed-in user. Edit Profile and the class form share one picker that loads that list. Check-in and walk-in search show the labels under the name. No group line when none are set. Group and age eligibility are task 7.3. The §16 unset-group fallback stays open. The §15 athlete-profile box stays open until task 11.2.
 
 - [ ] **11.2 — Progress + history UI**
   - Semicircle meter for **current quarter only** (later fallback rules in §10 are not this task).

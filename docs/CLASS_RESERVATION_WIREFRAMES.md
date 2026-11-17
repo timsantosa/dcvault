@@ -3,7 +3,7 @@
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Audience:** Client design review (walkthrough)  
 **Status:** Proposed UI for MVP / dark launch — not pixel-final  
-**Last updated:** 2026-09-30  
+**Last updated:** 2026-11-16  
 **Aligned with PRD:** v1.3
 
 This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail, data models, and later-phase features live in the PRD and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree, the **PRD is the source of truth**.
@@ -639,7 +639,7 @@ On a class the coach can manage, detail gains **Check members in** below the res
 └─────────────────────────────────────┘
 ```
 
-**Interaction:** tap the row (or the checkbox) to mark present. Tap again to undo if they tapped the wrong person. Large targets, no extra confirm on the happy path. Each row shows the athlete’s profile photo, or initials when they have none. **+ Walk-in** is a secondary button under the reserved list. The group line under a name waits for task 11.1. A walk-in row shows when they were added and the class cost.
+**Interaction:** tap the row (or the checkbox) to mark present. Tap again to undo if they tapped the wrong person. Large targets, no extra confirm on the happy path. Each row shows the athlete’s profile photo, or initials when they have none. **+ Walk-in** is a secondary button under the reserved list. A profile in one or more training groups shows those labels under the name (`Fly Kids, Elite Development`). No groups means no group line. A walk-in row keeps the added-at and cost line after the labels, separated by ` · `. A walk-in row shows when they were added and the class cost.
 
 Someone who reserved and is never checked in is a **no-show**. There is no separate “mark no-show” button — the credit was already taken at reserve time.
 
@@ -1043,16 +1043,16 @@ Afterward the chip falls back to any finite credits she still has, or to 0. Staf
 │  (existing name, bio, measurements) │
 │                                     │
 │  Training group                     │
-│  ┌─────────────────────────────┐    │
-│  │ Open / All Ages          ▾  │    │
-│  └─────────────────────────────┘    │
+│  [ Fly Kids ] [ Adult ]             │
+│  [ Open / All Ages ] [ Elite ]      │
+│  More than one can be selected.     │
 │  Controls which classes Emma        │
 │  is eligible for.                   │
 │                                     │
 │  [ Cancel ]              [ Save ]   │
 ```
 
-Without `edit_training_group`, the field is hidden or read-only on that form.
+A profile can be in more than one group. Saving with none selected leaves the group unset. Without `edit_training_group`, the field is hidden on that form.
 
 ---
 

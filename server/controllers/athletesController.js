@@ -13,6 +13,10 @@ const {
 } = require('../utils/rankingUtils');
 const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
 const NotificationUtils = require('../utils/notificationUtils');
+const {
+  readTrainingGroupIds,
+  trainingGroupsByProfileId,
+} = require('../lib/athleteTrainingGroups');
 
 function parseWorldAthleticsNumberForWrite(raw) {
   if (raw === undefined) {
@@ -80,6 +84,55 @@ function attachAthleticIds(responseObj, profileRow, usatfMap) {
     responseObj.usatf = usatf;
   }
   return responseObj;
+}
+
+// { write:false } leaves the links alone. { write:true, ids } replaces them.
+// { error } is a 400 and must be returned before any profile write.
+async function trainingGroupWrite(db, user, profileData) {
+  if (!profileData || profileData.trainingGroupIds === undefined) {
+    return { write: false };
+  }
+  const permissions = user && user.permissions;
+  const allowed = Array.isArray(permissions) && permissions.includes('edit_training_group');
+  if (!allowed) {
+    return { write: false };
+  }
+  const requested = profileData.trainingGroupIds;
+  let knownIds = [];
+  if (Array.isArray(requested) && requested.length) {
+    const numeric = [];
+    requested.forEach((value) => {
+      const id = Number(value);
+      if (Number.isInteger(id) && id > 0) {
+        numeric.push(id);
+      }
+    });
+    if (numeric.length) {
+      const rows = await db.tables.TrainingGroups.findAll({
+        where: { id: numeric },
+        attributes: ['id'],
+      });
+      knownIds = rows.map((row) => Number(row.id));
+    }
+  }
+  const parsed = readTrainingGroupIds(requested, knownIds);
+  if (!parsed.ok) {
+    return { error: parsed.message };
+  }
+  return { write: true, ids: parsed.ids };
+}
+
+async function replaceProfileTrainingGroups(db, athleteProfileId, ids, transaction) {
+  await db.tables.AthleteProfileTrainingGroups.destroy({
+    where: { athleteProfileId: athleteProfileId },
+    transaction: transaction,
+  });
+  for (let i = 0; i < ids.length; i += 1) {
+    await db.tables.AthleteProfileTrainingGroups.create({
+      athleteProfileId: athleteProfileId,
+      trainingGroupId: ids[i],
+    }, { transaction: transaction });
+  }
 }
 
 async function createProfile(req, res, db) {
@@ -165,7 +218,18 @@ async function createProfile(req, res, db) {
       athleteProfileData.worldAthleticsNumber = worldAthleticsParsed.value;
     }
 
-    const newProfile = await db.tables.AthleteProfiles.create(athleteProfileData);
+    const groupWrite = await trainingGroupWrite(db, userSendingRequest, newProfileData);
+    if (groupWrite.error) {
+      return res.status(400).json({ ok: false, message: groupWrite.error });
+    }
+
+    const newProfile = await db.tables.schema.transaction(async (transaction) => {
+      const created = await db.tables.AthleteProfiles.create(athleteProfileData, { transaction: transaction });
+      if (groupWrite.write) {
+        await replaceProfileTrainingGroups(db, created.id, groupWrite.ids, transaction);
+      }
+      return created;
+    });
     console.log(`Profile created successfully with id ${newProfile.id}`);
     
     // Notify users with manage_roles permission about the new profile
@@ -256,8 +320,18 @@ async function updateProfile(req, res, db) {
       athleteProfileData.worldAthleticsNumber = worldAthleticsParsed.value;
     }
 
+    const groupWrite = await trainingGroupWrite(db, userSendingRequest, newProfileData);
+    if (groupWrite.error) {
+      return res.status(400).json({ ok: false, message: groupWrite.error });
+    }
+
     // Update existing profile
-    await existingProfile.update(athleteProfileData);
+    await db.tables.schema.transaction(async (transaction) => {
+      await existingProfile.update(athleteProfileData, { transaction: transaction });
+      if (groupWrite.write) {
+        await replaceProfileTrainingGroups(db, existingProfile.id, groupWrite.ids, transaction);
+      }
+    });
 
     console.log(`Profile updated successfully with id ${existingProfile.id}`);
     return res.status(200).json({
@@ -400,6 +474,9 @@ const getProfile = async (req, res, db) => {
       athleteProfile.emergencyContactName = foundAthlete.emergencyContactName;
     }
 
+    const groups = await trainingGroupsByProfileId(db, [profile.id]);
+    athleteProfile.trainingGroups = groups[profile.id] || [];
+
     res.json({ ok: true, athleteProfile });
   } catch (err) {
     console.error(err);
@@ -442,6 +519,11 @@ const deleteProfile = async (req, res, db) => {
 
       // 3. Delete Drills (they reference AthleteProfiles)
       await db.tables.Drills.destroy({
+        where: { athleteProfileId },
+        transaction
+      });
+
+      await db.tables.AthleteProfileTrainingGroups.destroy({
         where: { athleteProfileId },
         transaction
       });
@@ -564,6 +646,7 @@ const getProfiles = async (req, res, db) => {
 
     const usatfMap = await hydrateUsatfForProfiles(profiles, db);
     let walkInOffers = null;
+    let groupsByProfile = null;
     if (walkInSearch.active) {
       try {
         walkInOffers = await loadWalkInOffers(db, profiles, walkInSearch.seriesId, walkInSearch.occursOn);
@@ -573,6 +656,7 @@ const getProfiles = async (req, res, db) => {
         }
         throw error;
       }
+      groupsByProfile = await trainingGroupsByProfileId(db, profiles.map((profile) => profile.id));
     }
 
     // Get medal counts for all profiles in bulk
@@ -606,6 +690,9 @@ const getProfiles = async (req, res, db) => {
       const listed = attachAthleticIds(athleteProfile, profile, usatfMap);
       if (walkInOffers) {
         listed.checkIn = walkInOffers.offers[profile.id];
+      }
+      if (groupsByProfile) {
+        listed.trainingGroups = groupsByProfile[profile.id] || [];
       }
       return listed;
     });

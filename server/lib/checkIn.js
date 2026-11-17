@@ -72,7 +72,8 @@ function decideWalkIn(input) {
 }
 
 // List counts for one session. reservations carry id, athleteProfileId,
-// firstName, lastName, profileImage, walkIn, and checkedInAt. reservedCount
+// firstName, lastName, profileImage, walkIn, checkedInAt, and trainingGroups.
+// reservedCount
 // leaves walk-ins out. presentCount includes a walk-in who is checked in.
 // Athletes are the reserved people first, then walk-ins, by last name, first
 // name, and id.
@@ -111,6 +112,7 @@ function toAthlete(row) {
     walkIn: isOn(row.walkIn),
     present: checkedInAt != null,
     checkedInAt: checkedInAt,
+    trainingGroups: Array.isArray(row.trainingGroups) ? row.trainingGroups : [],
   };
 }
 

@@ -11,6 +11,7 @@ const { memberScheduleRange, classStartInstant } = require('../../lib/memberSche
 const { sessionOnDate } = require('../../lib/reservations');
 const { loadClassGraph } = require('./classesController');
 const { lockedSession, takeCredits } = require('./reservationsController');
+const { trainingGroupsByProfileId } = require('../../lib/athleteTrainingGroups');
 
 async function listCheckIn(req, res, db) {
   try {
@@ -30,7 +31,8 @@ async function listCheckIn(req, res, db) {
         attributes: ['firstName', 'lastName', 'profileImage'],
       }],
     });
-    const listed = presentCheckIn(rows.map(toListed));
+    const groupsByProfile = await trainingGroupsByProfileId(db, rows.map((row) => row.athleteProfileId));
+    const listed = presentCheckIn(rows.map((row) => toListed(row, groupsByProfile)));
     res.json({
       ok: true,
       seriesId: parsed.seriesId,
@@ -179,8 +181,9 @@ async function openSession(db, seriesId, occursOn, transaction) {
 }
 
 // Signup row -> the fields presentCheckIn counts.
-function toListed(row) {
+function toListed(row, groupsByProfile) {
   const profile = row.athleteProfile || {};
+  const groups = groupsByProfile && groupsByProfile[row.athleteProfileId];
   return {
     id: row.id,
     athleteProfileId: row.athleteProfileId,
@@ -189,6 +192,7 @@ function toListed(row) {
     profileImage: profile.profileImage,
     walkIn: row.walkIn,
     checkedInAt: row.checkedInAt,
+    trainingGroups: groups || [],
   };
 }
 

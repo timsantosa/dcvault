@@ -191,6 +191,29 @@ describe('presentCheckIn', () => {
     });
   });
 
+  it('copies training groups and still counts that person once', () => {
+    const groups = [
+      { id: 1, key: 'fly-kids', label: 'Fly Kids' },
+      { id: 4, key: 'elite', label: 'Elite Development' },
+    ];
+    const listed = presentCheckIn([
+      {
+        id: 2,
+        athleteProfileId: 5,
+        firstName: 'Emma',
+        lastName: 'Dunne',
+        walkIn: false,
+        checkedInAt: null,
+        trainingGroups: groups,
+      },
+    ]);
+
+    expect(listed.reservedCount).toBe(1);
+    expect(listed.walkInCount).toBe(0);
+    expect(listed.athletes).toHaveLength(1);
+    expect(listed.athletes[0].trainingGroups).toEqual(groups);
+  });
+
   it('returns zeros for an empty session', () => {
     expect(presentCheckIn([])).toEqual({
       reservedCount: 0,

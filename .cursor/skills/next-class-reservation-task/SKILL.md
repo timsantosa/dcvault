@@ -102,7 +102,9 @@ Follow §19 "After completing a task": check off the §18 item, add completion n
 | 5.1 | PRD §6. Deferred until it is the first open §18 task. No screen. |
 | 6.1, 6.2 | Who sees what, visual language, Flow A |
 | 7.1, 7.2 | Flows A, B, C |
+| 7.3 | Flow C2. Also §5, §8, and §10. §16 #2 is still open. |
 | 8.2 | Flow D |
+| 8.3 | No wireframe. The task text is the spec. Class packages is only the Administrator entry. |
 | 9.1, 9.2 | Flow I and Flow G4 |
 | 10.1, 10.2 | Flow F |
 | 11.1 | Flow J |

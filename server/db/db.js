@@ -848,6 +848,12 @@ columns.classSeriesTrainingGroups = {
   trainingGroupId: { type: Sequelize.INTEGER, allowNull: false },
 };
 
+// Groups on an athlete profile. Many groups per profile. No single trainingGroup column.
+columns.athleteProfileTrainingGroups = {
+  athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
+  trainingGroupId: { type: Sequelize.INTEGER, allowNull: false },
+};
+
 // A date that differs from the series. Scalar differences live in overrides.
 columns.classOccurrences = {
   classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
@@ -1154,6 +1160,16 @@ const syncTables = (schema, force) => {
       },
     ],
   });
+  tables.AthleteProfileTrainingGroups = schema.define('athleteProfileTrainingGroup', columns.athleteProfileTrainingGroups, {
+    tableName: 'athleteProfileTrainingGroups',
+    indexes: [
+      {
+        unique: true,
+        fields: ['athleteProfileId', 'trainingGroupId'],
+        name: 'athlete_profile_training_groups',
+      },
+    ],
+  });
   tables.ClassOccurrences = schema.define('classOccurrence', columns.classOccurrences, {
     tableName: 'classOccurrences',
     validate: {
@@ -1431,6 +1447,27 @@ const syncTables = (schema, force) => {
     onUpdate: 'CASCADE',
   });
   tables.TrainingGroups.hasMany(tables.ClassSeriesTrainingGroups, { as: 'classSeriesLinks', foreignKey: 'trainingGroupId' });
+
+  tables.AthleteProfileTrainingGroups.belongsTo(tables.AthleteProfiles, {
+    as: 'athleteProfile',
+    foreignKey: 'athleteProfileId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.AthleteProfiles.hasMany(tables.AthleteProfileTrainingGroups, {
+    as: 'profileTrainingGroups',
+    foreignKey: 'athleteProfileId',
+  });
+  tables.AthleteProfileTrainingGroups.belongsTo(tables.TrainingGroups, {
+    as: 'trainingGroup',
+    foreignKey: 'trainingGroupId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.TrainingGroups.hasMany(tables.AthleteProfileTrainingGroups, {
+    as: 'athleteProfileLinks',
+    foreignKey: 'trainingGroupId',
+  });
 
   tables.ClassOccurrences.belongsTo(tables.ClassSeries, {
     as: 'classSeries',
