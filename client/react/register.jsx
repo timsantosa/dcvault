@@ -9,6 +9,37 @@ const parseFormValues = apiHelpers.parseFormValues
 // feature and revert registration to the original blank-form flow.
 const ENABLE_ATHLETE_SELECTOR = true
 
+// Pricing shared by the Packages step text and the Payment step charge.
+const APPAREL_PRICE = 20
+const PROCESSING_FEE_RATE = 0.03
+
+// Display labels for the Payment step order summary
+const LABELS = {
+  quarter: {spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter'},
+  group: {
+    'fly-kids': 'Fly-Kids (7-11) + Camps',
+    'dropin': 'Drop-In',
+    'adult': 'Adult (21+)',
+    'plesson': 'Private Lesson',
+    'allages': 'All Ages (12+ Beginner thru Advanced)',
+    'emerging-elite': 'Emerging Elite (Level III)',
+    'elite': 'Elite (Level IV)',
+    'professional': 'Professional (Level V)'
+  },
+  membership: {
+    '2classes': '2 Classes',
+    '4classes': '4 Classes',
+    '8classes': '8 Classes',
+    '15classes': '15 Classes',
+    '30classes': 'Unlimited Classes',
+    'summercamp': 'Summer Camp'
+  },
+  facility: {dcv: 'DC Vault', prep: 'Georgetown Prep', dcvprep: 'Flexible (DC Vault + Georgetown Prep)'},
+  size: {yxs: 'Youth XS', xs: 'XS', sm: 'S', md: 'M', lg: 'L'}
+}
+
+const formatMoney = (amount) => '$' + (Math.round(amount * 100) / 100).toFixed(2)
+
 // "DEFY GRAVITY" photo panel shown beside every registration step.
 const RegHero = () => (
   <aside className='reg-hero'>
@@ -568,7 +599,7 @@ class SelectPackage extends React.Component {
             {/* Apparel */}
             <div className='reg-section'>
               <p className='reg-heading'>Apparel<span className='rd-req'>*</span></p>
-              <p className='reg-subnote'>Would you like team apparel? DC Vault T-shirts can be purchased for an additional $20 (INCLUDED IN FLY-KIDS CAMP PLEASE SELECT "YES!" AND SIZE).</p>
+              <p className='reg-subnote'>Would you like team apparel? DC Vault T-shirts can be purchased for an additional ${APPAREL_PRICE} (INCLUDED IN FLY-KIDS CAMP PLEASE SELECT "YES!" AND SIZE).</p>
               <div className='reg-apparel-card'>
                 <img className='reg-apparel-card__img' src='../img/register/apparel-shirts.png' />
                 <div className='reg-apparel-card__options'>
@@ -1002,23 +1033,34 @@ class Agreement extends React.Component {
   constructor (props) {
     super(props)
 
+    // The waiver is chosen automatically from the athlete's DOB: under 18 →
+    // youth (guardian) waiver, 18+ → adult waiver. Only if the DOB can't be
+    // read do we fall back to letting them pick.
+    let autoWaiverType = Agreement.waiverTypeForDob(props.data)
+
     this.state = {
       errorText: '',
-      // Pre-select the youth waiver for athletes under 18; they can switch.
-      waiverType: Agreement.isMinor(props.data) ? 'youth' : 'adult',
+      autoWaiverType: autoWaiverType,
+      waiverType: autoWaiverType || 'adult',
       agreed: false
     }
   }
 
-  // athleteInfo.dob is collected on the previous step as mm/dd/yyyy
-  static isMinor (data) {
+  // athleteInfo.dob is collected on the previous step as mm/dd/yyyy.
+  // Returns 'youth', 'adult', or null when the DOB can't be read.
+  static waiverTypeForDob (data) {
     let dob = data && data.athleteInfo && data.athleteInfo.dob
     let parts = (dob || '').split('/')
-    if (parts.length !== 3) return false
-    let birth = new Date(parseInt(parts[2], 10), parseInt(parts[0], 10) - 1, parseInt(parts[1], 10))
-    if (isNaN(birth.getTime())) return false
-    let eighteenth = new Date(birth.getFullYear() + 18, birth.getMonth(), birth.getDate())
-    return eighteenth > new Date()
+    if (parts.length !== 3) return null
+    let month = parseInt(parts[0], 10)
+    let day = parseInt(parts[1], 10)
+    let year = parseInt(parts[2], 10)
+    if (!(month >= 1 && month <= 12 && day >= 1 && day <= 31 && year > 1900)) return null
+    let birth = new Date(year, month - 1, day)
+    if (isNaN(birth.getTime()) || birth > new Date()) return null
+    // Age on the registration date
+    let eighteenth = new Date(year + 18, month - 1, day)
+    return eighteenth > new Date() ? 'youth' : 'adult'
   }
 
   selectWaiver (waiverType) {
@@ -1095,7 +1137,22 @@ class Agreement extends React.Component {
             <p className='reg-subnote'>Please read the waiver below in full, then sign to continue.</p>
           </div>
 
-          {/* Waiver selector */}
+          {/* Waiver: chosen from the athlete's DOB, or picked if DOB is unreadable */}
+          {this.state.autoWaiverType ? (
+            <div className='reg-section'>
+              <p className='reg-heading reg-heading--icon'>
+                <img src='../img/register/icon-waiver.svg' width='17.29' height='17.29' alt='' />
+                {waiver.tabTitle} Waiver
+              </p>
+              <div className='reg-callout'>
+                {this.state.autoWaiverType === 'youth'
+                  ? 'This waiver must be signed by the athlete’s parent or legal guardian because the athlete is under 18'
+                  : 'This waiver is for athletes 18 or older'}
+                {' '}(date of birth <strong>{this.props.data.athleteInfo.dob}</strong>).
+                <div className='reg-callout__sub'>If the date of birth is incorrect, please restart registration and correct it on the Athlete step.</div>
+              </div>
+            </div>
+          ) : (
           <div className='reg-section'>
             <p className='reg-heading reg-heading--icon'>
               <img src='../img/register/icon-waiver.svg' width='17.29' height='17.29' alt='' />
@@ -1117,6 +1174,7 @@ class Agreement extends React.Component {
               })}
             </div>
           </div>
+          )}
 
           {/* Waiver text */}
           <div className='reg-section'>
@@ -1156,7 +1214,7 @@ class Agreement extends React.Component {
             </label>
             <div className='reg-grid-2'>
               <div className='reg-field'>
-                <label>{this.state.waiverType === 'youth' ? 'Guardian Full Name' : 'Full Name'}<span className='rd-req'>*</span></label>
+                <label>{this.state.waiverType === 'youth' ? 'Parent/Guardian Full Name' : 'Full Name'}<span className='rd-req'>*</span></label>
                 <input type='text' name='name' placeholder='Full name' />
               </div>
               <div className='reg-field'>
@@ -1265,27 +1323,42 @@ class Payment extends React.Component {
     })
   }
 
-  calculatePrice () {
-    let price = (this.state.price * (1 - this.state.discount))
-    price = parseFloat(price) < 10 ? 1 : price
-    price += this.state.lateFee
-    let group = this.props.data.selectPackage.group
-    let apparel = this.props.data.selectPackage.apparel
-    let apparelRes= this.props.data.selectPackage.yesApparel
-    let str = this.props.data.selectPackage.strength
-    let strFam = this.props.data.selectPackage.strengthFam
-    let fkmembership = this.props.data.selectPackage.membership
+  // Single source of truth for every amount shown in the summary AND charged
+  // through PayPal, so the breakdown always adds up to the charged total.
+  getTotals () {
+    let pkg = this.props.data.selectPackage
+    let packagePrice = this.state.price
+    let packageAfterDiscount = packagePrice * (1 - this.state.discount)
+    // Existing rule: a package under $10 (after discount) is charged $1
+    if (packageAfterDiscount < 10) packageAfterDiscount = 1
+    // e.g. $0 Elite/Professional packages are charged the $1 minimum; show
+    // the package at that price so the summary lines add up to the total
+    if (packageAfterDiscount > packagePrice) packagePrice = packageAfterDiscount
+    let discountAmount = packagePrice - packageAfterDiscount
 
+    let shirtIncluded = pkg.membership === 'summercamp'
+    let wantsShirt = pkg.yesApparel !== 'none'
+    let apparelPrice = (wantsShirt && !shirtIncluded) ? APPAREL_PRICE : 0
 
+    let lateFee = this.state.lateFee
+    let subtotal = packageAfterDiscount + apparelPrice + lateFee
+    let total = subtotal * (1 + PROCESSING_FEE_RATE)
 
-    if (apparelRes === 'none' || fkmembership === 'summercamp'){
-    }else{
-      price += 35
+    return {
+      packagePrice: packagePrice,
+      discountAmount: discountAmount,
+      wantsShirt: wantsShirt,
+      shirtIncluded: shirtIncluded,
+      apparelPrice: apparelPrice,
+      lateFee: lateFee,
+      subtotal: subtotal,
+      processingFee: total - subtotal,
+      total: total
     }
+  }
 
-    price = price * 1.03
-
-    this.renderButton(price)
+  calculatePrice () {
+    this.renderButton(this.getTotals().total)
   }
 
   renderButton (amount) {
@@ -1387,43 +1460,76 @@ class Payment extends React.Component {
       )
     }
 
-    let currentPrice = (this.state.price * (1 - this.state.discount))
-    currentPrice = currentPrice < 10 ? (1).toFixed(2) : currentPrice.toFixed(2)
-    let size = this.props.data.selectPackage.apparel
-    let apparelRes = this.props.data.selectPackage.yesApparel
-    let str = this.props.data.selectPackage.strength
-    let strFam = this.props.data.selectPackage.strengthFam
-    let group = this.props.data.selectPackage.group
-    let fkmembership = this.props.data.selectPackage.membership
+    let pkg = this.props.data.selectPackage
+    let athlete = this.props.data.athleteInfo || {}
+    let t = this.getTotals()
 
-    let currentProcessingFee = 0
-    if (apparelRes === 'yes') {
-      if (fkmembership === 'summercamp'){
-        currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
-      }else{
-        currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 35) * 0.03).toFixed(2)
+    // Package description lines (only the ones that apply to this selection)
+    let packageDetails = [
+      pkg.quarter ? ['Session', LABELS.quarter[pkg.quarter] || pkg.quarter] : null,
+      pkg.group ? ['Training group', LABELS.group[pkg.group] || pkg.group] : null,
+      LABELS.membership[pkg.membership] ? ['Class option', LABELS.membership[pkg.membership]] : null,
+      pkg.facility ? ['Location', LABELS.facility[pkg.facility] || pkg.facility] : null
+    ].filter(Boolean)
 
-      }
-    }else{
-      currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
-    }
-
-    let lateFee = this.state.lateFee
-
-    /*
-    old late fee code
-    {lateFee > 0 ? (<p className='price-text'>Late Fee: <span className='red-text'>${lateFee.toFixed(2)}</span></p>) : ''}
-     */
+    let shirtSize = LABELS.size[pkg.apparel]
 
     return (
       <div className='reg-center'>
         <form id='payment' className='reg-form'>
           <p className='reg-form__title'>Finalize Payment</p>
 
-          <div className='reg-section' style={{textAlign: 'center'}}>
-            <p className='reg-price'>Training Package: <span>${currentPrice}</span></p>
-            {apparelRes !== 'none' && fkmembership !== 'summercamp' ? (<p className='reg-price'>Apparel Fee: <span>${35}</span></p>) : ''}
-            <p className='reg-price'>Online Processing Fee: <span>${currentProcessingFee}</span></p>
+          <div className='reg-section'>
+            <p className='reg-heading'>Order Summary</p>
+            {athlete.fname ? (<p className='reg-subnote'>Athlete: {athlete.fname} {athlete.lname}</p>) : ''}
+
+            <div className='reg-summary'>
+              <div className='reg-summary__item'>
+                <div className='reg-summary__row'>
+                  <span className='reg-summary__label'>Training Package</span>
+                  <span className='reg-summary__amount'>{formatMoney(t.packagePrice)}</span>
+                </div>
+                <ul className='reg-summary__details'>
+                  {packageDetails.map((d) => (<li key={d[0]}><span>{d[0]}:</span> {d[1]}</li>))}
+                </ul>
+              </div>
+
+              {t.discountAmount > 0 ? (
+                <div className='reg-summary__row reg-summary__row--discount'>
+                  <span className='reg-summary__label'>Discount{this.state.discountCode ? ' (' + this.state.discountCode + ')' : ''}</span>
+                  <span className='reg-summary__amount'>&minus;{formatMoney(t.discountAmount)}</span>
+                </div>
+              ) : ''}
+
+              {t.wantsShirt ? (
+                <div className='reg-summary__item'>
+                  <div className='reg-summary__row'>
+                    <span className='reg-summary__label'>DC Vault T-Shirt</span>
+                    <span className='reg-summary__amount'>{t.shirtIncluded ? 'Included' : formatMoney(t.apparelPrice)}</span>
+                  </div>
+                  <ul className='reg-summary__details'>
+                    <li><span>Size:</span> {shirtSize || 'Not selected (coach will confirm)'}</li>
+                  </ul>
+                </div>
+              ) : ''}
+
+              {t.lateFee > 0 ? (
+                <div className='reg-summary__row'>
+                  <span className='reg-summary__label'>Late Fee</span>
+                  <span className='reg-summary__amount'>{formatMoney(t.lateFee)}</span>
+                </div>
+              ) : ''}
+
+              <div className='reg-summary__row reg-summary__row--muted'>
+                <span className='reg-summary__label'>Online Processing Fee</span>
+                <span className='reg-summary__amount'>{formatMoney(t.processingFee)}</span>
+              </div>
+
+              <div className='reg-summary__row reg-summary__row--total'>
+                <span className='reg-summary__label'>Total</span>
+                <span className='reg-summary__amount'>{formatMoney(t.total)}</span>
+              </div>
+            </div>
           </div>
 
           <a className='reg-link' onClick={this.toggleDiscount.bind(this)}>Have a Discount Code?</a>

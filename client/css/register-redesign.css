@@ -704,6 +704,90 @@
   color: var(--rd-red);
 }
 
+/* Payment step order summary */
+.reg-summary {
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--rd-font-body);
+}
+
+.reg-summary__item,
+.reg-summary > .reg-summary__row {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--rd-border);
+}
+
+.reg-summary__item .reg-summary__row {
+  padding: 0;
+}
+
+.reg-summary__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.reg-summary__label {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--rd-ink-soft);
+}
+
+.reg-summary__amount {
+  flex: 0 0 auto;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--rd-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.reg-summary__details {
+  list-style: none;
+  margin: 6px 0 0 0;
+  padding: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--rd-muted);
+}
+
+.reg-summary__details span {
+  color: var(--rd-ink-soft);
+  font-weight: 500;
+}
+
+.reg-summary__row--discount .reg-summary__label,
+.reg-summary__row--discount .reg-summary__amount {
+  color: #166534;
+}
+
+.reg-summary__row--muted .reg-summary__label,
+.reg-summary__row--muted .reg-summary__amount {
+  font-weight: 500;
+  color: var(--rd-muted);
+}
+
+.reg-summary > .reg-summary__row--total {
+  background-color: var(--rd-surface);
+  border-bottom: 0;
+}
+
+.reg-summary__row--total .reg-summary__label {
+  font-family: var(--rd-font-display);
+  font-weight: 400;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--rd-ink);
+}
+
+.reg-summary__row--total .reg-summary__amount {
+  font-size: 18px;
+  color: var(--rd-red);
+}
+
 /* --------------------------------------------------------------------------
    Waiver Agreement step
    -------------------------------------------------------------------------- */
