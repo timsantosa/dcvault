@@ -61,8 +61,9 @@ No reserve_classes          Has reserve_classes
 MEMBER                          COACH                         ADMIN
 Schedule tab ─────────┐         same Schedule +               same as coach +
   ├ Class detail      │           Create Class                Adjust Credits
-  │   ├ Reserve       │           Check In                    Class packages
-  │   └ Cancel        │           Message class               Edit Profile
+  │   ├ Reserve       │           Check In                    Classes menu: packages,
+  │   └ Cancel        │           Message class                 training groups
+  │                   │                                       Edit Profile
   └ Upcoming list     │           Cancel for member             (training group)
 Athlete profile ──────┘           Cancel / delete class
   ├ Progress / credits
@@ -1106,7 +1107,7 @@ Tapping opens that class detail **and** the class conversation. MVP does not add
 ## Flow L — Class packages
 
 **Permission:** `manage_classes`  
-**Where:** More → Administrator → Class packages. The website only reads the list.
+**Where:** More → Administrator → Classes → Class packages. The website only reads the list. Training groups is the other item in that Classes submenu (task 8.3, no wireframe).
 
 Staff create the products registration can sell. The first nine (Fly-Kids, Adult, All Ages, including Unlimited) are seeded once. After that, this screen is how packages change.
 

@@ -24,7 +24,7 @@ const memberScheduleRoutes = require('./mobileRoutes/memberScheduleRoutes');
 const reservationRoutes = require('./mobileRoutes/reservationRoutes');
 const creditRoutes = require('./mobileRoutes/creditRoutes');
 const checkInRoutes = require('./mobileRoutes/checkInRoutes');
-const { listTrainingGroups } = require('./controllers/classes/classesController');
+const trainingGroupRoutes = require('./mobileRoutes/trainingGroupRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -35,7 +35,7 @@ module.exports = function addMobileAppRoutes(app, db) {
 
   // Everything under '/mobileapp/user' will need to be authenticated
   app.use('/mobileapp/user', authenticateJWT);
-  app.get('/mobileapp/user/training-groups', (req, res) => listTrainingGroups(req, res, db));
+  app.use('/mobileapp/user/training-groups', trainingGroupRoutes(db));
   app.use('/mobileapp/user/log', jumpRoutes(db));
   app.use('/mobileapp/user/log', drillRoutes(db));
   app.use('/mobileapp/user/athlete', athleteRoutes(db));

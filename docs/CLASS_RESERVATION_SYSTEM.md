@@ -559,7 +559,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 ### Training group
 
 - An athlete profile can belong to **more than one training group**, using the same group list as class eligibility (`fly-kids`, `adult`, `allages`, `elite`). This is a join, not a single column. Task 11.1 adds the profile side. No groups means no group limit on a class.
-- Those four names are the seed, not a fixed set. Staff with `manage_classes` edit the catalog (task 8.3). `edit_training_group` only assigns groups on an athlete’s Edit Profile.
+- Those four names are the seed, not a fixed set. Staff with `manage_classes` add groups and rename labels at More → Administrator → Classes → Training groups (task 8.3). A new group’s key is made from its label when it is created and never changes. Groups are not deleted. `edit_training_group` only assigns groups on an athlete’s Edit Profile.
 - **Not editable by the athlete/user themselves.**
 - Shown and edited on the existing **Edit Profile** screen (not a standalone “Edit Training Group” flow). The field is only writable for users with a dedicated permission (e.g. `edit_training_group` — may or may not be assigned to coach role).
 - If unset, eligibility counts the athlete as **Open / All Ages** (catalog key `allages`). That group is not saved on the profile, and the profile still shows no groups. A purchase is not read. If the catalog has no `allages` row, an athlete with no groups is not eligible for a class that lists groups.
@@ -939,7 +939,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 - [x] **2.4 — Package catalog admin UI**
   - Mobile screen to create and edit `classPackages` (name, price, audience, credit count or unlimited, public vs invite level, sort order, active).
   - Permission: `manage_classes`. Deactivating a package hides it from the website and leaves existing grants.
-  - *Completion notes:* 2026-09-30. More → Administrator → Class packages, gated by `manage_classes`. List, create, and edit call `/mobileapp/user/classPackages`. Show on website writes `active`. No delete. Reorder is a per-group drag sheet that rewrites `sortOrder` as 1..n. Section order is fixed: Fly Kids, Adult, All Ages, then other keys alphabetically. A new package, or one whose group changes, is appended to that section. The catalog flag and website checkout are unchanged (Task 3.1).
+  - *Completion notes:* 2026-09-30. More → Administrator → Class packages (moved under Administrator → Classes in task 8.3), gated by `manage_classes`. List, create, and edit call `/mobileapp/user/classPackages`. Show on website writes `active`. No delete. Reorder is a per-group drag sheet that rewrites `sortOrder` as 1..n. Section order is fixed: Fly Kids, Adult, All Ages, then other keys alphabetically. A new package, or one whose group changes, is appended to that section. The catalog flag and website checkout are unchanged (Task 3.1).
 
 
 
@@ -1021,13 +1021,13 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Approval workflow and real card charging are Phase 2+ — do not build them in this task.
   - *Completion notes:* 2026-11-09. Already shipped in 7.1, 7.2, and 8.1. A dollar class confirms the price, then reserves immediately with `paymentStatus: external`. `creditCost` 0 spends no group credits. There is no approval state and no PayPal call. Do not rebuild the confirm. `notifyCoachOnReserve` is still only stored (task 12.4). §15 private-lesson box is checked.
 
-- [ ] **8.3 — Training group catalog**
+- [x] **8.3 — Training group catalog**
   - Admin screen to add a training group and edit its label. Entry is More → Administrator, beside Class packages. Permission: `manage_classes`. No wireframe; do not copy the package editor past that entry.
   - The key is set when the group is created and is not edited later. The label is the editable name.
   - Do not delete a group that a class or an athlete profile still uses.
   - Give training groups their own controller. Move the current list handler out of `classesController`. `GET /mobileapp/user/training-groups` stays available to any signed-in user. Create and update require `manage_classes`.
   - Assigning groups on Edit Profile stays task 11.1. Eligibility stays task 7.3.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-17. More → Administrator now has one **Classes** entry (`manage_classes`) that opens a submenu with Class packages (moved here, same `/classPackages` route) and **Training groups**. Training groups is a table of name and key. + adds a group and tapping a row renames it, both in one name field. The server makes the key from the name on create (`Pre-Elite` → `pre-elite`) and never changes it. Names must include a letter or number, and a name that matches another group’s name (any case) or key is a 400. No delete, so a group in use is never removed. Routes moved to `server/mobileRoutes/trainingGroupRoutes.js` and `trainingGroupsController`: `GET /mobileapp/user/training-groups` is any signed-in user, `POST` and `PUT /:id` require `manage_classes`. Rules are in `server/lib/trainingGroups.js`. §10 updated.
 
 
 

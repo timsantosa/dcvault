@@ -51,24 +51,6 @@ async function loadExpandedSessions(db, from, to) {
   return sessions;
 }
 
-async function listTrainingGroups(req, res, db) {
-  try {
-    const rows = await db.tables.TrainingGroups.findAll({
-      order: [['id', 'ASC']],
-    });
-    res.json({
-      ok: true,
-      trainingGroups: rows.map((row) => ({
-        id: row.id,
-        key: row.key,
-        label: row.label,
-      })),
-    });
-  } catch (error) {
-    sendError(res, error, 'Error in listTrainingGroups:');
-  }
-}
-
 async function getClass(req, res, db) {
   try {
     const row = await findLiveSeries(req, res, db);
@@ -739,7 +721,6 @@ function coded(status, message) {
 
 module.exports = {
   listClasses,
-  listTrainingGroups,
   loadExpandedSessions,
   loadClassGraph,
   getClass,
