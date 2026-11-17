@@ -110,6 +110,36 @@ describe('decideReserve', () => {
   it('still says already reserved when the class is also full', () => {
     expect(openReserve({ alreadyReserved: true, spotsTaken: 18 }).message).toBe('Already reserved.');
   });
+
+  it('rejects a group or age mismatch with the reason, ahead of the cutoff and full checks', () => {
+    const catalog = [
+      { id: 3, key: 'allages', label: 'Open / All Ages' },
+      { id: 4, key: 'elite', label: 'Elite Development' },
+    ];
+    const athlete = { firstName: 'Emma', dob: '2014-01-01', trainingGroups: [] };
+    const blocked = openReserve({
+      session: session({ trainingGroupIds: [4] }),
+      athlete: athlete,
+      trainingGroups: catalog,
+      now: HOUR_BEFORE,
+      spotsTaken: 18,
+    });
+    expect(blocked).toEqual({
+      ok: false,
+      status: 409,
+      message: 'Emma is in Open / All Ages. This class is Elite Development.',
+    });
+    expect(openReserve({
+      session: session({ occursOn: '2026-08-25', maxAge: 10 }),
+      athlete: athlete,
+      trainingGroups: catalog,
+    }).message).toBe('Emma is 12. This class is for age 10 or younger.');
+    expect(openReserve({
+      session: session({ occursOn: '2026-08-25', trainingGroupIds: [3, 4], minAge: 8, maxAge: 14 }),
+      athlete: athlete,
+      trainingGroups: catalog,
+    }).ok).toBe(true);
+  });
 });
 
 describe('decideMemberCancel', () => {

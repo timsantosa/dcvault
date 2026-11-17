@@ -4,6 +4,7 @@ const { allocateForReservation } = require('../../lib/creditInventory');
 const { presentMemberSchedule, classStartInstant } = require('../../lib/memberSchedule');
 const { decideReserve, decideMemberCancel, sessionOnDate } = require('../../lib/reservations');
 const { loadClassGraph } = require('./classesController');
+const { loadEligibilityInput } = require('../../lib/athleteTrainingGroups');
 
 async function reserveClass(req, res, db) {
   try {
@@ -22,6 +23,7 @@ async function reserveClass(req, res, db) {
       return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
     }
 
+    const eligibility = await loadEligibilityInput(db, profile);
     const created = await db.tables.schema.transaction(async (transaction) => {
       const session = await lockedSession(db, parsed.seriesId, parsed.occursOn, transaction);
       const existing = await db.tables.ClassReservations.findAll({
@@ -33,6 +35,8 @@ async function reserveClass(req, res, db) {
         now: new Date(),
         classStart: classStartInstant(session.occursOn, session.startTime),
         session: session,
+        athlete: eligibility.athlete,
+        trainingGroups: eligibility.trainingGroups,
         spotsTaken: existing.length,
         alreadyReserved: existing.some((row) => row.athleteProfileId === profile.id),
         note: parsed.note,

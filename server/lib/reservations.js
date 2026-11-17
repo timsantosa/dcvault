@@ -6,11 +6,13 @@
 const { expandClassOccurrences } = require('./classSchedule');
 const { day } = require('./dates');
 const { allocateForReservation } = require('./creditInventory');
+const { eligibilityReason } = require('./eligibility');
 
 const NOTE_LIMIT = 500;
 
 // Whether this member may take the spot. Input: session (the expanded class on
-// that date), alreadyReserved, spotsTaken, note, and Date instants now and
+// that date), athlete and trainingGroups (see eligibilityReason),
+// alreadyReserved, spotsTaken, note, and Date instants now and
 // classStart. Returns { ok:false, status, message } or { ok:true, note,
 // creditCost, paymentStatus }. The caller locks rows and writes them.
 // Hidden classes are a 404 so they match a missing class. Already reserved is
@@ -30,6 +32,14 @@ function decideReserve(input) {
   }
   if (input.alreadyReserved) {
     return reject(409, 'Already reserved.');
+  }
+  const notEligible = eligibilityReason({
+    session: session,
+    athlete: input.athlete,
+    trainingGroups: input.trainingGroups,
+  });
+  if (notEligible) {
+    return reject(409, notEligible);
   }
   const cutoffMinutes = Number(session.reservationCutoffMinutes);
   if (input.now.getTime() >= input.classStart.getTime() - cutoffMinutes * 60 * 1000) {

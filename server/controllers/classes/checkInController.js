@@ -11,7 +11,8 @@ const { memberScheduleRange, classStartInstant } = require('../../lib/memberSche
 const { sessionOnDate } = require('../../lib/reservations');
 const { loadClassGraph } = require('./classesController');
 const { lockedSession, takeCredits } = require('./reservationsController');
-const { trainingGroupsByProfileId } = require('../../lib/athleteTrainingGroups');
+const { trainingGroupsByProfileId, loadEligibilityInput } = require('../../lib/athleteTrainingGroups');
+const { eligibilityReason } = require('../../lib/eligibility');
 
 async function listCheckIn(req, res, db) {
   try {
@@ -117,6 +118,7 @@ async function addWalkIn(req, res, db) {
 
     const now = new Date();
     const today = memberScheduleRange(now).today;
+    const eligibility = await loadEligibilityInput(db, profile);
     const created = await db.tables.schema.transaction(async (transaction) => {
       const session = await lockedSession(db, parsed.seriesId, parsed.occursOn, transaction);
       const existing = await db.tables.ClassReservations.findAll({
@@ -127,6 +129,8 @@ async function addWalkIn(req, res, db) {
       const decision = decideWalkIn({
         session: session,
         today: today,
+        athlete: eligibility.athlete,
+        trainingGroups: eligibility.trainingGroups,
         alreadyReserved: existing.some((row) => row.athleteProfileId === profile.id),
         spotsTaken: existing.length,
       });
@@ -347,6 +351,10 @@ async function loadWalkInOffers(db, profiles, seriesId, occursOn) {
     grantsByAthlete[grant.athleteId].push(grant);
   });
 
+  const groupsByProfile = await trainingGroupsByProfileId(db, (profiles || []).map((profile) => profile.id));
+  const catalog = (await db.tables.TrainingGroups.findAll({ attributes: ['id', 'key', 'label'] }))
+    .map((row) => ({ id: Number(row.id), key: row.key, label: row.label }));
+
   const classStart = classStartInstant(session.occursOn, session.startTime);
   const offers = {};
   (profiles || []).forEach((profile) => {
@@ -362,6 +370,15 @@ async function loadWalkInOffers(db, profiles, seriesId, occursOn) {
       classStart: classStart,
       grants: athleteGrants,
       allocations: allocations.filter((row) => ids[row.creditGrantId] === true),
+    });
+    offers[profile.id].notEligible = eligibilityReason({
+      session: session,
+      athlete: {
+        firstName: profile.firstName,
+        dob: profile.dob,
+        trainingGroups: groupsByProfile[profile.id] || [],
+      },
+      trainingGroups: catalog,
     });
   });
   return {

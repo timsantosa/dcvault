@@ -4,10 +4,12 @@
 // are wall-clock America/New_York. Grants are Date instants. No database.
 
 const { summarizeCredits, formatCreditChip, grantBalance } = require('./creditInventory');
+const { eligibilityReason } = require('./eligibility');
 
 const TIME_ZONE = 'America/New_York';
 const DAYS_BEHIND = 14;
 const DAYS_AHEAD = 77;
+const NOT_ELIGIBLE = 'Not eligible';
 
 function memberScheduleRange(now) {
   const today = nyDateString(now);
@@ -49,7 +51,11 @@ function presentMemberSchedule(input) {
   const sessions = (input.sessions || [])
     .filter((session) => input.includeHidden || !isOff(session.visible))
     .map((session) => {
-      return presentSession(session, grants, now, allocations, signups[session.seriesId + '|' + session.occursOn]);
+      // No athlete means the caller already checked eligibility (reserve's credit message).
+      const notEligible = input.athlete
+        ? eligibilityReason({ session: session, athlete: input.athlete, trainingGroups: input.trainingGroups })
+        : null;
+      return presentSession(session, grants, now, allocations, signups[session.seriesId + '|' + session.occursOn], notEligible);
     })
     .sort(compareSessions);
 
@@ -61,10 +67,11 @@ function presentMemberSchedule(input) {
   };
 }
 
-function presentSession(session, grants, now, allocations, signup) {
+function presentSession(session, grants, now, allocations, signup, notEligible) {
   const creditCost = numericCost(session.creditCost);
   const spotsTaken = signup ? Number(signup.spotsTaken) : 0;
   const reserved = signup ? signup.reserved === true : false;
+  const block = blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved, notEligible);
   return {
     seriesId: session.seriesId,
     occursOn: session.occursOn,
@@ -84,7 +91,8 @@ function presentSession(session, grants, now, allocations, signup) {
     dollarCost: session.dollarCost == null || session.dollarCost === '' ? null : Number(session.dollarCost),
     reservationCutoffMinutes: Number(session.reservationCutoffMinutes),
     cancellationCutoffMinutes: Number(session.cancellationCutoffMinutes),
-    blockReason: blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved),
+    blockReason: block,
+    eligibilityReason: block === NOT_ELIGIBLE ? notEligible : null,
     cancellationNote: cancellationNote(session, reserved),
     cancellationBlock: cancellationBlock(session, now, reserved),
     reserved: reserved,
@@ -92,7 +100,7 @@ function presentSession(session, grants, now, allocations, signup) {
   };
 }
 
-function blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved) {
+function blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved, notEligible) {
   if (session.status === 'canceled') {
     return 'Canceled';
   }
@@ -101,6 +109,9 @@ function blockReason(session, grants, now, creditCost, allocations, spotsTaken, 
   }
   if (reserved) {
     return null;
+  }
+  if (notEligible) {
+    return NOT_ELIGIBLE;
   }
   const start = classStartInstant(session.occursOn, session.startTime);
   const cutoffMs = Number(session.reservationCutoffMinutes) * 60 * 1000;

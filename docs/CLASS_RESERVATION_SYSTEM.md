@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-16  
+**Last updated:** 2026-11-17  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -562,7 +562,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 - Those four names are the seed, not a fixed set. Staff with `manage_classes` edit the catalog (task 8.3). `edit_training_group` only assigns groups on an athlete’s Edit Profile.
 - **Not editable by the athlete/user themselves.**
 - Shown and edited on the existing **Edit Profile** screen (not a standalone “Edit Training Group” flow). The field is only writable for users with a dedicated permission (e.g. `edit_training_group` — may or may not be assigned to coach role).
-- If unset, fall back to group from latest purchase or a default (engineering TBD).
+- If unset, eligibility counts the athlete as **Open / All Ages** (catalog key `allages`). That group is not saved on the profile, and the profile still shows no groups. A purchase is not read. If the catalog has no `allages` row, an athlete with no groups is not eligible for a class that lists groups.
 
 
 
@@ -780,7 +780,7 @@ The athlete needs a place they can open and read those notices. The shape stays 
 - [x] Credit chip: remaining, reserved, `N expire [date]`
 - [x] Calendar reserved vs unreserved day markers (independent of class-type color)
 - [ ] Scrolling agenda (past dimmed; ~2 weeks of past loaded by default)
-- [ ] Eligibility visible-with-reason
+- [x] Eligibility visible-with-reason
 - [ ] Multi-package deduction (soonest expiring)
 - [ ] Multi-athlete per user via profile switching
 - [x] Check-in with walk-in support (two steps, one flow when granting a credit)
@@ -836,7 +836,7 @@ The athlete needs a place they can open and read those notices. The shape stays 
 These are intentionally unresolved — capture decisions as they come up during design/build:
 
 1. **Roster privacy** — confirmed OK for all members for now; revisit if gym culture changes.
-2. **Training group fallback** — when AthleteProfile group unset, derive from purchase or require admin set?
+2. **Training group fallback** — eligibility treats an unset profile as Open / All Ages (task 7.3, 2026-11-17), so Elite and other group classes stay closed. Still open: whether to derive a saved group from a purchase or require an admin to set one.
 3. **Success metrics** — define before full release (e.g., beta reservation volume, support tickets, Zen Planner manual entry reduction).
 4. **Launch communication** — member messaging when switching off Zen Planner.
 5. **Walk-in overdraft (parked, not decided)** — potential Phase 2: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
@@ -999,14 +999,14 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Chip updates immediately on reserve/cancel.
   - *Completion notes:* 2026-11-01. Reserve and Cancel are on the schedule row, the class screen, and Upcoming classes. A credit class, including a free one, reserves in one tap. A dollar class confirms the price first and is not charged; that confirm is the one task 8.2 described, so 8.2 should not build it again. Cancel confirms and shows the credits coming back. Past the cancellation cutoff, the button is replaced with the closed message. A full class says "Class is full". Pull to refresh reloads the list. The chip reloads from the server and pulses when the text changes. The athlete can type an optional note on the class screen; the row sends none. Upcoming classes lists this athlete’s reserved sessions in the loaded window, from the schedule and from their own profile. `cancellationBlock` is on the schedule payload. Group and age eligibility are task 7.3. The roster and the profile meter stay on later tasks.
 
-- [ ] **7.3 — Group and age eligibility**
+- [x] **7.3 — Group and age eligibility**
   - The class stays visible. The schedule row and class detail say why the selected athlete cannot reserve (Flow C2). Reserve rejects that same case. The blocked label is **Not eligible**.
   - A class with no training groups has no group limit (§10). A class that lists groups is open to an athlete in at least one of those groups. The reason names the athlete’s groups and the class’s groups.
   - Age uses the class minimum and maximum. No minimum and no maximum means no age limit. Outside that range is the same **Not eligible** block, and the reason says the age.
   - A new walk-in uses the same checks. Marking someone present does not. Overriding eligibility is Phase 2 (§9).
   - An athlete with no groups is still §16 #2. Do not derive a group from a purchase in this task. Ask before deciding that case.
   - The roster, attendance marks, and the profile meter stay on their own tasks. The §15 eligibility box stays open until this task is done and any remaining gap is noted.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-17. `server/lib/eligibility.js` is the one rule for the schedule, reserve, and a new walk-in. It uses the session’s groups and ages, so a per-date override counts. Ages are inclusive, in completed years on the class date. A class with an age limit and an unreadable date of birth is blocked (`Emma’s age is not on the profile.`). An athlete with no groups counts as Open / All Ages and nothing is saved (§10, §16 #2). On the schedule, the order is Canceled, View only, already reserved (left alone, Cancel still shows), **Not eligible**, then the cutoff, full, and credit reasons. `eligibilityReason` holds the sentences, and the row and class detail show them. Reserve and walk-in return the same sentences as a 409. Marking present does not recheck. Walk-in search returns `notEligible` on each offer. The search row says Not eligible, and the prompt blocks before the add-credits step, so staff are not offered a credit for a walk-in that would fail. There is no override (Phase 2). §15 eligibility box is checked.
 
 
 

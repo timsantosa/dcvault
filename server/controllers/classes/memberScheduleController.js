@@ -5,6 +5,7 @@ const { parseScheduleRange, expandClassOccurrences } = require('../../lib/classS
 const { day } = require('../../lib/dates');
 const { memberScheduleRange, presentMemberSchedule, classStartInstant } = require('../../lib/memberSchedule');
 const { loadExpandedSessions, loadClassGraph } = require('./classesController');
+const { loadEligibilityInput } = require('../../lib/athleteTrainingGroups');
 
 async function getMemberSchedule(req, res, db) {
   try {
@@ -62,8 +63,11 @@ async function getMemberSchedule(req, res, db) {
       }
       allocationsByReservation[row.reservationId].push(row);
     });
+    const eligibility = await loadEligibilityInput(db, profile);
     const permissions = req.user && req.user.permissions;
     const presented = presentMemberSchedule({
+      athlete: eligibility.athlete,
+      trainingGroups: eligibility.trainingGroups,
       sessions: sessions,
       grants: grantRows.map(toGrant),
       allocations: allocationRows.map(toAllocation),

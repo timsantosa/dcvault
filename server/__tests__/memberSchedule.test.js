@@ -303,6 +303,64 @@ describe('presentMemberSchedule', () => {
     expect(presented.sessions[0].blockReason).toBe('Reservations closed 24 hours before start');
   });
 
+  describe('eligibility', () => {
+    const catalog = [
+      { id: 3, key: 'allages', label: 'Open / All Ages' },
+      { id: 4, key: 'elite', label: 'Elite Development' },
+    ];
+    const athlete = { firstName: 'Emma', dob: '2014-01-01', trainingGroups: [] };
+
+    it('blocks an ineligible class with Not eligible and the reason, ahead of credit reasons', () => {
+      const presented = presentMemberSchedule({
+        now: open,
+        grants: [],
+        athlete: athlete,
+        trainingGroups: catalog,
+        sessions: [
+          session({ seriesId: 1, trainingGroupIds: [4] }),
+          session({ seriesId: 2, trainingGroupIds: [3] }),
+          session({ seriesId: 3, minAge: 13 }),
+        ],
+      });
+      expect(presented.sessions.map((item) => item.blockReason)).toEqual([
+        'Not eligible',
+        'Register to reserve',
+        'Not eligible',
+      ]);
+      expect(presented.sessions[0].eligibilityReason).toBe(
+        'Emma is in Open / All Ages. This class is Elite Development.'
+      );
+      expect(presented.sessions[1].eligibilityReason).toBeNull();
+      expect(presented.sessions[2].eligibilityReason).toBe('Emma is 12. This class is for age 13 or older.');
+    });
+
+    it('keeps Canceled and View only first, and leaves a reserved class alone', () => {
+      const presented = presentMemberSchedule({
+        now: open,
+        grants: [grant()],
+        athlete: athlete,
+        trainingGroups: catalog,
+        sessions: [
+          session({ seriesId: 1, trainingGroupIds: [4], status: 'canceled' }),
+          session({ seriesId: 2, trainingGroupIds: [4], isReservable: false }),
+          session({ seriesId: 3, trainingGroupIds: [4] }),
+        ],
+        signups: [{ seriesId: 3, occursOn: '2026-07-20', spotsTaken: 1, reserved: true }],
+      });
+      expect(presented.sessions.map((item) => item.blockReason)).toEqual(['Canceled', 'View only', null]);
+      expect(presented.sessions.map((item) => item.eligibilityReason)).toEqual([null, null, null]);
+    });
+
+    it('skips the check when no athlete is passed', () => {
+      const presented = presentMemberSchedule({
+        now: open,
+        grants: [grant()],
+        sessions: [session({ trainingGroupIds: [4] })],
+      });
+      expect(presented.sessions[0].blockReason).toBeNull();
+    });
+  });
+
   it('keeps a reserved count until start and leaves a paused hold out of it', () => {
     const now = new Date('2026-07-20T18:00:00.000Z');
     const presented = presentMemberSchedule({

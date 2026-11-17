@@ -3,7 +3,7 @@
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Audience:** Client design review (walkthrough)  
 **Status:** Proposed UI for MVP / dark launch — not pixel-final  
-**Last updated:** 2026-11-16  
+**Last updated:** 2026-11-17  
 **Aligned with PRD:** v1.3
 
 This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail, data models, and later-phase features live in the PRD and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree, the **PRD is the source of truth**.
@@ -337,6 +337,8 @@ The class is never silently missing. The member can open it and read why they ca
 │  │     Not eligible            │    │
 │  └─────────────────────────────┘    │
 ```
+
+The row shows the same sentences above its **Not eligible** label. Age uses the class date: `Emma is 12. This class is for ages 14–18.` (or `age 14 or older`, `age 12 or younger`). A class with an age limit and no readable birth date says `Emma’s age is not on the profile.` An athlete with no training group is treated as Open / All Ages here, and the profile still shows no groups. A class this athlete already reserved stays reserved and can be canceled. Walk-in search labels an ineligible athlete **Not eligible**. Picking them shows the reason and only a Close button, with no add-credit step.
 
 
 

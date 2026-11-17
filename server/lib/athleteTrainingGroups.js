@@ -1,7 +1,7 @@
 'use strict';
 
-// Profile training-group ids. Callers load the groups that exist and pass those
-// ids in. This does not read the database.
+// Profile training-group ids. readTrainingGroupIds does not read the database;
+// callers load the groups that exist and pass those ids in.
 
 function readTrainingGroupIds(value, knownIds) {
   if (!Array.isArray(value)) {
@@ -67,6 +67,24 @@ async function trainingGroupsByProfileId(db, profileIds) {
   return grouped;
 }
 
+// Profile row -> { athlete: { firstName, dob, trainingGroups }, trainingGroups }
+// for eligibilityReason. trainingGroups is the whole catalog.
+async function loadEligibilityInput(db, profile) {
+  const groups = await trainingGroupsByProfileId(db, [profile.id]);
+  const rows = await db.tables.TrainingGroups.findAll({
+    attributes: ['id', 'key', 'label'],
+    order: [['id', 'ASC']],
+  });
+  return {
+    athlete: {
+      firstName: profile.firstName,
+      dob: profile.dob,
+      trainingGroups: groups[Number(profile.id)] || [],
+    },
+    trainingGroups: rows.map((row) => ({ id: Number(row.id), key: row.key, label: row.label })),
+  };
+}
+
 function isWholeNumber(value) {
   if (typeof value === 'number') {
     return isFinite(value) && Math.floor(value) === value;
@@ -77,4 +95,5 @@ function isWholeNumber(value) {
 module.exports = {
   readTrainingGroupIds,
   trainingGroupsByProfileId,
+  loadEligibilityInput,
 };

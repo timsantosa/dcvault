@@ -1,6 +1,7 @@
 'use strict';
 
 const { grantBalance, allocateForReservation, seasonOf, resolveSeasonWindow } = require('./creditInventory');
+const { eligibilityReason } = require('./eligibility');
 
 // Check-in rules. Callers load rows and write them. Dates on a class are
 // YYYY-MM-DD in America/New_York. Marking present does not move a credit.
@@ -37,10 +38,11 @@ function decideCheckIn(input) {
 }
 
 // Whether staff may add a walk-in. Input: session, today (YYYY-MM-DD),
-// alreadyReserved, and spotsTaken. Returns { ok:true, creditCost,
-// paymentStatus } or { ok:false, status, message }. Hidden classes are
-// allowed. The reservation cutoff is not applied. A full class, a view-only
-// class, a canceled class, a future date, and an existing signup are rejected.
+// athlete and trainingGroups (see eligibilityReason), alreadyReserved, and
+// spotsTaken. Returns { ok:true, creditCost, paymentStatus } or { ok:false,
+// status, message }. Hidden classes are allowed. The reservation cutoff is not
+// applied. A full class, a view-only class, a canceled class, a future date,
+// an existing signup, and a group or age mismatch are rejected.
 // creditCost is a whole number; 0 means the signup has no credit hold.
 // paymentStatus is 'external' when the class also has a dollar price, because
 // this path does not charge it. The caller allocates and inserts the row.
@@ -57,6 +59,14 @@ function decideWalkIn(input) {
   }
   if (input.alreadyReserved) {
     return reject(409, 'Already reserved.');
+  }
+  const notEligible = eligibilityReason({
+    session: session,
+    athlete: input.athlete,
+    trainingGroups: input.trainingGroups,
+  });
+  if (notEligible) {
+    return reject(409, notEligible);
   }
   if (Number(input.spotsTaken) >= Number(session.capacity)) {
     return reject(409, 'Class is full');

@@ -134,6 +134,34 @@ describe('decideWalkIn', () => {
       today: '2026-08-25',
     }).message).toBe('Check-in is not open yet');
   });
+
+  it('rejects a group or age mismatch before the full-class check', () => {
+    const elite = { id: 4, key: 'elite', label: 'Elite Development' };
+    const allAges = { id: 3, key: 'allages', label: 'Open / All Ages' };
+    const athlete = { firstName: 'Emma', dob: '2014-01-01', trainingGroups: [] };
+    const blocked = walkIn({
+      session: session({ trainingGroupIds: [4] }),
+      athlete: athlete,
+      trainingGroups: [allAges, elite],
+      spotsTaken: 18,
+    });
+    expect(blocked.status).toBe(409);
+    expect(blocked.message).toBe('Emma is in Open / All Ages. This class is Elite Development.');
+    expect(walkIn({
+      session: session({ minAge: 16 }),
+      athlete: athlete,
+      trainingGroups: [allAges, elite],
+    }).message).toBe('Emma is 12. This class is for age 16 or older.');
+    expect(walkIn({
+      session: session({ trainingGroupIds: [3] }),
+      athlete: athlete,
+      trainingGroups: [allAges, elite],
+    }).ok).toBe(true);
+  });
+
+  it('does not recheck eligibility when marking an existing signup present', () => {
+    expect(checkIn({ session: session({ trainingGroupIds: [4], minAge: 99 }) }).ok).toBe(true);
+  });
 });
 
 describe('presentCheckIn', () => {
