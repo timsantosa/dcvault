@@ -4,6 +4,7 @@ const {
   memberScheduleRange,
   classStartInstant,
   presentMemberSchedule,
+  attendanceMark,
 } = require('../lib/memberSchedule');
 const { summarizeCredits, formatCreditChip } = require('../lib/creditInventory');
 
@@ -42,6 +43,43 @@ describe('classStartInstant', () => {
   it('reads the wall clock as America/New_York, including daylight time', () => {
     expect(classStartInstant('2026-01-15', '16:00:00').toISOString()).toBe('2026-01-15T21:00:00.000Z');
     expect(classStartInstant('2026-07-15', '16:00:00').toISOString()).toBe('2026-07-15T20:00:00.000Z');
+  });
+});
+
+describe('attendanceMark', () => {
+  const today = '2026-07-20';
+
+  it('says attended when checked in, even today', () => {
+    expect(attendanceMark(session({ occursOn: today }), { reserved: true, checkedIn: true }, today)).toBe('attended');
+  });
+
+  it('says missed for a past reservation with no check-in', () => {
+    expect(attendanceMark(session({ occursOn: '2026-07-19' }), { reserved: true, checkedIn: false }, today)).toBe('missed');
+  });
+
+  it('says nothing for today or a future date without a check-in', () => {
+    expect(attendanceMark(session({ occursOn: today }), { reserved: true, checkedIn: false }, today)).toBeNull();
+    expect(attendanceMark(session({ occursOn: '2026-07-21' }), { reserved: true, checkedIn: false }, today)).toBeNull();
+  });
+
+  it('says nothing for a canceled class', () => {
+    const canceled = session({ occursOn: '2026-07-19', status: 'canceled' });
+    expect(attendanceMark(canceled, { reserved: true, checkedIn: false }, today)).toBeNull();
+  });
+
+  it('says nothing when this athlete is not reserved', () => {
+    const past = session({ occursOn: '2026-07-19' });
+    expect(attendanceMark(past, { reserved: false, checkedIn: false }, today)).toBeNull();
+    expect(attendanceMark(past, undefined, today)).toBeNull();
+  });
+
+  it('is on the schedule payload', () => {
+    const presented = presentMemberSchedule({
+      now: new Date('2026-07-20T16:00:00.000Z'),
+      sessions: [session({ occursOn: '2026-07-19' }), session({ seriesId: 2, occursOn: '2026-07-19' })],
+      signups: [{ seriesId: 1, occursOn: '2026-07-19', spotsTaken: 1, reserved: true, checkedIn: false }],
+    });
+    expect(presented.sessions.map((row) => row.attendance)).toEqual(['missed', null]);
   });
 });
 

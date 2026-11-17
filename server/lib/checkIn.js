@@ -2,6 +2,7 @@
 
 const { grantBalance, allocateForReservation, seasonOf, resolveSeasonWindow } = require('./creditInventory');
 const { eligibilityReason } = require('./eligibility');
+const { day } = require('./dates');
 
 // Check-in rules. Callers load rows and write them. Dates on a class are
 // YYYY-MM-DD in America/New_York. Marking present does not move a credit.
@@ -231,8 +232,8 @@ function walkInGrantWindow(occursOn) {
   const window = resolveSeasonWindow(seasonOf(date), date);
   const end = new Date(window.expiresAt.getFullYear(), window.expiresAt.getMonth(), window.expiresAt.getDate() - 1);
   return {
-    startsOn: isoDate(window.startsAt),
-    endsOn: isoDate(end),
+    startsOn: day(window.startsAt),
+    endsOn: day(end),
   };
 }
 
@@ -263,14 +264,6 @@ function spentUnlimited(grants, allocations) {
     const grant = grants.find((row) => row.id === allocation.creditGrantId);
     return grant != null && grant.quantity == null;
   });
-}
-
-function isoDate(date) {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  return date.getFullYear() + '-'
-    + (month < 10 ? '0' : '') + month + '-'
-    + (day < 10 ? '0' : '') + day;
 }
 
 function wholeCost(value) {

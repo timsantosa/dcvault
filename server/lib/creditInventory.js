@@ -4,6 +4,8 @@
 // callers persist grants and allocations. Pass `today` / `now` in; nothing here
 // reads the clock or the database.
 
+const { day } = require('./dates');
+
 const SEASONS = ['winter', 'spring', 'summer', 'fall'];
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -548,20 +550,14 @@ function staffPeriods(today) {
       current: season === current,
       label: season === current ? 'End of current quarter' : seasonName(season),
       rangeText: formatMonthDay(window.startsAt) + ' \u2013 ' + formatMonthDay(endsOn),
-      startsOn: formatIsoDate(window.startsAt),
-      endsOn: formatIsoDate(endsOn),
+      startsOn: day(window.startsAt),
+      endsOn: day(endsOn),
     };
   });
 }
 
 function seasonName(season) {
   return season.charAt(0).toUpperCase() + season.slice(1);
-}
-
-function formatIsoDate(date) {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return date.getFullYear() + '-' + month + '-' + day;
 }
 
 function staffWindow(input) {

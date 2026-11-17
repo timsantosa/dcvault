@@ -136,7 +136,7 @@ async function classStartsFor(db, reservations) {
   return starts;
 }
 
-// (reservation rows, profileId) -> [{ seriesId, occursOn, spotsTaken, reserved }].
+// (reservation rows, profileId) -> [{ seriesId, occursOn, spotsTaken, reserved, checkedIn }].
 function signupCounts(rows, profileId) {
   const grouped = {};
   rows.forEach((row) => {
@@ -148,11 +148,13 @@ function signupCounts(rows, profileId) {
         occursOn: occursOn,
         spotsTaken: 0,
         reserved: false,
+        checkedIn: false,
       };
     }
     grouped[key].spotsTaken += 1;
     if (row.athleteProfileId === profileId) {
       grouped[key].reserved = true;
+      grouped[key].checkedIn = row.checkedInAt != null;
     }
   });
   return Object.keys(grouped).map((key) => grouped[key]);

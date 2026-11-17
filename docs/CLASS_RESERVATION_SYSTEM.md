@@ -568,10 +568,11 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Profile displays (current period)
 
+- Shown on the athlete’s **own** profiles when they have `reserve_classes`, and on any profile for staff with `manage_credits`. Not for every profile viewer.
 - **Classes attended** (current quarter)
 - **Classes remaining** — sum across active packages
 - **Reserved** vs remaining, consistent with the Schedule chip
-- **Progress visualization** — semicircle meter (remaining vs total purchased for the displayed period). If a spendable unlimited grant covers the period, show **Unlimited** instead of a fraction.
+- **Progress visualization** — semicircle meter (remaining vs total purchased for the displayed period). If a spendable unlimited grant covers the period, show **Unlimited** instead of a fraction. If no grant covers now, hide the meter and show **No classes this quarter** (attended still shows).
 - **Expiration timing** — `N expire [date]` for the soonest-expiring remaining credits, or `through [date]` when the visible balance is unlimited
 
 
@@ -1064,9 +1065,17 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Join profiles to `trainingGroups` (many groups per profile). Do not add a single `trainingGroup` column. The group rows are seeded in task 4.1.
   - *Completion notes:* 2026-11-16. Join table `athleteProfileTrainingGroups`. Edit Profile shows multi-select chips only with `edit_training_group`. Omitting the field, or sending it without that permission, leaves the links alone. A list replaces them; `[]` clears them. Unknown or duplicate ids are a 400 and change nothing. The group catalog is `GET /mobileapp/user/training-groups` for any signed-in user. Edit Profile and the class form share one picker that loads that list. Check-in and walk-in search show the labels under the name. No group line when none are set. Group and age eligibility are task 7.3. The §16 unset-group fallback stays open. The §15 athlete-profile box stays open until task 11.2.
 
-- [ ] **11.2 — Progress + history UI**
+- [x] **11.2a — Progress meter + schedule attendance marks**
   - Semicircle meter for **current quarter only** (later fallback rules in §10 are not this task).
-  - Quarter stats, `N expire [date]`, reserved vs remaining, history list (adjustments as separate lines), schedule attendance markers.
+  - Quarter stats, `N expire [date]`, reserved vs remaining. Attended / Missed on past schedule rows.
+  - *Completion notes:* 2026-11-17. `GET /mobileapp/user/class-progress` for an owned profile with `reserve_classes`, or any profile with `manage_credits`. Denied callers get the same 404 as schedule. Purchased is the sum of finite grant quantities covering now (staff add/remove included; ended and not-yet-started left out). Attended is check-ins whose `occursOn` falls in the current season window. Unlimited shows the word instead of a fraction. No covering grant → no meter, `No classes this quarter`, attended still shows. Profile section sits under Age/Height/Weight/Pole. Schedule payload adds `attendance` (`attended` / `missed` / null). Class history and Switch Profile `group · N left` stay on 11.2b and 11.2c. The §15 athlete-profile box stays open.
+
+- [ ] **11.2b — Class history**
+  - History list (purchases, staff adjustments as separate lines, attended, missed, credits expired unused), filterable by date range (Flow E3).
+  - *Completion notes:*
+
+- [ ] **11.2c — Switch Profile summary**
+  - Switch Profile rows show training group and `N left` (Flow E+).
   - *Completion notes:*
 
 

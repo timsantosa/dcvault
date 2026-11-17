@@ -96,8 +96,24 @@ function presentSession(session, grants, now, allocations, signup, notEligible) 
     cancellationNote: cancellationNote(session, reserved),
     cancellationBlock: cancellationBlock(session, now, reserved),
     reserved: reserved,
+    attendance: attendanceMark(session, signup, nyDateString(now)),
     hidden: isOff(session.visible),
   };
+}
+
+// 'attended' when checked in. 'missed' when reserved, not checked in, the day has
+// passed, and the class was not canceled. Otherwise null.
+function attendanceMark(session, signup, today) {
+  if (!signup || signup.reserved !== true) {
+    return null;
+  }
+  if (signup.checkedIn === true) {
+    return 'attended';
+  }
+  if (session.status === 'canceled' || session.occursOn >= today) {
+    return null;
+  }
+  return 'missed';
 }
 
 function blockReason(session, grants, now, creditCost, allocations, spotsTaken, reserved, notEligible) {
@@ -331,4 +347,5 @@ module.exports = {
   memberScheduleRange,
   classStartInstant,
   presentMemberSchedule,
+  attendanceMark,
 };

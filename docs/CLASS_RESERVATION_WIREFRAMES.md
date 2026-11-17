@@ -426,7 +426,7 @@ Optional note still exists on class detail (“Working 13' 7" this week”). To 
 
 ## Flow E — Profile: remaining classes, progress, history
 
-**Who:** the athlete (own profile) and anyone who can already view that profile.  
+**Who:** the athlete on their own profiles (`reserve_classes`), and staff with `manage_credits` on any profile. Not every profile viewer.  
 **Where:** existing Athlete Profile tab, new section below the current stats.
 
 ### E1. Profile additions
@@ -463,7 +463,9 @@ Optional note still exists on class detail (“Working 13' 7" this week”). To 
 └─────────────────────────────────────┘
 ```
 
-Semicircle is remaining vs total purchased for the **current** period. “Attended” means checked in, not merely reserved.
+Semicircle is remaining vs total purchased for the **current** period. “Attended” means checked in, not merely reserved. Training group labels appear only when the profile has groups set. **Class history** is task 11.2b (the button is not on the profile until then). **Upcoming classes** already ships from task 7.2.
+
+**Empty state (MVP):** when no finite or unlimited grant covers today, hide the semicircle and show `No classes this quarter`. The attended count and the chip line still show.
 
 **Later (not MVP):** if they are out of this quarter but already bought next quarter, show next quarter’s meter; if they ran out and did not buy next quarter, keep `0 / N` for this quarter; if they have no package this quarter or next, hide the meter. Documented in the PRD so it is not lost.
 
@@ -522,7 +524,7 @@ Filterable list of credit and attendance events for the selected athlete. Staff 
 
 ### E4. Attendance marks on the Schedule (past)
 
-Past rows sit in the same scrolling agenda, dimmed.
+Past rows sit in the same scrolling agenda, dimmed. A past reservation that was checked in says **Attended**. One that was not checked in says **Missed**. A canceled class does not say Missed. Today and future stay **Reserved** until check-in.
 
 ```
 │  TUESDAY, AUG 25                    │
