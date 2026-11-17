@@ -1,5 +1,6 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+import waivers from './waivers'
 const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
@@ -7,6 +8,22 @@ const parseFormValues = apiHelpers.parseFormValues
 // Feature flag: set to false to disable the "select an existing athlete"
 // feature and revert registration to the original blank-form flow.
 const ENABLE_ATHLETE_SELECTOR = true
+
+// "DEFY GRAVITY" photo panel shown beside every registration step.
+const RegHero = () => (
+  <aside className='reg-hero'>
+    <div className='reg-hero__overlay' />
+    <div className='reg-hero__content'>
+      <h1 className='reg-hero__title'>DEFY<br />GRAVITY.</h1>
+      <p className='reg-hero__sub'>Join the elite. Select your training packages below and secure your spot in our upcoming sessions.</p>
+      <ul className='reg-hero__features'>
+        <li><i className='fa fa-check-circle' /> Expert Coaching</li>
+        <li><i className='fa fa-check-circle' /> State-of-the-art Facilities</li>
+        <li><i className='fa fa-check-circle' /> All Skill Levels Welcome</li>
+      </ul>
+    </div>
+  </aside>
+)
 
 class Register extends React.Component {
   constructor (props) {
@@ -37,7 +54,7 @@ class Register extends React.Component {
       })
     } else if (newPageNum === 3) {
       this.setState({
-        currentPage: (<Agreement advance={this.advance.bind(this)} />)
+        currentPage: (<Agreement advance={this.advance.bind(this)} data={this.state.data} />)
       })
     } else if (newPageNum === 4) {
       this.setState({
@@ -141,7 +158,12 @@ class Register extends React.Component {
       return (
         <section id='register' className='reg-redesign'>
           {stepper}
-          {this.state.currentPage}
+          <div className='reg-split'>
+            <RegHero />
+            <div className='reg-main'>
+              {this.state.currentPage}
+            </div>
+          </div>
         </section>
       )
     } else {
@@ -217,6 +239,10 @@ class SelectPackage extends React.Component {
     output.membership = $('input[name="membership"]:checked').val()
     output.fkmembership = $('input[name="fkmembership"]:checked').val()
     output.yesApparel = $('input[name="yesapparel"]:checked').val()
+    // Size picker is always on screen; only send a size if they opted in
+    if (output.yesApparel !== 'yes') {
+      delete output.apparel
+    }
     if (this.state.inviteCode) {
       output.invite = this.state.inviteCode
     }
@@ -263,6 +289,11 @@ class SelectPackage extends React.Component {
 
   adjustOptions () {
     let group = $('input[name="group"]:checked').val()
+    // All class-option lists stay in the DOM, so clear the class choice when
+    // the group changes; otherwise e.g. an All Ages pick would carry over.
+    if (group !== this.state.checkedGroup) {
+      $('input[name="membership"], input[name="fkmembership"]').prop('checked', false)
+    }
     let quarter = $('input[name="quarter"]:checked').val()
     let facility = $('input[name="facility"]:checked').val()
     let month = $('input[name="month"]:checked').val()
@@ -436,23 +467,11 @@ class SelectPackage extends React.Component {
       )
     }
 
-    let showLocation = s.checkedFKMembership || s.checkedMembership || s.checkedGroup === 'plesson' || s.checkedGroup === 'dropin'
+    // Groups that have a class-count choice in the Class Options section
+    let classGroups = ['allages', 'adult', 'fly-kids']
+    let sizesEnabled = s.checkedYesApparel === 'yes'
 
     return (
-      <div className='reg-split'>
-        <aside className='reg-hero'>
-          <div className='reg-hero__overlay' />
-          <div className='reg-hero__content'>
-            <h1 className='reg-hero__title'>DEFY<br />GRAVITY.</h1>
-            <p className='reg-hero__sub'>Join the elite. Select your training packages below and secure your spot in our upcoming sessions.</p>
-            <ul className='reg-hero__features'>
-              <li><i className='fa fa-check-circle' /> Expert Coaching</li>
-              <li><i className='fa fa-check-circle' /> State-of-the-art Facilities</li>
-              <li><i className='fa fa-check-circle' /> All Skill Levels Welcome</li>
-            </ul>
-          </div>
-        </aside>
-
         <div className='reg-form-col'>
           <form id='select-package' className='reg-form'>
 
@@ -469,7 +488,7 @@ class SelectPackage extends React.Component {
             </div>
 
             {/* Training Group */}
-            <div className='reg-section' style={{display: s.checkedSession ? 'block' : 'none'}}>
+            <div className='reg-section'>
               <p className='reg-heading'>Training Group<span className='rd-req'>*</span></p>
               {this.groupCard('fly-kids', 'Fly-Kids (7-11) + Camps', s.checkedGroup === 'fly-kids', true)}
               {this.groupCard('dropin', 'Drop-In', s.checkedGroup === 'dropin', s.showDropIn)}
@@ -492,36 +511,45 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            {/* Class Options — All Ages */}
-            <div className='reg-section' style={{display: s.checkedGroup === 'allages' ? 'block' : 'none'}}>
+            {/* Class Options — always visible. The per-group lists are stacked in
+                one grid cell so the section is always as tall as the longest
+                list, and switching groups doesn't shift the layout. */}
+            <div className='reg-section'>
               <p className='reg-heading'>Class Options<span className='rd-req'>*</span></p>
-              {this.radioRow('membership', '4classes', '4 Classes ($250)')}
-              {this.radioRow('membership', '8classes', '8 Classes ($425)')}
-              {this.radioRow('membership', '15classes', '15 Classes ($575)')}
-              {this.radioRow('membership', '30classes', 'Unlimited Classes ($825)', '- 30-50 depending on training schedule')}
-              <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
-            </div>
+              <div className='reg-stack'>
+                <div className={'reg-stack__layer' + (classGroups.indexOf(s.checkedGroup) === -1 ? '' : ' reg-stack__layer--hidden')}>
+                  <p className='reg-subnote'>{s.checkedGroup ? 'No class options to choose for this training group.' : 'Select a training group above to see class options.'}</p>
+                </div>
 
-            {/* Class Options — Adult */}
-            <div className='reg-section' style={{display: s.checkedGroup === 'adult' ? 'block' : 'none'}}>
-              <p className='reg-heading'>Class Options<span className='rd-req'>*</span></p>
-              {this.radioRow('membership', '2classes', '2 Classes ($100)')}
-              {this.radioRow('membership', '8classes', '8 Classes ($350)')}
-              <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
-            </div>
+                {/* All Ages */}
+                <div className={'reg-stack__layer' + (s.checkedGroup === 'allages' ? '' : ' reg-stack__layer--hidden')}>
+                  {this.radioRow('membership', '4classes', '4 Classes ($250)')}
+                  {this.radioRow('membership', '8classes', '8 Classes ($425)')}
+                  {this.radioRow('membership', '15classes', '15 Classes ($575)')}
+                  {this.radioRow('membership', '30classes', 'Unlimited Classes ($825)', '- 30-50 depending on training schedule')}
+                  <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
+                </div>
 
-            {/* Fly-Kids Options */}
-            <div className='reg-section' style={{display: s.checkedGroup === 'fly-kids' ? 'block' : 'none'}}>
-              <p className='reg-heading'>Fly-Kids Options<span className='rd-req'>*</span></p>
-              <p className='reg-subnote'>Check back next Summer 2026 for Fly-Kids Summer Camp!</p>
-              {this.radioRow('fkmembership', '2classes', '2 Classes ($60)')}
-              {this.radioRow('fkmembership', '8classes', '8 Classes ($200)')}
-              {this.radioRow('fkmembership', '15classes', '15 Classes ($300)')}
-              <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
+                {/* Adult */}
+                <div className={'reg-stack__layer' + (s.checkedGroup === 'adult' ? '' : ' reg-stack__layer--hidden')}>
+                  {this.radioRow('membership', '2classes', '2 Classes ($100)')}
+                  {this.radioRow('membership', '8classes', '8 Classes ($350)')}
+                  <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
+                </div>
+
+                {/* Fly-Kids */}
+                <div className={'reg-stack__layer' + (s.checkedGroup === 'fly-kids' ? '' : ' reg-stack__layer--hidden')}>
+                  <p className='reg-subnote'>Check back next Summer 2026 for Fly-Kids Summer Camp!</p>
+                  {this.radioRow('fkmembership', '2classes', '2 Classes ($60)')}
+                  {this.radioRow('fkmembership', '8classes', '8 Classes ($200)')}
+                  {this.radioRow('fkmembership', '15classes', '15 Classes ($300)')}
+                  <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
+                </div>
+              </div>
             </div>
 
             {/* Preferred Training Location */}
-            <div className='reg-section reg-section--divider' style={{display: showLocation ? 'block' : 'none'}}>
+            <div className='reg-section reg-section--divider'>
               <p className='reg-heading'>Preferred Training Location<span className='rd-req'>*</span></p>
               <div className='reg-option-grid'>
                 {this.optionCard('facility', 'dcv', 'DC Vault', null, s.checkedFacility === 'dcv', {justifyContent: 'center', textAlign: 'center', paddingRight: '16px'})}
@@ -538,7 +566,7 @@ class SelectPackage extends React.Component {
             </div>
 
             {/* Apparel */}
-            <div className='reg-section' style={{display: s.checkedFacility ? 'block' : 'none'}}>
+            <div className='reg-section'>
               <p className='reg-heading'>Apparel<span className='rd-req'>*</span></p>
               <p className='reg-subnote'>Would you like team apparel? DC Vault T-shirts can be purchased for an additional $20 (INCLUDED IN FLY-KIDS CAMP PLEASE SELECT "YES!" AND SIZE).</p>
               <div className='reg-apparel-card'>
@@ -557,32 +585,32 @@ class SelectPackage extends React.Component {
                 </div>
               </div>
 
-              <div style={{display: s.checkedYesApparel === 'yes' ? 'block' : 'none', marginTop: '16px'}}>
+              <div className={'reg-sizes' + (sizesEnabled ? '' : ' reg-sizes--disabled')} style={{marginTop: '16px'}} aria-disabled={!sizesEnabled}>
                 <p className='reg-subnote'>Ask the coach for your shirt at your first class!</p>
                 <p className='reg-field' style={{fontWeight: 700, fontSize: '13px', color: 'var(--rd-ink-soft)', margin: '0 0 6px'}}>Youth</p>
                 <label className='reg-radio'>
-                  <input type='radio' name='apparel' value='yxs' />
+                  <input type='radio' name='apparel' value='yxs' disabled={!sizesEnabled} />
                   <span className='reg-radio__dot' />
                   <span className='reg-radio__label'>XS</span>
                 </label>
                 <p className='reg-field' style={{fontWeight: 700, fontSize: '13px', color: 'var(--rd-ink-soft)', margin: '12px 0 6px'}}>Unisex</p>
                 <label className='reg-radio'>
-                  <input type='radio' name='apparel' value='xs' />
+                  <input type='radio' name='apparel' value='xs' disabled={!sizesEnabled} />
                   <span className='reg-radio__dot' />
                   <span className='reg-radio__label'>XS</span>
                 </label>
                 <label className='reg-radio'>
-                  <input type='radio' name='apparel' value='sm' />
+                  <input type='radio' name='apparel' value='sm' disabled={!sizesEnabled} />
                   <span className='reg-radio__dot' />
                   <span className='reg-radio__label'>S</span>
                 </label>
                 <label className='reg-radio'>
-                  <input type='radio' name='apparel' value='md' />
+                  <input type='radio' name='apparel' value='md' disabled={!sizesEnabled} />
                   <span className='reg-radio__dot' />
                   <span className='reg-radio__label'>M</span>
                 </label>
                 <label className='reg-radio'>
-                  <input type='radio' name='apparel' value='lg' />
+                  <input type='radio' name='apparel' value='lg' disabled={!sizesEnabled} />
                   <span className='reg-radio__dot' />
                   <span className='reg-radio__label'>L</span>
                 </label>
@@ -597,7 +625,6 @@ class SelectPackage extends React.Component {
 
           </form>
         </div>
-      </div>
     )
   }
 }
@@ -976,8 +1003,29 @@ class Agreement extends React.Component {
     super(props)
 
     this.state = {
-      errorText: ''
+      errorText: '',
+      // Pre-select the youth waiver for athletes under 18; they can switch.
+      waiverType: Agreement.isMinor(props.data) ? 'youth' : 'adult',
+      agreed: false
     }
+  }
+
+  // athleteInfo.dob is collected on the previous step as mm/dd/yyyy
+  static isMinor (data) {
+    let dob = data && data.athleteInfo && data.athleteInfo.dob
+    let parts = (dob || '').split('/')
+    if (parts.length !== 3) return false
+    let birth = new Date(parseInt(parts[2], 10), parseInt(parts[0], 10) - 1, parseInt(parts[1], 10))
+    if (isNaN(birth.getTime())) return false
+    let eighteenth = new Date(birth.getFullYear() + 18, birth.getMonth(), birth.getDate())
+    return eighteenth > new Date()
+  }
+
+  selectWaiver (waiverType) {
+    if (waiverType === this.state.waiverType) return
+    this.setState({ waiverType: waiverType })
+    // Start the newly selected waiver from the top
+    if (this.refs.waiverBody) this.refs.waiverBody.scrollTop = 0
   }
 
   formatDate () {
@@ -1007,8 +1055,14 @@ class Agreement extends React.Component {
     })
 
     let output = parseFormValues($('#agreement').serializeArray())
+    delete output.agree
+    output.waiverType = this.state.waiverType
 
-    if (!output.hasOwnProperty('name') || !output.hasOwnProperty('date')) {
+    if (!this.state.agreed) {
+      this.setState({
+        errorText: 'Please confirm that you have read and agree to the waiver'
+      })
+    } else if (!output.hasOwnProperty('name') || !output.hasOwnProperty('date')) {
       this.setState({
         errorText: 'Please fill in all fields'
       })
@@ -1031,28 +1085,84 @@ class Agreement extends React.Component {
       )
     }
 
+    let waiver = waivers[this.state.waiverType]
+
     return (
-      <div className='reg-center'>
+      <div className='reg-form-col'>
         <form id='agreement' className='reg-form'>
-          <p className='reg-form__title'>Waiver Agreement</p>
+          <div className='reg-section'>
+            <p className='reg-heading'>Waiver Agreement<span className='rd-req'>*</span></p>
+            <p className='reg-subnote'>Please read the waiver below in full, then sign to continue.</p>
+          </div>
 
-          <img className='reg-waiver-img' src='../img/forms/adult-comp-1.png' />
-          <img className='reg-waiver-img' src='../img/forms/adult-comp-2.png' />
-          <img className='reg-waiver-img' src='../img/forms/adult-comp-3.png' />
-          <img className='reg-waiver-img' src='../img/forms/youth-comp-1.png' />
-          <img className='reg-waiver-img' src='../img/forms/youth-comp-2.png' />
-          <img className='reg-waiver-img' src='../img/forms/youth-comp-3.png' />
-
-          <p className='reg-subnote' style={{marginTop: '16px'}}>By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's legal guardian) agree with the above waivers. You may <a className='reg-link' href='../files/DC Vault Waiver - Competition.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
-
-          <div className='reg-grid-2'>
-            <div className='reg-field'>
-              <label>Full Name<span className='rd-req'>*</span></label>
-              <input type='text' name='name' />
+          {/* Waiver selector */}
+          <div className='reg-section'>
+            <p className='reg-heading reg-heading--icon'>
+              <img src='../img/register/icon-waiver.svg' width='17.29' height='17.29' alt='' />
+              Select Waiver
+            </p>
+            <div className='reg-option-grid' role='tablist'>
+              {['adult', 'youth'].map((key) => {
+                let w = waivers[key]
+                let selected = this.state.waiverType === key
+                return (
+                  <label key={key} role='tab' aria-selected={selected} className={'reg-option' + (selected ? ' reg-option--selected' : '')}>
+                    <input type='radio' name='waiverType' value={key} checked={selected} onChange={() => this.selectWaiver(key)} />
+                    <span className='reg-option__body'>
+                      <span className='reg-option__title'>{w.tabTitle}</span>
+                      <span className='reg-option__sub'>{w.tabSub}</span>
+                    </span>
+                  </label>
+                )
+              })}
             </div>
-            <div className='reg-field'>
-              <label>Date (mm/dd/yyyy)<span className='rd-req'>*</span></label>
-              <input type='text' name='date' onChange={this.formatDate.bind(this)} />
+          </div>
+
+          {/* Waiver text */}
+          <div className='reg-section'>
+            <div className='reg-waiver' role='tabpanel'>
+              <div className='reg-waiver__bar'>
+                <span className='reg-waiver__bar-title'>{waiver.title}</span>
+                <span className='reg-waiver__badge'>Scroll to read</span>
+              </div>
+              <div className='reg-waiver__body' ref='waiverBody' tabIndex='0'>
+                <h4 className='reg-waiver__heading'>{waiver.title}</h4>
+                {waiver.subtitle ? (<p className='reg-waiver__subtitle'>{waiver.subtitle}</p>) : ''}
+                {waiver.sections.map((section, i) => (
+                  <div key={waiver.key + i} className={'reg-waiver__section' + (section.emphasis ? ' reg-waiver__section--emphasis' : '')}>
+                    {section.heading ? (<h4 className='reg-waiver__heading'>{section.heading}</h4>) : ''}
+                    {section.paragraphs.map((text, j) => (<p key={j}>{text}</p>))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className='reg-section'>
+            <div className='reg-callout'>
+              By signing below and clicking ‘Continue’ you agree that you (the adult athlete or the athlete’s legal guardian) agree with the above waivers. You may <a className='reg-link' href='../files/DC Vault Waiver - Competition.pdf' target='_blank'>click here</a> to view the waivers as a PDF.
+            </div>
+          </div>
+
+          {/* Signature */}
+          <div className='reg-section'>
+            <p className='reg-heading reg-heading--icon'>
+              <img src='../img/register/icon-signature.svg' width='17.29' height='17.29' alt='' />
+              Signature
+            </p>
+            <label className={'reg-agree' + (this.state.agreed ? ' reg-agree--checked' : '')}>
+              <input type='checkbox' name='agree' checked={this.state.agreed} onChange={(e) => this.setState({ agreed: e.target.checked })} />
+              <span>I have read and agree to the waiver above.</span>
+            </label>
+            <div className='reg-grid-2'>
+              <div className='reg-field'>
+                <label>{this.state.waiverType === 'youth' ? 'Guardian Full Name' : 'Full Name'}<span className='rd-req'>*</span></label>
+                <input type='text' name='name' placeholder='Full name' />
+              </div>
+              <div className='reg-field'>
+                <label>Date (mm/dd/yyyy)<span className='rd-req'>*</span></label>
+                <input type='text' name='date' placeholder='mm/dd/yyyy' onChange={this.formatDate.bind(this)} />
+              </div>
             </div>
           </div>
 

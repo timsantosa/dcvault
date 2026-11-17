@@ -184,12 +184,17 @@
    -------------------------------------------------------------------------- */
 .reg-split {
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   min-height: 70vh;
 }
 
+/* Hero is pinned to the viewport (below the 88px fixed navbar) so its size —
+   and therefore the cover-scaled photo — doesn't change as form sections
+   expand/collapse or as the user moves between steps. */
 .reg-hero {
-  position: relative;
+  position: sticky;
+  top: 88px;
+  height: calc(100vh - 88px);
   flex: 0 0 40%;
   max-width: 40%;
   background-color: var(--rd-ink);
@@ -270,12 +275,45 @@
   text-align: center;
 }
 
-.reg-form-col {
+/* Overlapping layers in one grid cell: the container is always as tall as the
+   tallest layer, so swapping which layer is visible never shifts the layout. */
+.reg-stack {
+  display: grid;
+}
+
+.reg-stack__layer {
+  grid-area: 1 / 1;
+}
+
+.reg-stack__layer--hidden {
+  visibility: hidden;
+}
+
+/* Shirt sizes stay on screen but are inactive until "Yes!" is chosen */
+.reg-sizes {
+  transition: opacity 0.15s ease;
+}
+
+.reg-sizes--disabled {
+  opacity: 0.4;
+}
+
+.reg-sizes--disabled .reg-radio {
+  cursor: not-allowed;
+}
+
+/* Right-hand column that holds whichever step is active */
+.reg-main {
   flex: 1 1 60%;
   max-width: 60%;
+  min-width: 0;
+  align-self: stretch;
+}
+
+.reg-form-col {
   background-color: #ffffff;
   padding: 64px 96px;
-  overflow: auto;
+  min-height: 100%;
 }
 
 /* Centered form (steps that don't use the hero) */
@@ -666,12 +704,138 @@
   color: var(--rd-red);
 }
 
-.reg-waiver-img {
-  width: 100%;
-  height: auto;
-  margin-top: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 6px;
+/* --------------------------------------------------------------------------
+   Waiver Agreement step
+   -------------------------------------------------------------------------- */
+.reg-heading--icon {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.reg-heading--icon img {
+  flex: 0 0 auto;
+}
+
+.reg-waiver {
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.reg-waiver__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 45px;
+  padding: 10px 18px;
+  background-color: var(--rd-surface);
+  border-bottom: 2px solid var(--rd-border);
+}
+
+.reg-waiver__bar-title {
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 17px;
+  letter-spacing: 0.65px;
+  text-transform: uppercase;
+  color: #111111;
+}
+
+.reg-waiver__badge {
+  flex: 0 0 auto;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 18px;
+  color: #166534;
+  background-color: #dcfce7;
+  border-radius: 4px;
+  padding: 2px 10px;
+}
+
+.reg-waiver__body {
+  height: 699px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 22px 23px 8px;
+  font-family: var(--rd-font-body);
+  font-size: 12px;
+  line-height: 21px;
+  color: #2b2f36;
+}
+
+.reg-waiver__body:focus {
+  outline: 2px solid var(--rd-red-shadow);
+  outline-offset: -2px;
+}
+
+.reg-waiver__heading {
+  font-family: var(--rd-font-display);
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 0.69px;
+  text-transform: uppercase;
+  color: var(--rd-ink);
+  margin: 0 0 6px 0;
+}
+
+.reg-waiver__subtitle {
+  font-weight: 700;
+  color: var(--rd-ink);
+  margin: -2px 0 12px 0;
+}
+
+.reg-waiver__section {
+  margin-bottom: 14px;
+}
+
+.reg-waiver__section p {
+  margin: 0 0 10px 0;
+}
+
+.reg-waiver__section--emphasis p {
+  font-weight: 700;
+  color: #111111;
+}
+
+/* "I have read and agree" checkbox row */
+.reg-agree {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 14px 16px;
+  margin: 0 0 20px 0;
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 12.4px;
+  line-height: 18.5px;
+  letter-spacing: 0.74px;
+  text-transform: uppercase;
+  color: #111111;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.reg-agree input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--rd-red);
+  cursor: pointer;
+}
+
+.reg-agree--checked {
+  border-color: var(--rd-red);
+  background-color: var(--rd-red-tint);
 }
 
 .reg-error {
@@ -846,13 +1010,18 @@
   .reg-split {
     flex-direction: column;
   }
+  .reg-split {
+    align-items: stretch;
+  }
   .reg-hero,
-  .reg-form-col {
+  .reg-main {
     flex: 1 1 100%;
     max-width: 100%;
   }
   .reg-hero {
-    min-height: 320px;
+    position: relative;
+    top: auto;
+    height: 320px;
   }
   .reg-hero__content {
     padding: 48px;
