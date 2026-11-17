@@ -152,7 +152,9 @@ class AthleteInfo extends React.Component {
             errorText: []
         })
 
-        let required = ['fname', 'lname', 'email', 'dob', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division']
+        // 'age' is labeled required on the form; it must be checked here, before
+        // payment — a blank age used to fail /event/finalize after PayPal charged.
+        let required = ['fname', 'lname', 'email', 'dob', 'age', 'pr', 'team', 'emergency-contact', 'emergency-phone', 'emergency-relation', 'gender', 'state', 'division']
         let complete = true
 
         let output = parseFormValues($('#event-athlete-info').serializeArray())
@@ -183,6 +185,15 @@ class AthleteInfo extends React.Component {
         if (output.dob.length !== 0 && output.dob.length !== 10) {
             let errorText = this.state.errorText
             errorText.push('Please provide a valid date of birth (MM/DD/YYYY)')
+            this.setState({
+                errorText: errorText
+            })
+            complete = false
+        }
+
+        if (output.age && output.age.length !== 0 && !(parseInt(output.age, 10) > 0)) {
+            let errorText = this.state.errorText
+            errorText.push('Please provide a valid age')
             this.setState({
                 errorText: errorText
             })
@@ -871,30 +882,48 @@ class Confirmation extends React.Component {
         super(props)
 
         let athleteEmail = this.props.data.athleteInfo.email
+        let paymentId = this.props.data['event-payment'] ? this.props.data['event-payment'].paymentId : 'unknown'
 
         this.state = {
             title: 'Loading...',
-            message: 'Please wait, your purchase is being processed'
+            message: 'Please wait, your purchase is being processed',
+            paymentId: paymentId
         }
 
         apiHelpers.finalizeEventPayment(this.props.data)
             .then((response) => {
-                if (!response.data.ok) {
+                if (!response.data || !response.data.ok) {
+                    console.error('Payment finalization failed:', response.data)
                     this.setState({
                         title: 'Uh-oh...',
-                        message: 'There was an error storing your payment information. Please email it@dcvault.com to verify that your payment went through, or recieve help to fix the issue if not.'
+                        message: 'There was an error storing your payment information. Your payment was processed by PayPal. Please contact events@dcvault.org with your name, email, and the reference number below to complete your registration. We apologize for the inconvenience!'
                     })
                 } else {
+                    console.log('Payment successfully finalized, sending confirmation email...')
                     this.setState({
                         title: 'Success!',
                         message: 'Please check your email for Confirmation and Event information. Thank you!'
                     })
 
-                    //Send the athlete a confirmation email
+                    // Send the athlete a confirmation email and handle errors gracefully
                     if (apiHelpers.validateEmail(athleteEmail)) {
                         apiHelpers.sendDMVEventConfirmationEmail(athleteEmail, this.props.data)
+                            .then(() => {
+                                console.log('Confirmation email sent successfully to', athleteEmail)
+                            })
+                            .catch((emailError) => {
+                                console.error('Email sending failed (but registration was saved):', emailError)
+                                // Don't show error to user - registration is saved, this is just the notification
+                            })
                     }
                 }
+            })
+            .catch((error) => {
+                console.error('Network or API error during payment finalization:', error)
+                this.setState({
+                    title: 'Network Error',
+                    message: 'There was a network error while processing your registration. Your payment was received by PayPal. Please contact events@dcvault.org with your name and email to verify your registration. Reference ID: ' + paymentId
+                })
             })
     }
 

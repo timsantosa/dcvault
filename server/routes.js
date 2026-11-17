@@ -531,11 +531,19 @@ module.exports = (app, db) => {
                 return res.status(400).send({ok: false, message: 'missing purchase details'})
             }
 
-            const event_athlete = req.body.purchaseInfo.athleteInfo
+            const purchaseInfo = req.body.purchaseInfo
+            const event_athlete = purchaseInfo.athleteInfo
+            const payment = purchaseInfo['event-payment'] || {}
             const ageInt = parseInt(event_athlete.age, 10)
 
-            if (event_athlete.age === '' || event_athlete.age == null || isNaN(ageInt)) {
-                return res.status(400).send({ok: false, message: 'invalid or missing age'})
+            // This runs AFTER PayPal has already charged the customer, so never
+            // reject here over a bad field — save what we have and log it.
+            // (A blank age previously caused paid registrations to be lost.)
+            if (isNaN(ageInt)) {
+                console.warn('Event finalize: missing/invalid age, saving with null age', {
+                    paymentId: payment.paymentId,
+                    age: event_athlete.age
+                })
             }
 
             const athleteData = {
@@ -554,23 +562,35 @@ module.exports = (app, db) => {
                 division: event_athlete.division,
                 accomplishments: event_athlete.accomplishments,
                 dates: event_athlete.dates1,
-                age: ageInt
+                age: isNaN(ageInt) ? null : ageInt
             }
 
-            await db.tables.EventAthletes.create(athleteData)
+            const athleteRecord = await db.tables.EventAthletes.create(athleteData)
 
-            const purchaseInfo = req.body.purchaseInfo
-            await db.tables.EventPurchases.create({
-                waiverSignatory: purchaseInfo.agreement.name,
-                waiverDate: purchaseInfo.agreement.date,
-                paymentId: purchaseInfo['event-payment'].paymentId,
-                payerId: purchaseInfo['event-payment'].payerId,
+            const purchaseRecord = await db.tables.EventPurchases.create({
+                waiverSignatory: purchaseInfo.agreement ? purchaseInfo.agreement.name : 'Not provided',
+                waiverDate: purchaseInfo.agreement ? purchaseInfo.agreement.date : null,
+                paymentId: payment.paymentId || null,
+                payerId: payment.payerId || null,
                 athlete: event_athlete.fname + event_athlete.lname
             })
+            console.log('Event finalize saved:', {eventAthleteId: athleteRecord.id, eventPurchaseId: purchaseRecord.id, paymentId: payment.paymentId})
 
-            res.send({ok: true, message: 'purchase record saved'})
+            // Confirmation email is sent separately by the client via /event/email
+            res.send({ok: true, message: 'purchase record saved', athleteId: athleteRecord.id, purchaseId: purchaseRecord.id})
         } catch (error) {
-            console.error('Event Finalize Error:', error)
+            const info = req.body.purchaseInfo || {}
+            const athleteInfo = info.athleteInfo || {}
+            const payment = info['event-payment'] || {}
+            // Log enough to manually recover a paid registration
+            console.error('Error in /event/finalize:', {
+                athleteName: athleteInfo.fname + ' ' + athleteInfo.lname,
+                email: athleteInfo.email,
+                paymentId: payment.paymentId,
+                payerId: payment.payerId,
+                errorMessage: error.message,
+                errorStack: error.stack
+            })
             res.status(500).send({ok: false, message: 'a db error has occurred', error: error.message})
         }
     })
@@ -601,7 +621,10 @@ module.exports = (app, db) => {
       emailData = emailData.replace(/,/g, "<br>")
       console.log(emailData)
         if (email) {
+            // sendEventConfirmationEmails returns a promise; an unhandled
+            // rejection here would crash the server, so log failures instead.
             helpers.sendEventConfirmationEmails(email, emailData)
+                .catch((err) => console.error('Event confirmation email failed:', email, err.message))
             res.send({ok: true, message: 'email sent'})
         } else {
             res.status(400).send({ok: false, message: 'no or bad email'})
@@ -632,7 +655,9 @@ module.exports = (app, db) => {
     emailData = emailData.replace(/,/g, "<br>")
     console.log(emailData)
       if (email) {
+          // Returns a promise; log failures rather than crash on an unhandled rejection
           helpers.sendDMVEventConfirmationEmails(email, emailData, event_athlete.dates1)
+              .catch((err) => console.error('DMV event confirmation email failed:', email, err.message))
           res.send({ok: true, message: 'email sent'})
       } else {
           res.status(400).send({ok: false, message: 'no or bad email'})
