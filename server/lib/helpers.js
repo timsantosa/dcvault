@@ -340,41 +340,51 @@ const getEventEmailContent = (dates) => {
 };
 
 module.exports.sendEventConfirmationEmails = (email, emailData) => {
-  let mailOptions = {
-    from: '"DC Vault" <' + config.email.username + '>', // sender address
-    subject: 'DC Vault Event Registration Confirmation', // Subject line
-    to: email,
-    html: '<p>Thank you for registering for the event!</p>\
-      <p>Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org.</p>\
-      <p>Athlete Information:</p>\
-      <p>' + emailData + '</p>'
-  }
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log(error)
+  return new Promise((resolve, reject) => {
+    let mailOptions = {
+      from: '"DC Vault" <' + config.email.username + '>', // sender address
+      subject: 'DC Vault Event Registration Confirmation', // Subject line
+      to: email,
+      html: '<p>Thank you for registering for the event!</p>\
+        <p>Please see the general info below and let us know if you have questions by emailing us at events@dcvault.org.</p>\
+        <p>Athlete Information:</p>\
+        <p>' + emailData + '</p>'
     }
-    console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Event confirmation email failed for', email, ':', error)
+        reject(error)
+      } else {
+        console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+        resolve(info)
+      }
+    })
   })
 }
 
 module.exports.sendDMVEventConfirmationEmails = (email, emailData, dates) => {
-  let eventContent = getEventEmailContent(dates);
-  const formattedAthleteInfo = formatAthleteData(emailData);
+  return new Promise((resolve, reject) => {
+    let eventContent = getEventEmailContent(dates);
+    const formattedAthleteInfo = formatAthleteData(emailData);
 
-  
-  let mailOptions = {
-    from: `"DC Vault" <${config.email.username}>`,
-    to: [email, "events@dcvault.org"],
-    subject: "Event Registration Confirmation",
-    html: `<p>${eventContent}</p><br>${formattedAthleteInfo}`
-  };
+    
+    let mailOptions = {
+      from: `"DC Vault" <${config.email.username}>`,
+      to: [email, "events@dcvault.org"],
+      subject: "Event Registration Confirmation",
+      html: `<p>${eventContent}</p><br>${formattedAthleteInfo}`
+    };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log(error)
-    }
-    console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('DMV event confirmation email failed for', email, ':', error)
+        reject(error)
+      } else {
+        console.log('Message %s sent to %s response: %s', info.messageId, email, info.response)
+        resolve(info)
+      }
+    })
   })
 }
 
