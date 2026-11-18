@@ -122,7 +122,7 @@ These are the screens a beta athlete (or a parent switching into that athlete) u
 
 Replaces the current Google Calendar view **only** for beta users. Same tab, same header, same expandable month.
 
-There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past rows are dimmed. About the **past 2 weeks** load by default; older attendance lives under Profile → Class history.
+There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past rows are dimmed. About the **past 2 weeks** load by default; older attendance is Class history, opened by tapping the progress block on the profile.
 
 ```
 ┌─────────────────────────────────────┐
@@ -457,13 +457,12 @@ Optional note still exists on class detail (“Working 13' 7" this week”). To 
 │  4 expire Sep 30                    │
 │                                     │
 │  [ Upcoming classes ]               │
-│  [ Class history     ]              │
 │                                     │
 │  (existing medals, records, meets)  │
 └─────────────────────────────────────┘
 ```
 
-Semicircle is remaining vs total purchased for the **current** period. “Attended” means checked in, not merely reserved. Training group labels appear only when the profile has groups set. **Class history** is task 11.2b (the button is not on the profile until then). **Upcoming classes** already ships from task 7.2.
+Semicircle is remaining vs total purchased for the **current** period. “Attended” means checked in, not merely reserved. Training group labels appear only when the profile has groups set. Tapping the quarter block opens **Class history** (Flow E3). **Upcoming classes** already ships from task 7.2.
 
 **Empty state (MVP):** when no finite or unlimited grant covers today, hide the semicircle and show `No classes this quarter`. The attended count and the chip line still show.
 
@@ -494,13 +493,13 @@ A simple list of this athlete’s reservations — same cancel rules as the Sche
 
 ### E3. Class history
 
-Filterable list of credit and attendance events for the selected athlete. Staff credit adjustments show as their **own lines** (they are new package records, not silent edits of the original purchase).
+Opened by tapping the progress block. Newest first. Staff credit adjustments show as their **own lines** (they are new package records, not silent edits of the original purchase). The header filter icon opens the same slide-out shell as the jumps log. Inside: **Current Quarter**, the previous eight quarters, and a custom date range. The icon tints when the range is not the current quarter. A line under the header names the range.
 
 ```
 ┌─────────────────────────────────────┐
-│  ←         Class history            │
+│  ←         Class history     Filter │
 ├─────────────────────────────────────┤
-│  This period ▾                      │
+│  Current Quarter                    │
 │                                     │
 │  Aug 25  Open Vault                 │
 │          Attended                   │
@@ -513,12 +512,14 @@ Filterable list of credit and attendance events for the selected athlete. Staff 
 │          +1 · exp Sep 30            │
 │                                     │
 │  Aug 1   Quarterly package          │
-│          +16 credits · exp Sep 30   │
+│          +16 · exp Sep 30           │
 │                                     │
 │  Jun 30  Unused credits expired     │
 │          −2                         │
 └─────────────────────────────────────┘
 ```
+
+Credit lines use the inventory text (`+16 · exp Sep 30`). A canceled class does not say Missed. A class that was later removed still lists the visit, under the series name, or `Class` when that series is gone.
 
 **Talking point:** PDF/CSV export is later. MVP is this in-app list.
 

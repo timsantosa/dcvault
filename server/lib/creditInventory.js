@@ -691,4 +691,5 @@ module.exports = {
   summarizeCredits,
   formatCreditChip,
   formatHistoryLine,
+  lastInclusiveDay,
 };

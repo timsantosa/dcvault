@@ -348,4 +348,5 @@ module.exports = {
   classStartInstant,
   presentMemberSchedule,
   attendanceMark,
+  nyDateString,
 };
