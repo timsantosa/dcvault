@@ -145,48 +145,102 @@ module.exports.resetPass = (password, email) => {
 module.exports.sendConfirmationEmails = (email,athleteInfo) => {
   let mailOptions = {
     from: '"DC Vault" <' + config.email.username + '>', // sender address
-    subject: 'Welcome to DC Vault', // Subject line
+    subject: 'Welcome to DC Vault!', // Subject line
     to: email,
-    html: '<p>Thank you for registering with DC Vault. Please review the content below closely and let us know if you have any questions.</p>\
-      <h3>CLASS RESERVATION APP:</h3>\
-      <p>To help you keep track of the training package you signed up for, we have implemented a new reservation app called Zenplanner. This will help you pre-select the practice times you want to attend each week, keep track of your vault package allocation, track performance metrics, and more! Shortly after you register (usually within 24 hours) you will receive instructions on how to login to your free Zen Planner account. Once you have logged in, you will be able to use your Zen Planner App to reserve the specific class times that you wish to attend. </p>\
-      <p>Classes must be reserved 24 hours or more in advance as the classes are locked 24 hours prior to the scheduled start times. If you arrive without having reserved the class time slot, you will not be able to participate in that class. Classes are limited in size, so reserve all of the classes you intended to take right away. If you need to cancel or change a class time later on, you can do so as long as it is 24 hours or more prior to the start of your preferred class. If a class you wish to attend is Full, you can add yourself to the "waitlist" and if an athlete cancels their slot, you will be added IF you are next in the waiting queue.</p>\
-      <p>Note - If you do not attend a class you have reserved, it counts against your class allotment, so be sure to cancel a class if you aren’t going to attend. All classes must be reserved within the terms of your class package (1 per week, 2 per week, etc) and the Zen Planner app will limit you to these parameters.</p>\
-      <h3>SCHEDULE</h3>\
-      <p>Please refer to our online calendar for your training schedule. Your group dates, times and location for the upcoming training period are posted on this schedule. Any changes due to scheduling conflicts, weather or other unforeseen circumstances will be posted here as well. Please be sure to check the schedule prior to your training sessions at all times.</p> \
-      <h3>WHAT TO EXPECT</h3>\
-      <p>If this is your first session, welcome aboard! When you arrive to your first session, we will introduce you to everyone and let you know who you will be working with to get you acquainted with the program. You will be shown the basics and instructed through every step of the process. If this is your first experience with vaulting, relax, we move very slow, with easy to execute fundamental movements and work you up from there one step at a time. During a typical training session, we will go through a warmup and equipment setup, before we move into the lesson.</p>\
-      <h3>WHAT TO BRING</h3>\
-      <p>Dress in comfortable athletic clothing. Bring regular running shoes and some water to drink. If you are training at one of our outdoor locations (like DCV), bring sunblock as well as extra water.</p>\
-      <h3>LOCATION</h3>\
-      You selected a specific training location when you registered. This is your assigned group location. Address information can be found on our website in the Facilities section</p>\
-      <h3>WORKOUTS (attached)</h3>\
-      <p>If you want to progress as quickly as possible, conditioning is very important. We\'ve attached our general team conditioning program. It\'s a 12 week program for our athletes to follow outside of scheduled practices. We strongly encourage every athlete to complete this workout in total. If you do, your progress will accelerate significantly.</p>\
-      <h3>CANCELLATIONS / WEATHER POLICY</h3>\
-      <p>If any change is made to a scheduled class time, it is posted on the DCVault.com website calendar immediately. Any change or cancellation will be posted a minimum of 1-hour prior to the class time, but normally 2-or more-hours before the scheduled class time.</p>\
-      <p>We NEVER “intend” to cancel or change a class time, and therefore cannot send a notification that we are “planning” on cancelling a class. We watch weather radar, etc. up to the moment that it becomes explicitly clear that we cannot hold class. At that time we update the website calendar and - when possible - send out an email notification as well. Any inquiries regarding scheduling changes will be referred to the website calendar.</p>\
-      <p>Note - The Zen Planner app is NOT where you check for class cancellations. Refer to the website calendar.</p>\
-      <h3>MAKEUP SESSIONS</h3>\
-      <p>Makeup sessions are only permitted for athletes who were scheduled to attend a class that was cancelled by the DC Vault staff. If an athlete is scheduled to be at class and misses a regularly scheduled class that is held, it will count against their class package allotment. Exceptions are made for injuries with appropriate doctors notice.</p>\
-      <h3>SCHEDULE</h3>\
-      <p>For specific schedule details on a current or upcoming training course, please consult the DC Vault training calendar. Look for the training group of interest and click on the time slot to view details (date, time, location, course duration, etc…). The schedule for an upcoming training quarter is typically posted one month in advance.</p>\
-      <h3>TRAINING LOCATION</h3>\
-      <p>See Website Schedule.</p>\
-      <h3>EQUIPMENT</h3>\
-      <p>DC Vault provides all needed equipment, poles, etc. during scheduled training sessions.</p>\
-      <h3>SPIKES</h3>\
-      <p>Spikes are not used during practice sessions unless it is raining and the coaching staff allows it for traction. Absolutely no spikes longer than 1/8” are permitted at the DC Vault Home Training Facility located at 2100 East Capitol street NE, DC!</p>\
-      <h3>CONTACT</h3>\
-      <p>If you have any questions that have not been answered, please email us, at <a href="mailto:dcvault@dcvault.org">dcvault@dcvault.org</a>\
-      <p>Again, thank you for joining us, and we look forward to seeing you soon.</p>',
+    html: `<p>Thank you for registering with DC Vault. Please review the content below and let us know if you have any questions.</p>
+      <h2>Please install the DC VAULT APP at this time!</h2>
+      <h2>You will use the DC Vault app to:</h2>
+      <ul>
+        <li>Reserve classes</li>
+        <li>Track your remaining classes</li>
+        <li>View the training schedule</li>
+        <li>Log jump data during practice, including:
+          <ul>
+            <li>Pole</li>
+            <li>Run</li>
+            <li>Step</li>
+            <li>Performance metrics</li>
+          </ul>
+        </li>
+        <li>View your ranking within the organization and compare your results against:
+          <ul>
+            <li>Active or all-time athletes</li>
+            <li>Male or female athletes</li>
+          </ul>
+        </li>
+        <li>Receive notifications and announcements, including:
+          <ul>
+            <li>Weather updates</li>
+            <li>Schedule changes</li>
+            <li>Class cancellations</li>
+            <li>Event notifications</li>
+          </ul>
+        </li>
+      </ul>
+      <h2>App installation and setup instructions:</h2>
+      <ol>
+        <li>Download the <strong>DC Vault app</strong> from the <a href="https://play.google.com/store/apps/details?id=com.dcvault.dcvault">Google Play Store</a> or <a href="https://apps.apple.com/us/app/dc-vault/id6738288506">Apple App Store</a>.</li>
+        <li>Log in using your <strong>DC Vault website credentials</strong>.</li>
+        <li>Create an Athlete Profile (if you do not already have one):
+          <ul>
+            <li>Tap the <strong>middle tab</strong> and select <strong>Create Profile</strong>.</li>
+            <li>Ensure the profile is linked to the athlete you registered by selecting the appropriate <strong>Associated Athlete</strong>.</li>
+          </ul>
+        </li>
+        <li>Reserve your class slots:
+          <ul>
+            <li>Open the <strong>Schedule</strong> tab to view available classes.</li>
+            <li>Tap <strong>Reserve</strong> to save your spot.</li>
+            <li>Reservations, cancellations, and changes can only be made <strong><u>more than</u> 24 hours before a class begins</strong>.</li>
+          </ul>
+        </li>
+      </ol>
+      <h2>Families with Multiple Athletes</h2>
+      <p>If your DC Vault account includes more than one athlete (such as multiple children or a spouse), you can create a separate Athlete Profile for each person.</p>
+      <ol>
+        <li>Each athlete must be registered for training on <strong>DCVault.com</strong> <u>at least once under the same account</u>.</li>
+        <li>Open the <strong>More Menu</strong> (three dots in the upper-right corner).</li>
+        <li>Under <strong>Account</strong>, select <strong>Create New Profile</strong>.</li>
+        <li>Associate the new profile with the corresponding athlete registered on the website.</li>
+        <li>Switch between profiles at any time by selecting the <strong>More Menu</strong> and choosing <strong>Switch Profile</strong>.
+          <ul>
+            <li>You can also switch profiles directly from the <strong>Schedule</strong> screen when reserving classes.</li>
+          </ul>
+        </li>
+      </ol>
+      <h3>Shared Family Access</h3>
+      <p>Multiple family members can be logged into the same profile simultaneously, allowing parents to monitor their athlete's account. All logged-in devices will receive the same information, including:</p>
+      <ul>
+        <li>Messages from coaching staff</li>
+        <li>Weather updates and class cancellation notices</li>
+        <li>Event announcements</li>
+        <li>Registration reminders</li>
+        <li>Performance announcements, including:
+          <ul>
+            <li>New personal records</li>
+            <li>Championship medal performances</li>
+            <li>School records, facility records, and similar achievements</li>
+          </ul>
+        </li>
+      </ul>
+      <h2>FIRST PRACTICE?</h2>
+      <h4>WHAT TO EXPECT</h4>
+      <p>If this is your first session, welcome aboard! When you arrive to your first session, we will introduce you to everyone and let you know who you will be working with to get you acquainted with the program. You will be shown the basics and instructed through every step of the process. If this is your first experience with vaulting, relax, we move very slowly, with easy to execute fundamental movements and work you up from there one step at a time. During a typical training session, we will go through a warmup and equipment setup, before we move into the lesson.</p>
+      <h4>WHAT TO BRING</h4>
+      <p>Dress in comfortable athletic clothing. Bring regular running shoes and some water to drink. If you are training at one of our outdoor locations (like DCV), bring sunblock as well as extra water.</p>
+      <h4>LOCATION</h4>
+      <p>Be sure to check the training location of each class on the schedule so you don't go to the wrong facility. Address information can be found on our website home page in the Facilities section.</p>
+      <h4>WORKOUTS (attached)</h4>
+      <p>If you want to progress as quickly as possible, conditioning is very important. We've attached our general team conditioning program. It's a 12 week program for our athletes to follow outside of scheduled practices. We strongly encourage every athlete to complete this workout in total. If you do, your progress will accelerate significantly.</p>
+      <h4>MAKEUP SESSIONS</h4>
+      <p>Makeup sessions are only permitted for athletes who were scheduled to attend a class that was cancelled by the DC Vault staff. If an athlete is scheduled to be at class and misses a regularly scheduled class that is held, it will count against their class package allotment. Exceptions are made for injuries with appropriate doctor's notice.</p>
+      <p><strong>Please consult the IMPORTANT INFORMATION &amp; POLICIES</strong> section of the DC Vault website for additional information, including class cancellation and weather policies, makeup sessions and more.</p>
+      <p>Let us know if you have questions!</p>
+      <p>Again, thank you for joining us, and we look forward to seeing you soon!</p>`,
     attachments: [
       {
         filename: 'DC Vault Quarterly Pole Vault Conditioning L-I_L-II.pdf',
         path: path.join(__dirname, '/../files/quarterly-conditioning.pdf')
-      },
-      {
-        filename: 'DC Vault Parking Pass.pdf',
-        path: path.join(__dirname, '/../files/parking-pass.pdf')
       }
     ]
   }

@@ -1,5 +1,6 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
+import waivers from './waivers'
 const $ = window.$
 
 const parseFormValues = apiHelpers.parseFormValues
@@ -7,6 +8,53 @@ const parseFormValues = apiHelpers.parseFormValues
 // Feature flag: set to false to disable the "select an existing athlete"
 // feature and revert registration to the original blank-form flow.
 const ENABLE_ATHLETE_SELECTOR = true
+
+// Pricing shared by the Packages step text and the Payment step charge.
+const APPAREL_PRICE = 35
+const PROCESSING_FEE_RATE = 0.03
+
+// Display labels for the Payment step order summary
+const LABELS = {
+  quarter: {spring: 'Spring', summer: 'Summer', fall: 'Fall', winter: 'Winter'},
+  group: {
+    'fly-kids': 'Fly-Kids (7-11) + Camps',
+    'dropin': 'Drop-In',
+    'adult': 'Adult (21+)',
+    'plesson': 'Private Lesson',
+    'allages': 'All Ages (12+ Beginner thru Advanced)',
+    'emerging-elite': 'Emerging Elite (Level III)',
+    'elite': 'Elite (Level IV)',
+    'professional': 'Professional (Level V)'
+  },
+  membership: {
+    '2classes': '2 Classes',
+    '4classes': '4 Classes',
+    '8classes': '8 Classes',
+    '15classes': '15 Classes',
+    '30classes': 'Unlimited Classes',
+    'summercamp': 'Summer Camp'
+  },
+  facility: {dcv: 'DC Vault', prep: 'Georgetown Prep', dcvprep: 'Flexible (DC Vault + Georgetown Prep)'},
+  size: {yxs: 'Youth XS', xs: 'XS', sm: 'S', md: 'M', lg: 'L'}
+}
+
+const formatMoney = (amount) => '$' + (Math.round(amount * 100) / 100).toFixed(2)
+
+// "DEFY GRAVITY" photo panel shown beside every registration step.
+const RegHero = () => (
+  <aside className='reg-hero'>
+    <div className='reg-hero__overlay' />
+    <div className='reg-hero__content'>
+      <h1 className='reg-hero__title'>DEFY<br />GRAVITY.</h1>
+      <p className='reg-hero__sub'>Join the elite. Select your training packages below and secure your spot in our upcoming sessions.</p>
+      <ul className='reg-hero__features'>
+        <li><i className='fa fa-check-circle' /> Expert Coaching</li>
+        <li><i className='fa fa-check-circle' /> State-of-the-art Facilities</li>
+        <li><i className='fa fa-check-circle' /> All Skill Levels Welcome</li>
+      </ul>
+    </div>
+  </aside>
+)
 
 class Register extends React.Component {
   constructor (props) {
@@ -37,7 +85,7 @@ class Register extends React.Component {
       })
     } else if (newPageNum === 3) {
       this.setState({
-        currentPage: (<Agreement advance={this.advance.bind(this)} />)
+        currentPage: (<Agreement advance={this.advance.bind(this)} data={this.state.data} />)
       })
     } else if (newPageNum === 4) {
       this.setState({
@@ -78,7 +126,7 @@ class Register extends React.Component {
     const loginButton = document.getElementById('login-button')
     apiHelpers.verifyToken().then((answer) => {
       if (answer) {
-        loginButton.innerHTML = 'My Account'
+        loginButton.innerHTML = '<i class="fa fa-user"></i>'
         loginButton.onclick = () => {
           window.location.href = '/account'
         }
@@ -121,11 +169,12 @@ class Register extends React.Component {
         }
         this.setState({
           currentPage: (
-            <div className='row'>
-              <div className='col-xs-12' style={{textAlign: 'center'}}>
-                <p className=''>You Must be Logged in to <span className='red-text'>Register for Training</span></p>
-                <a className='red-text center-content' onClick={() => { loginButton.click() }}>Login/Register</a>
-              </div>
+            <div className='reg-center'>
+              <form className='reg-form' style={{textAlign: 'center'}}>
+                <p className='reg-form__title'>Register for Training</p>
+                <p style={{fontFamily: 'var(--rd-font-body)', color: '#374151'}}>You must be logged in to <span className='reg-link'>register for training</span>.</p>
+                <a className='reg-btn' onClick={() => { loginButton.click() }}>Login / Register</a>
+              </form>
             </div>
           )
         })
@@ -135,33 +184,28 @@ class Register extends React.Component {
 
   render () {
     window.scrollTo(0, 0)
-    let progressBar = this.state.showBar ? (<ProgressBar pageNum={this.state.pageNum} />) : ''
+    let stepper = this.state.showBar ? (<ProgressBar pageNum={this.state.pageNum} />) : ''
     if (this.state.registrationOpen) {
       return (
-        <section id='register'>
-          <div className='containter'>
-            <div className='row'>
-              <div className='col-xs-12 col-md-6 col-md-push-3'>
-                <p className='info-text' style={{textAlign: 'center', fontStyle: 'italic'}}><span className='red-text'>Private Lessons</span> or available <span className='red-text'>Discounts</span>, please <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>click here</a> to contact us.</p>
-              </div>
+        <section id='register' className='reg-redesign'>
+          {stepper}
+          <div className='reg-split'>
+            <RegHero />
+            <div className='reg-main'>
+              {this.state.currentPage}
             </div>
-            {this.state.currentPage}
-            {progressBar}
-
           </div>
         </section>
       )
     } else {
       return (
-        <section style={{minHeight: '90vh'}}>
-          <div className='container'>
-            <div className='row'>
-              <div className='col-xs-12 col-md-6 col-md-push-3'>
-                <p className='section-header'><span className='red-text'>DC Vault</span> Registration</p>
-                <p className='content-text intro-text' style={{textAlign: 'justify'}}>Registration for training will re-open <span className='red-text'>15 days prior</span> to the start of the upcoming quarter. A <span className='red-text'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training, and don't hesitate to <a className='red-text' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a> if you have any questions. <span className='red-text'>Thank you</span>.</p>
-                <p className='content-text intro-text' style={{textAlign: 'right'}}>- DC <span className='red-text'>Vault</span></p>
-              </div>
-            </div>
+        <section id='register' className='reg-redesign'>
+          <div className='reg-center'>
+            <form className='reg-form'>
+              <p className='reg-form__title'>DC Vault Registration</p>
+              <p style={{fontFamily: 'var(--rd-font-body)', color: '#374151', lineHeight: 1.6}}>Registration for training will re-open <span className='reg-link'>15 days prior</span> to the start of the upcoming quarter. A <span className='reg-link'>$25 late fee</span> will be applied if registration occurs after the start of a given quarter. Please check back later to register for training, and don't hesitate to <a className='reg-link' onClick={() => { document.getElementById('contact-button').click() }}>contact us</a> if you have any questions. <span className='reg-link'>Thank you</span>.</p>
+              <p style={{fontFamily: 'var(--rd-font-body)', color: '#374151', textAlign: 'right'}}>- DC Vault</p>
+            </form>
           </div>
         </section>
       )
@@ -226,6 +270,10 @@ class SelectPackage extends React.Component {
     output.membership = $('input[name="membership"]:checked').val()
     output.fkmembership = $('input[name="fkmembership"]:checked').val()
     output.yesApparel = $('input[name="yesapparel"]:checked').val()
+    // Size picker is always on screen; only send a size if they opted in
+    if (output.yesApparel !== 'yes') {
+      delete output.apparel
+    }
     if (this.state.inviteCode) {
       output.invite = this.state.inviteCode
     }
@@ -270,14 +318,13 @@ class SelectPackage extends React.Component {
     })
   }
 
-  // fillInfo() {
-  //   this.props.advance ('selectPackage', {quarter: 'fall', group: 'beginner', facility: 'dcv'});
-  // }
-
-  // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
-
   adjustOptions () {
     let group = $('input[name="group"]:checked').val()
+    // All class-option lists stay in the DOM, so clear the class choice when
+    // the group changes; otherwise e.g. an All Ages pick would carry over.
+    if (group !== this.state.checkedGroup) {
+      $('input[name="membership"], input[name="fkmembership"]').prop('checked', false)
+    }
     let quarter = $('input[name="quarter"]:checked').val()
     let facility = $('input[name="facility"]:checked').val()
     let month = $('input[name="month"]:checked').val()
@@ -404,328 +451,211 @@ class SelectPackage extends React.Component {
     }
   }
 
-  /*
-                <div>
-                  <label>
-                    <input type='radio' name='group' value='intermediate' checked={this.state.checkedGroup === 'intermediate'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Intermediate (Level II)</span>
-                  </label>
-                </div>
-  */
+  // Selectable option card (used for session + location pickers)
+  optionCard (name, value, title, sub, selected, extraStyle) {
+    return (
+      <label className={'reg-option' + (selected ? ' reg-option--selected' : '')} style={extraStyle || {}}>
+        <input type='radio' name={name} value={value} checked={selected} onChange={this.adjustOptions.bind(this)} />
+        <span className='reg-option__body'>
+          <span className='reg-option__title'>{title}</span>
+          {sub ? (<span className='reg-option__sub'>{sub}</span>) : ''}
+        </span>
+        <i className='fa fa-check-circle reg-option__check' />
+      </label>
+    )
+  }
+
+  // Full-width selectable radio card (used for the training-group picker)
+  groupCard (value, label, selected, show) {
+    return (
+      <label className={'reg-radio reg-radio-card' + (selected ? ' reg-radio--selected' : '')} style={{display: show ? 'flex' : 'none'}}>
+        <input type='radio' name='group' value={value} checked={selected} onChange={this.adjustOptions.bind(this)} />
+        <span className='reg-radio__dot' />
+        <span className='reg-radio__label'>{label}</span>
+      </label>
+    )
+  }
+
+  // Inline radio row (used for class-option lists)
+  radioRow (name, value, label, sub) {
+    return (
+      <label className='reg-radio'>
+        <input type='radio' name={name} value={value} onChange={this.adjustOptions.bind(this)} />
+        <span className='reg-radio__dot' />
+        <span className='reg-radio__label'>{label}{sub ? (<small>{sub}</small>) : ''}</span>
+      </label>
+    )
+  }
 
   render () {
+    let s = this.state
     let errorContainer
-    if (!(this.state.errorText.length === 0)) {
-      errorContainer = <div className='row'>
-        <div className='error-container'>
-          <p>{this.state.errorText}</p>
+    if (!(s.errorText.length === 0)) {
+      errorContainer = (
+        <div className='reg-error'>
+          <p>{s.errorText}</p>
         </div>
-      </div>
+      )
     }
+
+    // Groups that have a class-count choice in the Class Options section
+    let classGroups = ['allages', 'adult', 'fly-kids']
+    let sizesEnabled = s.checkedYesApparel === 'yes'
+
     return (
-    /*
-    To manually change what quarters are available to sign up for change the <div style = {{display: 'x'}}>
-    line to either block or none. block will show the option as available and none will hide it
-     */
+        <div className='reg-form-col'>
+          <form id='select-package' className='reg-form'>
 
-      <div className='row'>
-        <div className='col-xs-12' style={{textAlign: 'center'}}>
-          <form id='select-package' className='form-labels-on-top'>
-
-
-
-            <div className='form-row'>
-              <label><span className='required'>Training Session</span></label>
-              <div><span>(consult the training <span class = "red-text">calendar</span> for class schedule BEFORE registering)</span></div>
-              
-
-              <div className='form-radio-buttons'>
-
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='spring' checked={this.state.checkedSession === 'spring'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Spring (Mar-May)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='summer' checked={this.state.checkedSession === 'summer'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Summer (Jun-Aug)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='fall' checked={this.state.checkedSession === 'fall'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Fall (Sep-Nov)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='quarter' value='winter' checked={this.state.checkedSession === 'winter'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Winter (Dec-Feb)</span>
-                  </label>
-                </div>
-
+            {/* Training Session */}
+            <div className='reg-section'>
+              <p className='reg-heading'>Training Session<span className='rd-req'>*</span></p>
+              <p className='reg-subnote'>(consult the training <span className='reg-link'>calendar</span> for class schedule BEFORE registering)</p>
+              <div className='reg-option-grid'>
+                {this.optionCard('quarter', 'spring', 'Spring', '(Mar-May)', s.checkedSession === 'spring')}
+                {this.optionCard('quarter', 'summer', 'Summer', '(Jun-Aug)', s.checkedSession === 'summer')}
+                {this.optionCard('quarter', 'fall', 'Fall', '(Sep-Nov)', s.checkedSession === 'fall')}
+                {this.optionCard('quarter', 'winter', 'Winter', '(Dec-Feb)', s.checkedSession === 'winter')}
               </div>
             </div>
 
-            <div className='form-row' style={{display: this.state.checkedSession ? 'block' : 'none'}}>
-              <label><span className='required'>Training Group</span></label>
-              <div className='form-radio-buttons'>
-                <div style={{display:'block'}}>
-                  <label>
-                    <input type='radio' name='group' value='fly-kids' checked={this.state.checkedGroup === 'fly-kids'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Fly-Kids (7-11) + Camps</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.showDropIn ? 'block' : 'none'}} >
-                  <label>
-                    <input type='radio' name='group' value='dropin' checked={this.state.checkedGroup === 'dropin'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Drop-In</span>
-                  </label>
-                </div>
-                <div style={{display:'block'}} >
-                  <label>
-                    <input type='radio' name='group' value='adult' checked={this.state.checkedGroup === 'adult'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Adult (21+)</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.showPrivateLesson ? 'block' : 'none'}} >
-                  <label>
-                    <input type='radio' name='group' value='plesson' checked={this.state.checkedGroup === 'plesson'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Private Lesson</span>
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='group' value='allages' checked={this.state.checkedGroup === 'allages'} onChange={this.adjustOptions.bind(this)} />
-                    <span>All Ages (12+ Beginner thru Advanced)</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.showEmergingElite ? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='group' value='emerging-elite' checked={this.state.checkedGroup === 'emerging-elite'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Emerging Elite (Level III)</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.showElite ? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='group' value='elite' checked={this.state.checkedGroup === 'elite'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Elite (Level IV)</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.showProfessional ? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='group' value='professional' checked={this.state.checkedGroup === 'professional'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Professional (Level V)</span>
-                  </label>
-                </div>
-              </div>
-              <div>
-                <span><a style={{color: '#C0282D'}} onClick={this.toggleInvite.bind(this)}>CLICK HERE</a> and enter your <a style={{color: '#C0282D'}}>Invite Code</a> to register for a <a style={{color: '#C0282D'}}>Private Lesson</a> or <a style={{color: '#C0282D'}}>Drop-In Class</a> <br></br><br></br></span>
-                <span>Don't have an <a style={{color: '#C0282D'}}>Invite Code? <a onClick={() => { document.getElementById('contact-button').click() }}>CLICK HERE</a></a></span>
-                <div className='form-row' style={{display: this.state.showInvite ? 'block' : 'none'}}>
-                  <div className='row'>
-                    <div className='col-xs-8'>
-                      <label>
-                        <span>Invite Code</span>
-                        <input ref='inviteBox' type='text' name='invite' style={{width: '100%'}} />
-                      </label>
-                    </div>
-                    <div className='col-xs-4'>
-                      <button type='button' onClick={this.applyInvite.bind(this)}>Apply</button>
-                    </div>
+            {/* Training Group */}
+            <div className='reg-section'>
+              <p className='reg-heading'>Training Group<span className='rd-req'>*</span></p>
+              {this.groupCard('fly-kids', 'Fly-Kids (7-11) + Camps', s.checkedGroup === 'fly-kids', true)}
+              {this.groupCard('dropin', 'Drop-In', s.checkedGroup === 'dropin', s.showDropIn)}
+              {this.groupCard('adult', 'Adult (21+)', s.checkedGroup === 'adult', true)}
+              {this.groupCard('plesson', 'Private Lesson', s.checkedGroup === 'plesson', s.showPrivateLesson)}
+              {this.groupCard('allages', 'All Ages (12+ Beginner thru Advanced)', s.checkedGroup === 'allages', true)}
+              {this.groupCard('emerging-elite', 'Emerging Elite (Level III)', s.checkedGroup === 'emerging-elite', s.showEmergingElite)}
+              {this.groupCard('elite', 'Elite (Level IV)', s.checkedGroup === 'elite', s.showElite)}
+              {this.groupCard('professional', 'Professional (Level V)', s.checkedGroup === 'professional', s.showProfessional)}
+
+              <div className='reg-callout' style={{marginTop: '12px'}}>
+                <div><span className='reg-link' onClick={this.toggleInvite.bind(this)}>CLICK HERE</span> and enter your <span className='reg-link'>Invite Code</span> to register for a <span className='reg-link'>Private Lesson</span> or <span className='reg-link'>Drop-In Class</span></div>
+                <div className='reg-callout__sub'>Don't have an <span className='reg-link'>Invite Code?</span> <span className='reg-link' onClick={() => { document.getElementById('contact-button').click() }}>CLICK HERE</span></div>
+                <div style={{display: s.showInvite ? 'block' : 'none', marginTop: '12px'}}>
+                  <div className='reg-grid-2'>
+                    <input ref='inviteBox' type='text' name='invite' placeholder='Invite Code' />
+                    <button type='button' className='reg-btn' onClick={this.applyInvite.bind(this)}>Apply</button>
                   </div>
                 </div>
-
               </div>
             </div>
 
-
-
-            <div className='form-row' style={{display: this.state.checkedGroup && ((this.state.checkedGroup === 'allages'))? 'block' : 'none'}}>
-              <label><span>Class Options</span></label>
-              <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='membership' value='4classes' checked={this.state.checkedMembership === '4classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>4 Classes ($250)</span>
-                  </label>
+            {/* Class Options — always visible. The per-group lists are stacked in
+                one grid cell so the section is always as tall as the longest
+                list, and switching groups doesn't shift the layout. */}
+            <div className='reg-section'>
+              <p className='reg-heading'>Class Options<span className='rd-req'>*</span></p>
+              <div className='reg-stack'>
+                <div className={'reg-stack__layer' + (classGroups.indexOf(s.checkedGroup) === -1 ? '' : ' reg-stack__layer--hidden')}>
+                  <p className='reg-subnote'>{s.checkedGroup ? 'No class options to choose for this training group.' : 'Select a training group above to see class options.'}</p>
                 </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='membership' value='8classes' checked={this.state.checkedMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>8 Classes ($425)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='membership' value='15classes' checked={this.state.checkedMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>15 Classes ($575)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='membership' value='30classes' checked={this.state.checkedMembership === '30classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>Unlimited Classes ($825) - 30-50 depending on training schedule</span>
-                  </label>
-                </div>
-              </div>
-              <label><span>(see above highlighted updates for pricing and options for each category including private lessons)</span></label>
-            </div>
 
-
-
-
-
-            <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedGroup === 'adult')? 'block' : 'none'}}>
-              <label><span>Class Options</span></label>
-              <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='membership' value='2classes' checked={this.state.checkedMembership === '2classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>2 Classes ($100)</span>
-                  </label>
+                {/* All Ages */}
+                <div className={'reg-stack__layer' + (s.checkedGroup === 'allages' ? '' : ' reg-stack__layer--hidden')}>
+                  {this.radioRow('membership', '4classes', '4 Classes ($250)')}
+                  {this.radioRow('membership', '8classes', '8 Classes ($425)')}
+                  {this.radioRow('membership', '15classes', '15 Classes ($575)')}
+                  {this.radioRow('membership', '30classes', 'Unlimited Classes ($825)', '- 30-50 depending on training schedule')}
+                  <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
                 </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='membership' value='8classes' checked={this.state.checkedMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>8 Classes ($350)</span>
-                  </label>
-                </div>
-              </div>
-              <label><span>(see above highlighted updates for pricing and options for each category including private lessons)</span></label>
 
-            </div>
+                {/* Adult */}
+                <div className={'reg-stack__layer' + (s.checkedGroup === 'adult' ? '' : ' reg-stack__layer--hidden')}>
+                  {this.radioRow('membership', '2classes', '2 Classes ($100)')}
+                  {this.radioRow('membership', '8classes', '8 Classes ($350)')}
+                  <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
+                </div>
 
-            <div className='form-row' style={{display: this.state.checkedGroup && (this.state.checkedGroup === 'fly-kids')? 'block' : 'none'}}>
-              <label><span>Fly-Kids Options</span></label>
-              <div>
-                <span>Check back next Summer 2026 for Fly-Kids Summer Camp!</span>
-              </div>
-              <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='fkmembership' value='2classes' checked={this.state.checkedFKMembership === '2classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>2 Classes ($60)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='fkmembership' value='8classes' checked={this.state.checkedFKMembership === '8classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>8 Classes ($200)</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='fkmembership' value='15classes' checked={this.state.checkedFKMembership === '15classes'} onChange={this.adjustOptions.bind(this)} />
-                    <span>15 Classes ($300)</span>
-                  </label>
-                </div>
-              </div>
-              <label><span>(see above highlighted updates for pricing and options for each category including private lessons)</span></label>
-
-            </div>
-
-
-            <div className='form-row' style={{display: this.state.checkedFKMembership || this.state.checkedMembership|| this.state.checkedGroup == "plesson" || this.state.checkedGroup == "dropin" ? 'block' : 'none'}}>
-              <label><span className='required'>Preferred Training Location</span></label>
-              <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='facility' value='dcv' checked={this.state.checkedFacility === 'dcv'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>DCV</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.checkedFKMembership !== 'summercamp'? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='facility' value='prep' checked={this.state.checkedFacility === 'prep'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>PREP</span>
-                  </label>
-                </div>
-                <div style={{display: this.state.checkedFKMembership !== 'summercamp'? 'block' : 'none'}}>
-                  <label>
-                    <input type='radio' name='facility' value='dcvprep' checked={this.state.checkedFacility === 'dcvprep'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>FLEXIBLE (I may train at more than one site)</span>
-                  </label>
+                {/* Fly-Kids */}
+                <div className={'reg-stack__layer' + (s.checkedGroup === 'fly-kids' ? '' : ' reg-stack__layer--hidden')}>
+                  <p className='reg-subnote'>Check back next Summer 2026 for Fly-Kids Summer Camp!</p>
+                  {this.radioRow('fkmembership', '2classes', '2 Classes ($60)')}
+                  {this.radioRow('fkmembership', '8classes', '8 Classes ($200)')}
+                  {this.radioRow('fkmembership', '15classes', '15 Classes ($300)')}
+                  <p className='reg-subnote' style={{marginTop: '12px'}}>(see above highlighted updates for pricing and options for each category including private lessons)</p>
                 </div>
               </div>
             </div>
 
-
-
-            <div className='form-row' style={{display: this.state.checkedFacility? 'block' : 'none'}}>
-
-              <label><span className='required'>Apparel</span></label>
-              <br/>
-              <span style = {{fontSize: 12, textAlign: 'center', fontWeight: 'normal'}}>Would you like team apparel? DC Vault T-shirts can be purchased for an additional $20 (INCLUDED IN FLY-KIDS CAMP PLEASE SELECT "YES!" AND SIZE). </span>
-              <br/><br/>
-              <img className='apparel-img' src='../img/forms/apparel.jpg' width='100%' height='auto'/>
-              <br/><br/><br/>
-              <div className='form-radio-buttons'>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='yesapparel' value='none' checked={this.state.checkedYesApparel === 'none'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>No Thanks</span>
-                  </label>
-                </div>
-                <div style={{display: 'block'}}>
-                  <label>
-                    <input type='radio' name='yesapparel' value='yes' checked={this.state.checkedYesApparel === 'yes'} onChange={this.adjustOptions.bind(this)}/>
-                    <span>Yes!</span>
-                  </label>
-                </div>
+            {/* Preferred Training Location */}
+            <div className='reg-section reg-section--divider'>
+              <p className='reg-heading'>Preferred Training Location<span className='rd-req'>*</span></p>
+              <div className='reg-option-grid'>
+                {this.optionCard('facility', 'dcv', 'DC Vault', null, s.checkedFacility === 'dcv', {justifyContent: 'center', textAlign: 'center', paddingRight: '16px'})}
+                {s.checkedFKMembership !== 'summercamp' ? this.optionCard('facility', 'prep', 'Georgetown Prep', null, s.checkedFacility === 'prep', {justifyContent: 'center', textAlign: 'center', paddingRight: '16px'}) : ''}
               </div>
-              <div className='form-radio-buttons' style={{display: this.state.checkedYesApparel === 'yes'? 'block' : 'none'}}>
-                <span style={{fontWeight:'normal'}}>Ask the coach for your shirt at your first class!</span>
-                <br></br>
-                <span style={{fontWeight:'normal'}}><i>Youth</i></span>
-                <div>
-                  <label>
-                    <input type='radio' name='apparel' value='yxs' />
-                    <span>XS</span>
-                  </label>
-                </div>
+              {s.checkedFKMembership !== 'summercamp' ? (
+                <label className={'reg-option reg-option--center' + (s.checkedFacility === 'dcvprep' ? ' reg-option--selected' : '')} style={{marginTop: '16px'}}>
+                  <input type='radio' name='facility' value='dcvprep' checked={s.checkedFacility === 'dcvprep'} onChange={this.adjustOptions.bind(this)} />
+                  <span className='reg-option__body'>
+                    <span className='reg-option__title'>Flexible <span style={{fontWeight: 400, textTransform: 'none', color: 'var(--rd-muted)'}}>(I may train at more than one site)</span></span>
+                  </span>
+                </label>
+              ) : ''}
+            </div>
 
-                <span style={{fontWeight:'normal'}}><i>Unisex</i></span>
-                <div>
-                  <label>
-                    <input type='radio' name='apparel' value='xs' />
-                    <span>XS</span>
+            {/* Apparel */}
+            <div className='reg-section'>
+              <p className='reg-heading'>Apparel<span className='rd-req'>*</span></p>
+              <p className='reg-subnote'>Would you like team apparel? DC Vault T-shirts can be purchased for an additional ${APPAREL_PRICE} (INCLUDED IN FLY-KIDS CAMP PLEASE SELECT "YES!" AND SIZE).</p>
+              <div className='reg-apparel-card'>
+                <img className='reg-apparel-card__img' src='../img/register/apparel-shirts.png' />
+                <div className='reg-apparel-card__options'>
+                  <label className='reg-radio'>
+                    <input type='radio' name='yesapparel' value='none' checked={s.checkedYesApparel === 'none'} onChange={this.adjustOptions.bind(this)} />
+                    <span className='reg-radio__dot' />
+                    <span className='reg-radio__label'>No Thanks</span>
                   </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='apparel' value='sm' />
-                    <span>S</span>
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='apparel' value='md' />
-                    <span>M</span>
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <input type='radio' name='apparel' value='lg' />
-                    <span>L</span>
+                  <label className='reg-radio'>
+                    <input type='radio' name='yesapparel' value='yes' checked={s.checkedYesApparel === 'yes'} onChange={this.adjustOptions.bind(this)} />
+                    <span className='reg-radio__dot' />
+                    <span className='reg-radio__label'>Yes!</span>
                   </label>
                 </div>
               </div>
 
-
+              <div className={'reg-sizes' + (sizesEnabled ? '' : ' reg-sizes--disabled')} style={{marginTop: '16px'}} aria-disabled={!sizesEnabled}>
+                <p className='reg-subnote'>Ask the coach for your shirt at your first class!</p>
+                <p className='reg-field' style={{fontWeight: 700, fontSize: '13px', color: 'var(--rd-ink-soft)', margin: '0 0 6px'}}>Youth</p>
+                <label className='reg-radio'>
+                  <input type='radio' name='apparel' value='yxs' disabled={!sizesEnabled} />
+                  <span className='reg-radio__dot' />
+                  <span className='reg-radio__label'>XS</span>
+                </label>
+                <p className='reg-field' style={{fontWeight: 700, fontSize: '13px', color: 'var(--rd-ink-soft)', margin: '12px 0 6px'}}>Unisex</p>
+                <label className='reg-radio'>
+                  <input type='radio' name='apparel' value='xs' disabled={!sizesEnabled} />
+                  <span className='reg-radio__dot' />
+                  <span className='reg-radio__label'>XS</span>
+                </label>
+                <label className='reg-radio'>
+                  <input type='radio' name='apparel' value='sm' disabled={!sizesEnabled} />
+                  <span className='reg-radio__dot' />
+                  <span className='reg-radio__label'>S</span>
+                </label>
+                <label className='reg-radio'>
+                  <input type='radio' name='apparel' value='md' disabled={!sizesEnabled} />
+                  <span className='reg-radio__dot' />
+                  <span className='reg-radio__label'>M</span>
+                </label>
+                <label className='reg-radio'>
+                  <input type='radio' name='apparel' value='lg' disabled={!sizesEnabled} />
+                  <span className='reg-radio__dot' />
+                  <span className='reg-radio__label'>L</span>
+                </label>
+              </div>
             </div>
 
-
-            <div className='form-row'>
-              <button type='button' onClick={this.continue.bind(this)}>Continue</button>
-            </div>
             {errorContainer}
+
+            <div className='reg-section'>
+              <button type='button' className='reg-btn reg-btn--block' onClick={this.continue.bind(this)}>Continue</button>
+            </div>
 
           </form>
         </div>
-      </div>
     )
   }
 }
@@ -870,26 +800,6 @@ class AthleteInfo extends React.Component {
     }
   }
 
-  // fillInfo() {
-  //   let output = {
-  //     conditions: 'Medical Conditions',
-  //     dob: "07/12/1994",
-  //     email: "moores.alexd@gmail.com",
-  //     fname: "Alex",
-  //     gender: "male",
-  //     lname: "Moores",
-  //     school: "school",
-  //     state: "ME",
-  //     usatf: "6546545645"
-  //   }
-  //   output['emergency-contact'] = 'Emergency Contact Name';
-  //   output['emergency-phone'] = '555-555-5555';
-  //   output['emergency-relation'] = 'Emergency Contact Relationship';
-
-  //   this.props.advance('athleteInfo', output);
-  // }
-  // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
-
   toggleUSATFinfo () {
     let current = this.state.showUSATFinfo
     this.setState({
@@ -900,39 +810,24 @@ class AthleteInfo extends React.Component {
   render () {
     let errorContainer
     if (!(this.state.errorText.length === 0)) {
-      errorContainer = <div className='row'>
-        <div className='error-container'>
+      errorContainer = (
+        <div className='reg-error'>
           {this.state.errorText.map((error) => {
             return <p key={error}>{error}</p>
           })}
         </div>
-      </div>
+      )
     }
 
     let athleteSelector
     let existingAthletes = ENABLE_ATHLETE_SELECTOR ? (this.props.existingAthletes || []) : []
     if (existingAthletes.length > 0) {
-      let cardBaseStyle = {
-        border: '1px solid #ccc',
-        borderRadius: '6px',
-        padding: '12px',
-        marginBottom: '10px',
-        textAlign: 'left',
-        cursor: 'pointer'
-      }
-      let selectedCardStyle = Object.assign({}, cardBaseStyle, {
-        border: '2px solid #C0282D',
-        backgroundColor: 'rgba(192, 40, 45, 0.05)'
-      })
-
-      let detailStyle = {fontWeight: 'normal', fontSize: '13px', color: '#5f5f5f', marginTop: '6px' }
+      let detailStyle = {fontWeight: 'normal', fontSize: '13px', color: '#5f5f5f', marginTop: '6px'}
       let columnStyle = {display: 'inline-block', verticalAlign: 'top', width: '50%', boxSizing: 'border-box'}
 
       athleteSelector = (
-        <div className='form-row' style={{textAlign: 'left'}}>
-          <label style={{textAlign: 'center', display: 'block'}}>
-            <span style={{width: 'auto', textAlign: 'center'}}>Select an existing athlete or create a new one</span>
-          </label>
+        <div className='reg-section'>
+          <p className='reg-heading' style={{fontSize: '16px'}}>Select an existing athlete or create a new one</p>
 
           {existingAthletes.map((athlete) => {
             let isSelected = this.state.selectedAthleteId === athlete.id
@@ -940,7 +835,7 @@ class AthleteInfo extends React.Component {
             return (
               <div
                 key={athlete.id}
-                style={isSelected ? selectedCardStyle : cardBaseStyle}
+                className={'reg-athlete-card' + (isSelected ? ' reg-athlete-card--selected' : '')}
                 onClick={() => { this.selectAthlete(athlete) }}
               >
                 <div style={{fontWeight: 'bold', color: '#5f5f5f', display: 'flex', justifyContent: 'space-between'}}>
@@ -972,9 +867,7 @@ class AthleteInfo extends React.Component {
           })}
 
           <div
-            style={this.state.selectedAthleteId === null
-              ? selectedCardStyle
-              : cardBaseStyle}
+            className={'reg-athlete-card' + (this.state.selectedAthleteId === null ? ' reg-athlete-card--selected' : '')}
             onClick={() => { this.createNewAthlete() }}
           >
             <div style={{fontWeight: 'bold', color: '#5f5f5f'}}>+ Create New Athlete</div>
@@ -987,190 +880,150 @@ class AthleteInfo extends React.Component {
     }
 
     return (
-      <div className='row'>
-        <div className='col-xs-12' style={{textAlign: 'center'}}>
-          <form id='athlete-info' className='form-labels-on-top'>
+      <div className='reg-center'>
+        <form id='athlete-info' className='reg-form'>
 
-            <div className='form-title-row'>
-              <h1>Athlete Information</h1>
+          <p className='reg-form__title'>Athlete Information</p>
+
+          {athleteSelector}
+
+          <div className='reg-grid-2'>
+            <div className='reg-field'>
+              <label>Athlete First Name<span className='rd-req'>*</span></label>
+              <input type='text' name='fname' />
             </div>
-
-            {athleteSelector}
-
-            <div className='row'>
-              <div className='col-xs-12 col-md-6'>
-                <div className='form-row'>
-                  <label>
-                    <span className='required'>Athlete First Name</span>
-                    <input type='text' name='fname' style={{width: '100%'}} />
-                  </label>
-                </div>
-              </div>
-
-              <div className='col-xs-12 col-md-6'>
-                <div className='form-row'>
-                  <label>
-                    <span className='required'>Athlete Last Name</span>
-                    <input type='text' name='lname' style={{width: '100%'}} />
-                  </label>
-                </div>
-              </div>
+            <div className='reg-field'>
+              <label>Athlete Last Name<span className='rd-req'>*</span></label>
+              <input type='text' name='lname' />
             </div>
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>Athlete DOB (mm/dd/yyyy)</span>
-                <input type='text' name='dob' onChange={this.formatDOB.bind(this)} />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Athlete DOB (mm/dd/yyyy)<span className='rd-req'>*</span></label>
+            <input type='text' name='dob' onChange={this.formatDOB.bind(this)} />
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>Athlete Email</span>
-                <input type='text' name='email' />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Athlete Email<span className='rd-req'>*</span></label>
+            <input type='text' name='email' />
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>Notification Email (for announcements, schedule adjustments, etc.) </span>
-                <input type='text' name='lstserv' />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Notification Email (for announcements, schedule adjustments, etc.)<span className='rd-req'>*</span></label>
+            <input type='text' name='lstserv' />
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <div className='row'>
-                  <div className='col-xs-10'>
-                    <span className='required'>Athlete USATF Number</span>
-                  </div>
-                  <div className='col-xs-2'>
-                    <span onClick={this.toggleUSATFinfo.bind(this)} style={{color: '#C0282D'}}>?</span>
-                  </div>
-                </div>
-                <p className='info-text' style={{display: this.state.showUSATFinfo ? 'block' : 'none'}}>
-                        We are sanctioned by USATF. As such, our participants need a current USATF membership ($30 for 1-year). If you have a current number, but do not know it, you can look it up <a style={{color: '#C0282D'}} target='_blank' href='https://www.usatf.org/membership/help/number.asp'>here</a>. If you do not have a current number, you can join or renew <a style={{color: '#C0282D'}} target='_blank' href='https://www.usatf.org/home/top-utility-nav-content/membership-1'>here</a>.
-                      </p>
-                <input type='text' name='usatf' onChange={this.formatUSATF.bind(this)} />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>
+              Athlete USATF Number<span className='rd-req'>*</span>
+              <span onClick={this.toggleUSATFinfo.bind(this)} className='reg-link' style={{marginLeft: '8px'}}>?</span>
+            </label>
+            <p className='reg-subnote' style={{display: this.state.showUSATFinfo ? 'block' : 'none'}}>
+              We are sanctioned by USATF. As such, our participants need a current USATF membership ($30 for 1-year). If you have a current number, but do not know it, you can look it up <a className='reg-link' target='_blank' href='https://www.usatf.org/membership/help/number.asp'>here</a>. If you do not have a current number, you can join or renew <a className='reg-link' target='_blank' href='https://www.usatf.org/home/top-utility-nav-content/membership-1'>here</a>.
+            </p>
+            <input type='text' name='usatf' onChange={this.formatUSATF.bind(this)} />
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>Emergency Contact Name</span>
-                <input type='text' name='emergency-contact' />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Emergency Contact Name<span className='rd-req'>*</span></label>
+            <input type='text' name='emergency-contact' />
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>Emergency Contact Relation</span>
-                <input type='text' name='emergency-relation' />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Emergency Contact Relation<span className='rd-req'>*</span></label>
+            <input type='text' name='emergency-relation' />
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>Emergency Contact Phone</span>
-                <input type='text' name='emergency-phone' onChange={this.formatPhone.bind(this)} />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Emergency Contact Phone<span className='rd-req'>*</span></label>
+            <input type='text' name='emergency-phone' onChange={this.formatPhone.bind(this)} />
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>Athlete Gender</span>
-                <select name='gender'>
-                  <option value=''>Select Gender</option>
-                  <option value='male'>Male</option>
-                  <option value='female'>Female</option>
-                  <option value='other'>Other/Non-Binary</option>
-                </select>
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Athlete Gender<span className='rd-req'>*</span></label>
+            <select name='gender'>
+              <option value=''>Select Gender</option>
+              <option value='male'>Male</option>
+              <option value='female'>Female</option>
+              <option value='other'>Other/Non-Binary</option>
+            </select>
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>State of Residence</span>
-                <select name='state'>
-                  <option value=''>Select State</option>
-                  <option value='AL'>Alabama</option>
-                  <option value='AK'>Alaska</option>
-                  <option value='AZ'>Arizona</option>
-                  <option value='AR'>Arkansas</option>
-                  <option value='CA'>California</option>
-                  <option value='CO'>Colorado</option>
-                  <option value='CT'>Connecticut</option>
-                  <option value='DE'>Delaware</option>
-                  <option value='DC'>Dist of Columbia</option>
-                  <option value='FL'>Florida</option>
-                  <option value='GA'>Georgia</option>
-                  <option value='HI'>Hawaii</option>
-                  <option value='ID'>Idaho</option>
-                  <option value='IL'>Illinois</option>
-                  <option value='IN'>Indiana</option>
-                  <option value='IA'>Iowa</option>
-                  <option value='KS'>Kansas</option>
-                  <option value='KY'>Kentucky</option>
-                  <option value='LA'>Louisiana</option>
-                  <option value='ME'>Maine</option>
-                  <option value='MD'>Maryland</option>
-                  <option value='MA'>Massachusetts</option>
-                  <option value='MI'>Michigan</option>
-                  <option value='MN'>Minnesota</option>
-                  <option value='MS'>Mississippi</option>
-                  <option value='MO'>Missouri</option>
-                  <option value='MT'>Montana</option>
-                  <option value='NE'>Nebraska</option>
-                  <option value='NV'>Nevada</option>
-                  <option value='NH'>New Hampshire</option>
-                  <option value='NJ'>New Jersey</option>
-                  <option value='NM'>New Mexico</option>
-                  <option value='NY'>New York</option>
-                  <option value='NC'>North Carolina</option>
-                  <option value='ND'>North Dakota</option>
-                  <option value='OH'>Ohio</option>
-                  <option value='OK'>Oklahoma</option>
-                  <option value='OR'>Oregon</option>
-                  <option value='PA'>Pennsylvania</option>
-                  <option value='RI'>Rhode Island</option>
-                  <option value='SC'>South Carolina</option>
-                  <option value='SD'>South Dakota</option>
-                  <option value='TN'>Tennessee</option>
-                  <option value='TX'>Texas</option>
-                  <option value='UT'>Utah</option>
-                  <option value='VT'>Vermont</option>
-                  <option value='VA'>Virginia</option>
-                  <option value='WA'>Washington</option>
-                  <option value='WV'>West Virginia</option>
-                  <option value='WI'>Wisconsin</option>
-                  <option value='WY'>Wyoming</option>
-                </select>
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>State of Residence<span className='rd-req'>*</span></label>
+            <select name='state'>
+              <option value=''>Select State</option>
+              <option value='AL'>Alabama</option>
+              <option value='AK'>Alaska</option>
+              <option value='AZ'>Arizona</option>
+              <option value='AR'>Arkansas</option>
+              <option value='CA'>California</option>
+              <option value='CO'>Colorado</option>
+              <option value='CT'>Connecticut</option>
+              <option value='DE'>Delaware</option>
+              <option value='DC'>Dist of Columbia</option>
+              <option value='FL'>Florida</option>
+              <option value='GA'>Georgia</option>
+              <option value='HI'>Hawaii</option>
+              <option value='ID'>Idaho</option>
+              <option value='IL'>Illinois</option>
+              <option value='IN'>Indiana</option>
+              <option value='IA'>Iowa</option>
+              <option value='KS'>Kansas</option>
+              <option value='KY'>Kentucky</option>
+              <option value='LA'>Louisiana</option>
+              <option value='ME'>Maine</option>
+              <option value='MD'>Maryland</option>
+              <option value='MA'>Massachusetts</option>
+              <option value='MI'>Michigan</option>
+              <option value='MN'>Minnesota</option>
+              <option value='MS'>Mississippi</option>
+              <option value='MO'>Missouri</option>
+              <option value='MT'>Montana</option>
+              <option value='NE'>Nebraska</option>
+              <option value='NV'>Nevada</option>
+              <option value='NH'>New Hampshire</option>
+              <option value='NJ'>New Jersey</option>
+              <option value='NM'>New Mexico</option>
+              <option value='NY'>New York</option>
+              <option value='NC'>North Carolina</option>
+              <option value='ND'>North Dakota</option>
+              <option value='OH'>Ohio</option>
+              <option value='OK'>Oklahoma</option>
+              <option value='OR'>Oregon</option>
+              <option value='PA'>Pennsylvania</option>
+              <option value='RI'>Rhode Island</option>
+              <option value='SC'>South Carolina</option>
+              <option value='SD'>South Dakota</option>
+              <option value='TN'>Tennessee</option>
+              <option value='TX'>Texas</option>
+              <option value='UT'>Utah</option>
+              <option value='VT'>Vermont</option>
+              <option value='VA'>Virginia</option>
+              <option value='WA'>Washington</option>
+              <option value='WV'>West Virginia</option>
+              <option value='WI'>Wisconsin</option>
+              <option value='WY'>Wyoming</option>
+            </select>
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span>Current School (optional)</span>
-                <input type='text' name='school' />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Current School (optional)</label>
+            <input type='text' name='school' />
+          </div>
 
-            <div className='form-row'>
-              <label>
-                <span className='required'>Medical Conditions</span>
-                <span style={{textSize: '75%', fontWeight: 'normal'}}> If none, write 'none' </span>
-                <textarea rows='6' cols='40' name='conditions' />
-              </label>
-            </div>
+          <div className='reg-field'>
+            <label>Medical Conditions<span className='rd-req'>*</span> <span style={{fontWeight: 'normal', color: 'var(--rd-muted)'}}>If none, write 'none'</span></label>
+            <textarea rows='6' name='conditions' />
+          </div>
 
-            {errorContainer}
+          {errorContainer}
 
-            <div className='form-row'>
-              <button type='button' onClick={this.continue.bind(this)}>Continue</button>
-            </div>
+          <div className='reg-section'>
+            <button type='button' className='reg-btn reg-btn--block' onClick={this.continue.bind(this)}>Continue</button>
+          </div>
 
-          </form>
-        </div>
+        </form>
       </div>
     )
   }
@@ -1180,9 +1033,41 @@ class Agreement extends React.Component {
   constructor (props) {
     super(props)
 
+    // The waiver is chosen automatically from the athlete's DOB: under 18 →
+    // youth (guardian) waiver, 18+ → adult waiver. Only if the DOB can't be
+    // read do we fall back to letting them pick.
+    let autoWaiverType = Agreement.waiverTypeForDob(props.data)
+
     this.state = {
-      errorText: ''
+      errorText: '',
+      autoWaiverType: autoWaiverType,
+      waiverType: autoWaiverType || 'adult',
+      agreed: false
     }
+  }
+
+  // athleteInfo.dob is collected on the previous step as mm/dd/yyyy.
+  // Returns 'youth', 'adult', or null when the DOB can't be read.
+  static waiverTypeForDob (data) {
+    let dob = data && data.athleteInfo && data.athleteInfo.dob
+    let parts = (dob || '').split('/')
+    if (parts.length !== 3) return null
+    let month = parseInt(parts[0], 10)
+    let day = parseInt(parts[1], 10)
+    let year = parseInt(parts[2], 10)
+    if (!(month >= 1 && month <= 12 && day >= 1 && day <= 31 && year > 1900)) return null
+    let birth = new Date(year, month - 1, day)
+    if (isNaN(birth.getTime()) || birth > new Date()) return null
+    // Age on the registration date
+    let eighteenth = new Date(year + 18, month - 1, day)
+    return eighteenth > new Date() ? 'youth' : 'adult'
+  }
+
+  selectWaiver (waiverType) {
+    if (waiverType === this.state.waiverType) return
+    this.setState({ waiverType: waiverType })
+    // Start the newly selected waiver from the top
+    if (this.refs.waiverBody) this.refs.waiverBody.scrollTop = 0
   }
 
   formatDate () {
@@ -1212,8 +1097,14 @@ class Agreement extends React.Component {
     })
 
     let output = parseFormValues($('#agreement').serializeArray())
+    delete output.agree
+    output.waiverType = this.state.waiverType
 
-    if (!output.hasOwnProperty('name') || !output.hasOwnProperty('date')) {
+    if (!this.state.agreed) {
+      this.setState({
+        errorText: 'Please confirm that you have read and agree to the waiver'
+      })
+    } else if (!output.hasOwnProperty('name') || !output.hasOwnProperty('date')) {
       this.setState({
         errorText: 'Please fill in all fields'
       })
@@ -1226,67 +1117,120 @@ class Agreement extends React.Component {
     }
   }
 
-  // fillInfo() {
-  //   this.props.advance('agreement', {name: 'Signatory Jones', date: '01/23/2562'});
-  // }
-
-  // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
-
   render () {
     let errorContainer
     if (!(this.state.errorText.length === 0)) {
-      errorContainer = <div className='row'>
-        <div className='error-container'>
+      errorContainer = (
+        <div className='reg-error'>
           <p>{this.state.errorText}</p>
         </div>
-      </div>
+      )
     }
 
+    let waiver = waivers[this.state.waiverType]
+
     return (
-      <div className='row'>
-        <div className='col-xs-12' style={{textAlign: 'center'}}>
-          <form id='agreement' className='form-labels-on-top'>
-            <div className='form-title-row'>
-              <h1>Waiver Agreement</h1>
-            </div>
+      <div className='reg-form-col'>
+        <form id='agreement' className='reg-form'>
+          <div className='reg-section'>
+            <p className='reg-heading'>Waiver Agreement<span className='rd-req'>*</span></p>
+            <p className='reg-subnote'>Please read the waiver below in full, then sign to continue.</p>
+          </div>
 
-              <img className='waiver-image' src='../img/forms/adult-comp-1.png' />
-              <img className='waiver-image' src='../img/forms/adult-comp-2.png' />
-              <img className='waiver-image' src='../img/forms/adult-comp-3.png' />
-              <img className='waiver-image' src='../img/forms/youth-comp-1.png' />
-              <img className='waiver-image' src='../img/forms/youth-comp-2.png' />
-              <img className='waiver-image' src='../img/forms/youth-comp-3.png' />
-
-            <p style={{fontSize: '12px', fontWeight: 'normal'}}> By signing below and clicking 'continue' you agree that you (the adult athlete or the athlete's legal guardian) agree with the above waivers. You may <a style={{color: '#C0282D'}} href='../files/DC Vault Waiver - Competition.pdf' target='_blank'>click here</a> to view the waivers as a PDF</p>
-
-            <div className='row'>
-              <div className='col-xs-12 col-md-6'>
-                <div className='form-row'>
-                  <label>
-                    <span className='required'>Full Name</span>
-                    <input type='text' name='name' style={{width: '100%'}} />
-                  </label>
-                </div>
-              </div>
-
-              <div className='col-xs-12 col-md-6'>
-                <div className='form-row'>
-                  <label>
-                    <span className='required'>Date (mm/dd/yyyy)</span>
-                    <input type='text' name='date' style={{width: '100%'}} onChange={this.formatDate.bind(this)} />
-                  </label>
-                </div>
+          {/* Waiver: chosen from the athlete's DOB, or picked if DOB is unreadable */}
+          {this.state.autoWaiverType ? (
+            <div className='reg-section'>
+              <p className='reg-heading reg-heading--icon'>
+                <img src='../img/register/icon-waiver.svg' width='17.29' height='17.29' alt='' />
+                {waiver.tabTitle} Waiver
+              </p>
+              <div className='reg-callout'>
+                {this.state.autoWaiverType === 'youth'
+                  ? 'This waiver must be signed by the athlete’s parent or legal guardian because the athlete is under 18'
+                  : 'This waiver is for athletes 18 or older'}
+                {' '}(date of birth <strong>{this.props.data.athleteInfo.dob}</strong>).
+                <div className='reg-callout__sub'>If the date of birth is incorrect, please restart registration and correct it on the Athlete step.</div>
               </div>
             </div>
-
-            {errorContainer}
-
-            <div className='form-row'>
-              <button type='button' onClick={this.continue.bind(this)}>Continue</button>
+          ) : (
+          <div className='reg-section'>
+            <p className='reg-heading reg-heading--icon'>
+              <img src='../img/register/icon-waiver.svg' width='17.29' height='17.29' alt='' />
+              Select Waiver
+            </p>
+            <div className='reg-option-grid' role='tablist'>
+              {['adult', 'youth'].map((key) => {
+                let w = waivers[key]
+                let selected = this.state.waiverType === key
+                return (
+                  <label key={key} role='tab' aria-selected={selected} className={'reg-option' + (selected ? ' reg-option--selected' : '')}>
+                    <input type='radio' name='waiverType' value={key} checked={selected} onChange={() => this.selectWaiver(key)} />
+                    <span className='reg-option__body'>
+                      <span className='reg-option__title'>{w.tabTitle}</span>
+                      <span className='reg-option__sub'>{w.tabSub}</span>
+                    </span>
+                  </label>
+                )
+              })}
             </div>
+          </div>
+          )}
 
-          </form>
-        </div>
+          {/* Waiver text */}
+          <div className='reg-section'>
+            <div className='reg-waiver' role='tabpanel'>
+              <div className='reg-waiver__bar'>
+                <span className='reg-waiver__bar-title'>{waiver.title}</span>
+                <span className='reg-waiver__badge'>Scroll to read</span>
+              </div>
+              <div className='reg-waiver__body' ref='waiverBody' tabIndex='0'>
+                <h4 className='reg-waiver__heading'>{waiver.title}</h4>
+                {waiver.subtitle ? (<p className='reg-waiver__subtitle'>{waiver.subtitle}</p>) : ''}
+                {waiver.sections.map((section, i) => (
+                  <div key={waiver.key + i} className={'reg-waiver__section' + (section.emphasis ? ' reg-waiver__section--emphasis' : '')}>
+                    {section.heading ? (<h4 className='reg-waiver__heading'>{section.heading}</h4>) : ''}
+                    {section.paragraphs.map((text, j) => (<p key={j}>{text}</p>))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className='reg-section'>
+            <div className='reg-callout'>
+              By signing below and clicking ‘Continue’ you agree that you (the adult athlete or the athlete’s legal guardian) agree with the above waivers. You may <a className='reg-link' href='../files/DC Vault Waiver - Competition.pdf' target='_blank'>click here</a> to view the waivers as a PDF.
+            </div>
+          </div>
+
+          {/* Signature */}
+          <div className='reg-section'>
+            <p className='reg-heading reg-heading--icon'>
+              <img src='../img/register/icon-signature.svg' width='17.29' height='17.29' alt='' />
+              Signature
+            </p>
+            <label className={'reg-agree' + (this.state.agreed ? ' reg-agree--checked' : '')}>
+              <input type='checkbox' name='agree' checked={this.state.agreed} onChange={(e) => this.setState({ agreed: e.target.checked })} />
+              <span>I have read and agree to the waiver above.</span>
+            </label>
+            <div className='reg-grid-2'>
+              <div className='reg-field'>
+                <label>{this.state.waiverType === 'youth' ? 'Parent/Guardian Full Name' : 'Full Name'}<span className='rd-req'>*</span></label>
+                <input type='text' name='name' placeholder='Full name' />
+              </div>
+              <div className='reg-field'>
+                <label>Date (mm/dd/yyyy)<span className='rd-req'>*</span></label>
+                <input type='text' name='date' placeholder='mm/dd/yyyy' onChange={this.formatDate.bind(this)} />
+              </div>
+            </div>
+          </div>
+
+          {errorContainer}
+
+          <div className='reg-section'>
+            <button type='button' className='reg-btn reg-btn--block' onClick={this.continue.bind(this)}>Continue</button>
+          </div>
+
+        </form>
       </div>
     )
   }
@@ -1328,7 +1272,7 @@ class Payment extends React.Component {
         price = 100
       }else{
         price = 350
-      }     
+      }
     } else if (group === 'elite' || group === 'professional') {
       price = 0
     } else if (group === 'allages') {
@@ -1379,27 +1323,42 @@ class Payment extends React.Component {
     })
   }
 
-  calculatePrice () {
-    let price = (this.state.price * (1 - this.state.discount))
-    price = parseFloat(price) < 10 ? 1 : price
-    price += this.state.lateFee
-    let group = this.props.data.selectPackage.group
-    let apparel = this.props.data.selectPackage.apparel
-    let apparelRes= this.props.data.selectPackage.yesApparel
-    let str = this.props.data.selectPackage.strength
-    let strFam = this.props.data.selectPackage.strengthFam
-    let fkmembership = this.props.data.selectPackage.membership
+  // Single source of truth for every amount shown in the summary AND charged
+  // through PayPal, so the breakdown always adds up to the charged total.
+  getTotals () {
+    let pkg = this.props.data.selectPackage
+    let packagePrice = this.state.price
+    let packageAfterDiscount = packagePrice * (1 - this.state.discount)
+    // Existing rule: a package under $10 (after discount) is charged $1
+    if (packageAfterDiscount < 10) packageAfterDiscount = 1
+    // e.g. $0 Elite/Professional packages are charged the $1 minimum; show
+    // the package at that price so the summary lines add up to the total
+    if (packageAfterDiscount > packagePrice) packagePrice = packageAfterDiscount
+    let discountAmount = packagePrice - packageAfterDiscount
 
-    
+    let shirtIncluded = pkg.membership === 'summercamp'
+    let wantsShirt = pkg.yesApparel !== 'none'
+    let apparelPrice = (wantsShirt && !shirtIncluded) ? APPAREL_PRICE : 0
 
-    if (apparelRes === 'none' || fkmembership === 'summercamp'){
-    }else{
-      price += 35
+    let lateFee = this.state.lateFee
+    let subtotal = packageAfterDiscount + apparelPrice + lateFee
+    let total = subtotal * (1 + PROCESSING_FEE_RATE)
+
+    return {
+      packagePrice: packagePrice,
+      discountAmount: discountAmount,
+      wantsShirt: wantsShirt,
+      shirtIncluded: shirtIncluded,
+      apparelPrice: apparelPrice,
+      lateFee: lateFee,
+      subtotal: subtotal,
+      processingFee: total - subtotal,
+      total: total
     }
-  
-    price = price * 1.03
+  }
 
-    this.renderButton(price)
+  calculatePrice () {
+    this.renderButton(this.getTotals().total)
   }
 
   renderButton (amount) {
@@ -1491,90 +1450,103 @@ class Payment extends React.Component {
     })
   }
 
-  // fillInfo() {
-  //   this.props.advance('payment', {paymentId: 'paymentID==2348759012834570', payerId: 'payerID==9018245709284'})
-  // }
-  // <a style={{color: '#C0282D', fontSize: '25px'}} onClick={this.fillInfo.bind(this)}>FILL INFO</a>
-
   render () {
     let errorContainer
     if (!(this.state.errorText.length === 0)) {
-      errorContainer = <div className='row'>
-        <div className='error-container'>
+      errorContainer = (
+        <div className='reg-error'>
           <p>{this.state.errorText}</p>
         </div>
-      </div>
+      )
     }
 
-    let currentPrice = (this.state.price * (1 - this.state.discount))
-    currentPrice = currentPrice < 10 ? (1).toFixed(2) : currentPrice.toFixed(2)
-    let size = this.props.data.selectPackage.apparel
-    let apparelRes = this.props.data.selectPackage.yesApparel
-    let str = this.props.data.selectPackage.strength
-    let strFam = this.props.data.selectPackage.strengthFam
-    let group = this.props.data.selectPackage.group
-    let fkmembership = this.props.data.selectPackage.membership
+    let pkg = this.props.data.selectPackage
+    let athlete = this.props.data.athleteInfo || {}
+    let t = this.getTotals()
 
-    let currentProcessingFee = 0
-    if (apparelRes === 'yes') {
-      if (fkmembership === 'summercamp'){
-        currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
-      }else{
-        currentProcessingFee = ((((this.state.price * (1 - this.state.discount))) + 35) * 0.03).toFixed(2)
+    // Package description lines (only the ones that apply to this selection)
+    let packageDetails = [
+      pkg.quarter ? ['Session', LABELS.quarter[pkg.quarter] || pkg.quarter] : null,
+      pkg.group ? ['Training group', LABELS.group[pkg.group] || pkg.group] : null,
+      LABELS.membership[pkg.membership] ? ['Class option', LABELS.membership[pkg.membership]] : null,
+      pkg.facility ? ['Location', LABELS.facility[pkg.facility] || pkg.facility] : null
+    ].filter(Boolean)
 
-      }
-    }else{
-      currentProcessingFee = ((this.state.price * (1 - this.state.discount)) * 0.03).toFixed(2)
-    }
-    
-    let lateFee = this.state.lateFee
-
-    /*
-    old late fee code
-    {lateFee > 0 ? (<p className='price-text'>Late Fee: <span className='red-text'>${lateFee.toFixed(2)}</span></p>) : ''}
-     */
+    let shirtSize = LABELS.size[pkg.apparel]
 
     return (
-      <div className='row'>
-        <div className='col-xs-12' style={{textAlign: 'center'}}>
-          <form id='payment' className='form-labels-on-top'>
-            <div className='form-title-row'>
-              <h1>Finalize Payment</h1>
-            </div>
+      <div className='reg-center'>
+        <form id='payment' className='reg-form'>
+          <p className='reg-form__title'>Finalize Payment</p>
 
-            <div className='form-row'>
-              <div className='row'>
-                <div className='col-xs-12' style={{textAlign: 'center'}}>
-                  <p className='price-text'>Training Package: <span className='red-text'>${currentPrice}</span></p>
-                  {apparelRes !== 'none' && fkmembership !== 'summercamp'? (<p className='price-text'>Apparel Fee: <span className='red-text'>${35}</span></p>) : ''}
-                  <p className='price-text'>Online Processing Fee: <span className='red-text'>${currentProcessingFee}</span></p>
+          <div className='reg-section'>
+            <p className='reg-heading'>Order Summary</p>
+            {athlete.fname ? (<p className='reg-subnote'>Athlete: {athlete.fname} {athlete.lname}</p>) : ''}
+
+            <div className='reg-summary'>
+              <div className='reg-summary__item'>
+                <div className='reg-summary__row'>
+                  <span className='reg-summary__label'>Training Package</span>
+                  <span className='reg-summary__amount'>{formatMoney(t.packagePrice)}</span>
                 </div>
+                <ul className='reg-summary__details'>
+                  {packageDetails.map((d) => (<li key={d[0]}><span>{d[0]}:</span> {d[1]}</li>))}
+                </ul>
+              </div>
+
+              {t.discountAmount > 0 ? (
+                <div className='reg-summary__row reg-summary__row--discount'>
+                  <span className='reg-summary__label'>Discount{this.state.discountCode ? ' (' + this.state.discountCode + ')' : ''}</span>
+                  <span className='reg-summary__amount'>&minus;{formatMoney(t.discountAmount)}</span>
+                </div>
+              ) : ''}
+
+              {t.wantsShirt ? (
+                <div className='reg-summary__item'>
+                  <div className='reg-summary__row'>
+                    <span className='reg-summary__label'>DC Vault T-Shirt</span>
+                    <span className='reg-summary__amount'>{t.shirtIncluded ? 'Included' : formatMoney(t.apparelPrice)}</span>
+                  </div>
+                  <ul className='reg-summary__details'>
+                    <li><span>Size:</span> {shirtSize || 'Not selected (coach will confirm)'}</li>
+                  </ul>
+                </div>
+              ) : ''}
+
+              {t.lateFee > 0 ? (
+                <div className='reg-summary__row'>
+                  <span className='reg-summary__label'>Late Fee</span>
+                  <span className='reg-summary__amount'>{formatMoney(t.lateFee)}</span>
+                </div>
+              ) : ''}
+
+              <div className='reg-summary__row reg-summary__row--muted'>
+                <span className='reg-summary__label'>Online Processing Fee</span>
+                <span className='reg-summary__amount'>{formatMoney(t.processingFee)}</span>
+              </div>
+
+              <div className='reg-summary__row reg-summary__row--total'>
+                <span className='reg-summary__label'>Total</span>
+                <span className='reg-summary__amount'>{formatMoney(t.total)}</span>
               </div>
             </div>
+          </div>
 
-            <a style={{color: '#C0282D'}} onClick={this.toggleDiscount.bind(this)}> Have a Discount Code? </a>
+          <a className='reg-link' onClick={this.toggleDiscount.bind(this)}>Have a Discount Code?</a>
 
-            <div className='form-row' style={{display: this.state.showDiscount ? 'block' : 'none'}}>
-              <div className='row'>
-                <div className='col-xs-8'>
-                  <label>
-                    <span>Discount Code</span>
-                    <input ref='discountBox' type='text' name='discount' style={{width: '100%'}} />
-                  </label>
-                </div>
-                <div className='col-xs-4'>
-                  <button type='button' onClick={this.applyDiscount.bind(this)}>Apply</button>
-                </div>
-              </div>
-              {errorContainer}
+          <div style={{display: this.state.showDiscount ? 'block' : 'none', marginTop: '12px'}}>
+            <div className='reg-grid-2'>
+              <input ref='discountBox' type='text' name='discount' placeholder='Discount Code' />
+              <button type='button' className='reg-btn' onClick={this.applyDiscount.bind(this)}>Apply</button>
             </div>
+            {errorContainer}
+          </div>
 
-            <p style={{fontSize: '14px', fontWeight: 'normal', marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
-            <div className='form-row' style={{textAlign: 'center'}}>
-              <div id='paypal-button-container' />
-            </div>
-          </form>
-        </div>
+          <p className='reg-subnote' style={{marginTop: '20px'}}>Click the button to process your payment through PayPal</p>
+          <div className='reg-section' style={{textAlign: 'center'}}>
+            <div id='paypal-button-container' />
+          </div>
+        </form>
       </div>
     )
   }
@@ -1621,18 +1593,14 @@ class Confirmation extends React.Component {
 
   render () {
     return (
-      <div className='row'>
-        <div className='col-xs-12' style={{textAlign: 'center'}}>
-          <form id='confirmation' className='form-labels-on-top'>
-            <div className='form-title-row'>
-              <h1>{this.state.title}</h1>
-            </div>
-            <p style={{fontSize: '14px', fontWeight: 'normal'}}> {this.state.message} </p>
-            <div className='form-row' style={{textAlign: 'center'}}>
-              <button type='button' onClick={() => { window.location.href = '/' }}>Home</button>
-            </div>
-          </form>
-        </div>
+      <div className='reg-center'>
+        <form id='confirmation' className='reg-form' style={{textAlign: 'center'}}>
+          <p className='reg-form__title'>{this.state.title}</p>
+          <p style={{fontFamily: 'var(--rd-font-body)', color: '#374151', lineHeight: 1.6}}>{this.state.message}</p>
+          <div className='reg-section'>
+            <button type='button' className='reg-btn' onClick={() => { window.location.href = '/' }}>Home</button>
+          </div>
+        </form>
       </div>
     )
   }
@@ -1640,32 +1608,28 @@ class Confirmation extends React.Component {
 
 class ProgressBar extends React.Component {
   render () {
-    let offStyle = {width: '0px', height: '0px', padding: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: '#AAA', margin: '0 auto'}
-    let onStyle = {width: '0px', height: '0px', padding: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: '#C0282D', margin: '0 auto'}
+    let steps = ['Packages', 'Athlete', 'Agreement', 'Payment', 'Done!']
+    let current = this.props.pageNum
 
     return (
-      <div className='container' style={{marginTop: '35px'}}>
-        <div className='row'>
-          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-            <div style={this.props.pageNum === 1 ? onStyle : offStyle} />
-            <p>Packages</p>
-          </div>
-          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-            <div style={this.props.pageNum === 2 ? onStyle : offStyle} />
-            <p>Athlete</p>
-          </div>
-          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-            <div style={this.props.pageNum === 3 ? onStyle : offStyle} />
-            <p>Agreement</p>
-          </div>
-          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-            <div style={this.props.pageNum === 4 ? onStyle : offStyle} />
-            <p>Payment</p>
-          </div>
-          <div className='col-xs-2 col-xs-push-1 progress-text' style={{textAlign: 'center'}}>
-            <div style={this.props.pageNum === 5 ? onStyle : offStyle} />
-            <p>Done!</p>
-          </div>
+      <div className='reg-stepper'>
+        <div className='reg-stepper__track'>
+          {steps.map((label, i) => {
+            let n = i + 1
+            let cls = 'reg-step'
+            if (n === current) {
+              cls += ' reg-step--active'
+            } else if (n < current) {
+              cls += ' reg-step--done'
+            }
+            let content = (n < current || n === 5) ? (<i className='fa fa-check' />) : n
+            return (
+              <div className={cls} key={label}>
+                <div className='reg-step__circle'>{content}</div>
+                <div className='reg-step__label'>{label}</div>
+              </div>
+            )
+          })}
         </div>
       </div>
     )
