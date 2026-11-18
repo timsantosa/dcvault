@@ -1,6 +1,7 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
 import GenericModal from './generic-modal.jsx'
+import AccountCard from './account-card.jsx'
 const $ = window.$
 
 class AccountPanel extends React.Component {
@@ -21,6 +22,7 @@ class AccountPanel extends React.Component {
       discounts: [],
       invites: [],
       isEditing: false,
+      loaded: false,
       errorText: '',
       statusText: ''
     }
@@ -36,7 +38,7 @@ class AccountPanel extends React.Component {
     const loginButton = document.getElementById('login-button')
     apiHelpers.verifyToken().then((answer) => {
       if (answer) {
-        loginButton.innerHTML = 'My Account'
+        loginButton.innerHTML = '<i class="fa fa-user"></i>'
         loginButton.onclick = () => {
           window.location.href = '/account'
         }
@@ -101,7 +103,8 @@ class AccountPanel extends React.Component {
             athletes: response.data.athletes || [],
             purchases: response.data.purchases || [],
             discounts: response.data.discounts || [],
-            invites: response.data.invites || []
+            invites: response.data.invites || [],
+            loaded: true
           })
         } else {
           window.location.href = '/'
@@ -119,114 +122,121 @@ class AccountPanel extends React.Component {
     let purchases = this.state.purchases
     let athletes = this.state.athletes
     let user = this.state.user
-    let errorContainer = ''
-    let statusContainer = ''
-    if (this.state.errorText.length > 0) {
-      errorContainer = (
-        <div className='error-container'>
-          <p>{this.state.errorText}</p>
-        </div>
-      )
+    let isEditing = this.state.isEditing
+    let hasName = this.state.name && this.state.name !== 'None Entered'
+
+    let heroSub = 'Loading your account...'
+    if (this.state.loaded) {
+      heroSub = hasName ? ('Welcome back, ' + this.state.name + '.') : 'Welcome back.'
     }
-    if (this.state.statusText.length > 0) {
-      statusContainer = (
-        <div className='status-container'>
-          <p>{this.state.statusText}</p>
-        </div>
-      )
-    }
+
+    let editAction = (
+      <button type='button' className='acct-card__action' onClick={this.editUserInfo.bind(this)}>
+        <i className={isEditing ? 'fa fa-times' : 'fa fa-pencil'} /> {isEditing ? 'Cancel' : 'Edit'}
+      </button>
+    )
+
     return (
-      <section id='my-account'>
-        <div className='row'>
-          <div className='col-xs-12 col-md-6'>
-            <p className='subsection-header'><span className='red-text'>Athlete</span> Profile</p>
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>My Purchases</span>
-              </div>
-              <div className='body-box'>
-                <Purchases purchases={purchases} athletes={athletes} user={user} />
-              </div>
+      <section className='reg-redesign acct-redesign'>
+        <header className='acct-hero'>
+          <div className='container acct-hero__inner'>
+            <div>
+              <p className='acct-hero__eyebrow'>Athlete Profile</p>
+              <h1 className='acct-hero__title'>My Account</h1>
+              <p className='acct-hero__sub'>{heroSub}</p>
             </div>
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>Resources</span>
-              </div>
-              <div className='body-box'>
-                <ul>
-                  <li><a href='/files/quarterly-conditioning.pdf' download>Quarterly Conditioning Guide</a></li>
-                  <li><a href='/files/parking-pass.pdf' download>DCV Parking Pass</a></li>
-                </ul>
-              </div>
-            </div>
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>Pole Rental</span>
-              </div>
-              <div className='body-box'>
-                <PoleRental user={user} />
-              </div>
+            <div className='acct-hero__actions'>
+              <button type='button' className='reg-btn acct-btn--light acct-btn--sm' onClick={this.logout.bind(this)}>Log Out</button>
             </div>
           </div>
+        </header>
 
-          <div className='col-xs-12 col-md-6'>
-            <p className='subsection-header'>Account <span className='red-text'>Management</span></p>
+        <div className='container acct-body'>
+          <div className='acct-grid'>
+            <div className='acct-col'>
+              <AccountCard title='My Purchases'>
+                <Purchases purchases={purchases} athletes={athletes} user={user} loaded={this.state.loaded} />
+              </AccountCard>
 
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>My Account Details</span>
-                <span style={{display: this.state.isEditing ? 'none' : 'inline-block'}} className='glyphicon glyphicon-pencil edit-button' onClick={this.editUserInfo.bind(this)} />
-                <span style={{display: this.state.isEditing ? 'inline-block' : 'none'}} className='glyphicon glyphicon-remove edit-button' onClick={this.editUserInfo.bind(this)} />
-              </div>
-              <div className='body-box'>
-                <p><span className='item-name'>Name:</span>
-                  <span style={{display: this.state.isEditing ? 'none' : 'inline-block'}}>{this.state.name}</span>
-                  <input ref='nameChange' style={{display: this.state.isEditing ? 'inline-block' : 'none'}} />
-                </p>
-                <p><span className='item-name'>Email:</span>{this.state.email}</p>
-                <p><span className='item-name'>Password:</span>
-                  <span style={{display: this.state.isEditing ? 'none' : 'inline-block'}}>********</span>
-                  <input ref='passwordChange' style={{display: this.state.isEditing ? 'inline-block' : 'none'}} type='password' />
-                  <span style={{display: this.state.isEditing ? 'block' : 'none'}} />
-                  <span className='item-name' style={{display: this.state.isEditing ? 'inline-block' : 'none'}}>Confirm:</span>
-                  <input ref='passwordChangeConfirm' style={{display: this.state.isEditing ? 'inline-block' : 'none'}} type='password' />
-                </p>
-
-                <div className='red-button' style={{display: this.state.isEditing ? 'block' : 'none'}} onClick={this.updateUserInfo.bind(this)}>
-                  <span className='button-text'>Update</span>
-                </div>
-                {errorContainer}
-                {statusContainer}
-
-                <p style={{display: this.state.isEditing ? 'none' : 'block'}}>
-                  To edit your account information, click the pen icon in the top right
-                </p>
-
-                <div style={{display: this.state.isEditing ? 'none' : 'block'}} className='red-button' onClick={this.logout.bind(this)}>
-                  <span className='button-text'>Log Out</span>
-                </div>
-              </div>
+              <AccountCard title='Pole Rental'>
+                <PoleRental user={user} />
+              </AccountCard>
             </div>
-            {this.state.isAdmin ? (
-              <div className='account-panel-box'>
-                <div className='title-box'>
-                  <span className='title'>Admin Panel</span>
-                </div>
-                <div className='body-box'>
-                  <p>
-                    It appears you are an administrator. To view your Administrator Panel, click below.
-                  </p>
-                  <div className='multi-btn-container'>
-                    <div className='red-button' onClick={() => { window.location.href = '/admin' }}>
-                      <span className='button-text'>Admin</span>
+
+            <div className='acct-col'>
+              <AccountCard title='Account Details' action={editAction}>
+                {isEditing ? (
+                  <form onSubmit={(e) => { e.preventDefault(); this.updateUserInfo() }}>
+                    <div className='reg-field'>
+                      <label htmlFor='acct-name'>Name</label>
+                      <input id='acct-name' className='reg-input' ref='nameChange' placeholder={hasName ? this.state.name : ''} />
                     </div>
-                    <div className='red-button' onClick={() => { window.location.href = '/poles' }}>
-                      <span className='button-text'>Poles</span>
+                    <div className='reg-field'>
+                      <label>Email</label>
+                      <p className='acct-muted' style={{margin: 0}}>{this.state.email}</p>
                     </div>
+                    <div className='reg-field'>
+                      <label htmlFor='acct-password'>New Password</label>
+                      <input id='acct-password' className='reg-input' ref='passwordChange' type='password' />
+                    </div>
+                    <div className='reg-field'>
+                      <label htmlFor='acct-password-confirm'>Confirm New Password</label>
+                      <input id='acct-password-confirm' className='reg-input' ref='passwordChangeConfirm' type='password' />
+                    </div>
+                    <div className='acct-form-actions'>
+                      <button type='submit' className='reg-btn acct-btn--sm'>Update</button>
+                      <button type='button' className='reg-btn reg-btn--ghost acct-btn--sm' onClick={this.editUserInfo.bind(this)}>Cancel</button>
+                    </div>
+                  </form>
+                ) : (
+                  <dl className='acct-dl'>
+                    <div className='acct-dl__row'>
+                      <dt>Name</dt>
+                      <dd>{this.state.name}</dd>
+                    </div>
+                    <div className='acct-dl__row'>
+                      <dt>Email</dt>
+                      <dd>{this.state.email}</dd>
+                    </div>
+                    <div className='acct-dl__row'>
+                      <dt>Password</dt>
+                      <dd>********</dd>
+                    </div>
+                  </dl>
+                )}
+                {this.state.errorText.length > 0 ? (
+                  <div className='reg-error'>
+                    <p>{this.state.errorText}</p>
                   </div>
-                </div>
-              </div>
-            ) : ''}
+                ) : null}
+                {this.state.statusText.length > 0 ? (
+                  <div className='acct-status'>
+                    <p>{this.state.statusText}</p>
+                  </div>
+                ) : null}
+              </AccountCard>
+
+              {this.state.isAdmin ? (
+                <AccountCard title='Administrator'>
+                  <p>You have administrator access. Manage registrations, discount codes and poles below.</p>
+                  <div className='acct-form-actions'>
+                    <a className='reg-btn acct-btn--sm' href='/admin'>Admin Panel</a>
+                    <a className='reg-btn reg-btn--ghost acct-btn--sm' href='/poles'>Poles</a>
+                  </div>
+                </AccountCard>
+              ) : null}
+
+              <AccountCard title='Resources'>
+                <ul className='acct-links'>
+                  <li>
+                    <a href='/files/quarterly-conditioning.pdf' download>
+                      <i className='fa fa-file-pdf-o' /> Quarterly Conditioning Guide
+                      <i className='fa fa-download acct-links__arrow' />
+                    </a>
+                  </li>
+                </ul>
+              </AccountCard>
+            </div>
           </div>
         </div>
       </section>
@@ -336,63 +346,59 @@ class PoleRental extends React.Component {
   render () {
     const openModal = this.state.openModal
     if (this.state.athletes.filter(athlete => athlete.currentlyRegistered).length === 0) {
-      return (<p> There are no actively registered athletes associated with this account </p>)
+      return (
+        <div>
+          {this.state.errorText ? (
+            <div className='reg-error'>
+              <p>{this.state.errorText}</p>
+            </div>
+          ) : null}
+          <div className='acct-empty'>There are no actively registered athletes associated with this account.</div>
+        </div>
+      )
     } else {
       return (
         <div className='pole-rental'>
-          <p>
-            To request a pole rental, select from the options below
+          <p className='acct-muted'>
+            Registered athletes can rent a pole. Choose a rental period and athlete below.
           </p>
-          <div style={{textAlign: 'center'}}>
-            <form id='rental-info' className='form-labels-on-top' style={{padding: '8px', boxShadow: 'none'}} onChange={this.updateState.bind(this)}>
-              <div className='form-row'>
-                <label>
-                  <span className='required'>Select Rental Period</span>
-                  <select name='type'>
-                    {
-                      this.state.rentalOptions.map(option => {
-                        return (<option key={option.name} value={option.name}>{option.displayName}: {option.displayPrice}</option>)
-                      })
-                    }
-                  </select>
-                </label>
+          <form id='rental-info' onChange={this.updateState.bind(this)} onSubmit={(e) => { e.preventDefault(); this.submit() }}>
+            <div className='reg-grid-2'>
+              <div className='reg-field'>
+                <label htmlFor='rental-type'>Rental Period<span className='rd-req'>*</span></label>
+                <select id='rental-type' className='reg-input' name='type'>
+                  {
+                    this.state.rentalOptions.map(option => {
+                      return (<option key={option.name} value={option.name}>{option.displayName}: {option.displayPrice}</option>)
+                    })
+                  }
+                </select>
               </div>
-              <div className='form-row' style={{display: this.state.period === 'quarterly' ? 'block' : 'none'}}>
-                <label>
-                  <span className='required'>Select Quarter</span>
-                  <select name='quarter' defaultValue={apiHelpers.getCurrentQuarter()}>
-                    {
-                      this.state.quarters.map(option => {
-                        return (<option key={option.name} value={option.name}>{option.displayName}</option>)
-                      })
-                    }
-                  </select>
-                </label>
+              <div className='reg-field'>
+                <label htmlFor='rental-athlete'>Athlete<span className='rd-req'>*</span></label>
+                <select id='rental-athlete' className='reg-input' name='athlete'>
+                  {
+                    this.state.athletes.filter(athlete => athlete.currentlyRegistered).map(athlete => {
+                      return (<option key={athlete.id} value={athlete.id}>{athlete.firstName + ' ' + athlete.lastName}</option>)
+                    })
+                  }
+                </select>
               </div>
-              { this.state.athletes.length ? (
-                <div className='form-row'>
-                  <label>
-                    <span className='required'>Select Athlete</span>
-                    <select name='athlete'>
-                      {
-                        this.state.athletes.filter(athlete => athlete.currentlyRegistered).map(athlete => {
-                          return (<option key={athlete.id} value={athlete.id}>{athlete.firstName + ' ' + athlete.lastName}</option>)
-                        })
-                      }
-                    </select>
-                  </label>
-                </div>
-              ) : (
-                <div className='error-container'>
-                  <p>{this.state.errorText}</p>
-                </div>
-              )}
-
-            </form>
-            <div className='red-button' style={{marginTop: '16px', marginBottom: '16px'}} onClick={this.submit.bind(this)}>
-              <span className='button-text'>Request Rental</span>
             </div>
-          </div>
+            <div className='reg-field' style={{display: this.state.period === 'quarterly' ? 'block' : 'none'}}>
+              <label htmlFor='rental-quarter'>Quarter<span className='rd-req'>*</span></label>
+              <select id='rental-quarter' className='reg-input' name='quarter' defaultValue={apiHelpers.getCurrentQuarter()}>
+                {
+                  this.state.quarters.map(option => {
+                    return (<option key={option.name} value={option.name}>{option.displayName}</option>)
+                  })
+                }
+              </select>
+            </div>
+            <div className='acct-form-actions'>
+              <button type='submit' className='reg-btn acct-btn--sm'>Request Rental</button>
+            </div>
+          </form>
           {openModal ? (<GenericModal style={{zIndex: 9999}} title={'Request Rental'} onClose={this.closeModal.bind(this)} childComponent={<PoleRentalPurchase period={this.state.period} user={this.props.user} quarter={this.state.quarter} closeFunction={this.closeModal.bind(this)} athlete={this.getSelectedAthlete()} />} />) : ''}
         </div>
       )
@@ -491,19 +497,31 @@ class PoleRentalPurchase extends React.Component {
   render () {
     if (!this.state.successfulPayment && !this.state.failedPayment) {
       return (
-        <div style={{textAlign: 'center'}}>
-          <p>
+        <div className='reg-redesign' style={{minHeight: 0, backgroundColor: 'transparent'}}>
+          <p className='acct-modal-copy'>
             {this.props.period === 'oneTime'
-          ? 'A one-time rental is good for 48 hours. You are expected to return the pole at practice 48 hours from the date the pole is issued'
-          : 'A quarterly rental is good for the duration of the training quarter. You are expected to return the pole at practice before the start of the following quarter'}</p>
-          <p><span className='red-text'>{this.state.periodDisplay} rental:</span> ${this.state.price.toFixed(2)}</p>
-          <p><span className='red-text'>Online Transaction Fee:</span> ${(this.state.price * 0.03).toFixed(2)}</p>
+          ? 'A one-time rental is good for 48 hours. You are expected to return the pole at practice 48 hours from the date the pole is issued.'
+          : 'A quarterly rental is good for the duration of the training quarter. You are expected to return the pole at practice before the start of the following quarter.'}</p>
+          <div className='reg-summary'>
+            <div className='reg-summary__row'>
+              <span className='reg-summary__label'>{this.state.periodDisplay} rental</span>
+              <span className='reg-summary__amount'>${this.state.price.toFixed(2)}</span>
+            </div>
+            <div className='reg-summary__row reg-summary__row--muted'>
+              <span className='reg-summary__label'>Online transaction fee (3%)</span>
+              <span className='reg-summary__amount'>${(this.state.price * 0.03).toFixed(2)}</span>
+            </div>
+            <div className='reg-summary__row reg-summary__row--total'>
+              <span className='reg-summary__label'>Total</span>
+              <span className='reg-summary__amount'>${(this.state.price * 1.03).toFixed(2)}</span>
+            </div>
+          </div>
           <div id='paypal-button-container' />
         </div>
       )
     } else {
       return (
-        <div className={this.state.failedPayment ? 'error-container' : 'status-container'}>
+        <div className={this.state.failedPayment ? 'reg-error' : 'acct-status'}>
           <p>{this.state.statusText}</p>
         </div>
       )
@@ -522,27 +540,39 @@ class Purchases extends React.Component {
 
   render () {
     let getAthlete = this.getAthlete.bind(this)
-    if (this.props.purchases.length === 0) {
-      return (<p> None to show </p>)
+    if (!this.props.loaded) {
+      return (<p className='acct-muted'>Loading...</p>)
+    }
+    let user = this.props.user || {}
+    let purchases = this.props.purchases.filter((purchase) => purchase.userId === user.id)
+    if (purchases.length === 0) {
+      return (
+        <div className='acct-empty'>
+          No training purchases yet.
+          <div><a className='reg-btn acct-btn--sm' href='/register'>Register for Training</a></div>
+        </div>
+      )
     } else {
       return (
-        <table className='purchases-table'>
-          <tbody>
-            <tr>
-              <th>Quarter</th>
-              <th>Group</th>
-              <th>Facility</th>
-              <th>Athlete</th>
-            </tr>
-            {this.props.purchases.map((purchase) => {
-              if (purchase.userId === this.props.user.id) {
+        <div className='acct-table-wrap'>
+          <table className='acct-table'>
+            <thead>
+              <tr>
+                <th>Quarter</th>
+                <th>Group</th>
+                <th>Facility</th>
+                <th>Athlete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {purchases.map((purchase) => {
                 return (
                   <tr key={purchase.id}>
                     <td>
                       {purchase.quarter.toUpperCase()}
                     </td>
                     <td>
-                      {purchase.group === 'beginner-intermediate' ? ('BEGINNER/INTERMEDATE') : purchase.group.toUpperCase()}
+                      {purchase.group === 'beginner-intermediate' ? ('BEGINNER/INTERMEDIATE') : purchase.group.toUpperCase()}
                     </td>
                     <td>
                       {purchase.facility.toUpperCase()}
@@ -552,10 +582,10 @@ class Purchases extends React.Component {
                     </td>
                   </tr>
                 )
-              }
-            })}
-          </tbody>
-        </table>
+              })}
+            </tbody>
+          </table>
+        </div>
       )
     }
   }

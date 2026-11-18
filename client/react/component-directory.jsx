@@ -36,29 +36,23 @@ contactClose.onclick = () => {
 let socialButton = document.getElementById('social-button')
 let socialLinkDiv = document.getElementsByClassName('social-links')
 
-socialButton.onclick = () => {
-  socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
-  }, 500)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
-  }, 1000)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
-  }, 1500)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
-  }, 2000)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
-  }, 2500)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
-  }, 3000)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
-  }, 3500)
+// Flash the footer's social icons when "Contact"/"Social" is clicked. Pages
+// using the redesigned footer (register, account, admin) don't have the old
+// `.social-links` block, so do nothing there (the link still scrolls to the
+// footer).
+if (socialButton) {
+  socialButton.onclick = () => {
+    let links = socialLinkDiv[0]
+    if (!links) {
+      return
+    }
+    links.style.background = 'rgba(255,255,255,.25)'
+    for (let i = 1; i <= 7; i++) {
+      setTimeout(() => {
+        links.style.background = i % 2 ? 'rgba(255,255,255,0)' : 'rgba(255,255,255,.25)'
+      }, i * 500)
+    }
+  }
 }
 
 if (currentPage.indexOf('account') !== -1) {
