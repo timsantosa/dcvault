@@ -10,7 +10,7 @@ const parseFormValues = apiHelpers.parseFormValues
 const ENABLE_ATHLETE_SELECTOR = true
 
 // Pricing shared by the Packages step text and the Payment step charge.
-const APPAREL_PRICE = 20
+const APPAREL_PRICE = 35
 const PROCESSING_FEE_RATE = 0.03
 
 // Display labels for the Payment step order summary
