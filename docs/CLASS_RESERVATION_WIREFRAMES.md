@@ -3,7 +3,7 @@
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Audience:** Client design review (walkthrough)  
 **Status:** Proposed UI for MVP / dark launch — not pixel-final  
-**Last updated:** 2026-11-17  
+**Last updated:** 2026-11-18  
 **Aligned with PRD:** v1.3
 
 This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail, data models, and later-phase features live in the PRD and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree, the **PRD is the source of truth**.
@@ -544,26 +544,6 @@ Past rows sit in the same scrolling agenda, dimmed. A past reservation that was 
 │  │ 4:00–6:00 PM                 │   │
 │  │ Open Vault             Missed│   │
 │  └──────────────────────────────┘   │
-```
-
----
-
-
-
-## Flow E+ — Parent with two athletes
-
-Switching AthleteProfile (existing More → Switch Profile, also the chip on Schedule) swaps **schedule, credits, reservations, and history** to that athlete. A parent never accidentally spends Kid B’s credit while looking at Kid A.
-
-```
-┌─────────────────────────────────────┐
-│  Switch athlete                     │
-│                                     │
-│  ●  Emma Dunne                      │
-│     Open / All Ages · 8 left        │
-│                                     │
-│  ○  Noah Dunne                      │
-│     Fly Kids · 12 left              │
-└─────────────────────────────────────┘
 ```
 
 ---

@@ -110,7 +110,6 @@ Follow §19 "After completing a task": check off the §18 item, add completion n
 | 11.1 | Flow J |
 | 11.2a | Flow E1 and Flow E4 |
 | 11.2b | Flow E3 |
-| 11.2c | Flow E+ |
 | 12.1 | Who sees what, roster on class detail |
 | 12.2 | Flow K |
 | 12.3 | Flow H |

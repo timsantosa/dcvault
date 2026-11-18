@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-17  
+**Last updated:** 2026-11-18  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -789,7 +789,7 @@ The athlete needs a place they can open and read those notices. The shape stays 
 - [ ] Class change notices via class messaging, with option to save silently
 - [ ] Class participant messaging
 - [ ] Roster visibility (permission-gated)
-- [ ] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
+- [x] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
 - [x] Private lessons reserve immediately (no approval workflow)
 - [ ] One-way sync to separate Google Calendar (task 5.1, last MVP build task; rules in §6)
 - [ ] Unit test framework + core logic tests
@@ -1068,15 +1068,11 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 - [x] **11.2a — Progress meter + schedule attendance marks**
   - Semicircle meter for **current quarter only** (later fallback rules in §10 are not this task).
   - Quarter stats, `N expire [date]`, reserved vs remaining. Attended / Missed on past schedule rows.
-  - *Completion notes:* 2026-11-17. `GET /mobileapp/user/class-progress` for an owned profile with `reserve_classes`, or any profile with `manage_credits`. Denied callers get the same 404 as schedule. Purchased is the sum of finite grant quantities covering now (staff add/remove included; ended and not-yet-started left out). Attended is check-ins whose `occursOn` falls in the current season window. Unlimited shows the word instead of a fraction. No covering grant → no meter, `No classes this quarter`, attended still shows. Profile section sits under Age/Height/Weight/Pole. Schedule payload adds `attendance` (`attended` / `missed` / null). Class history and Switch Profile `group · N left` stay on 11.2b and 11.2c. The §15 athlete-profile box stays open.
+  - *Completion notes:* 2026-11-17. `GET /mobileapp/user/class-progress` for an owned profile with `reserve_classes`, or any profile with `manage_credits`. Denied callers get the same 404 as schedule. Purchased is the sum of finite grant quantities covering now (staff add/remove included; ended and not-yet-started left out). Attended is check-ins whose `occursOn` falls in the current season window. Unlimited shows the word instead of a fraction. No covering grant → no meter, `No classes this quarter`, attended still shows. Profile section sits under Age/Height/Weight/Pole. Schedule payload adds `attendance` (`attended` / `missed` / null).
 
 - [x] **11.2b — Class history**
   - History list (purchases, staff adjustments as separate lines, attended, missed, credits expired unused), filterable by date range (Flow E3).
-  - *Completion notes:* 2026-11-17. Tapping the progress block opens Class history. `GET /mobileapp/user/class-history` shares the progress permission check and loader. Lines are grant history text, Attended, Missed (reserved, no check-in), and Unused credits expired. Default range is the current quarter. The header filter reuses the jumps slide-out: Current Quarter, the previous eight quarters, and custom dates. A visit still shows if that date is no longer on the class. Progress and history stay two endpoints in one module. Switch Profile `group · N left` stays on 11.2c. The §15 athlete-profile box stays open.
-
-- [ ] **11.2c — Switch Profile summary**
-  - Switch Profile rows show training group and `N left` (Flow E+).
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-17. Tapping the progress block opens Class history. `GET /mobileapp/user/class-history` shares the progress permission check and loader. Lines are grant history text, Attended, Missed (reserved, no check-in), and Unused credits expired. Default range is the current quarter. The header filter reuses the jumps slide-out: Current Quarter, the previous eight quarters, and custom dates. A visit still shows if that date is no longer on the class. Progress and history stay two endpoints in one module.
 
 
 
