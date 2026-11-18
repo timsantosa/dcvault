@@ -465,13 +465,12 @@ module.exports = (app, db) => {
       let noapp = purchaseInfo.selectPackage.yesApparel;
       let app = purchaseInfo.selectPackage.apparel;
   
-      //If the group is fly-kids or basic then the membe
-      if (grp !== 'fly-kids' && mem !== 'basic') {
-        if (grp == 'adult') {
-          mem = 'adult';
-        } else {
-          mth = 'none';
-        }
+      // Month only applies to fly-kids, basic memberships and adults; clear it
+      // for everyone else. Adults keep the class package they chose
+      // ('2classes' / '8classes'). This used to overwrite it with 'adult',
+      // so older adult purchases don't record their class count.
+      if (grp !== 'fly-kids' && mem !== 'basic' && grp != 'adult') {
+        mth = 'none';
       }
   
       if (!mem) {
@@ -900,7 +899,19 @@ module.exports = (app, db) => {
                     athlete.dataValues.currentlyRegistered = currentlyRegistered
                     return athlete
                   })
-                  db.tables.Invites.findAll().then((invites) => {
+                  // Flag athletes who have a DCV mobile app profile linked to
+                  // their training record (athleteProfiles.athleteId). Read-only.
+                  db.tables.AthleteProfiles.findAll({
+                    attributes: ['athleteId'],
+                    where: {athleteId: {[db.tables.schema.Sequelize.Op.ne]: null}}
+                  }).then((profiles) => {
+                    let onApp = new Set(profiles.map((p) => p.athleteId))
+                    athletes.forEach((athlete) => {
+                      athlete.dataValues.dcvMobileApp = onApp.has(athlete.id) ? 'Yes' : ''
+                    })
+                  }).catch((err) => {
+                    console.error('Could not load mobile app profiles for admin info', err)
+                  }).then(() => db.tables.Invites.findAll()).then((invites) => {
                     db.tables.Discounts.findAll().then((discounts) => {
                       let user = {
                         id: foundUser.id,

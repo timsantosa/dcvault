@@ -1,0 +1,1069 @@
+/* ==========================================================================
+   DC Vault — Account & Admin page visual redesign
+   Builds on register-redesign.css (tokens, navbar, footer, .reg-btn,
+   .reg-input, .reg-field, .reg-error). Everything here is scoped to
+   `.acct-redesign`, the React-rendered section on /account and /admin, so
+   other pages that still use the legacy account styles (e.g. /poles) are
+   unaffected.
+   ========================================================================== */
+
+.acct-redesign {
+  /* section padding from new-age.css; leave room for the 88px fixed navbar */
+  padding: 88px 0 0;
+  border-bottom: 0;
+  color: var(--rd-ink-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Page header band
+   -------------------------------------------------------------------------- */
+.acct-hero {
+  position: relative;
+  background-color: var(--rd-ink);
+  background-image: linear-gradient(
+      90deg,
+      rgba(17, 17, 17, 0.96) 0%,
+      rgba(17, 17, 17, 0.85) 55%,
+      rgba(17, 17, 17, 0.55) 100%
+    ),
+    url('../img/register/hero-vaulter.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  color: #ffffff;
+  padding: 56px 0;
+}
+
+.acct-hero__inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.acct-hero__eyebrow {
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #fca5a5;
+  margin: 0 0 10px 0;
+}
+
+.acct-hero__title {
+  font-family: var(--rd-font-display);
+  font-size: 48px;
+  line-height: 52px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+}
+
+.acct-hero__sub {
+  font-family: var(--rd-font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #e5e7eb;
+  margin: 0;
+}
+
+.acct-hero__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons (extensions of .reg-btn)
+   -------------------------------------------------------------------------- */
+.acct-redesign .reg-btn {
+  text-decoration: none;
+}
+
+.acct-redesign .reg-btn:hover,
+.acct-redesign .reg-btn:focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.acct-redesign .reg-btn--ghost:hover,
+.acct-redesign .reg-btn--ghost:focus {
+  color: var(--rd-red);
+}
+
+.acct-btn--sm {
+  padding: 11px 24px;
+  font-size: 12px;
+}
+
+/* White outline button for use on the dark header */
+.acct-redesign .acct-btn--light {
+  background-color: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  color: #ffffff;
+}
+
+.acct-redesign .acct-btn--light:hover,
+.acct-redesign .acct-btn--light:focus {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.acct-redesign .reg-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+.acct-body {
+  padding-top: 40px;
+  padding-bottom: 72px;
+}
+
+.acct-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.acct-grid--halves {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.acct-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+.acct-card {
+  background-color: #ffffff;
+  border: 2px solid var(--rd-border-soft);
+  border-radius: 16px;
+  box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  min-width: 0;
+}
+
+.acct-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--rd-border);
+}
+
+.acct-card__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--rd-font-display);
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--rd-ink);
+  margin: 0;
+}
+
+.acct-card__title::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 4px;
+  height: 18px;
+  border-radius: 2px;
+  background-color: var(--rd-red);
+}
+
+.acct-card__body {
+  padding: 24px;
+  font-family: var(--rd-font-body);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.acct-card__body > *:last-child {
+  margin-bottom: 0;
+}
+
+.acct-card__body p {
+  margin: 0 0 16px 0;
+}
+
+/* Small icon/text button in a card header (edit / cancel) */
+.acct-card__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--rd-red);
+  background: transparent;
+  border: 2px solid var(--rd-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.acct-card__action:hover,
+.acct-card__action:focus {
+  border-color: var(--rd-red);
+  background-color: var(--rd-red-tint);
+  outline: none;
+}
+
+.acct-muted {
+  color: var(--rd-muted);
+}
+
+.acct-empty {
+  font-family: var(--rd-font-body);
+  font-size: 14px;
+  color: var(--rd-muted);
+  background-color: var(--rd-surface);
+  border: 1px dashed var(--rd-border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.acct-empty .reg-btn {
+  margin-top: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Account details (label / value rows)
+   -------------------------------------------------------------------------- */
+.acct-dl {
+  margin: 0 0 20px 0;
+}
+
+.acct-dl__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rd-border-soft);
+}
+
+.acct-dl__row:first-child {
+  padding-top: 0;
+}
+
+.acct-dl dt {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--rd-muted);
+}
+
+.acct-dl dd {
+  margin: 0;
+  font-weight: 500;
+  color: var(--rd-ink-soft);
+  text-align: right;
+  word-break: break-word;
+}
+
+/* --------------------------------------------------------------------------
+   Inputs (focus ring for .reg-input outside a .reg-form)
+   -------------------------------------------------------------------------- */
+.acct-redesign .reg-input:focus {
+  outline: none;
+  border-color: var(--rd-red);
+  box-shadow: 0 0 0 3px var(--rd-red-shadow);
+}
+
+.acct-redesign select.reg-input {
+  height: auto;
+}
+
+.acct-form-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+/* Success message, sibling of .reg-error */
+.acct-status {
+  background-color: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 16px 0;
+}
+
+.acct-status p {
+  color: #166534;
+  font-size: 13px;
+  margin: 2px 0;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+.acct-table-wrap {
+  overflow-x: auto;
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+}
+
+.acct-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--rd-font-body);
+}
+
+.acct-table th {
+  background-color: var(--rd-surface);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--rd-muted);
+  text-align: left;
+  white-space: nowrap;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rd-border);
+}
+
+.acct-table td {
+  font-size: 14px;
+  color: var(--rd-ink-soft);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rd-border-soft);
+  white-space: nowrap;
+}
+
+.acct-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.acct-table tbody tr:hover td {
+  background-color: #fcfcfd;
+}
+
+.acct-table__code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  background-color: var(--rd-border-soft);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+.acct-table__actions {
+  text-align: right;
+  width: 1%;
+}
+
+.acct-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  color: var(--rd-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.acct-icon-btn:hover,
+.acct-icon-btn:focus {
+  color: var(--rd-red);
+  background-color: var(--rd-red-tint);
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   Resources / quick links
+   -------------------------------------------------------------------------- */
+.acct-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.acct-links li + li {
+  margin-top: 10px;
+}
+
+.acct-links a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--rd-ink-soft);
+  text-decoration: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.acct-links a:hover,
+.acct-links a:focus {
+  border-color: var(--rd-red);
+  background-color: var(--rd-red-tint);
+  color: var(--rd-ink-soft);
+  text-decoration: none;
+}
+
+.acct-links .fa {
+  color: var(--rd-red);
+  width: 16px;
+  text-align: center;
+}
+
+.acct-links__arrow {
+  margin-left: auto;
+  color: var(--rd-muted-light) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Admin: record filter chips
+   -------------------------------------------------------------------------- */
+.acct-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.acct-filters__label {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--rd-muted);
+  margin-right: 4px;
+}
+
+.acct-chip {
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+}
+
+.acct-chip input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.acct-chip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--rd-ink-soft);
+  border: 2px solid var(--rd-border);
+  border-radius: 999px;
+  padding: 7px 16px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.acct-chip span::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--rd-border);
+}
+
+.acct-chip input:checked + span {
+  border-color: var(--rd-red);
+  background-color: var(--rd-red-tint);
+}
+
+.acct-chip input:checked + span::before {
+  background-color: var(--rd-red);
+}
+
+.acct-chip input:focus-visible + span {
+  box-shadow: 0 0 0 3px var(--rd-red-shadow);
+}
+
+.acct-chip input:disabled + span {
+  opacity: 0.45;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Admin: DCV mobile app marker (table cell) and header stat
+   -------------------------------------------------------------------------- */
+.acct-app-logo {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  vertical-align: middle;
+  border-radius: 4px;
+}
+
+.acct-app-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--rd-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-ink-soft);
+  background-color: var(--rd-surface);
+  border: 1px solid var(--rd-border);
+  border-radius: 999px;
+  padding: 5px 14px 5px 6px;
+  white-space: nowrap;
+}
+
+.acct-app-stat strong {
+  color: var(--rd-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Admin: SuperTable (shared component, restyled only inside this page)
+   -------------------------------------------------------------------------- */
+.acct-redesign .SuperTable {
+  font-family: var(--rd-font-body);
+  font-size: 13px;
+}
+
+.acct-redesign .SuperTable p {
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--rd-muted);
+  margin: 0 0 6px 0;
+}
+
+.acct-redesign .SuperTable a {
+  color: var(--rd-red);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.acct-redesign .SuperTable select,
+.acct-redesign .SuperTable input[type='text'],
+.acct-redesign .SuperTable textarea {
+  font-family: var(--rd-font-body);
+  font-size: 13px;
+  color: var(--rd-ink-soft);
+  background-color: #ffffff;
+  border: 2px solid var(--rd-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin: 0 6px 6px 0;
+  max-width: 100%;
+}
+
+.acct-redesign .SuperTable select:focus,
+.acct-redesign .SuperTable input[type='text']:focus,
+.acct-redesign .SuperTable textarea:focus {
+  outline: none;
+  border-color: var(--rd-red);
+}
+
+.acct-redesign .SuperTable button {
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--rd-red);
+  background: transparent;
+  border: 2px solid var(--rd-red);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin: 0 6px 6px 0;
+  cursor: pointer;
+}
+
+.acct-redesign .SuperTable button:hover {
+  background-color: var(--rd-red-tint);
+}
+
+.acct-redesign .SuperTable > table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  border: 2px solid var(--rd-border);
+  border-radius: 12px;
+  margin: 8px 0 16px;
+}
+
+.acct-redesign .SuperTable th {
+  background-color: var(--rd-surface);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--rd-muted);
+  white-space: nowrap;
+  text-align: left;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--rd-border);
+}
+
+.acct-redesign .SuperTable th.superTable-th {
+  cursor: pointer;
+}
+
+.acct-redesign .SuperTable th.superTable-th:hover {
+  color: var(--rd-red);
+}
+
+.acct-redesign .SuperTable td {
+  font-size: 13px;
+  color: var(--rd-ink-soft);
+  white-space: nowrap;
+  text-align: left;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--rd-border-soft);
+}
+
+.acct-redesign .SuperTable tbody tr:nth-child(even) td {
+  background-color: #fcfcfd;
+}
+
+.acct-redesign .SuperTable input[type='checkbox'] {
+  accent-color: var(--rd-red);
+  margin-right: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Admin: registrations-by-quarter chart (registration-chart.jsx)
+   Text stays in ink tokens; only the marks and swatches carry series color.
+   -------------------------------------------------------------------------- */
+.acct-chart {
+  font-family: var(--rd-font-body);
+}
+
+.acct-chart__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.acct-chart__field {
+  flex: 0 1 220px;
+  margin-bottom: 0;
+}
+
+.acct-chart__field .reg-input {
+  padding: 9px 12px;
+}
+
+.acct-chart__toggle {
+  margin-left: auto;
+  margin-bottom: 4px;
+}
+
+.acct-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  list-style: none;
+  margin: 0 0 12px 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-ink-soft);
+}
+
+.acct-chart__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.acct-chart__swatch {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.acct-chart__plot {
+  position: relative;
+  width: 100%;
+}
+
+.acct-chart__svg {
+  display: block;
+  overflow: visible;
+}
+
+.acct-chart__grid {
+  stroke: var(--rd-border-soft);
+  stroke-width: 1;
+}
+
+.acct-chart__baseline {
+  stroke: var(--rd-border);
+  stroke-width: 1;
+}
+
+.acct-chart__tick {
+  font-family: var(--rd-font-body);
+  font-size: 11px;
+  fill: var(--rd-muted);
+}
+
+.acct-chart__total {
+  font-family: var(--rd-font-body);
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--rd-ink-soft);
+}
+
+/* white outline so a total stays readable where the avg line crosses it */
+.acct-chart__total--halo {
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.acct-chart__hover-band {
+  fill: var(--rd-surface);
+}
+
+.acct-chart__tooltip {
+  position: absolute;
+  z-index: 2;
+  min-width: 180px;
+  pointer-events: none;
+  background-color: #ffffff;
+  border: 1px solid var(--rd-border);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.18);
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.acct-chart__tooltip-title {
+  font-weight: 700;
+  color: var(--rd-ink);
+  margin: 0 0 6px 0 !important;
+}
+
+.acct-chart__tooltip-empty {
+  color: var(--rd-muted);
+  margin: 0 !important;
+}
+
+.acct-chart__tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.acct-chart__tooltip-label {
+  color: var(--rd-ink-soft);
+}
+
+.acct-chart__tooltip-value {
+  margin-left: auto;
+  font-weight: 700;
+  color: var(--rd-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-chart__tooltip-row--total {
+  border-top: 1px solid var(--rd-border);
+  margin-top: 4px;
+  padding-top: 6px;
+  font-weight: 700;
+}
+
+.acct-chart__note {
+  margin: 12px 0 0 0 !important;
+}
+
+/* Avg classes per athlete line over the bars (right-hand axis), in DC Vault
+   red. A white casing under the line keeps it distinct where it crosses
+   the orange All Ages bars. Pointer events pass through to the column hit
+   targets underneath. */
+.acct-density__line-casing {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.acct-density__line {
+  fill: none;
+  stroke: var(--rd-red);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.acct-density__dot {
+  fill: var(--rd-red);
+  stroke: #ffffff;
+  stroke-width: 2px;
+  pointer-events: none;
+}
+
+.acct-density__dot--active {
+  fill: #7a0101;
+}
+
+.acct-density__value {
+  font-family: var(--rd-font-body);
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--rd-ink);
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.acct-density__value--active {
+  fill: var(--rd-red);
+}
+
+/* legend / tooltip key matches the red line */
+.acct-density__swatch,
+.acct-density__swatch::after {
+  background-color: var(--rd-red) !important;
+}
+
+.acct-density__axis-title {
+  font-family: var(--rd-font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  fill: var(--rd-muted);
+}
+
+/* Legend / tooltip key for the line: a short dark stroke with a dot */
+.acct-density__swatch {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 2px;
+  background-color: var(--rd-ink);
+  border-radius: 1px;
+}
+
+.acct-density__swatch::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--rd-ink);
+}
+
+.acct-density__coverage {
+  font-size: 12px;
+  margin: 4px 0 0 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Admin: facility / membership donuts (registration-breakdown.jsx)
+   -------------------------------------------------------------------------- */
+.acct-pie {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  font-family: var(--rd-font-body);
+}
+
+.acct-pie__figure {
+  flex: 0 0 auto;
+  margin: 0 auto;
+}
+
+.acct-pie__figure svg {
+  display: block;
+}
+
+/* 2px surface ring between slices */
+.acct-pie__slice {
+  stroke: #ffffff;
+  stroke-width: 2px;
+  stroke-linejoin: round;
+  transition: opacity 0.15s ease;
+}
+
+.acct-pie__center-value {
+  font-family: var(--rd-font-display);
+  font-size: 30px;
+  fill: var(--rd-ink);
+}
+
+.acct-pie__center-label {
+  font-family: var(--rd-font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  fill: var(--rd-muted);
+}
+
+.acct-pie__legend {
+  flex: 1 1 220px;
+  min-width: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.acct-pie__legend li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rd-border-soft);
+  font-size: 13px;
+  color: var(--rd-ink-soft);
+  cursor: default;
+  transition: opacity 0.15s ease;
+}
+
+.acct-pie__legend li:last-child {
+  border-bottom: 0;
+}
+
+.acct-pie__legend-item--dim {
+  opacity: 0.45;
+}
+
+.acct-pie__legend-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 500;
+}
+
+.acct-pie__legend-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-pie__legend-pct {
+  width: 40px;
+  text-align: right;
+  color: var(--rd-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Membership card: mirrors the facility card's filter; sized to match the
+   chip row so the two donuts line up side by side */
+.acct-pie__showing {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-ink-soft);
+  margin: 0 0 14px 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Pole rental purchase modal content
+   -------------------------------------------------------------------------- */
+.acct-modal-copy {
+  font-family: var(--rd-font-body);
+  font-size: 14px;
+  line-height: 22px;
+  color: #374151;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.acct-redesign .reg-summary {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+  .acct-grid,
+  .acct-grid--halves {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .acct-hero {
+    padding: 40px 0;
+  }
+  .acct-hero__title {
+    font-size: 34px;
+    line-height: 38px;
+  }
+  .acct-hero__inner {
+    align-items: flex-start;
+  }
+  .acct-body {
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+  .acct-card__header,
+  .acct-card__body {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .acct-dl__row {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .acct-dl dd {
+    text-align: left;
+  }
+}

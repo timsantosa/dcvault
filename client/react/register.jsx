@@ -278,9 +278,25 @@ class SelectPackage extends React.Component {
       output.invite = this.state.inviteCode
     }
 
+    // For these groups the class option sets the price (see the Payment
+    // step), so one must be chosen, and it must be an option offered for that
+    // group. Checked here, before payment, because the server can't reject a
+    // registration after PayPal has already charged for it.
+    const PACKAGE_OPTIONS = {
+      'allages': {field: 'membership', values: ['4classes', '8classes', '15classes', '30classes']},
+      'adult': {field: 'membership', values: ['2classes', '8classes']},
+      'fly-kids': {field: 'fkmembership', values: ['2classes', '8classes', '15classes', 'summercamp']}
+    }
+    let packageRule = PACKAGE_OPTIONS[output.group]
+    let missingPackage = packageRule && packageRule.values.indexOf(output[packageRule.field]) === -1
+
     if (output.quarter === undefined || output.group === undefined || output.facility === undefined || output.yesApparel === undefined) {
       this.setState({
         errorText: 'Please fill in all required fields'
+      })
+    } else if (missingPackage) {
+      this.setState({
+        errorText: 'Please choose a class option for your training group'
       })
     } else {
       console.log(output)

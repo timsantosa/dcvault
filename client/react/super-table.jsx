@@ -228,7 +228,9 @@ class SuperTable extends React.Component {
           <thead><tr>
             {this.state.keys.map((key, index) => {
               if (this.state.shownColumns.indexOf(key) !== -1) {
-                return (<th onClick={() => { this.sortBy.bind(this)(key) }} key={index} className='superTable-th'> {key} </th>)
+                // optional `columnLabels` prop: {key: 'Display Name'}
+                let label = (this.props.columnLabels && this.props.columnLabels[key]) || key
+                return (<th onClick={() => { this.sortBy.bind(this)(key) }} key={index} className='superTable-th'> {label} </th>)
               }
             })}
             {this.props.extraAction ? (<th>{this.props.actionInfo.title}</th>) : null}
@@ -237,7 +239,7 @@ class SuperTable extends React.Component {
             {this.state.data.map((row, index) => {
               if (this.passesFilter.bind(this)(row)) {
                 return (
-                  <SuperTableRow key={index} info={row} keys={this.state.keys} shownColumns={this.state.shownColumns} extraAction={this.props.extraAction} actionInfo={this.props.actionInfo} callback={this.state.callback.bind(this)} />
+                  <SuperTableRow key={index} info={row} keys={this.state.keys} shownColumns={this.state.shownColumns} extraAction={this.props.extraAction} actionInfo={this.props.actionInfo} callback={this.state.callback.bind(this)} renderCell={this.props.renderCell} />
                 )
               }
             })}
@@ -264,7 +266,11 @@ class SuperTableRow extends React.Component {
       <tr>
         {this.props.keys.map((key, index) => {
           if (this.props.shownColumns.indexOf(key) !== -1) {
-            return (<td key={index}> {this.props.info.hasOwnProperty(key) ? this.props.info[key] : '-'} </td>)
+            // optional `renderCell(key, value, row)` prop; return undefined to
+            // fall back to the plain value
+            let value = this.props.info.hasOwnProperty(key) ? this.props.info[key] : '-'
+            let custom = this.props.renderCell ? this.props.renderCell(key, value, this.props.info) : undefined
+            return (<td key={index}> {custom !== undefined ? custom : value} </td>)
           }
         })}
         {this.props.extraAction ? (<td onClick={() => { this.props.callback(this.props.info) }}><span className={this.props.actionInfo.iconClass} /></td>) : null}

@@ -1,7 +1,13 @@
 import React from 'react'
 import apiHelpers from './api-helpers'
 import SuperTable from './super-table.jsx'
+import AccountCard from './account-card.jsx'
+import RegistrationChart from './registration-chart.jsx'
+import RegistrationBreakdown from './registration-breakdown.jsx'
 const $ = window.$
+
+// {quarter: 'fall', year: 2026} -> 'Fall 2026'
+const quarterName = (q) => q.quarter.charAt(0).toUpperCase() + q.quarter.slice(1) + ' ' + q.year
 
 class AdminPanel extends React.Component {
   constructor (props) {
@@ -34,7 +40,7 @@ class AdminPanel extends React.Component {
     const loginButton = document.getElementById('login-button')
     apiHelpers.verifyToken().then((answer) => {
       if (answer) {
-        loginButton.innerHTML = 'My Account'
+        loginButton.innerHTML = '<i class="fa fa-user"></i>'
         loginButton.onclick = () => {
           window.location.href = '/account'
         }
@@ -101,6 +107,31 @@ class AdminPanel extends React.Component {
   }
 
 
+  // Adds a `year` column (the year of the training quarter, derived from the
+  // purchase's createdAt via getFullQuarter so January/February winter
+  // registrations count toward the previous year's winter). SuperTable orders
+  // columns by key order, so `year` is inserted directly after `quarter`.
+  withQuarterYear (row) {
+    if (!row.createdAt || !row.quarter) {
+      return row
+    }
+    let year = this.getFullQuarter(row).year
+    let out = {}
+    for (let key in row) {
+      if (key === 'dcvMobileApp') {
+        continue // placed just before quarter below
+      }
+      if (key === 'quarter') {
+        out.dcvMobileApp = row.dcvMobileApp || ''
+      }
+      out[key] = row[key]
+      if (key === 'quarter') {
+        out.year = year
+      }
+    }
+    return out
+  }
+
   combineData (athletes, purchases) {
     let returnArr = []
     for (let i = 0; i < purchases.length; i++) {
@@ -116,7 +147,7 @@ class AdminPanel extends React.Component {
               purchaseClone['athlete_' + key] = athleteClone[key]
             }
           }
-          returnArr.push(purchaseClone)
+          returnArr.push(this.withQuarterYear(purchaseClone))
         }
       }
     }
@@ -191,101 +222,127 @@ class AdminPanel extends React.Component {
     }
   }
 
+  // Distinct athletes in the shown records, and how many have a DCV mobile
+  // app profile linked to their training record
+  mobileAppStat () {
+    let all = {}
+    let onApp = {}
+    ;(this.state.displayData || []).forEach((row) => {
+      all[row.athleteId] = true
+      if (row.dcvMobileApp === 'Yes') {
+        onApp[row.athleteId] = true
+      }
+    })
+    let total = Object.keys(all).length
+    let count = Object.keys(onApp).length
+    return {count: count, total: total, pct: total ? Math.round((count / total) * 100) : 0}
+  }
+
   render () {
     let showAllRecords = $('#showAll').is(':checked')
+    let appStat = this.mobileAppStat()
 
     return (
-      <section id='my-account'>
-
-        <p className='subsection-header'><span className='red-text'>Admin</span> Panel</p>
-
-        <div className='row'>
-          <div className='col-xs-12'>
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>Registered Athletes</span>
-              </div>
-              <div className='body-box'>
-                <span style={{textDecoration: showAllRecords ? 'line-through' : '', display: 'block'}}><input id='showCurrent' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} defaultChecked /> Show Current Quarter</span>
-                <span style={{textDecoration: showAllRecords ? 'line-through' : '', display: 'block'}}><input id='showUpcoming' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} /> Show Upcoming Quarter</span>
-                <span style={{display: 'block'}}><input id='showAll' type='checkbox' onChange={this.updateDisplayRecords.bind(this)} /> Show All Records</span>
-                <SuperTable data={this.state.displayData} shownColumns={['firstName', 'lastName', 'facility', 'group', 'membership','quarter','month','strength','strengthFam','size','notification', 'emergencyContactMDN']} />
-              </div>
+      <section className='reg-redesign acct-redesign'>
+        <header className='acct-hero'>
+          <div className='container acct-hero__inner'>
+            <div>
+              <p className='acct-hero__eyebrow'>Administrator</p>
+              <h1 className='acct-hero__title'>Admin Panel</h1>
+              <p className='acct-hero__sub'>Registered athletes, discount codes and invite codes.</p>
+            </div>
+            <div className='acct-hero__actions'>
+              <a className='reg-btn acct-btn--sm' href='/poles'>Poles</a>
+              <a className='reg-btn acct-btn--light acct-btn--sm' href='/account'>My Account</a>
             </div>
           </div>
-        </div>
+        </header>
 
-
-
-        <div className='row'>
-          <div className='col-xs-12 col-md-6'>
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>Discount Codes</span>
+        <div className='container acct-body'>
+          <div className='acct-col'>
+            <AccountCard title='Registered Athletes' action={(
+              <span className='acct-app-stat' title='Distinct athletes in the records shown below whose DCV mobile app profile is linked to their training record'>
+                <img src='/img/logos/cropped-logo_square-180x180.png' alt='' className='acct-app-logo' />
+                Athletes on Mobile App <strong>{appStat.count}/{appStat.total}</strong> ({appStat.pct}%)
+              </span>
+            )}>
+              <div className='acct-filters'>
+                <span className='acct-filters__label'>Show</span>
+                <label className='acct-chip'>
+                  <input id='showCurrent' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} defaultChecked />
+                  <span>Current Quarter</span>
+                </label>
+                <label className='acct-chip'>
+                  <input id='showUpcoming' type='checkbox' disabled={showAllRecords} onChange={this.updateDisplayRecords.bind(this)} />
+                  <span>Upcoming Quarter</span>
+                </label>
+                <label className='acct-chip'>
+                  <input id='showAll' type='checkbox' onChange={this.updateDisplayRecords.bind(this)} />
+                  <span>All Records</span>
+                </label>
               </div>
-              <div className='body-box'>
+              <SuperTable data={this.state.displayData}
+                shownColumns={['firstName', 'lastName', 'email', 'facility', 'group', 'membership', 'dcvMobileApp', 'quarter', 'year', 'size', 'notifications', 'emergencyContactMDN']}
+                columnLabels={{dcvMobileApp: 'DCV Mobile App'}}
+                renderCell={(key, value) => {
+                  if (key !== 'dcvMobileApp') {
+                    return undefined
+                  }
+                  return value === 'Yes'
+                    ? (<img src='/img/logos/cropped-logo_square-180x180.png' className='acct-app-logo' alt='On DCV Mobile App' title='On DCV Mobile App' />)
+                    : ''
+                }} />
+            </AccountCard>
+
+            <AccountCard title='Registrations by Quarter'>
+              <RegistrationChart data={this.state.fullData} />
+            </AccountCard>
+
+            <RegistrationBreakdown
+              currentData={this.state.filteredData}
+              upcomingData={this.filterByUpcoming(this.state.fullData || [])}
+              currentLabel={quarterName(apiHelpers.getCurrentFullQuarter())}
+              upcomingLabel={quarterName(apiHelpers.getNextFullQuarter())} />
+
+            <div className='acct-grid acct-grid--halves'>
+              <AccountCard title='Discount Codes'>
                 <Discounts discounts={this.state.discounts} />
-                <form id='addCode' className='form-labels-on-top' onSubmit={this.addCode.bind(this)}>
-                  <div className='row'>
-                    <div className='col-xs-12 col-md-6'>
-                      <div className='form-row'>
-                        <label>
-                          <span className='required'>Description</span>
-                          <input type='text' name='description' ref='descInput' style={{width: '100%'}} />
-                        </label>
-                      </div>
+                <form id='addCode' onSubmit={this.addCode.bind(this)} style={{marginTop: '24px'}}>
+                  <div className='reg-grid-2'>
+                    <div className='reg-field'>
+                      <label htmlFor='discount-description'>Description<span className='rd-req'>*</span></label>
+                      <input id='discount-description' className='reg-input' type='text' name='description' ref='descInput' />
                     </div>
-
-                    <div className='col-xs-12 col-md-6'>
-                      <div className='form-row'>
-                        <label>
-                          <span className='required'>Percentage (0-100)</span>
-                          <input type='text' name='amount' ref='percentInput' style={{width: '100%'}} />
-                        </label>
-                      </div>
+                    <div className='reg-field'>
+                      <label htmlFor='discount-amount'>Percentage (0-100)<span className='rd-req'>*</span></label>
+                      <input id='discount-amount' className='reg-input' type='text' name='amount' ref='percentInput' />
                     </div>
                   </div>
-                  <div className='form-row' >
-                    <button type='submit'>Add Code</button>
+                  <div className='acct-form-actions'>
+                    <button type='submit' className='reg-btn acct-btn--sm'>Add Code</button>
                   </div>
-
                 </form>
-              </div>
-            </div>
-          </div>
-          <div className='col-xs-12 col-md-6'>
-            <div className='account-panel-box'>
-              <div className='title-box'>
-                <span className='title'>Invite Codes</span>
-              </div>
-              <div className='body-box'>
+              </AccountCard>
+
+              <AccountCard title='Invite Codes'>
                 <Invites invites={this.state.invites} />
-                <form id='addInvite' className='form-labels-on-top' onSubmit={this.addInvite.bind(this)}>
-                  <div className='row'>
-                    <div className='col-xs-12 col-md-6'>
-                      <div className='form-row'>
-                        <label>
-                          <span className='required'>Description</span>
-                          <input type='text' name='description' ref='inviteDescInput' style={{width: '100%'}} />
-                        </label>
-                      </div>
+                <form id='addInvite' onSubmit={this.addInvite.bind(this)} style={{marginTop: '24px'}}>
+                  <div className='reg-grid-2'>
+                    <div className='reg-field'>
+                      <label htmlFor='invite-description'>Description<span className='rd-req'>*</span></label>
+                      <input id='invite-description' className='reg-input' type='text' name='description' ref='inviteDescInput' />
                     </div>
-
-                    <div className='col-xs-12 col-md-6'>
-                      <div className='form-row'>
-                        <label>
-                          <span className='required'>Level (1:Drop in, 2:Private Lesson), Levels (3-5:Elite Groups)</span>
-                          <input type='text' name='amount' ref='levelInput' style={{width: '100%'}} />
-                        </label>
-                      </div>
+                    <div className='reg-field'>
+                      <label htmlFor='invite-level'>Level (1-5)<span className='rd-req'>*</span></label>
+                      <input id='invite-level' className='reg-input' type='text' name='amount' ref='levelInput' />
                     </div>
                   </div>
-                  <div className='form-row' >
-                    <button type='submit'>Add Code</button>
+                  <p className='reg-subnote'>1: Drop in &middot; 2: Private Lesson &middot; 3-5: Elite Groups</p>
+                  <div className='acct-form-actions'>
+                    <button type='submit' className='reg-btn acct-btn--sm'>Add Code</button>
                   </div>
-
                 </form>
-              </div>
+              </AccountCard>
             </div>
           </div>
         </div>
@@ -328,52 +385,58 @@ class Discounts extends React.Component {
     let statusContainer = ''
     if (this.state.errorText.length > 0) {
       errorContainer = (
-        <div className='error-container'>
+        <div className='reg-error'>
           <p>{this.state.errorText}</p>
         </div>
       )
     }
     if (this.state.statusText.length > 0) {
       statusContainer = (
-        <div className='status-container'>
+        <div className='acct-status'>
           <p>{this.state.statusText}</p>
         </div>
       )
     }
 
     if (this.props.discounts.length === 0) {
-      return (<p> None to show </p>)
+      return (<div className='acct-empty'>No discount codes yet.</div>)
     } else {
       return (
         <div>
-          <table className='purchases-table'>
-            <tbody>
-              <tr>
-                <th>Description</th>
-                <th>Code</th>
-                <th>Amount</th>
-                <th>Delete</th>
-              </tr>
-              {this.props.discounts.map((discount, index) => {
-                return (
-                  <tr key={discount.id}>
-                    <td>
-                      {discount.type}
-                    </td>
-                    <td>
-                      {discount.code}
-                    </td>
-                    <td>
-                      {discount.amount * 100}%
-                    </td>
-                    <td>
-                      <span className='glyphicon glyphicon-remove edit-button' onClick={() => { this.deleteCode.bind(this)(discount.id) }} />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+          <div className='acct-table-wrap'>
+            <table className='acct-table'>
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Code</th>
+                  <th>Amount</th>
+                  <th className='acct-table__actions'><span className='sr-only'>Delete</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.props.discounts.map((discount, index) => {
+                  return (
+                    <tr key={discount.id}>
+                      <td>
+                        {discount.type}
+                      </td>
+                      <td>
+                        <span className='acct-table__code'>{discount.code}</span>
+                      </td>
+                      <td>
+                        {discount.amount * 100}%
+                      </td>
+                      <td className='acct-table__actions'>
+                        <button type='button' className='acct-icon-btn' title='Delete code' aria-label={'Delete code ' + discount.code} onClick={() => { this.deleteCode.bind(this)(discount.id) }}>
+                          <i className='fa fa-trash-o' />
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
           {errorContainer}
           {statusContainer}
         </div>
@@ -416,54 +479,60 @@ class Invites extends React.Component {
     let statusContainer = ''
     if (this.state.errorText.length > 0) {
       errorContainer = (
-        <div className='error-container'>
+        <div className='reg-error'>
           <p>{this.state.errorText}</p>
         </div>
       )
     }
     if (this.state.statusText.length > 0) {
       statusContainer = (
-        <div className='status-container'>
+        <div className='acct-status'>
           <p>{this.state.statusText}</p>
         </div>
       )
     }
 
     if (this.props.invites.length === 0) {
-      return (<p> None to show </p>)
+      return (<div className='acct-empty'>No invite codes yet.</div>)
     } else {
       return (
         <div>
-          <table className='purchases-table'>
-            <tbody>
-              <tr>
-                <th>Description</th>
-                <th>Code</th>
-                <th>Level</th>
-                <th>Delete</th>
-              </tr>
-              {this.props.invites.map((invite) => {
-                return (
-                  <tr key={invite.id}>
-                    <td>
-                      {invite.type}
-                    </td>
-                    <td>
-                      {invite.code}
-                    </td>
-                    <td>
-                      {invite.level}
-                    </td>
-                    <td>
-                      <span className='glyphicon glyphicon-remove edit-button' onClick={() => { this.deleteCode.bind(this)(invite.id) }} />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-            {errorContainer}
-            {statusContainer}
-          </table>
+          <div className='acct-table-wrap'>
+            <table className='acct-table'>
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Code</th>
+                  <th>Level</th>
+                  <th className='acct-table__actions'><span className='sr-only'>Delete</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.props.invites.map((invite) => {
+                  return (
+                    <tr key={invite.id}>
+                      <td>
+                        {invite.type}
+                      </td>
+                      <td>
+                        <span className='acct-table__code'>{invite.code}</span>
+                      </td>
+                      <td>
+                        {invite.level}
+                      </td>
+                      <td className='acct-table__actions'>
+                        <button type='button' className='acct-icon-btn' title='Delete code' aria-label={'Delete code ' + invite.code} onClick={() => { this.deleteCode.bind(this)(invite.id) }}>
+                          <i className='fa fa-trash-o' />
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+          {errorContainer}
+          {statusContainer}
         </div>
       )
     }
