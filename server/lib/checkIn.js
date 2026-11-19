@@ -274,6 +274,30 @@ function wholeCost(value) {
   return cost;
 }
 
+// Who may read the attendee list. visible is the session flag (false or 0 is
+// hidden). permissions is the caller's permission keys. manage_attendance can
+// read a hidden class. manage_classes can read a hidden class. view_class_roster
+// can read a class members can see. A hidden class they cannot see is 404.
+// Anyone else is 403.
+function canReadCheckInList(input) {
+  const permissions = Array.isArray(input.permissions) ? input.permissions : [];
+  const hidden = isOff(input.visible);
+  const has = (key) => permissions.indexOf(key) !== -1;
+  if (has('manage_attendance')) {
+    return { ok: true };
+  }
+  if (hidden) {
+    if (has('manage_classes')) {
+      return { ok: true };
+    }
+    return reject(404, 'Class not found.');
+  }
+  if (has('view_class_roster')) {
+    return { ok: true };
+  }
+  return reject(403, 'Forbidden: Insufficient permissions');
+}
+
 function reject(status, message) {
   return { ok: false, status: status, message: message };
 }
@@ -290,6 +314,7 @@ module.exports = {
   decideCheckIn,
   decideWalkIn,
   presentCheckIn,
+  canReadCheckInList,
   walkInCreditOffer,
   walkInGrantWindow,
 };

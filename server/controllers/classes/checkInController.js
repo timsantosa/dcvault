@@ -4,6 +4,7 @@ const {
   decideCheckIn,
   decideWalkIn,
   presentCheckIn,
+  canReadCheckInList,
   walkInCreditOffer,
   walkInGrantWindow,
 } = require('../../lib/checkIn');
@@ -24,6 +25,13 @@ async function listCheckIn(req, res, db) {
       return res.status(400).json({ ok: false, message: parsed.message });
     }
     const session = await openSession(db, parsed.seriesId, parsed.occursOn);
+    const access = canReadCheckInList({
+      visible: session.visible,
+      permissions: req.user && req.user.permissions,
+    });
+    if (!access.ok) {
+      return res.status(access.status).json({ ok: false, message: access.message });
+    }
     const rows = await db.tables.ClassReservations.findAll({
       where: { classSeriesId: parsed.seriesId, occursOn: parsed.occursOn },
       include: [{

@@ -189,9 +189,12 @@ On reserve (and cancel, when a credit returns), **animate** the remaining and re
 
 ### Roster visibility
 
-- Attendee **count**, **names**, and **profile photos** visible to users with `view_class_roster` permission.
-- MVP: grant this permission to regular members and coaches. Confirmed OK for gym culture for now; can tighten to coaches-only later if needed.
-- Tapping a roster entry opens the athlete profile (per existing privacy rules).
+- Attendee **count** shows on the class for anyone who can open it. **Names**, **photos**, and training-group labels are on the attendees screen. Class detail has a small tertiary **View attendees** button beside the spots count for someone who can see that list. The schedule row’s **Check in** button, when check-in is open, opens the same screen. When Reserve or Cancel cannot be used, that button stays on class detail, disabled, with the reason underneath.
+- `view_class_roster` can read that list for a class members can see. `manage_attendance` can read it too, including a hidden class, because that is the check-in list. A hidden class stays hidden from `view_class_roster` unless the caller also has `manage_classes` or `manage_attendance`.
+- The list is reserved people, then walk-ins. A missing photo shows initials. Nobody signed up says **No one is on this class yet.**
+- MVP: grant `view_class_roster` to regular members and coaches. Confirmed OK for gym culture for now; can tighten to coaches-only later if needed.
+- Tapping a name opens the athlete profile (per existing privacy rules). The Athletes roster is anchored underneath when it is not already there.
+- Without `view_class_roster` or `manage_attendance`, only the count shows (“6 of 18”).
 
 
 
@@ -624,9 +627,9 @@ Export (PDF/CSV): **later**.
 
 ### Requirements
 
-- Coach opens check-in for a **class session** from the app on their **personal device**.
-- View class roster (reserved athletes).
-- **Tap to mark present** — fast, minimal friction.
+- Coach checks people in on the **attendees** screen, on their personal device. **Check in** on the schedule row opens that screen directly. **View attendees** on class detail opens the same screen.
+- The list is the one members see. A tertiary **Check in** button appears on each person only for `manage_attendance`, and only when the session is today or earlier and not canceled. After the tap the label is **Checked in**, with a filled circle. An open circle means they are not checked in. Tapping it again undoes the check-in. The name and the button are separate presses.
+- **+ Walk-in** is on that screen when check-in is open.
 - Check-in tied to **reservation** when one exists.
 
 
@@ -723,7 +726,7 @@ The athlete needs a place they can open and read those notices. The shape stays 
 | `manage_classes`         | Create/edit/cancel/delete classes; cancel reservations on behalf of users; create/edit class packages | Yes                       |
 | `manage_credits`         | Manually add/remove athlete credits (as new records)                      | Yes                       |
 | `manage_attendance`      | Check-in interface                                                        | Yes                       |
-| `view_class_roster`      | See attendee names/photos on class detail                                 | Yes                       |
+| `view_class_roster`      | See attendee names/photos on the attendees screen                         | Yes                       |
 | `edit_training_group`    | Change athlete training group on **Edit Profile**                         | Yes                       |
 | `manage_feature_toggles` | —                                                                         | Not used                  |
 | `manage_discounts`       | —                                                                         | Deferred (website system) |
@@ -788,7 +791,7 @@ The athlete needs a place they can open and read those notices. The shape stays 
 - [ ] Admin credit add/remove; admin cancel reservation
 - [ ] Class change notices via class messaging, with option to save silently
 - [ ] Class participant messaging
-- [ ] Roster visibility (permission-gated)
+- [x] Roster visibility (permission-gated)
 - [x] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
 - [x] Private lessons reserve immediately (no approval workflow)
 - [ ] One-way sync to separate Google Calendar (task 5.1, last MVP build task; rules in §6)
@@ -1078,9 +1081,9 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 ### Task 12: Roster + messaging + notifications
 
-- [ ] **12.1 — Class roster UI**
+- [x] **12.1 — Class roster UI**
   - Permission-gated names/photos; link to profiles.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-18. The attendees screen loads `GET /mobileapp/user/class-attendees`. `view_class_roster` can read a visible class. A hidden class is 404 unless the caller has `manage_classes` or `manage_attendance`. No read permission is 403. Mark present and walk-in stay `POST /mobileapp/user/check-in` for `manage_attendance`. Rows are reserved, then walk-ins, with photo or initials, name, and group labels. Tapping a name opens the profile with the Athletes roster anchored underneath. When check-in is open, each row has a large tertiary **Check in** / **Checked in** control with an open or filled circle, and the screen has **+ Walk-in**. Class detail has a tertiary **View attendees** button beside the spots count. A Reserve or Cancel that cannot be used stays on class detail, disabled, with the reason underneath. The schedule row’s **Check in** button opens that same screen. The walk-in search is a sheet from the bottom. Add credit and the following check-in show a spinner on the button that was tapped. The staff ⋯ menu is task 12.5. §15 roster box is checked.
 
 - [ ] **12.2 — Class change notices**
   - Cancel / time / location change go through **class messaging**; staff can save without notifying; optional admin message.
@@ -1094,6 +1097,12 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 - [ ] **12.4 — Member notification place**
   - A place the athlete can open and read notices that are not a class conversation (reservation canceled by staff, credit changes, a lesson reserved). The shape stays open. One candidate: a faux conversation that belongs only to that athlete and holds their notifications.
   - `notifyCoachOnReserve` is stored and does not send until this task. Class change notices stay on 12.2.
+  - *Completion notes:*
+
+- [ ] **12.5 — Roster staff menu**
+  - On each class-detail roster row, `manage_classes` gets View profile, Cancel reservation, and Adjust credits when they also have `manage_credits`.
+  - Cancel takes the person off the class and does not return the credit. The storage for that spent credit is still open: a reservation cannot be deleted while its hold exists, and keeping the row blocks reserving that same date again. Decide that before building this task.
+  - The notice that the reservation changed stays on 12.4.
   - *Completion notes:*
 
 

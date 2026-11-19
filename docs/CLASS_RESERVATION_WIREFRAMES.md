@@ -31,7 +31,7 @@ Beta is per-user, using the existing permissions system. Non-beta members keep t
 | Permission            | Typical role               | What it unlocks                                                              |
 | --------------------- | -------------------------- | ---------------------------------------------------------------------------- |
 | `reserve_classes`     | Beta members               | New Schedule tab, reserve / cancel, credits on profile                       |
-| `view_class_roster`   | Members + coaches (MVP)    | Names and photos on class detail                                             |
+| `view_class_roster`   | Members + coaches (MVP)    | Names and photos on the attendees screen                                     |
 | `manage_attendance`   | Coaches                    | Check-in and walk-ins                                                        |
 | `manage_classes`      | Coaches (optional) / admin | Create / edit / cancel / delete classes, cancel for someone else, edit the class-package catalog |
 | `manage_credits`      | Admin (coaches optional)   | Add / remove credits on an athlete (each adjustment is its own history line) |
@@ -61,7 +61,7 @@ No reserve_classes          Has reserve_classes
 MEMBER                          COACH                         ADMIN
 Schedule tab ─────────┐         same Schedule +               same as coach +
   ├ Class detail      │           Create Class                Adjust Credits
-  │   ├ Reserve       │           Check In                    Classes menu: packages,
+  │   ├ Reserve       │           Check in → attendees       Classes menu: packages,
   │   └ Cancel        │           Message class                 training groups
   │                   │                                       Edit Profile
   └ Upcoming list     │           Cancel for member             (training group)
@@ -196,7 +196,7 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
 │  4:00 PM – 6:00 PM                  │
 │  DC Vault                           │
 │                                     │
-│  6 of 18 spots taken                │
+│  6 of 18 spots taken  View attendees│
 │  ████████░░░░░░░░░░░░               │
 │                                     │
 │  Open / All Ages                    │
@@ -205,11 +205,6 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
 │                                     │
 │  Bring a 14' pole for step 5        │
 │                                     │
-│  ─────────────────────────────────  │
-│  GOING (6)                    [>]   │
-│  [JM] [ED] [AK] [+3]                │
-│                                     │
-│  ─────────────────────────────────  │
 │  Note (optional)                    │
 │  ┌─────────────────────────────┐    │
 │  │ 14'7" 180                   │    │
@@ -225,7 +220,7 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
 └─────────────────────────────────────┘
 ```
 
-**Roster:** names and photos show if the user has `view_class_roster` (planned default for members in MVP — confirmed OK for now). Tapping a person opens their existing athlete profile, with the same privacy rules as today. Without that permission, the member only sees the count (“6 of 18”).
+**Attendees:** class detail has a small tertiary **View attendees** button beside the spots count when the user has `view_class_roster` (planned default for members in MVP — confirmed OK for now). It opens the attendees screen: reserved people, then walk-ins, with names, photos, and training-group labels. A missing photo shows initials. Nobody signed up says **No one is on this class yet.** Tapping a name opens their existing athlete profile, with the Athletes roster underneath when it is not already there, and with the same privacy rules as today. Without `view_class_roster` or `manage_attendance`, the member only sees the count (“6 of 18”) and no View attendees button. The schedule row’s **Check in** button opens this same screen (Flow F). When Reserve or Cancel cannot be used, the button stays at the bottom of class detail, disabled, with the reason underneath. The staff ⋯ menu is task 12.5.
 
 ### A3. One tap — reserved
 
@@ -563,55 +558,23 @@ Hidden unless the user has the matching permission. Coaches still use the same S
 **Permission:** `manage_attendance`  
 **Goal:** fast tap-to-present on the coach’s own phone. No kiosk mode, no athlete self check-in in MVP.
 
-### F1. Entry from class detail
+### F1. Entry
 
-On a class the coach can manage, detail gains **Check members in** below the reserve button (and Edit if they also have `manage_classes`). The schedule row has a shorter **Check in** button to the right of the spots count.
+**Check in** on the schedule row opens the attendees screen. It shows when check-in is open: `manage_attendance`, today or earlier, and the class is not canceled. **View attendees** on class detail opens the same screen, including for a future class, where the names show without a Check in control.
 
-```
-┌─────────────────────────────────────┐
-│  ←              Open Vault          │
-├─────────────────────────────────────┤
-│  Tuesday, Aug 25 · 4:00–6:00 PM     │
-│  7 reserved · 2 checked in          │
-│                                     │
-│  [ Reserve / Cancel reservation ]   │
-│  [ Edit class ]  [ Message all ]    │  ← manage_classes / messaging
-│  ┌─────────────────────────────┐    │
-│  │      CHECK MEMBERS IN       │    │
-│  └─────────────────────────────┘    │
-│                                     │
-│  GOING (7)                          │
-│  ...roster...                       │
-└─────────────────────────────────────┘
-```
+### F2. Attendees screen
 
-
-
-### F2. Check-in list (the main coach screen)
+Each person has their own tertiary **Check in** button, with a large tap target, when check-in is open. After the tap the label is **Checked in** beside a filled circle. Before that, the circle is empty. Tapping it again undoes the check-in. Tapping the name opens the profile. A future class still shows the names, without the button.
 
 ```
-┌─────────────────────────────────────┐
-│  ←     Check in · Open Vault        │
-├─────────────────────────────────────┤
-│  Tue Aug 25 · 4:00–6:00 PM          │
-│  2 of 7 present                     │
-│                                     │
 │  RESERVED                           │
 │  ┌─────────────────────────────┐    │
 │  │ (photo) Emma Dunne          │    │
-│  │                      [ ✓ ]  │    │
-│  └─────────────────────────────┘    │
-│  ┌─────────────────────────────┐    │
-│  │ (photo) Jordan Miles        │    │
-│  │                      [ ✓ ]  │    │
-│  └─────────────────────────────┘    │
-│  ┌─────────────────────────────┐    │
-│  │ (photo) Aisha Khan          │    │
-│  │                      [  ]   │    │
+│  │            Checked in (●)   │    │
 │  └─────────────────────────────┘    │
 │  ┌─────────────────────────────┐    │
 │  │ [BL] Ben Lee                │    │
-│  │                      [  ]   │    │
+│  │                   Check in  │    │
 │  └─────────────────────────────┘    │
 │                                     │
 │  [ + Walk-in ]                      │
@@ -619,13 +582,12 @@ On a class the coach can manage, detail gains **Check members in** below the res
 │  WALK-INS                           │
 │  ┌─────────────────────────────┐    │
 │  │ [CR] Chris Ruiz             │    │
-│  │      added at 4:12 · 1 cr   │    │
-│  │                      [ ✓ ]  │    │
+│  │   added at 4:12 · 1 credit  │    │
+│  │            Checked in (●)   │    │
 │  └─────────────────────────────┘    │
-└─────────────────────────────────────┘
 ```
 
-**Interaction:** tap the row (or the checkbox) to mark present. Tap again to undo if they tapped the wrong person. Large targets, no extra confirm on the happy path. Each row shows the athlete’s profile photo, or initials when they have none. **+ Walk-in** is a secondary button under the reserved list. A profile in one or more training groups shows those labels under the name (`Fly Kids, Elite Development`). No groups means no group line. A walk-in row keeps the added-at and cost line after the labels, separated by ` · `. A walk-in row shows when they were added and the class cost.
+**Interaction:** the name and the button are separate presses. No extra confirm on the happy path. Each row shows the athlete’s profile photo, or initials when they have none. **+ Walk-in** is a secondary button under the reserved list. A profile in one or more training groups shows those labels under the name (`Fly Kids, Elite Development`). No groups means no group line. A walk-in row on this coach view keeps the added-at and cost line after the labels, separated by ` · `.
 
 Someone who reserved and is never checked in is a **no-show**. There is no separate “mark no-show” button — the credit was already taken at reserve time.
 
@@ -633,9 +595,11 @@ Someone who reserved and is never checked in is a **no-show**. There is no separ
 
 Athlete showed up without a reservation. Staff add them and deduct a credit.
 
+The athlete search is a sheet that slides up from the bottom.
+
 ```
 ┌─────────────────────────────────────┐
-│  ←            Add walk-in           │
+│               Add walk-in           │
 ├─────────────────────────────────────┤
 │  Search athletes                    │
 │  ┌─────────────────────────────┐    │
@@ -818,7 +782,7 @@ Staff can **save without notifying**. Bulk “update pole note on every week of 
 
 ### G4. Cancel a member’s reservation (staff)
 
-On roster / class detail, staff with `manage_classes` can remove someone. This does **not** auto-restore the credit. If the cancel is excused, admin adds a credit in Flow I.
+On roster / class detail, staff with `manage_classes` can remove someone. This menu is task 12.5 and is not on the roster yet. Removing someone does **not** auto-restore the credit. If the cancel is excused, admin adds a credit in Flow I.
 
 ```
 │  Emma Dunne                    ⋯    │
@@ -922,7 +886,7 @@ Admin has every permission above, plus credit and training-group tools. Coaches 
 ## Flow I — Add or remove credits
 
 **Permission:** `manage_credits`  
-**Entry:** athlete profile (someone else’s). The class roster ⋯ menu opens this same screen once the roster exists (task 12.1).  
+**Entry:** athlete profile (someone else’s). The class roster ⋯ menu opens this same screen once that menu exists (task 12.5).  
 **MVP:** add/remove only. No cutoff override, no required reason field, no audit log UI. The screen says the member will get a notification. Sending it is task 12.4.
 
 Each add or remove is a **new package / credit record** so history stays honest. It does **not** silently rewrite the original quarterly purchase.

@@ -24,6 +24,7 @@ const memberScheduleRoutes = require('./mobileRoutes/memberScheduleRoutes');
 const reservationRoutes = require('./mobileRoutes/reservationRoutes');
 const creditRoutes = require('./mobileRoutes/creditRoutes');
 const checkInRoutes = require('./mobileRoutes/checkInRoutes');
+const classAttendeeRoutes = require('./mobileRoutes/classAttendeeRoutes');
 const trainingGroupRoutes = require('./mobileRoutes/trainingGroupRoutes');
 const { classProgressRoutes, classHistoryRoutes } = require('./mobileRoutes/classHistoryRoutes');
 
@@ -66,6 +67,7 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/schedule', checkPermission('reserve_classes'), memberScheduleRoutes(db));
   app.use('/mobileapp/user/reservations', checkPermission('reserve_classes'), reservationRoutes(db));
   app.use('/mobileapp/user/credits', checkPermission('manage_credits'), creditRoutes(db));
+  app.use('/mobileapp/user/class-attendees', classAttendeeRoutes(db));
   app.use('/mobileapp/user/check-in', checkPermission('manage_attendance'), checkInRoutes(db));
   // reserve_classes (own profile) or manage_credits, checked in the controller.
   app.use('/mobileapp/user/class-progress', classProgressRoutes(db));

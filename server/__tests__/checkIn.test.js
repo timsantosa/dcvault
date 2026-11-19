@@ -4,6 +4,7 @@ const {
   decideCheckIn,
   decideWalkIn,
   presentCheckIn,
+  canReadCheckInList,
   walkInCreditOffer,
   walkInGrantWindow,
 } = require('../lib/checkIn');
@@ -354,6 +355,58 @@ describe('walkInCreditOffer', () => {
       unlimited: false,
       usable: 0,
       shortfall: 0,
+    });
+  });
+});
+
+describe('canReadCheckInList', () => {
+  it('lets view_class_roster read a visible class', () => {
+    expect(canReadCheckInList({
+      visible: true,
+      permissions: ['view_class_roster'],
+    })).toEqual({ ok: true });
+  });
+
+  it('hides a hidden class from view_class_roster', () => {
+    expect(canReadCheckInList({
+      visible: false,
+      permissions: ['view_class_roster'],
+    })).toEqual({ ok: false, status: 404, message: 'Class not found.' });
+  });
+
+  it('lets manage_attendance read a hidden class', () => {
+    expect(canReadCheckInList({
+      visible: 0,
+      permissions: ['manage_attendance'],
+    })).toEqual({ ok: true });
+  });
+
+  it('lets manage_classes read a hidden class', () => {
+    expect(canReadCheckInList({
+      visible: false,
+      permissions: ['manage_classes'],
+    })).toEqual({ ok: true });
+  });
+
+  it('does not let manage_classes alone read a visible class', () => {
+    expect(canReadCheckInList({
+      visible: true,
+      permissions: ['manage_classes'],
+    })).toEqual({
+      ok: false,
+      status: 403,
+      message: 'Forbidden: Insufficient permissions',
+    });
+  });
+
+  it('rejects a caller with none of those permissions', () => {
+    expect(canReadCheckInList({
+      visible: true,
+      permissions: ['reserve_classes'],
+    })).toEqual({
+      ok: false,
+      status: 403,
+      message: 'Forbidden: Insufficient permissions',
     });
   });
 });
