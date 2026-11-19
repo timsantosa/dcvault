@@ -75,7 +75,7 @@ class Register extends React.Component {
       if (answer) {
         loginButton.innerHTML = 'My Account'
         loginButton.onclick = () => {
-          window.location.href = '/account'
+          window.location.href = '/home/'
         }
         this.setState({
           currentPage: (<SelectPackage advance={this.advance.bind(this)} />),

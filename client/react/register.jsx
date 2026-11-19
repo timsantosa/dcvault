@@ -128,7 +128,7 @@ class Register extends React.Component {
       if (answer) {
         loginButton.innerHTML = '<i class="fa fa-user"></i>'
         loginButton.onclick = () => {
-          window.location.href = '/account'
+          window.location.href = '/home/'
         }
         if (ENABLE_ATHLETE_SELECTOR) {
           // Skip the lookup for admins: the /users/info admin branch returns
@@ -1614,7 +1614,7 @@ class Confirmation extends React.Component {
           <p className='reg-form__title'>{this.state.title}</p>
           <p style={{fontFamily: 'var(--rd-font-body)', color: '#374151', lineHeight: 1.6}}>{this.state.message}</p>
           <div className='reg-section'>
-            <button type='button' className='reg-btn' onClick={() => { window.location.href = '/' }}>Home</button>
+            <button type='button' className='reg-btn' onClick={() => { window.location.href = 'https://dcvault.com/' }}>Home</button>
           </div>
         </form>
       </div>

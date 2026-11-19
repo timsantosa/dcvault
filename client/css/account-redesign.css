@@ -2,7 +2,7 @@
    DC Vault — Account & Admin page visual redesign
    Builds on register-redesign.css (tokens, navbar, footer, .reg-btn,
    .reg-input, .reg-field, .reg-error). Everything here is scoped to
-   `.acct-redesign`, the React-rendered section on /account and /admin, so
+   `.acct-redesign`, the React-rendered section on /home (My Account) and /admin, so
    other pages that still use the legacy account styles (e.g. /poles) are
    unaffected.
    ========================================================================== */
@@ -1066,4 +1066,136 @@
   .acct-dl dd {
     text-align: left;
   }
+}
+
+/* --------------------------------------------------------------------------
+   Standalone login page (/login/)
+   -------------------------------------------------------------------------- */
+.login-body {
+  padding: 48px 15px 72px;
+}
+
+.login-card {
+  max-width: 460px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.login-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--rd-border);
+}
+
+.login-tab {
+  flex: 1 1 50%;
+  font-family: var(--rd-font-display);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--rd-muted);
+  background: var(--rd-surface);
+  border: 0;
+  border-bottom: 3px solid transparent;
+  padding: 16px 12px 13px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.login-tab:hover,
+.login-tab:focus {
+  color: var(--rd-ink);
+  outline: none;
+}
+
+.login-tab--active {
+  color: var(--rd-ink);
+  background: #ffffff;
+  border-bottom-color: var(--rd-red);
+}
+
+.login-card .reg-input:focus {
+  outline: none;
+  border-color: var(--rd-red);
+  box-shadow: 0 0 0 3px var(--rd-red-shadow);
+}
+
+.login-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.login-label-row > label {
+  display: block;
+  font-family: var(--rd-font-body);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--rd-ink-soft);
+  margin-bottom: 6px;
+}
+
+.login-link {
+  font-family: var(--rd-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-red);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-card .reg-btn[disabled] {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.login-card .acct-card__body .reg-btn {
+  margin-top: 8px;
+}
+
+/* Pop-up version of the login card (<LoginModal />, registration page).
+   Shown/hidden via opacity/visibility on its #login container (extras.css). */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+  background-color: rgba(17, 17, 17, 0.65);
+  font-family: var(--rd-font-body);
+}
+
+.login-overlay__dialog {
+  width: 100%;
+  max-width: 460px;
+  margin: auto;
+}
+
+.login-overlay .login-card {
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.45);
+}
+
+.login-close {
+  flex: 0 0 auto;
+  width: 52px;
+  font-size: 16px;
+  color: var(--rd-muted);
+  background: var(--rd-surface);
+  border: 0;
+  border-left: 1px solid var(--rd-border);
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.login-close:hover,
+.login-close:focus {
+  color: var(--rd-red);
+  outline: none;
 }

@@ -11,6 +11,25 @@ const morgan = require('morgan')
 const addMobileAppRoutes = require('./mobileAppRoutes');
 
 module.exports = (app, db) => {
+  // The training registration flow is the landing page (account.dcvault.com/).
+  // The marketing site now lives at dcvault.com, so the old client/index.html
+  // homepage is no longer served at the root. Registered before express.static
+  // so it takes precedence over client/index.html.
+  const registerPage = path.join(__dirname, '../client/register/index.html')
+  app.get('/', (req, res) => res.sendFile(registerPage))
+  // Old /register links (emails, legacy pages, bookmarks) -> canonical root.
+  // /register/info and other subpaths are still served statically.
+  app.get(['/register', '/register/'], (req, res) => {
+    const qsIndex = req.originalUrl.indexOf('?')
+    res.redirect(301, '/' + (qsIndex === -1 ? '' : req.originalUrl.slice(qsIndex)))
+  })
+
+  // My Account page moved from /account to /home (client/home/index.html).
+  app.get(['/account', '/account/'], (req, res) => {
+    const qsIndex = req.originalUrl.indexOf('?')
+    res.redirect(301, '/home/' + (qsIndex === -1 ? '' : req.originalUrl.slice(qsIndex)))
+  })
+
   // External Middleware
   app.use(express.static(path.join(__dirname, '../client')))
   app.use(bodyParser.json())
@@ -831,9 +850,9 @@ module.exports = (app, db) => {
         } else {
           if (!user.verified) {
             db.tables.Users.update({verified: true}, {where: {id: user.id}})
-            res.redirect('/#justVerified=true')
+            res.redirect('/login/#justVerified=true')
           } else {
-            res.redirect('/#alreadyVerified=true')
+            res.redirect('/login/#alreadyVerified=true')
           }
         }
       })

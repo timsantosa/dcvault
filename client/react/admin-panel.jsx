@@ -14,7 +14,10 @@ class AdminPanel extends React.Component {
     super(props)
     apiHelpers.isAdmin().then((answer) => {
       if (!answer) {
-        window.location.href = '/'
+        // Logged-in non-admins go to their account; everyone else logs in first.
+        apiHelpers.verifyToken().then((loggedIn) => {
+          window.location.href = loggedIn ? '/home/' : '/login/?next=%2Fadmin%2F'
+        })
       }
     })
 
@@ -36,18 +39,16 @@ class AdminPanel extends React.Component {
   }
 
   isLoggedIn () {
-    const loginDiv = document.getElementById('login')
     const loginButton = document.getElementById('login-button')
     apiHelpers.verifyToken().then((answer) => {
       if (answer) {
         loginButton.innerHTML = '<i class="fa fa-user"></i>'
         loginButton.onclick = () => {
-          window.location.href = '/account'
+          window.location.href = '/home/'
         }
       } else {
         loginButton.onclick = () => {
-          loginDiv.style.opacity = 1
-          loginDiv.style.visibility = 'visible'
+          window.location.href = '/login/?next=%2Fadmin%2F'
         }
       }
     })
@@ -75,10 +76,10 @@ class AdminPanel extends React.Component {
               fullData: combinedData
             })
           } else {
-            window.location.href = '/'
+            window.location.href = '/home/'
           }
         } else {
-          window.location.href = '/'
+          window.location.href = '/login/?next=%2Fadmin%2F'
         }
       }
     })
@@ -93,17 +94,7 @@ class AdminPanel extends React.Component {
   }
 
   getFullQuarter (row) {
-    let rowMonth = new Date(row.createdAt).getMonth() + 1
-    let rowYear = new Date(row.createdAt).getFullYear()
-
-    if ((rowMonth === 1 || rowMonth === 2) && row.quarter.indexOf('winter') !== -1) {
-      rowYear--
-    }
-
-    return {
-      year: rowYear,
-      quarter: row.quarter
-    }
+    return apiHelpers.getPurchaseFullQuarter(row)
   }
 
 
@@ -253,7 +244,7 @@ class AdminPanel extends React.Component {
             </div>
             <div className='acct-hero__actions'>
               <a className='reg-btn acct-btn--sm' href='/poles'>Poles</a>
-              <a className='reg-btn acct-btn--light acct-btn--sm' href='/account'>My Account</a>
+              <a className='reg-btn acct-btn--light acct-btn--sm' href='/home/'>My Account</a>
             </div>
           </div>
         </header>

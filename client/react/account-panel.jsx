@@ -9,7 +9,7 @@ class AccountPanel extends React.Component {
     super(props)
     apiHelpers.verifyToken().then((answer) => {
       if (!answer) {
-        window.location.href = '/'
+        window.location.href = '/login/'
       }
     })
 
@@ -34,18 +34,16 @@ class AccountPanel extends React.Component {
   }
 
   isLoggedIn () {
-    const loginDiv = document.getElementById('login')
     const loginButton = document.getElementById('login-button')
     apiHelpers.verifyToken().then((answer) => {
       if (answer) {
         loginButton.innerHTML = '<i class="fa fa-user"></i>'
         loginButton.onclick = () => {
-          window.location.href = '/account'
+          window.location.href = '/home/'
         }
       } else {
         loginButton.onclick = () => {
-          loginDiv.style.opacity = 1
-          loginDiv.style.visibility = 'visible'
+          window.location.href = '/login/'
         }
       }
     })
@@ -107,7 +105,7 @@ class AccountPanel extends React.Component {
             loaded: true
           })
         } else {
-          window.location.href = '/'
+          window.location.href = '/login/'
         }
       }
     })
@@ -115,7 +113,7 @@ class AccountPanel extends React.Component {
 
   logout () {
     window.localStorage.removeItem('token')
-    window.location.href = '/'
+    window.location.href = '/login/'
   }
 
   render () {
@@ -549,7 +547,7 @@ class Purchases extends React.Component {
       return (
         <div className='acct-empty'>
           No training purchases yet.
-          <div><a className='reg-btn acct-btn--sm' href='/register'>Register for Training</a></div>
+          <div><a className='reg-btn acct-btn--sm' href='/'>Register for Training</a></div>
         </div>
       )
     } else {
@@ -559,6 +557,7 @@ class Purchases extends React.Component {
             <thead>
               <tr>
                 <th>Quarter</th>
+                <th>Year</th>
                 <th>Group</th>
                 <th>Facility</th>
                 <th>Athlete</th>
@@ -570,6 +569,9 @@ class Purchases extends React.Component {
                   <tr key={purchase.id}>
                     <td>
                       {purchase.quarter.toUpperCase()}
+                    </td>
+                    <td>
+                      {purchase.createdAt ? apiHelpers.getPurchaseFullQuarter(purchase).year : ''}
                     </td>
                     <td>
                       {purchase.group === 'beginner-intermediate' ? ('BEGINNER/INTERMEDIATE') : purchase.group.toUpperCase()}
