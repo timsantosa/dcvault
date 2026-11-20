@@ -99,8 +99,17 @@ module.exports.getCurrentQuarter = () => {
   }
 }
 
+// Absolute base URL of this app (account.dcvault.com in production), built from
+// config.server.domain. A protocol in the config value is respected; otherwise
+// localhost gets http and everything else https.
+const siteBaseUrl = () => {
+  const domain = String(config.server.domain || '').replace(/\/+$/, '')
+  if (/^https?:\/\//i.test(domain)) return domain
+  return (/^(localhost|127\.0\.0\.1)(:|$)/.test(domain) ? 'http://' : 'https://') + domain
+}
+
 module.exports.sendCode = (code, email) => {
-  let link = config.server.domain + '/users/verify?code=' + code
+  let link = siteBaseUrl() + '/users/verify?code=' + encodeURIComponent(code)
   let mailOptions = {
     from: '"DC Vault" <' + config.email.username + '>', // sender address
     subject: 'DC Vault New Account Verification', // Subject line
@@ -109,7 +118,7 @@ module.exports.sendCode = (code, email) => {
     html: '<p>Thank you for registering a DC Vault profile!</p>\
       <p>Your username is: ' + email + '</p>\
       <p>To verify your account, click the link below or copy/paste the following into your browser\'s URL bar: ' + link + '</p>\
-      <p><a href="http://' + link + '">Click Here to Verify your Account</a></p>' // html body
+      <p><a href="' + link + '">Click Here to Verify your Account</a></p>' // html body
   }
 
   // send mail with defined transport object
