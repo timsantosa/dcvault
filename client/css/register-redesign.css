@@ -65,17 +65,58 @@
   background-color: #ffffff;
 }
 
-/* Account / login icon pill */
+/* Account / login icon pill. It sits in .navbar-header, outside the collapse,
+   so it is visible at every width (matching dcvault.com). It is pinned to the
+   right end of the bar: after the links on desktop, and to the right of the
+   menu button on phones. Top offset centers 36px in the 88px bar. */
+.reg-redesign-page #mainNav > .container {
+  position: relative;
+}
+
 .reg-redesign-page .rd-account {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  top: 26px;
+  right: 15px;
   width: 36px;
   height: 36px;
   border: 1.5px solid rgba(255, 255, 255, 0.6);
   border-radius: 999px;
   color: #ffffff;
-  margin-top: 6px;
+}
+
+.reg-redesign-page .rd-account:focus {
+  color: #ffffff;
+}
+
+@media (min-width: 768px) {
+  /* Leave room for the icon after the last link */
+  .reg-redesign-page #mainNav .navbar-right {
+    margin-right: 36px;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Menu button: same height as the icon, vertically centered, with room
+     for the icon on its right (15px edge + 36px icon + 10px gap). */
+  .reg-redesign-page #mainNav .navbar-header .navbar-toggle {
+    top: 0;
+    height: 36px;
+    margin-top: 26px;
+    margin-right: 61px;
+    padding: 0 10px;
+    border: 0;
+    background: transparent;
+    color: #ffffff;
+    font-size: 22px;
+  }
+  .reg-redesign-page #mainNav .navbar-header .navbar-toggle:hover,
+  .reg-redesign-page #mainNav .navbar-header .navbar-toggle:focus {
+    background: transparent;
+    color: var(--rd-red);
+  }
 }
 
 .reg-redesign-page .rd-account:hover {
