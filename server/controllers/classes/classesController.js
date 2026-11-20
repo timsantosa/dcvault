@@ -1,7 +1,7 @@
 'use strict';
 
-// Staff class CRUD. The notify flag is accepted and echoed. Sending the class
-// message is task 12.2.
+// Staff class CRUD. Update and cancel can post one read-only notice per
+// reserved athlete. Delete accepts the notify flag and does not send.
 
 const {
   expandClassOccurrences,
@@ -11,9 +11,13 @@ const {
   prepareClassCancel,
   prepareClassDelete,
 } = require('../../lib/classSchedule');
+const { classNotice, pairsForNotice, readNoticeRequest } = require('../../lib/classNotices');
 const { day, clock, timestamp } = require('../../lib/dates');
 const { classStartInstant } = require('../../lib/memberSchedule');
 const { reservationEffects, reallocatePaused, sessionOnDate } = require('../../lib/reservations');
+const { athleteProfileBelongsToUser } = require('../../middlewares/mobileAuthMiddleware');
+const { sendMessageInConversation } = require('../../utils/messagesUtils');
+const NotificationUtils = require('../../utils/notificationUtils');
 
 async function listClasses(req, res, db) {
   try {
@@ -111,7 +115,7 @@ async function createClass(req, res, db) {
 
 async function updateClass(req, res, db) {
   try {
-    await writeClass(req, res, db, (graph, known) => prepareClassUpdate(graph, req.body, known));
+    await writeClass(req, res, db, (graph, known) => prepareClassUpdate(graph, req.body, known), true);
   } catch (error) {
     sendError(res, error, 'Error in updateClass:');
   }
@@ -120,7 +124,7 @@ async function updateClass(req, res, db) {
 async function cancelClass(req, res, db) {
   try {
     const now = new Date().toISOString();
-    await writeClass(req, res, db, (graph) => prepareClassCancel(graph, req.body, now));
+    await writeClass(req, res, db, (graph) => prepareClassCancel(graph, req.body, now), true);
   } catch (error) {
     sendError(res, error, 'Error in cancelClass:');
   }
@@ -129,23 +133,41 @@ async function cancelClass(req, res, db) {
 async function deleteClass(req, res, db) {
   try {
     const now = new Date().toISOString();
-    await writeClass(req, res, db, (graph) => prepareClassDelete(graph, req.body, now));
+    await writeClass(req, res, db, (graph) => prepareClassDelete(graph, req.body, now), false);
   } catch (error) {
     sendError(res, error, 'Error in deleteClass:');
   }
 }
 
 // Shared update, cancel, and delete. prepareFor(graph, known) -> { ok, value }.
-async function writeClass(req, res, db, prepareFor) {
+// sendNotices is false for delete. A notice failure still returns the saved class.
+async function writeClass(req, res, db, prepareFor, sendNotices) {
   const row = await findLiveSeries(req, res, db);
   if (!row) {
     return;
   }
   const known = await loadKnownIds(db, req.body);
-  const prepared = prepareFor(graphFromRow(row), known);
+  const before = graphFromRow(row);
+  const prepared = prepareFor(before, known);
   if (!prepared.ok) {
     res.status(400).json({ ok: false, message: prepared.message });
     return;
+  }
+  const telling = sendNotices && prepared.value.notifyRequested === true;
+  const noticeRequest = readNoticeRequest(req.body, telling, (senderId) => (
+    athleteProfileBelongsToUser(senderId, req.user || {})
+    || athleteProfileBelongsToUser(String(senderId), req.user || {})
+  ));
+  if (!noticeRequest.ok) {
+    res.status(400).json({ ok: false, message: noticeRequest.message });
+    return;
+  }
+  let reservationRows = [];
+  if (telling) {
+    reservationRows = await db.tables.ClassReservations.findAll({
+      where: { classSeriesId: row.id },
+      attributes: ['athleteProfileId', 'occursOn'],
+    });
   }
   const saved = await savePrepared(db, row, prepared.value);
   if (!saved.ok) {
@@ -153,10 +175,29 @@ async function writeClass(req, res, db, prepareFor) {
     return;
   }
   const reloaded = await loadSeries(db, row.id);
+  let notified = 0;
+  if (telling) {
+    try {
+      const after = graphFromRow(reloaded);
+      const notice = classNotice({
+        title: after.series.title,
+        seriesId: row.id,
+        note: noticeRequest.message,
+        today: day(new Date()),
+        reservations: pairsForNotice(before, after, reservationRows),
+      });
+      if (notice) {
+        notified = await sendClassNotices(db, notice.notices, noticeRequest.senderId);
+      }
+    } catch (error) {
+      console.error('Error preparing class notice:', error);
+    }
+  }
   res.json({
     ok: true,
     classSeries: toClassSeriesJson(reloaded),
     notifyRequested: prepared.value.notifyRequested,
+    notified: notified,
   });
 }
 
@@ -710,6 +751,66 @@ function toSyncGrant(row) {
     startsAt: row.startsAt == null ? null : new Date(row.startsAt),
     expiresAt: row.expiresAt == null ? null : new Date(row.expiresAt),
   };
+}
+
+// Posts one message into each athlete's Notifications conversation. Returns how many
+// were saved. A failure for one athlete does not stop the others.
+async function sendClassNotices(db, notices, senderId) {
+  let notified = 0;
+  for (let i = 0; i < notices.length; i += 1) {
+    const notice = notices[i];
+    try {
+      const conversation = await findOrCreateNotices(db, notice.athleteProfileId, senderId);
+      await sendMessageInConversation(
+        conversation.id,
+        senderId,
+        notice.body,
+        db,
+        {
+          customNotificationHandler: async () => {
+            // TODO: email and SMS are not sent. Later, delete class-conversation
+            // messages after about 2 weeks and other messages, including these
+            // notices, after 6 months.
+            await NotificationUtils.sendNotificationToAthleteProfiles(
+              [notice.athleteProfileId],
+              notice.summary,
+              notice.note || notice.summary,
+              { type: 'message', conversationId: conversation.id }
+            );
+          },
+        }
+      );
+      notified += 1;
+    } catch (error) {
+      console.error('Error sending class notice:', error);
+    }
+  }
+  return notified;
+}
+
+async function findOrCreateNotices(db, athleteProfileId, senderId) {
+  const existing = await db.tables.Conversations.findOne({
+    where: { noticesForAthleteProfileId: athleteProfileId },
+  });
+  if (existing) {
+    return existing;
+  }
+  const conversation = await db.tables.Conversations.create({
+    name: 'Notifications',
+    type: 'group',
+    createdBy: senderId,
+    noticesForAthleteProfileId: athleteProfileId,
+    settings: {
+      canSendMessages: false,
+      canReact: false,
+    },
+  });
+  await db.tables.ConversationParticipants.create({
+    conversationId: conversation.id,
+    athleteProfileId: athleteProfileId,
+    role: 'readonly',
+  });
+  return conversation;
 }
 
 // Error savePrepared turns into that HTTP status.

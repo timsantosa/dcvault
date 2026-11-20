@@ -778,7 +778,7 @@ Saving a repeating class asks:
 │  └─────────────────────────────┘    │
 ```
 
-Staff can **save without notifying**. Bulk “update pole note on every week of the series” is **not** a separate MVP tool — series edit covers the whole series, single-instance edit covers one day. Moving one class to another day is a single-instance edit. The other weeks stay on their usual days. Moving a class that does not repeat changes that class’s date.
+The notify switch and optional message appear when this save changes the time, date, or location for the scope they pick. A title-only save does not ask. Staff can **save without notifying**. Bulk “update pole note on every week of the series” is **not** a separate MVP tool — series edit covers the whole series, single-instance edit covers one day. Moving one class to another day is a single-instance edit. The other weeks stay on their usual days. Moving a class that does not repeat changes that class’s date.
 
 ### G4. Cancel a member’s reservation (staff)
 
@@ -842,11 +842,12 @@ DELETE CLASS (permanent — extra confirm)
 │  │                             │    │
 │  └─────────────────────────────┘    │
 │                                     │
-│  Notify reserved athletes    [ON]   │
 │                                     │
 │  [ Back ]     [ Delete forever ]    │
 └─────────────────────────────────────┘
 ```
+
+Delete does not notify. Cancel does, unless staff turn notify off or they are restoring a canceled class.
 
 ---
 
@@ -856,7 +857,7 @@ DELETE CLASS (permanent — extra confirm)
 
 Uses the **existing messaging** system. Staff open class detail → **Message all**.
 
-Class cancel / time / location changes use **this same path** (a class conversation), not a one-off alert that never appears in the inbox. Staff can still save those edits with notify **off**. Auto-delete is **not MVP**, but the rule is already decided: **all class conversations** (this thread included) after ~2 weeks; **all other message types** after 6 months.
+Class cancel / time / location changes do **not** use this thread. Each reserved athlete gets one message in their own Notifications conversation (Flow K). Staff can still save those edits with notify **off**. Auto-delete is **not MVP**, but the rule is already decided: **all class conversations** (this thread included) after ~2 weeks; **all other message types**, including Notifications, after 6 months.
 
 ```
 │  ┌─────────────────────────────┐    │
@@ -1008,11 +1009,9 @@ A profile can be in more than one group. Saving with none selected leaves the gr
 
 
 
-## Flow K — Class canceled or moved (via class messages)
+## Flow K — Class canceled or moved (Notifications)
 
-When staff save a destructive or member-visible change (class canceled, time changed, location changed), they get an optional message field and a **notify** toggle. Recipients: users with a reserved athlete on that class.
-
-The notice is sent **through the class messaging system**, same as Flow H. Staff can save with notify **off**.
+When staff cancel a class or change its time, date, or location, they get an optional message field and a **notify** toggle. Each athlete reserved on an affected upcoming date gets **one** message in a private Notifications conversation. A series change is still one message per person. Staff can save with notify **off**. Restore and delete do not ask.
 
 ```
 │  ┌─────────────────────────────┐    │
@@ -1034,18 +1033,21 @@ The notice is sent **through the class messaging system**, same as Flow H. Staff
 │  └─────────────────────────────┘    │
 ```
 
-Member lock screen (whatever push the messaging system already sends):
+The athlete opens Notifications from the message list. They can read it and cannot reply. A message from the server is shown as from DC Vault. The athlete’s own message still uses their name. Each date says what changed, including the previous value, and **View class** opens that date on the schedule. Reply to coaches is later (task 12.4).
+
+Member lock screen (the existing message push):
 
 ```
 │  ┌─────────────────────────────┐    │
 │  │ DC Vault                    │    │
-│  │ Open Vault moved to 4:30 PM │    │
+│  │ Open Vault on Aug 25 moved  │    │
+│  │ from 4:00 PM to 4:30 PM     │    │
 │  │ Thunder delay — still on    │    │
 │  │ for 4:30.                   │    │
 │  └─────────────────────────────┘    │
 ```
 
-Tapping opens that class detail **and** the class conversation. MVP does not add a second parallel push channel. No 24-hour class reminder in MVP. Message auto-delete is later: class conversations ~2 weeks, other messages 6 months.
+Tapping opens that athlete’s Notifications conversation. MVP does not add a second push channel. No 24-hour class reminder in MVP. Message auto-delete is later: class conversations ~2 weeks, other messages (including Notifications) 6 months.
 
 ---
 
@@ -1150,7 +1152,7 @@ They keep reserving in Zen Planner until they are granted `reserve_classes`.
 
 | Event                                    | Who is notified            | How                                      |
 | ---------------------------------------- | -------------------------- | ---------------------------------------- |
-| Class canceled / time / location changed | Members with a reservation | Class conversation (unless notify is off)|
+| Class canceled / time / location changed | Athletes reserved on an affected upcoming date | One message in that athlete’s Notifications conversation (unless notify is off) |
 | Staff message the class                  | Reserved roster            | Class conversation                       |
 | Staff cancel a reservation               | That member                | Existing notify pattern                  |
 | Staff add or remove credits              | That member                | Existing notify pattern                  |
@@ -1202,7 +1204,7 @@ Call these out so the review stays on launch scope:
 | 9–12  | Flow E — profile meter + history                | Confirm “attended” = checked in                                     |
 | 12–15 | Flow F — check-in + walk-in                     | Confirm tap-to-present; two-step grant+check-in when at zero        |
 | 15–17 | Flow G — create class sheet                     | Confirm custom series, relative cutoffs, cancel vs delete           |
-| 17–18 | Flow H + K — class messages, silent save        | Confirm notify toggle and inbox (not a one-off alert)               |
+| 17–18 | Flow H + K — class messages, silent save        | Message all is a class group. A time change is one Notifications message, and staff can save silently |
 | 18–20 | Flow I + J — credits as new records + profile   | Confirm coaches may or may not get these                            |
 | last  | Not in MVP                                      | Park waitlist, subscriptions, auto discounts, weekly packages       |
 
@@ -1226,7 +1228,7 @@ These used to be open UI questions. They are now in the PRD as well.
 9. **Training group:** field on Edit Profile, not its own flow.
 10. **Credit adjustments:** new record for history, not a silent edit of the original package. Ending a package (including unlimited) sets that grant’s expiration and keeps the row.
 11. **Cancel vs delete class:** cancel stays on the calendar and is reversible; delete is permanent and confirmed (this one vs series).
-12. **Class changes:** class messaging, with option to save without notifying.
+12. **Class changes:** one message in each reserved athlete’s private Notifications conversation, with the option to save without notifying. Message all stays a normal class group.
 13. **Weekly-allotment (later):** unused classes vanish at week’s end (use-it-or-lose-it).
 14. **Subscriptions (later):** admin sets the cadence; customer signs up and can cancel anytime.
 15. **Early bird (later):** configurable duration, not a hardcoded window.

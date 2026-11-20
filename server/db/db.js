@@ -640,6 +640,19 @@ columns.conversations = {
     type: Sequelize.STRING,
     allowNull: true, // null means use default logic (profile image for direct, no image for groups)
   },
+  // Set only on an athlete's Notifications thread. schema.sync() does not add this
+  // to an existing conversations table. See migrations/class-reservation.sql.
+  noticesForAthleteProfileId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+    unique: true,
+    references: {
+      model: tables.athleteProfiles,
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  },
   settings: {
     type: Sequelize.JSON,
     allowNull: false,
@@ -1339,6 +1352,17 @@ const syncTables = (schema, force) => {
   // Messaging associations
   tables.Conversations.belongsTo(tables.AthleteProfiles, { as: 'creator', foreignKey: 'createdBy' });
   tables.AthleteProfiles.hasMany(tables.Conversations, { as: 'createdConversations', foreignKey: 'createdBy' });
+
+  tables.Conversations.belongsTo(tables.AthleteProfiles, {
+    as: 'noticesForAthlete',
+    foreignKey: 'noticesForAthleteProfileId',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  });
+  tables.AthleteProfiles.hasOne(tables.Conversations, {
+    as: 'notificationsConversation',
+    foreignKey: 'noticesForAthleteProfileId',
+  });
 
   tables.ConversationParticipants.belongsTo(tables.Conversations, { as: 'conversation', foreignKey: 'conversationId' });
   tables.Conversations.hasMany(tables.ConversationParticipants, { as: 'participants', foreignKey: 'conversationId' });

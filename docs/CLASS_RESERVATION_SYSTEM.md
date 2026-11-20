@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-18  
+**Last updated:** 2026-11-19  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -669,12 +669,13 @@ Export (PDF/CSV): **later**.
 
 ### Class change notices (MVP)
 
-When staff **cancel** a class, change **time**, or change **location**, the default is to notify reserved athletes **through the same class messaging system** as “Message all” — not a one-off notification type that never appears in the inbox.
+When staff **cancel** a class, change **time** (including the date), or change **location**, each reserved athlete gets **one message** in a private **Notifications** conversation. That conversation belongs to that athlete alone. It is not the class group used by Message all.
 
-- Staff must be able to **save without notifying** (toggle off). Silent save is valid for corrections nobody needs to see.
-- When notify is on, the conversation is a normal class thread (optional custom message/reason from admin). Recipients: users with athletes reserved for that class.
-- Whatever push the existing messaging system already sends for a new class message should fire; do not invent a second parallel push channel for the same event.
-- Tapping the notification / message opens that class detail.
+- Staff must be able to **save without notifying** (toggle off). Silent save is valid for corrections nobody needs to see. The toggle is shown only when the save or cancel would actually notify.
+- Notify on sends one message, plus an optional note from staff. Each affected date is its own sentence, with that date and the previous value. The message ends with a View class link that opens that date on the schedule. A person reserved on several dates of a series still gets one message. Someone reserved only for a past date is not notified.
+- Restore and delete do not send.
+- The message uses the existing message push. Tapping it opens that athlete’s Notifications conversation. The athlete can read it and cannot reply there.
+- A Reply action that messages coaches stays on task 12.4, along with credit changes and a reservation canceled by staff. Those later notices use this same Notifications conversation.
 
 
 
@@ -690,11 +691,11 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 
 ### Member notification place (task 12.4)
 
-Class threads (tasks 12.2 and 12.3) are not a place to read a notice that is not about one class conversation: a coach canceled that athlete’s reservation, credits changed, or a lesson was reserved.
+Class groups (task 12.3) are for a person choosing Message all. They are not the place for an automated notice.
 
-The athlete needs a place they can open and read those notices. The shape stays open. One candidate is a faux conversation that belongs only to that athlete and holds their notifications.
+Task 12.2 creates the athlete’s Notifications conversation for a class cancel, time change, or location change. This task adds the other automated notices to that same conversation: a coach canceled that athlete’s reservation, credits changed, or a lesson was reserved. It also adds Reply, which opens a normal conversation with coaches. The Notifications thread itself stays read-only.
 
-`notifyCoachOnReserve` stays a stored flag until this work sends it. Class change notices stay on task 12.2. Credit add, remove, and end return `notifyRequested` and do not send until this task.
+`notifyCoachOnReserve` stays a stored flag until this work sends it. Credit add, remove, and end return `notifyRequested` and do not send until this task.
 
 
 
@@ -764,6 +765,10 @@ The athlete needs a place they can open and read those notices. The shape stays 
 3. **Reservation note / pole field storage** — free-text now, structured later.
 4. **Website purchase → new system sync** — resolved 2026-09-27. Catalog flag, grant created inside registration finalize, no backfill. See [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §5.
 
+### Schema to apply on deploy
+
+Server startup creates a missing table and does not add a column to a table that already exists. The full list, the `conversations` column change, and the two manual seeds are in [server/db/migrations/class-reservation.sql](../server/db/migrations/class-reservation.sql). Run that file once on the existing database before deploying this work. The Google Calendar sync table is not included; it arrives with task 5.1.
+
 ---
 
 
@@ -789,7 +794,7 @@ The athlete needs a place they can open and read those notices. The shape stays 
 - [ ] Multi-athlete per user via profile switching
 - [x] Check-in with walk-in support (two steps, one flow when granting a credit)
 - [ ] Admin credit add/remove; admin cancel reservation
-- [ ] Class change notices via class messaging, with option to save silently
+- [x] Class change notices: one read-only message per reserved athlete, with the option to save silently
 - [ ] Class participant messaging
 - [x] Roster visibility (permission-gated)
 - [x] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
@@ -1085,18 +1090,18 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Permission-gated names/photos; link to profiles.
   - *Completion notes:* 2026-11-18. The attendees screen loads `GET /mobileapp/user/class-attendees`. `view_class_roster` can read a visible class. A hidden class is 404 unless the caller has `manage_classes` or `manage_attendance`. No read permission is 403. Mark present and walk-in stay `POST /mobileapp/user/check-in` for `manage_attendance`. Rows are reserved, then walk-ins, with photo or initials, name, and group labels. Tapping a name opens the profile with the Athletes roster anchored underneath. When check-in is open, each row has a large tertiary **Check in** / **Checked in** control with an open or filled circle, and the screen has **+ Walk-in**. Class detail has a tertiary **View attendees** button beside the spots count. A Reserve or Cancel that cannot be used stays on class detail, disabled, with the reason underneath. The schedule row’s **Check in** button opens that same screen. The walk-in search is a sheet from the bottom. Add credit and the following check-in show a spinner on the button that was tapped. The staff ⋯ menu is task 12.5. §15 roster box is checked.
 
-- [ ] **12.2 — Class change notices**
+- [x] **12.2 — Class change notices**
   - Cancel / time / location change go through **class messaging**; staff can save without notifying; optional admin message.
   - Skeleton TODOs for email/SMS and for later message auto-delete (class conversations ~2 weeks; other messages 6 months).
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-19. A cancel, time change, date change, or location change with notify on posts one message in each reserved athlete’s private Notifications conversation. The thread is found by `conversations.noticesForAthleteProfileId` (see the deploy schema note in §14). A series change is still one message per person, worded for that person’s dates. Past dates are skipped. Notify off, restore, delete, and other edits send nothing. The note is optional. Each date names the previous value, and the message links to that class on the schedule. The athlete can read the thread and cannot reply. A server message is shown as DC Vault. The athlete’s own message still uses their name. Push uses the existing message send and opens that conversation. Email, SMS, and deletion are comments only. Reply and the other automated notices stay on 12.4. Message all stays on 12.3.
 
 - [ ] **12.3 — Message class participants**
   - Integrate with existing messaging system.
   - *Completion notes:*
 
 - [ ] **12.4 — Member notification place**
-  - A place the athlete can open and read notices that are not a class conversation (reservation canceled by staff, credit changes, a lesson reserved). The shape stays open. One candidate: a faux conversation that belongs only to that athlete and holds their notifications.
-  - `notifyCoachOnReserve` is stored and does not send until this task. Class change notices stay on 12.2.
+  - Add the other automated notices to the Notifications conversation from 12.2 (reservation canceled by staff, credit changes, a lesson reserved), and add Reply, which opens a normal conversation with coaches. The Notifications thread stays read-only.
+  - `notifyCoachOnReserve` is stored and does not send until this task. Class change notices shipped on 12.2.
   - *Completion notes:*
 
 - [ ] **12.5 — Roster staff menu**
