@@ -1,5 +1,6 @@
 const helpers = require('../lib/helpers');
 const rankingCache = require('./athleteRankingCache');
+const { parseWalkInSearch, loadWalkInOffers } = require('./classes/checkInController');
 const {
   getBestOfPersonalRecords,
   getPersonalBestForVaultScope,
@@ -12,6 +13,10 @@ const {
 } = require('../utils/rankingUtils');
 const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
 const NotificationUtils = require('../utils/notificationUtils');
+const {
+  readTrainingGroupIds,
+  trainingGroupsByProfileId,
+} = require('../lib/athleteTrainingGroups');
 
 function parseWorldAthleticsNumberForWrite(raw) {
   if (raw === undefined) {
@@ -55,6 +60,20 @@ async function hydrateUsatfForProfiles(profiles, db) {
   return result;
 }
 
+// First name, last name, and "first last" matches. getProfiles and getRankedProfiles both use this.
+function profileNameSearch(sequelize, search) {
+  const like = '%' + String(search).toLowerCase() + '%';
+  const match = (expression) => sequelize.where(expression, { [sequelize.Op.like]: like });
+  return [
+    match(sequelize.fn('LOWER', sequelize.col('firstName'))),
+    match(sequelize.fn('LOWER', sequelize.col('lastName'))),
+    match(sequelize.fn(
+      'LOWER',
+      sequelize.fn('concat', sequelize.col('firstName'), ' ', sequelize.col('lastName'))
+    )),
+  ];
+}
+
 // Omit empty athletic IDs from list/bulk profile responses (used by getProfiles, getRankedProfiles).
 function attachAthleticIds(responseObj, profileRow, usatfMap) {
   if (profileRow.worldAthleticsNumber) {
@@ -65,6 +84,55 @@ function attachAthleticIds(responseObj, profileRow, usatfMap) {
     responseObj.usatf = usatf;
   }
   return responseObj;
+}
+
+// { write:false } leaves the links alone. { write:true, ids } replaces them.
+// { error } is a 400 and must be returned before any profile write.
+async function trainingGroupWrite(db, user, profileData) {
+  if (!profileData || profileData.trainingGroupIds === undefined) {
+    return { write: false };
+  }
+  const permissions = user && user.permissions;
+  const allowed = Array.isArray(permissions) && permissions.includes('edit_training_group');
+  if (!allowed) {
+    return { write: false };
+  }
+  const requested = profileData.trainingGroupIds;
+  let knownIds = [];
+  if (Array.isArray(requested) && requested.length) {
+    const numeric = [];
+    requested.forEach((value) => {
+      const id = Number(value);
+      if (Number.isInteger(id) && id > 0) {
+        numeric.push(id);
+      }
+    });
+    if (numeric.length) {
+      const rows = await db.tables.TrainingGroups.findAll({
+        where: { id: numeric },
+        attributes: ['id'],
+      });
+      knownIds = rows.map((row) => Number(row.id));
+    }
+  }
+  const parsed = readTrainingGroupIds(requested, knownIds);
+  if (!parsed.ok) {
+    return { error: parsed.message };
+  }
+  return { write: true, ids: parsed.ids };
+}
+
+async function replaceProfileTrainingGroups(db, athleteProfileId, ids, transaction) {
+  await db.tables.AthleteProfileTrainingGroups.destroy({
+    where: { athleteProfileId: athleteProfileId },
+    transaction: transaction,
+  });
+  for (let i = 0; i < ids.length; i += 1) {
+    await db.tables.AthleteProfileTrainingGroups.create({
+      athleteProfileId: athleteProfileId,
+      trainingGroupId: ids[i],
+    }, { transaction: transaction });
+  }
 }
 
 async function createProfile(req, res, db) {
@@ -150,7 +218,18 @@ async function createProfile(req, res, db) {
       athleteProfileData.worldAthleticsNumber = worldAthleticsParsed.value;
     }
 
-    const newProfile = await db.tables.AthleteProfiles.create(athleteProfileData);
+    const groupWrite = await trainingGroupWrite(db, userSendingRequest, newProfileData);
+    if (groupWrite.error) {
+      return res.status(400).json({ ok: false, message: groupWrite.error });
+    }
+
+    const newProfile = await db.tables.schema.transaction(async (transaction) => {
+      const created = await db.tables.AthleteProfiles.create(athleteProfileData, { transaction: transaction });
+      if (groupWrite.write) {
+        await replaceProfileTrainingGroups(db, created.id, groupWrite.ids, transaction);
+      }
+      return created;
+    });
     console.log(`Profile created successfully with id ${newProfile.id}`);
     
     // Notify users with manage_roles permission about the new profile
@@ -241,8 +320,18 @@ async function updateProfile(req, res, db) {
       athleteProfileData.worldAthleticsNumber = worldAthleticsParsed.value;
     }
 
+    const groupWrite = await trainingGroupWrite(db, userSendingRequest, newProfileData);
+    if (groupWrite.error) {
+      return res.status(400).json({ ok: false, message: groupWrite.error });
+    }
+
     // Update existing profile
-    await existingProfile.update(athleteProfileData);
+    await db.tables.schema.transaction(async (transaction) => {
+      await existingProfile.update(athleteProfileData, { transaction: transaction });
+      if (groupWrite.write) {
+        await replaceProfileTrainingGroups(db, existingProfile.id, groupWrite.ids, transaction);
+      }
+    });
 
     console.log(`Profile updated successfully with id ${existingProfile.id}`);
     return res.status(200).json({
@@ -385,6 +474,9 @@ const getProfile = async (req, res, db) => {
       athleteProfile.emergencyContactName = foundAthlete.emergencyContactName;
     }
 
+    const groups = await trainingGroupsByProfileId(db, [profile.id]);
+    athleteProfile.trainingGroups = groups[profile.id] || [];
+
     res.json({ ok: true, athleteProfile });
   } catch (err) {
     console.error(err);
@@ -431,6 +523,11 @@ const deleteProfile = async (req, res, db) => {
         transaction
       });
 
+      await db.tables.AthleteProfileTrainingGroups.destroy({
+        where: { athleteProfileId },
+        transaction
+      });
+
       // 4. Finally delete the AthleteProfile
       await db.tables.AthleteProfiles.destroy({
         where: { id: athleteProfileId },
@@ -469,7 +566,7 @@ const deleteProfile = async (req, res, db) => {
 
 const getProfiles = async (req, res, db) => {
   try {
-    const { userId, athleteProfileIds, search } = req.query;
+    const { userId, athleteProfileIds, search, role } = req.query;
     
     // Validate inputs
     if (userId && !helpers.isValidId(parseInt(userId))) {
@@ -480,6 +577,18 @@ const getProfiles = async (req, res, db) => {
       const ids = athleteProfileIds.split(',').map(id => parseInt(id, 10));
       if (ids.some(id => !helpers.isValidId(id))) {
         return res.status(400).json({ ok: false, message: 'Invalid athlete profile ID in list' });
+      }
+    }
+
+    const walkInSearch = parseWalkInSearch(req.query);
+    if (!walkInSearch.ok) {
+      return res.status(400).json({ ok: false, message: walkInSearch.message });
+    }
+    if (walkInSearch.active) {
+      const permissions = req.user && req.user.permissions;
+      const canCheckIn = Array.isArray(permissions) && permissions.includes('manage_attendance');
+      if (!canCheckIn) {
+        return res.status(403).json({ ok: false, message: 'Forbidden: Insufficient permissions' });
       }
     }
 
@@ -495,32 +604,39 @@ const getProfiles = async (req, res, db) => {
       };
     }
 
-    // Add search conditions if search term exists
+    const roleName = typeof role === 'string' ? role.trim() : '';
+    if (roleName) {
+      const roleRow = await db.tables.Roles.findOne({ where: { roleName: roleName } });
+      if (!roleRow) {
+        return res.json({ ok: true, athleteProfiles: [] });
+      }
+      const links = await db.tables.User_Roles.findAll({
+        where: { roleId: roleRow.id },
+        attributes: ['userId'],
+      });
+      const roleUserIds = [];
+      links.forEach((link) => {
+        if (link.userId != null) {
+          roleUserIds.push(link.userId);
+        }
+      });
+      if (!roleUserIds.length) {
+        return res.json({ ok: true, athleteProfiles: [] });
+      }
+      const requestedUserId = whereClause.userId == null ? null : Number(whereClause.userId);
+      const userHasRole = requestedUserId != null && roleUserIds.some((id) => Number(id) === requestedUserId);
+      if (requestedUserId != null && !userHasRole) {
+        return res.json({ ok: true, athleteProfiles: [] });
+      }
+      if (whereClause.userId == null) {
+        whereClause.userId = {
+          [db.tables.schema.Sequelize.Op.in]: roleUserIds,
+        };
+      }
+    }
+
     if (search) {
-      const searchTerm = search.toLowerCase();
-      whereClause[db.tables.schema.Sequelize.Op.or] = [
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        // Search in full name (for cases like "John Do")
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn(
-            'LOWER',
-            db.tables.schema.Sequelize.fn(
-              'concat',
-              db.tables.schema.Sequelize.col('firstName'),
-              ' ',
-              db.tables.schema.Sequelize.col('lastName')
-            )
-          ),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        )
-      ];
+      whereClause[db.tables.schema.Sequelize.Op.or] = profileNameSearch(db.tables.schema.Sequelize, search);
     }
 
     const profiles = await db.tables.AthleteProfiles.findAll({
@@ -529,6 +645,19 @@ const getProfiles = async (req, res, db) => {
     });
 
     const usatfMap = await hydrateUsatfForProfiles(profiles, db);
+    let walkInOffers = null;
+    let groupsByProfile = null;
+    if (walkInSearch.active) {
+      try {
+        walkInOffers = await loadWalkInOffers(db, profiles, walkInSearch.seriesId, walkInSearch.occursOn);
+      } catch (error) {
+        if (error.status) {
+          return res.status(error.status).json({ ok: false, message: error.message });
+        }
+        throw error;
+      }
+      groupsByProfile = await trainingGroupsByProfileId(db, profiles.map((profile) => profile.id));
+    }
 
     // Get medal counts for all profiles in bulk
     // const profileIdsForMedals = profiles.map(profile => profile.id);
@@ -558,10 +687,21 @@ const getProfiles = async (req, res, db) => {
         vaultAssociationId: profile.vaultAssociationId ?? undefined,
         vaultAssociation: profile.vaultAssociation ? { id: profile.vaultAssociation.id, name: profile.vaultAssociation.name } : null,
       };
-      return attachAthleticIds(athleteProfile, profile, usatfMap);
+      const listed = attachAthleticIds(athleteProfile, profile, usatfMap);
+      if (walkInOffers) {
+        listed.checkIn = walkInOffers.offers[profile.id];
+      }
+      if (groupsByProfile) {
+        listed.trainingGroups = groupsByProfile[profile.id] || [];
+      }
+      return listed;
     });
 
-    res.json({ ok: true, athleteProfiles });
+    const payload = { ok: true, athleteProfiles };
+    if (walkInOffers) {
+      payload.checkInGrant = walkInOffers.checkInGrant;
+    }
+    res.json(payload);
   } catch (err) {
     console.error(err);
     res.status(500).json({ ok: false, message: 'Failed to fetch athlete profiles' });
@@ -646,38 +786,11 @@ const getRankedProfiles = async (req, res, db) => {
     // Build base where clause
     const baseWhereClause = buildBaseWhereClause(athleteActiveStatus);
 
-    // Add search conditions if search term exists
     let whereClause = { ...baseWhereClause };
     if (search) {
-      const searchTerm = search.toLowerCase();
-      const searchConditions = [
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('firstName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn('LOWER', db.tables.schema.Sequelize.col('lastName')),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        ),
-        // Search in full name (for cases like "John Do")
-        db.tables.schema.Sequelize.where(
-          db.tables.schema.Sequelize.fn(
-            'LOWER',
-            db.tables.schema.Sequelize.fn(
-              'concat',
-              db.tables.schema.Sequelize.col('firstName'),
-              ' ',
-              db.tables.schema.Sequelize.col('lastName')
-            )
-          ),
-          { [db.tables.schema.Sequelize.Op.like]: `%${searchTerm}%` }
-        )
-      ];
-
-      // Combine base conditions with search conditions using AND
       whereClause[db.tables.schema.Sequelize.Op.and] = [
         baseWhereClause,
-        { [db.tables.schema.Sequelize.Op.or]: searchConditions }
+        { [db.tables.schema.Sequelize.Op.or]: profileNameSearch(db.tables.schema.Sequelize, search) }
       ];
     }
 

@@ -9,7 +9,7 @@ const userRoutes = require('./mobileRoutes/userRoutes');
 const { deleteUser } = require('./controllers/usersController');
 const { getMobileUserInfo } = require('./controllers/authController');
 const imageUploadRoutes = require('./mobileRoutes/imageUploadRoutes');
-const { verifyJump, rejectJumpVerification, getUnverifiedMeetJumps } = require('./controllers/jumpsController');
+const { verifyJump, rejectJumpVerification, getUnverifiedMeetJumps } = require('./controllers/trainingLog/jumpsController');
 const poleRoutes = require('./mobileRoutes/poleRoutes');
 const meetDataRoutes = require('./mobileRoutes/meetDataRoutes');
 const meetEntityRoutes = require('./mobileRoutes/meetEntityRoutes');
@@ -18,6 +18,15 @@ const drillRoutes = require('./mobileRoutes/drillRoutes');
 const messageRoutes = require('./mobileRoutes/messageRoutes');
 const notificationRoutes = require('./mobileRoutes/notificationRoutes');
 const vaultAssociationRoutes = require('./mobileRoutes/vaultAssociationRoutes');
+const classPackageRoutes = require('./mobileRoutes/classPackageRoutes');
+const classRoutes = require('./mobileRoutes/classRoutes');
+const memberScheduleRoutes = require('./mobileRoutes/memberScheduleRoutes');
+const reservationRoutes = require('./mobileRoutes/reservationRoutes');
+const creditRoutes = require('./mobileRoutes/creditRoutes');
+const checkInRoutes = require('./mobileRoutes/checkInRoutes');
+const classAttendeeRoutes = require('./mobileRoutes/classAttendeeRoutes');
+const trainingGroupRoutes = require('./mobileRoutes/trainingGroupRoutes');
+const { classProgressRoutes, classHistoryRoutes } = require('./mobileRoutes/classHistoryRoutes');
 
 module.exports = function addMobileAppRoutes(app, db) {
 
@@ -28,6 +37,7 @@ module.exports = function addMobileAppRoutes(app, db) {
 
   // Everything under '/mobileapp/user' will need to be authenticated
   app.use('/mobileapp/user', authenticateJWT);
+  app.use('/mobileapp/user/training-groups', trainingGroupRoutes(db));
   app.use('/mobileapp/user/log', jumpRoutes(db));
   app.use('/mobileapp/user/log', drillRoutes(db));
   app.use('/mobileapp/user/athlete', athleteRoutes(db));
@@ -52,6 +62,17 @@ module.exports = function addMobileAppRoutes(app, db) {
 
   app.use('/mobileapp/user/drillTypes', drillTypeRoutes(db));
   app.use('/mobileapp/user/vaultAssociations', vaultAssociationRoutes(db));
+  app.use('/mobileapp/user/classPackages', checkPermission('manage_classes'), classPackageRoutes(db));
+  app.use('/mobileapp/user/classes', checkPermission('manage_classes'), classRoutes(db));
+  app.use('/mobileapp/user/schedule', checkPermission('reserve_classes'), memberScheduleRoutes(db));
+  // Reserve requires reserve_classes. Cancel is own profile or manage_classes.
+  app.use('/mobileapp/user/reservations', reservationRoutes(db));
+  app.use('/mobileapp/user/credits', checkPermission('manage_credits'), creditRoutes(db));
+  app.use('/mobileapp/user/class-attendees', classAttendeeRoutes(db));
+  app.use('/mobileapp/user/check-in', checkPermission('manage_attendance'), checkInRoutes(db));
+  // reserve_classes (own profile) or manage_credits, checked in the controller.
+  app.use('/mobileapp/user/class-progress', classProgressRoutes(db));
+  app.use('/mobileapp/user/class-history', classHistoryRoutes(db));
 
   // Admin routes
   app.post('/mobileapp/user/jump/verify', checkPermission('verify_jumps'), (req, res) => verifyJump(req, res, db));

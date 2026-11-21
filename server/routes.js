@@ -5,10 +5,56 @@ const jwt = require('jwt-simple')
 const express = require('express')
 const bcrypt = require('bcrypt-nodejs')
 const helpers = require('./lib/helpers')
+const { buildWebsitePurchaseGrant } = require('./lib/creditInventory')
+const { toClassPackageJson } = require('./lib/classPackageCatalog')
+const {
+  isCatalogFlagOn,
+  visibleClassPackages,
+  inviteOnlyPackages,
+  resolveCatalogPurchase,
+  registrationPurchaseFields,
+} = require('./lib/registrationCatalog')
 const config = require('./config/config')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const addMobileAppRoutes = require('./mobileAppRoutes');
+
+async function loadCatalogState(db) {
+  const settings = await db.tables.RegistrationSettings.findOne({ where: { id: 1 } });
+  const useClassPackageCatalog = isCatalogFlagOn(settings);
+  if (!useClassPackageCatalog) {
+    return { useClassPackageCatalog: false, packages: [] };
+  }
+  const rows = await db.tables.ClassPackages.findAll();
+  return {
+    useClassPackageCatalog: true,
+    packages: rows.map(toClassPackageJson),
+  };
+}
+
+async function createWebsitePurchaseGrant(db, input) {
+  const existing = await db.tables.CreditGrants.findAll({
+    where: { purchaseId: input.purchaseId },
+  });
+  const built = buildWebsitePurchaseGrant({
+    athleteId: input.athleteId,
+    classPackage: input.classPackage,
+    purchaseId: input.purchaseId,
+    season: input.season,
+    today: new Date(),
+    existingGrants: existing,
+  });
+  if (!built.created) {
+    return;
+  }
+  try {
+    await db.tables.CreditGrants.create(built.grant);
+  } catch (error) {
+    if (!error || error.name !== 'SequelizeUniqueConstraintError') {
+      throw error;
+    }
+  }
+}
 
 module.exports = (app, db) => {
   // The training registration flow is the landing page (account.dcvault.com/).
@@ -325,18 +371,41 @@ module.exports = (app, db) => {
 
   // Registration Endpoints
 
-  app.post('/registration/invite', (req, res) => {
-    let code = req.body.code
-    if (!code) {
-      res.status(400).send({ok: false, message: 'no code given'})
-    } else {
-      db.tables.Invites.findOne({where: {code: code}}).then((invite) => {
-        if (!invite) {
-          res.status(400).send({ok: false, message: 'not a valid code'})
-        } else {
-          res.send({ok: true, message: 'code accepted', invite: invite})
-        }
-      })
+  app.get('/registration/catalog', async (req, res) => {
+    try {
+      const state = await loadCatalogState(db);
+      res.send({
+        ok: true,
+        useClassPackageCatalog: state.useClassPackageCatalog,
+        packages: state.useClassPackageCatalog ? visibleClassPackages(state.packages, null) : [],
+      });
+    } catch (error) {
+      console.error('Registration catalog error:', error);
+      res.status(500).send({ ok: false, message: 'an internal error has occurred' });
+    }
+  })
+
+  app.post('/registration/invite', async (req, res) => {
+    try {
+      const code = req.body.code;
+      if (!code) {
+        return res.status(400).send({ ok: false, message: 'no code given' });
+      }
+
+      const invite = await db.tables.Invites.findOne({ where: { code: code } });
+      if (!invite) {
+        return res.status(400).send({ ok: false, message: 'not a valid code' });
+      }
+
+      const state = await loadCatalogState(db);
+      const body = { ok: true, message: 'code accepted', invite: invite };
+      if (state.useClassPackageCatalog) {
+        body.packages = inviteOnlyPackages(state.packages, invite.level);
+      }
+      return res.send(body);
+    } catch (error) {
+      console.error('Registration invite error:', error);
+      return res.status(500).send({ ok: false, message: 'db error' });
     }
   })
 
@@ -436,6 +505,30 @@ module.exports = (app, db) => {
       if (!foundUser) {
         return res.status(403).send({ ok: false, message: 'bad user token' });
       }
+
+      const catalogState = await loadCatalogState(db);
+      let catalogPurchase = null;
+      if (catalogState.useClassPackageCatalog) {
+        const selectPackage = req.body.purchaseInfo.selectPackage || {};
+        let inviteLevel = null;
+        if (selectPackage.invite) {
+          const invite = await db.tables.Invites.findOne({ where: { code: selectPackage.invite } });
+          if (invite) {
+            inviteLevel = invite.level;
+          }
+        }
+        const resolved = resolveCatalogPurchase({
+          useClassPackageCatalog: true,
+          membership: selectPackage.membership,
+          packages: catalogState.packages,
+          inviteLevel: inviteLevel,
+          season: selectPackage.quarter,
+        });
+        if (!resolved.ok) {
+          return res.status(400).send({ ok: false, message: resolved.message });
+        }
+        catalogPurchase = resolved;
+      }
   
       let athlete = req.body.purchaseInfo.athleteInfo;
       let foundAthlete = null;
@@ -484,13 +577,18 @@ module.exports = (app, db) => {
       let noapp = purchaseInfo.selectPackage.yesApparel;
       let app = purchaseInfo.selectPackage.apparel;
   
-      // Month only applies to fly-kids, basic memberships and adults; clear it
-      // for everyone else. Adults keep the class package they chose
-      // ('2classes' / '8classes'). This used to overwrite it with 'adult',
-      // so older adult purchases don't record their class count.
-      if (grp !== 'fly-kids' && mem !== 'basic' && grp != 'adult') {
-        mth = 'none';
-      }
+      // Catalog checkout stores pkg:<id> and clears month. The hardcoded form
+      // keeps an adult's class package and month, and clears month for everyone
+      // else except fly-kids and basic memberships.
+      const purchaseFields = registrationPurchaseFields({
+        catalogPurchase: catalogPurchase,
+        group: grp,
+        membership: mem,
+        month: mth,
+      });
+      grp = purchaseFields.group;
+      mem = purchaseFields.membership;
+      mth = purchaseFields.month;
   
       if (!mem) {
         mem = 'none';
@@ -508,12 +606,12 @@ module.exports = (app, db) => {
         purchaseInfo.selectPackage.strengthFam = 'yes';
       }
   
-      await db.tables.Purchases.create({
+      const purchase = await db.tables.Purchases.create({
         athleteId: athleteId,
         userId: userId,
-        quarter: purchaseInfo.selectPackage.quarter,
+        quarter: catalogPurchase ? catalogPurchase.season : purchaseInfo.selectPackage.quarter,
         month: mth,
-        group: purchaseInfo.selectPackage.group,
+        group: grp,
         facility: purchaseInfo.selectPackage.facility,
         waiverSignatory: purchaseInfo.agreement.name,
         size: app,
@@ -524,6 +622,15 @@ module.exports = (app, db) => {
         paymentId: purchaseInfo.payment.paymentId,
         payerId: purchaseInfo.payment.payerId
       });
+
+      if (catalogPurchase) {
+        await createWebsitePurchaseGrant(db, {
+          athleteId: athleteId,
+          classPackage: catalogPurchase.classPackage,
+          purchaseId: purchase.id,
+          season: catalogPurchase.season,
+        });
+      }
   
       // Ensure `invite` and `discount` exist before deleting
       if (purchaseInfo.selectPackage.invite) {
