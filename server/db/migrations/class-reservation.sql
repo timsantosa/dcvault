@@ -28,7 +28,7 @@
 --   node server/db/seedClassPackages.js
 -- Permissions, including the class-reservation keys, are seeded by server startup.
 --
--- Task 5.1 will add a Google Calendar sync table. It is not in this file yet.
+-- The Google Calendar sync table is Phase 2. It is not in this file.
 
 ALTER TABLE conversations
   ADD COLUMN noticesForAthleteProfileId INT NULL UNIQUE

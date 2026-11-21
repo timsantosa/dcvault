@@ -52,7 +52,7 @@ After questions are answered (or there were none), switch to Plan mode with Swit
 The plan states:
 
 - Task id and the behavior being added
-- Repos and files, following existing patterns
+- Repos and files, following existing patterns and reusing components and shared functions.
 - The simple approach, and any heavier approach you are not taking
 - Unit tests (pure functions; see AGENTS.md). No `require` of `server/app.js`
 - Out of scope, including the next §18 task
@@ -99,7 +99,7 @@ Follow §19 "After completing a task": check off the §18 item, add completion n
 | --- | --- |
 | 3.1 | CREDIT_INVENTORY.md §5. No member screen. |
 | 4.1, 4.2, 8.1 | Flow G |
-| 5.1 | PRD §6. Deferred until it is the first open §18 task. No screen. |
+| 5.1 | Phase 2. Do not pick it up. The rules stay in PRD §6. No screen. |
 | 6.1, 6.2 | Who sees what, visual language, Flow A |
 | 7.1, 7.2 | Flows A, B, C |
 | 7.3 | Flow C2. Also §5, §8, and §10. §16 #2 is still open. |

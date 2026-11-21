@@ -322,10 +322,10 @@ The **app/backend class system is the source of truth** for beta users.
 ### During transition
 
 - The **existing public Google Calendar** (website practice schedule) is **maintained separately** by staff — unchanged workflow for non-beta members.
-- Classes created in the new system **sync one-way to a separate Google Calendar** (not the existing public one) to avoid duplicate events during testing. This is task 5.1. It stays in the MVP, and it is the **last MVP build task** (after Task 12, before dark launch) so the schedule and reservations can be tested first.
+- Classes created in the new system **sync one-way to a separate Google Calendar** (not the existing public one) to avoid duplicate events during testing. This is Phase 2, not part of the first build. The rules below stay the spec.
 - The push runs when a class is **created, edited, canceled, restored, or deleted**. There is no scheduled job.
 - A repeating class is **one Google event per weekday and time**. That event has **no end date** unless the class has one. A one-off class is a single event. Dates nobody edited are not stored as their own events.
-- A **moved, canceled, or otherwise edited** date is its own event. A moved session stays that one event and changes day. Task 5.1 stores each Google event id in a sync table.
+- A **moved, canceled, or otherwise edited** date is its own event. A moved session stays that one event and changes day. The sync stores each Google event id in a sync table.
 - A canceled class **stays** on the sync calendar, with the title prefixed `Canceled: `. A deleted class is **removed**.
 - Each event shows the **title, date, start and end time, location, and training groups**.
 - **Hidden** classes are not copied. Only classes marked visible are synced.
@@ -766,7 +766,7 @@ Task 12.2 creates the athlete’s Notifications conversation for a class cancel,
 
 ### Schema to apply on deploy
 
-Server startup creates a missing table and does not add a column to a table that already exists. The full list, the `conversations` column change, and the two manual seeds are in [server/db/migrations/class-reservation.sql](../server/db/migrations/class-reservation.sql). Run that file once on the existing database before deploying this work. The Google Calendar sync table is not included; it arrives with task 5.1.
+Server startup creates a missing table and does not add a column to a table that already exists. The full list, the `conversations` column change, and the two manual seeds are in [server/db/migrations/class-reservation.sql](../server/db/migrations/class-reservation.sql). Run that file once on the existing database before deploying this work.
 
 ---
 
@@ -798,13 +798,13 @@ Server startup creates a missing table and does not add a column to a table that
 - [x] Roster visibility (permission-gated)
 - [x] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
 - [x] Private lessons reserve immediately (no approval workflow)
-- [ ] One-way sync to separate Google Calendar (task 5.1, last MVP build task; rules in §6)
 - [ ] Unit test framework + core logic tests
 
 
 
 ### Phase 2+ (prioritize later)
 
+- **One-way sync to a separate Google Calendar** — not the public website calendar. Rules are in §6. Moved out of the first build on 2026-11-21. Not built.
 - **Reply on Notifications** — opens a normal conversation with coaches. Members can message coaches and admins to ask a question without `manage_conversations`. The Notifications thread stays read-only.
 - **Lesson reserved notice** — one message in the athlete’s Notifications conversation when a lesson is reserved.
 - **`notifyCoachOnReserve`** — when the class flag is on, tell the coaches listed on that class that someone reserved. The flag is already stored. An empty coach list sends nothing.
@@ -861,7 +861,7 @@ These are intentionally unresolved — capture decisions as they come up during 
 
 ### Resolved (2026-10-21)
 
-- **Google Calendar sync details** — separate calendar, not the public one. Push on create, edit, cancel, restore, and delete. One repeating Google event per weekday and time, with no end date unless the class has one. Edited dates are their own events. Title, time, location, and training groups. Canceled stays, prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied. Calendar id and service-account key path come from the environment; if either is missing, skip the push. The IANA timezone is still confirmed when task 5.1 is built. See §6. Implementation is deferred to the end of the MVP build list.
+- **Google Calendar sync details** — separate calendar, not the public one. Push on create, edit, cancel, restore, and delete. One repeating Google event per weekday and time, with no end date unless the class has one. Edited dates are their own events. Title, time, location, and training groups. Canceled stays, prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied. Calendar id and service-account key path come from the environment; if either is missing, skip the push. The IANA timezone is still confirmed when the sync is built. See §6. Implementation is Phase 2.
 
 ---
 
@@ -979,7 +979,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 ### Task 5: Google Calendar outbound sync
 
-Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before dark launch. The rules are in §6. Do not pick it up while an earlier `[ ]` task is still open.
+Moved to Phase 2. The checkbox and notes are with the later task 5.1 entry. Do not pick it up for the first build. The rules are in §6.
 
 
 
@@ -1116,15 +1116,15 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
 
 ### Task 5: Google Calendar outbound sync
 
-Last MVP build task. Do this after Tasks 6–12 so the schedule and reservations can be tested first. Decisions are in §6 (resolved 2026-10-21).
+Phase 2. Decisions stay in §6 (resolved 2026-10-21). Do not build this for the first release.
 
-- [ ] **5.1 — Separate calendar sync**
+- [x] **5.1 — Separate calendar sync**
   - One-way push from the class system to a separate Google Calendar. The public calendar is not written.
   - Push on create, edit, cancel, restore, and delete. No scheduled job.
   - A repeating class is one Google event per weekday and time, with no end date unless the class has one. A one-off is a single event. A moved, canceled, or otherwise edited date is its own event, and a move updates that same event. Store each Google event id in a sync table added here.
   - Title, date, start and end time, location, and training groups. Canceled stays, with the title prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied.
   - Read `GOOGLE_CLASS_SYNC_CALENDAR_ID` and `GOOGLE_CLASS_SYNC_CREDENTIALS`. If either is missing, skip the push and still save the class. Confirm the IANA timezone when building.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-21. Moved to Phase 2. Not built. The first build does not include this sync. Rules stay in §6. The next open task is 13.1.
 
 
 
