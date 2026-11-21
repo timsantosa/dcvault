@@ -6,6 +6,9 @@ const {
   presentStaffCredits,
   staffPeriods,
 } = require('../../lib/creditInventory');
+const { creditNotice } = require('../../lib/creditNotices');
+const { athleteProfileBelongsToUser } = require('../../middlewares/mobileAuthMiddleware');
+const { postAthleteNotice } = require('../../utils/messagesUtils');
 const { classStartsFor, isPaused } = require('./memberScheduleController');
 
 async function listStaffCredits(req, res, db) {
@@ -57,15 +60,27 @@ async function adjustStaffCredits(req, res, db) {
     if (!prepared.ok) {
       return res.status(400).json({ ok: false, message: prepared.message });
     }
+    const sender = readSender(req);
+    if (!sender.ok) {
+      return res.status(400).json({ ok: false, message: sender.message });
+    }
 
     const created = await db.tables.CreditGrants.create(prepared.grant);
     const presented = await loadPresented(db, profile.profile, now);
     const grant = presented.grants.find((row) => row.id === created.id);
+    const notified = prepared.notifyRequested
+      ? await sendCreditNotice(db, profile.profile.id, sender.senderId, {
+        kind: body.action,
+        quantity: prepared.grant.quantity,
+        expiresAt: prepared.grant.expiresAt,
+      })
+      : 0;
     res.status(201).json({
       ok: true,
       grant: grant,
       summary: presented.summary,
       notifyRequested: prepared.notifyRequested,
+      notified: notified,
     });
   } catch (error) {
     sendError(res, error, 'Error in adjustStaffCredits:');
@@ -81,6 +96,10 @@ async function endStaffGrant(req, res, db) {
     const profile = await loadProfile(db, (req.body || {}).athleteProfileId);
     if (!profile.ok) {
       return res.status(profile.status).json({ ok: false, message: profile.message });
+    }
+    const sender = readSender(req);
+    if (!sender.ok) {
+      return res.status(400).json({ ok: false, message: sender.message });
     }
     const now = new Date();
     const result = await db.tables.schema.transaction(async (transaction) => {
@@ -110,11 +129,19 @@ async function endStaffGrant(req, res, db) {
         notifyRequested: prepared.notifyRequested,
       };
     });
+    const notified = result.notifyRequested
+      ? await sendCreditNotice(db, profile.profile.id, sender.senderId, {
+        kind: 'end',
+        quantity: result.grant.quantity,
+        expiresAt: result.grant.expiresAt,
+      })
+      : 0;
     res.json({
       ok: true,
       grant: result.grant,
       changed: result.changed,
       notifyRequested: result.notifyRequested,
+      notified: notified,
     });
   } catch (error) {
     sendError(res, error, 'Error in endStaffGrant:');
@@ -197,6 +224,38 @@ function toAllocation(row) {
     amount: Number(row.amount),
     holding: row.holding,
   };
+}
+
+// The staff member's own profile, the same check a class notice uses.
+function readSender(req) {
+  const senderId = parseInt(req.body && req.body.senderAthleteProfileId, 10);
+  const user = req.user || {};
+  const owns = athleteProfileBelongsToUser(senderId, user)
+    || athleteProfileBelongsToUser(String(senderId), user);
+  if (!Number.isInteger(senderId) || senderId < 1 || !owns) {
+    return { ok: false, message: 'senderAthleteProfileId is required' };
+  }
+  return { ok: true, senderId: senderId };
+}
+
+// A failed send does not undo the grant. Returns 1 when the message was saved.
+async function sendCreditNotice(db, athleteProfileId, senderId, fields) {
+  const notice = creditNotice(fields);
+  if (!notice) {
+    return 0;
+  }
+  try {
+    await postAthleteNotice(db, {
+      athleteProfileId: athleteProfileId,
+      senderId: senderId,
+      summary: notice.summary,
+      body: notice.body,
+    });
+    return 1;
+  } catch (error) {
+    console.error('Error sending credit notice:', error);
+    return 0;
+  }
 }
 
 function callerId(req) {

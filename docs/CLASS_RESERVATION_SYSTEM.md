@@ -693,9 +693,9 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 
 Class groups (task 12.3) are for a person choosing Message all. They are not the place for an automated notice.
 
-Task 12.2 creates the athlete’s Notifications conversation for a class cancel, time change, or location change. This task adds the other automated notices to that same conversation: a coach canceled that athlete’s reservation, credits changed, or a lesson was reserved. It also adds Reply, which opens a normal conversation with coaches. The Notifications thread itself stays read-only.
+Task 12.2 creates the athlete’s Notifications conversation for a class cancel, time change, or location change. Credit add, remove, and end post one message in that same conversation. The date matches the credit history line. An end that does not change the expiration sends nothing. Still to add: a coach canceled that athlete’s reservation, a lesson was reserved, and Reply, which opens a normal conversation with coaches. The Notifications thread itself stays read-only.
 
-`notifyCoachOnReserve` stays a stored flag until this work sends it. Credit add, remove, and end return `notifyRequested` and do not send until this task.
+`notifyCoachOnReserve` stays a stored flag until the rest of this task sends it.
 
 
 
@@ -1100,9 +1100,9 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - *Completion notes:* 2026-11-20. **Message all** on class detail for `manage_classes` or `manage_attendance`. `POST /mobileapp/user/messaging/conversations/class` finds or creates one group for that series and date (`classConversations`, created by sync), sets the roster to everyone signed up including walk-ins, and sends with `sendMessageInConversation`. Athletes in the group can reply. A person who leaves is removed on the next send. Staff who already sent stay. The sheet opens that conversation after send. Email, SMS, and deletion stay comments. `manage_conversations` is not required. Reply on Notifications stays on 12.4.
 
 - [ ] **12.4 — Member notification place**
-  - Add the other automated notices to the Notifications conversation from 12.2 (reservation canceled by staff, credit changes, a lesson reserved), and add Reply, which opens a normal conversation with coaches. The Notifications thread stays read-only.
-  - `notifyCoachOnReserve` is stored and does not send until this task. Class change notices shipped on 12.2.
-  - *Completion notes:*
+  - Add the remaining automated notices to the Notifications conversation from 12.2 (reservation canceled by staff, a lesson reserved), and add Reply, which opens a normal conversation with coaches. The Notifications thread stays read-only. Credit add, remove, and end already post here.
+  - `notifyCoachOnReserve` is stored and does not send until the rest of this task. Class change notices shipped on 12.2.
+  - *Completion notes:* 2026-11-20 (partial). Add, remove, and end post one message in that athlete’s Notifications conversation. The sender is the staff member’s selected profile, and a profile that is missing or not theirs is rejected before the grant is written. An end that does not change the date sends nothing. A failed send leaves the grant saved. Reply, a lesson reserved, notify-coach-on-reserve, and a reservation canceled by staff are still open.
 
 - [ ] **12.5 — Roster staff menu**
   - On each class-detail roster row, `manage_classes` gets View profile, Cancel reservation, and Adjust credits when they also have `manage_credits`.

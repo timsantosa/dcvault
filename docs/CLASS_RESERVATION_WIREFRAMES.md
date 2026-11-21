@@ -890,7 +890,7 @@ Admin has every permission above, plus credit and training-group tools. Coaches 
 
 **Permission:** `manage_credits`  
 **Entry:** athlete profile (someone else’s). The class roster ⋯ menu opens this same screen once that menu exists (task 12.5).  
-**MVP:** add/remove only. No cutoff override, no required reason field, no audit log UI. The screen says the member will get a notification. Sending it is task 12.4.
+**MVP:** add/remove only. No cutoff override, no required reason field, no audit log UI. The screen says the member will get a notification. Saving posts that message in the athlete’s Notifications conversation.
 
 Each add or remove is a **new package / credit record** so history stays honest. It does **not** silently rewrite the original quarterly purchase.
 
@@ -1157,7 +1157,7 @@ They keep reserving in Zen Planner until they are granted `reserve_classes`.
 | Class canceled / time / location changed | Athletes reserved on an affected upcoming date | One message in that athlete’s Notifications conversation (unless notify is off) |
 | Staff message the class                  | Reserved roster            | Class conversation                       |
 | Staff cancel a reservation               | That member                | Existing notify pattern                  |
-| Staff add or remove credits              | That member                | Existing notify pattern                  |
+| Staff add, remove, or end credits        | That member                | One message in that athlete’s Notifications conversation |
 
 
 ---
@@ -1185,7 +1185,7 @@ Call these out so the review stays on launch scope:
 - Refunds in-app (coach handles money; admin adjusts credits)
 - Email / SMS / 24-hour class reminders
 - Auto-delete of messages (class conversations ~2 weeks; other types 6 months)
-- A place to read personal notices that are not a class conversation (reservation canceled, credits changed, lesson reserved). Shape is later; one option is a faux conversation for that athlete only (task 12.4)
+- Reply on Notifications, a lesson-reserved notice, and a notice when staff cancel one reservation (task 12.4). Credit changes already post in that athlete’s Notifications conversation.
 - Personal Apple/Google calendar subscription
 - Progress meter flipping to next quarter when this quarter is empty
 - Replacing the public website calendar or turning off Zen Planner for everyone

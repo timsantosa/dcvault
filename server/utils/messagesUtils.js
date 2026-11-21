@@ -323,11 +323,68 @@ async function sendMessageInConversation(conversationId, senderId, content, db, 
   return message;
 }
 
+// The athlete's private Notifications conversation. Created on the first notice.
+async function findOrCreateNoticesConversation(db, athleteProfileId, senderId) {
+  const existing = await db.tables.Conversations.findOne({
+    where: { noticesForAthleteProfileId: athleteProfileId },
+  });
+  if (existing) {
+    return existing;
+  }
+  const conversation = await db.tables.Conversations.create({
+    name: 'Notifications',
+    type: 'group',
+    createdBy: senderId,
+    noticesForAthleteProfileId: athleteProfileId,
+    settings: {
+      canSendMessages: false,
+      canReact: false,
+    },
+  });
+  await db.tables.ConversationParticipants.create({
+    conversationId: conversation.id,
+    athleteProfileId: athleteProfileId,
+    role: 'readonly',
+  });
+  return conversation;
+}
+
+// Posts one read-only notice and sends the message push. Email and SMS are not sent.
+// Later, delete class-conversation messages after about 2 weeks and other messages,
+// including these notices, after 6 months.
+async function postAthleteNotice(db, notice) {
+  const conversation = await findOrCreateNoticesConversation(
+    db,
+    notice.athleteProfileId,
+    notice.senderId
+  );
+  await sendMessageInConversation(
+    conversation.id,
+    notice.senderId,
+    notice.body,
+    db,
+    {
+      customNotificationHandler: async () => {
+        const NotificationUtils = require('./notificationUtils');
+        await NotificationUtils.sendNotificationToAthleteProfiles(
+          [notice.athleteProfileId],
+          notice.summary,
+          notice.note || notice.summary,
+          { type: 'message', conversationId: conversation.id }
+        );
+      },
+    }
+  );
+  return conversation;
+}
+
 module.exports = {
   syncAllAthleteParticipants,
   syncActiveAthleteParticipants,
   canSendAnnouncements,
   getOrCreateAnnouncementConversation,
   getOrCreateDirectConversation,
-  sendMessageInConversation
+  sendMessageInConversation,
+  findOrCreateNoticesConversation,
+  postAthleteNotice,
 };

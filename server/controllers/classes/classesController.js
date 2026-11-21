@@ -16,8 +16,7 @@ const { day, clock, timestamp } = require('../../lib/dates');
 const { classStartInstant } = require('../../lib/memberSchedule');
 const { reservationEffects, reallocatePaused, sessionOnDate } = require('../../lib/reservations');
 const { athleteProfileBelongsToUser } = require('../../middlewares/mobileAuthMiddleware');
-const { sendMessageInConversation } = require('../../utils/messagesUtils');
-const NotificationUtils = require('../../utils/notificationUtils');
+const { postAthleteNotice } = require('../../utils/messagesUtils');
 
 async function listClasses(req, res, db) {
   try {
@@ -760,57 +759,19 @@ async function sendClassNotices(db, notices, senderId) {
   for (let i = 0; i < notices.length; i += 1) {
     const notice = notices[i];
     try {
-      const conversation = await findOrCreateNotices(db, notice.athleteProfileId, senderId);
-      await sendMessageInConversation(
-        conversation.id,
-        senderId,
-        notice.body,
-        db,
-        {
-          customNotificationHandler: async () => {
-            // TODO: email and SMS are not sent. Later, delete class-conversation
-            // messages after about 2 weeks and other messages, including these
-            // notices, after 6 months.
-            await NotificationUtils.sendNotificationToAthleteProfiles(
-              [notice.athleteProfileId],
-              notice.summary,
-              notice.note || notice.summary,
-              { type: 'message', conversationId: conversation.id }
-            );
-          },
-        }
-      );
+      await postAthleteNotice(db, {
+        athleteProfileId: notice.athleteProfileId,
+        senderId: senderId,
+        summary: notice.summary,
+        note: notice.note,
+        body: notice.body,
+      });
       notified += 1;
     } catch (error) {
       console.error('Error sending class notice:', error);
     }
   }
   return notified;
-}
-
-async function findOrCreateNotices(db, athleteProfileId, senderId) {
-  const existing = await db.tables.Conversations.findOne({
-    where: { noticesForAthleteProfileId: athleteProfileId },
-  });
-  if (existing) {
-    return existing;
-  }
-  const conversation = await db.tables.Conversations.create({
-    name: 'Notifications',
-    type: 'group',
-    createdBy: senderId,
-    noticesForAthleteProfileId: athleteProfileId,
-    settings: {
-      canSendMessages: false,
-      canReact: false,
-    },
-  });
-  await db.tables.ConversationParticipants.create({
-    conversationId: conversation.id,
-    athleteProfileId: athleteProfileId,
-    role: 'readonly',
-  });
-  return conversation;
 }
 
 // Error savePrepared turns into that HTTP status.
