@@ -518,7 +518,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Notifications
 
-- Member notified when admin changes their reservation or credits (see §12).
+- Member notified when staff add, remove, or end credits (see §12). A notice when staff cancel that member’s reservation is Phase 2+.
 - Class canceled / time / location changes notify through the **class messaging** path, unless staff choose to save without notifying.
 
 ---
@@ -541,7 +541,8 @@ An athlete is an **active member** if they have purchased a package for the curr
 | Override cutoff / eligibility            | **No** — future         |
 | Optional note/reason on actions          | **No** — future         |
 | Audit log                                | **No** — future         |
-| Notify user on credit/reservation change | **Yes**                 |
+| Notify user on a credit change           | **Yes**                 |
+| Notify user when staff cancel their reservation | Phase 2+            |
 
 
 
@@ -638,7 +639,7 @@ Export (PDF/CSV): **later**.
 
 - Athlete showed up but has no reservation: staff can **add them to the class** and **deduct a credit**.
 - If athlete has no credits: **two steps, one flow** — staff with `manage_credits` add a credit (new record per §7), then sign them in, without dumping the coach back to a disconnected screen. Staff without `manage_credits` are told to ask an admin.
-- **Not MVP / not decided:** allowing the athlete to go **negative** so the next purchase automatically pays back the debt. Keep as a potential Phase 2 item so it is not lost (§16).
+- **Not MVP / not decided:** allowing the athlete to go **negative** so the next purchase automatically pays back the debt. Keep as a potential Phase 2+ item so it is not lost (§16).
 - Check-in and walk-in are allowed on the session’s America/New_York calendar day and any later day. A future session is rejected (`Check-in is not open yet`). There is no cutoff after the class.
 - A canceled session cannot be checked in or walked into.
 - A walk-in stops when the class is full. It does not use the reservation cutoff. Staff can check in a hidden class. A view-only class rejects a new walk-in; an existing reservation can still be marked present.
@@ -675,17 +676,15 @@ When staff **cancel** a class, change **time** (including the date), or change *
 - Notify on sends one message, plus an optional note from staff. Each affected date is its own sentence, with that date and the previous value. The message ends with a View class link that opens that date on the schedule. A person reserved on several dates of a series still gets one message. Someone reserved only for a past date is not notified.
 - Restore and delete do not send.
 - The message uses the existing message push. Tapping it opens that athlete’s Notifications conversation. The athlete can read it and cannot reply there.
-- A Reply action that messages coaches stays on task 12.4, along with credit changes and a reservation canceled by staff. Those later notices use this same Notifications conversation.
+- Credit changes use this same Notifications conversation. Reply, a lesson-reserved notice, `notifyCoachOnReserve` sending, and a notice when staff cancel one reservation are Phase 2+ (§15). They are not new build tasks.
 
 
 
 ### Automated notifications (MVP)
 
-Also notify (via existing patterns — push and/or in-app message as the feature already works) when:
+Credit add, remove, and end each post one message in that athlete’s Notifications conversation. The date matches the credit history line. An end that does not change the expiration sends nothing.
 
-- Admin **cancels a member’s reservation**
-- Admin **adds or removes credits**
-- Private lesson / slot activity that is in MVP (immediate reserve; no approve/decline loop)
+These waits are Phase 2+, not new build tasks: a notice when staff cancel that athlete’s reservation, a notice when a lesson is reserved, and sending `notifyCoachOnReserve` to the coaches on that class.
 
 
 
@@ -693,9 +692,9 @@ Also notify (via existing patterns — push and/or in-app message as the feature
 
 Class groups (task 12.3) are for a person choosing Message all. They are not the place for an automated notice.
 
-Task 12.2 creates the athlete’s Notifications conversation for a class cancel, time change, or location change. Credit add, remove, and end post one message in that same conversation. The date matches the credit history line. An end that does not change the expiration sends nothing. Still to add: a coach canceled that athlete’s reservation, a lesson was reserved, and Reply, which opens a normal conversation with coaches. The Notifications thread itself stays read-only.
+Task 12.2 creates the athlete’s Notifications conversation for a class cancel, time change, or location change. Credit add, remove, and end post one message there. The athlete can read the thread and cannot reply. Reply, which would open a normal conversation with coaches, is Phase 2+. The Notifications thread itself stays read-only.
 
-`notifyCoachOnReserve` stays a stored flag until the rest of this task sends it.
+`notifyCoachOnReserve` stays a stored flag. Sending it is Phase 2+.
 
 
 
@@ -801,12 +800,15 @@ Server startup creates a missing table and does not add a column to a table that
 - [x] Private lessons reserve immediately (no approval workflow)
 - [ ] One-way sync to separate Google Calendar (task 5.1, last MVP build task; rules in §6)
 - [ ] Unit test framework + core logic tests
-- [ ] Allow users to message coaches/admins even without the manage_conversations permission. (For asking questions)
 
 
 
 ### Phase 2+ (prioritize later)
 
+- **Reply on Notifications** — opens a normal conversation with coaches. Members can message coaches and admins to ask a question without `manage_conversations`. The Notifications thread stays read-only.
+- **Lesson reserved notice** — one message in the athlete’s Notifications conversation when a lesson is reserved.
+- **`notifyCoachOnReserve`** — when the class flag is on, tell the coaches listed on that class that someone reserved. The flag is already stored. An empty coach list sends nothing.
+- **Reservation canceled by staff** — one message in that athlete’s Notifications conversation. The cancel action itself stays in the MVP (task 12.5) and does not send.
 - In-app registration with website parity
 - Waitlist
 - Meets reservation workflows
@@ -832,7 +834,7 @@ Server startup creates a missing table and does not add a column to a table that
 - **Lesson-credit packs** sold on the website (MVP lessons are pay-at-reserve only)
 - Attendance-based restrictions, dynamic pricing, analytics
 - **Message retention / auto-delete** — all class conversations after ~2 weeks; all other message types after 6 months
-- **Negative / overdraft credits** — potential Phase 2; **not decided**. If built: walk-in (or similar) can go negative and the next package purchase pays the debt back. Keep on this list so it is not lost.
+- **Negative / overdraft credits** — potential Phase 2+; **not decided**. If built: walk-in (or similar) can go negative and the next package purchase pays the debt back. Keep on this list so it is not lost.
 - Migrate public website calendar to new system; retire Zen Planner
 - History export
 
@@ -848,7 +850,7 @@ These are intentionally unresolved — capture decisions as they come up during 
 2. **Training group fallback** — eligibility treats an unset profile as Open / All Ages (task 7.3, 2026-11-17), so Elite and other group classes stay closed. Still open: whether to derive a saved group from a purchase or require an admin to set one.
 3. **Success metrics** — define before full release (e.g., beta reservation volume, support tickets, Zen Planner manual entry reduction).
 4. **Launch communication** — member messaging when switching off Zen Planner.
-5. **Walk-in overdraft (parked, not decided)** — potential Phase 2: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
+5. **Walk-in overdraft (parked, not decided)** — potential Phase 2+: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
 6. **Automatic discount eligibility** — how military / other non-time-based discounts are verified; whether automatic discounts stack with remaining manual codes. Early-bird window itself is decided: configurable duration.
 
 ### Resolved (2026-09-27)
@@ -1012,10 +1014,10 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - The class stays visible. The schedule row and class detail say why the selected athlete cannot reserve (Flow C2). Reserve rejects that same case. The blocked label is **Not eligible**.
   - A class with no training groups has no group limit (§10). A class that lists groups is open to an athlete in at least one of those groups. The reason names the athlete’s groups and the class’s groups.
   - Age uses the class minimum and maximum. No minimum and no maximum means no age limit. Outside that range is the same **Not eligible** block, and the reason says the age.
-  - A new walk-in uses the same checks. Marking someone present does not. Overriding eligibility is Phase 2 (§9).
+  - A new walk-in uses the same checks. Marking someone present does not. Overriding eligibility is Phase 2+ (§9).
   - An athlete with no groups is still §16 #2. Do not derive a group from a purchase in this task. Ask before deciding that case.
   - The roster, attendance marks, and the profile meter stay on their own tasks. The §15 eligibility box stays open until this task is done and any remaining gap is noted.
-  - *Completion notes:* 2026-11-17. `server/lib/eligibility.js` is the one rule for the schedule, reserve, and a new walk-in. It uses the session’s groups and ages, so a per-date override counts. Ages are inclusive, in completed years on the class date. A class with an age limit and an unreadable date of birth is blocked (`Emma’s age is not on the profile.`). An athlete with no groups counts as Open / All Ages and nothing is saved (§10, §16 #2). On the schedule, the order is Canceled, View only, already reserved (left alone, Cancel still shows), **Not eligible**, then the cutoff, full, and credit reasons. `eligibilityReason` holds the sentences, and the row and class detail show them. Reserve and walk-in return the same sentences as a 409. Marking present does not recheck. Walk-in search returns `notEligible` on each offer. The search row says Not eligible, and the prompt blocks before the add-credits step, so staff are not offered a credit for a walk-in that would fail. There is no override (Phase 2). §15 eligibility box is checked.
+  - *Completion notes:* 2026-11-17. `server/lib/eligibility.js` is the one rule for the schedule, reserve, and a new walk-in. It uses the session’s groups and ages, so a per-date override counts. Ages are inclusive, in completed years on the class date. A class with an age limit and an unreadable date of birth is blocked (`Emma’s age is not on the profile.`). An athlete with no groups counts as Open / All Ages and nothing is saved (§10, §16 #2). On the schedule, the order is Canceled, View only, already reserved (left alone, Cancel still shows), **Not eligible**, then the cutoff, full, and credit reasons. `eligibilityReason` holds the sentences, and the row and class detail show them. Reserve and walk-in return the same sentences as a 409. Marking present does not recheck. Walk-in search returns `notEligible` on each offer. The search row says Not eligible, and the prompt blocks before the add-credits step, so staff are not offered a credit for a walk-in that would fail. There is no override (Phase 2+). §15 eligibility box is checked.
 
 
 
@@ -1099,15 +1101,15 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Integrate with existing messaging system.
   - *Completion notes:* 2026-11-20. **Message all** on class detail for `manage_classes` or `manage_attendance`. `POST /mobileapp/user/messaging/conversations/class` finds or creates one group for that series and date (`classConversations`, created by sync), sets the roster to everyone signed up including walk-ins, and sends with `sendMessageInConversation`. Athletes in the group can reply. A person who leaves is removed on the next send. Staff who already sent stay. The sheet opens that conversation after send. Email, SMS, and deletion stay comments. `manage_conversations` is not required. Reply on Notifications stays on 12.4.
 
-- [ ] **12.4 — Member notification place**
-  - Add the remaining automated notices to the Notifications conversation from 12.2 (reservation canceled by staff, a lesson reserved), and add Reply, which opens a normal conversation with coaches. The Notifications thread stays read-only. Credit add, remove, and end already post here.
-  - `notifyCoachOnReserve` is stored and does not send until the rest of this task. Class change notices shipped on 12.2.
-  - *Completion notes:* 2026-11-20 (partial). Add, remove, and end post one message in that athlete’s Notifications conversation. The sender is the staff member’s selected profile, and a profile that is missing or not theirs is rejected before the grant is written. An end that does not change the date sends nothing. A failed send leaves the grant saved. Reply, a lesson reserved, notify-coach-on-reserve, and a reservation canceled by staff are still open.
+- [x] **12.4 — Member notification place**
+  - Credit add, remove, and end post one message in the Notifications conversation from 12.2. The thread stays read-only.
+  - Reply, a lesson-reserved notice, sending `notifyCoachOnReserve`, and a notice when staff cancel one reservation are Phase 2+ (§15), not further build tasks.
+  - *Completion notes:* 2026-11-20. Add, remove, and end post one message in that athlete’s Notifications conversation. The sender is the staff member’s selected profile, and a profile that is missing or not theirs is rejected before the grant is written. An end that does not change the date sends nothing. A failed send leaves the grant saved. The four leftovers above moved to Phase 2+. The cancel action stays on 12.5 and does not send.
 
 - [ ] **12.5 — Roster staff menu**
   - On each class-detail roster row, `manage_classes` gets View profile, Cancel reservation, and Adjust credits when they also have `manage_credits`.
   - Cancel takes the person off the class and does not return the credit. The storage for that spent credit is still open: a reservation cannot be deleted while its hold exists, and keeping the row blocks reserving that same date again. Decide that before building this task.
-  - The notice that the reservation changed stays on 12.4.
+  - The notice that the reservation changed is Phase 2+. This task does not send it.
   - *Completion notes:*
 
 
@@ -1134,7 +1136,7 @@ Last MVP build task. Do this after Tasks 6–12 so the schedule and reservations
   - *Completion notes:*
 
 - [ ] **13.2 — Update MVP checklist (§15)**
-  - Mark all completed items; file remaining gaps as new tasks or Phase 2.
+  - Mark all completed items; file remaining gaps as new tasks or Phase 2+.
   - *Completion notes:*
 
 ---

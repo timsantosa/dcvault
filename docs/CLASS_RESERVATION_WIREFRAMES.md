@@ -383,7 +383,7 @@ Credits bought on the website show up here automatically. Staff no longer need t
 
 Private lessons use the same Schedule tab. There is **no request / wait / approve loop in MVP**. A lesson is a normal class configured with a dollar price, a small capacity, and notify-on-reserve. It does not spend group credits, and the website does not sell lesson packs.
 
-Reserving a credit class is still one tap (Flow A). Reserving a **dollar** class asks the member to confirm the price, then saves the spot. MVP does not call PayPal. Staff are notified and send the invoice themselves.
+Reserving a credit class is still one tap (Flow A). Reserving a **dollar** class asks the member to confirm the price, then saves the spot. MVP does not call PayPal. Staff send the invoice themselves. Notifying the coaches on reserve is Phase 2+. The flag is stored and does not send.
 
 ### D1. Member sees a lesson slot
 
@@ -628,7 +628,7 @@ Then confirm:
 
 If they have **zero credits**, it is **two steps in one flow** (not two disconnected screens). Staff with `manage_credits` add a credit first (that add is a **new history record**), then check them in. Staff without that permission are told to ask an admin.
 
-Going negative so the next purchase pays it back is **not MVP** and **not decided** — parked as a possible Phase 2 item in the PRD so it is not lost.
+Going negative so the next purchase pays it back is **not MVP** and **not decided** — parked as a possible Phase 2+ item in the PRD so it is not lost.
 
 ```
 │  Chris has 0 remaining.             │
@@ -1035,7 +1035,7 @@ When staff cancel a class or change its time, date, or location, they get an opt
 │  └─────────────────────────────┘    │
 ```
 
-The athlete opens Notifications from the message list. They can read it and cannot reply. A message from the server is shown as from DC Vault. The athlete’s own message still uses their name. Each date says what changed, including the previous value, and **View class** opens that date on the schedule. Reply to coaches is later (task 12.4).
+The athlete opens Notifications from the message list. They can read it and cannot reply. A message from the server is shown as from DC Vault. The athlete’s own message still uses their name. Each date says what changed, including the previous value, and **View class** opens that date on the schedule. Reply to coaches is Phase 2+.
 
 Member lock screen (the existing message push):
 
@@ -1156,7 +1156,6 @@ They keep reserving in Zen Planner until they are granted `reserve_classes`.
 | ---------------------------------------- | -------------------------- | ---------------------------------------- |
 | Class canceled / time / location changed | Athletes reserved on an affected upcoming date | One message in that athlete’s Notifications conversation (unless notify is off) |
 | Staff message the class                  | Reserved roster            | Class conversation                       |
-| Staff cancel a reservation               | That member                | Existing notify pattern                  |
 | Staff add, remove, or end credits        | That member                | One message in that athlete’s Notifications conversation |
 
 
@@ -1185,7 +1184,7 @@ Call these out so the review stays on launch scope:
 - Refunds in-app (coach handles money; admin adjusts credits)
 - Email / SMS / 24-hour class reminders
 - Auto-delete of messages (class conversations ~2 weeks; other types 6 months)
-- Reply on Notifications, a lesson-reserved notice, and a notice when staff cancel one reservation (task 12.4). Credit changes already post in that athlete’s Notifications conversation.
+- Reply on Notifications, a lesson-reserved notice, notifying coaches when someone reserves, and a notice when staff cancel one reservation (Phase 2+). Credit changes already post in that athlete’s Notifications conversation. The cancel action is still MVP and does not send.
 - Personal Apple/Google calendar subscription
 - Progress meter flipping to next quarter when this quarter is empty
 - Replacing the public website calendar or turning off Zen Planner for everyone
