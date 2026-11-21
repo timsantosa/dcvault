@@ -175,10 +175,36 @@ function resolveCatalogPurchase(input) {
   };
 }
 
+// Fields stored on a purchases row.
+// catalogPurchase: a successful resolveCatalogPurchase result, or null on the hardcoded form.
+// group, membership, and month are what the form submitted.
+// Catalog checkout keeps membership as pkg:<id>, stores the package audience as group, and clears month.
+// The hardcoded form keeps an adult class package ('2classes' / '8classes') and that adult's month.
+// Month is cleared for every other group except fly-kids and basic memberships.
+// A missing membership is stored as none.
+function registrationPurchaseFields(input) {
+  const source = input || {};
+  let group = source.group;
+  let membership = source.membership;
+  let month = source.month;
+  if (source.catalogPurchase) {
+    group = source.catalogPurchase.group;
+    membership = source.catalogPurchase.membership;
+    month = 'none';
+  } else if (group !== 'fly-kids' && membership !== 'basic' && group != 'adult') {
+    month = 'none';
+  }
+  if (!membership) {
+    membership = 'none';
+  }
+  return { group: group, membership: membership, month: month };
+}
+
 module.exports = {
   isCatalogFlagOn,
   visibleClassPackages,
   inviteOnlyPackages,
   parseCatalogMembership,
   resolveCatalogPurchase,
+  registrationPurchaseFields,
 };

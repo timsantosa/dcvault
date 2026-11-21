@@ -11,19 +11,26 @@
   <link href="https://fonts.googleapis.com/css?family=Lato:100,200,300,400,500,600,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:100,500" />
   <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"><!-- Plugin CSS -->
+  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+  <!-- Redesign fonts (shared with registration) -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet"><!-- Plugin CSS -->
   <link href="../lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="../lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
   <link href="../lib/device-mockups/device-mockups.min.css" rel="stylesheet"><!-- Theme CSS -->
   <link href="../css/new-age.css" rel="stylesheet"><!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <link href="../css/extras.css" rel="stylesheet">
+  <!-- Site redesign: navbar/footer, shared tokens, form and button styles -->
+  <link href="../css/register-redesign.css" rel="stylesheet">
+  <!-- Account / admin page redesign -->
+  <link href="../css/account-redesign.css" rel="stylesheet">
   <!-- initialize config vars -->
   <script type="text/javascript" src="../config/config.js"></script>
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://www.paypalobjects.com/api/checkout.js"></script>
   <script src='https://www.google.com/recaptcha/api.js'></script>
+  <script src="https://www.paypalobjects.com/api/checkout.js"></script>
   <script src="//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js"></script>
+
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -35,89 +42,102 @@
   <link rel="apple-touch-icon-precomposed" href="../img/logos/cropped-logo_square-180x180.png" />
   <meta name="msapplication-TileImage" content="../img/logos/cropped-logo_square-270x270.png" />
 </head>
-<body id="page-top">
+<body id="page-top" class="reg-redesign-page">
   <nav class="navbar navbar-default navbar-fixed-top" id="mainNav">
     <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <button class="navbar-toggle collapsed" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"><span class="sr-only">Toggle navigation</span><i class="fa fa-bars"></i></button> <a class="navbar-brand page-scroll" href="/#page-top">
-          <img src="../img/logos/logo_square-768x637.png" class="nav-logo"/>
-          <!-- DC <span class="red-text">VAULT</span> -->
+        <button class="navbar-toggle collapsed" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"><span class="sr-only">Toggle navigation</span><i class="fa fa-bars"></i></button> <a class="navbar-brand" href="https://dcvault.com/">
+          <img src="../img/register/logo-navbar.svg" class="nav-logo"/>
         </a>
+        <!-- Kept outside the collapse so it stays visible next to the menu button on phones -->
+        <a class="rd-account" href="/login/" id="login-button" title="Login / My Account"><i class="fa fa-user"></i></a>
       </div><!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li>
-            <a class="page-scroll" href="#" id="login-button">Login</a>
+            <a href="https://dcvault.com/">Home</a>
           </li>
           <li>
-            <a class="page-scroll" href="../#facilities">Facilities</a>
+            <a href="https://dcvault.com/about-us/">About Us</a>
           </li>
           <li>
-            <a class="page-scroll" href="/register/info">Registration</a>
+            <a href="https://dcvault.com/training/">Training &amp; Registration</a>
           </li>
           <li>
-            <a class="page-scroll" href="../#training">Training</a>
+            <a href="https://dcvault.com/events/">Events</a>
           </li>
           <li>
-            <a class="page-scroll" href="/npva">Non-Profit</a>
+            <a href="https://dcvault.com/schedule/">Schedule</a>
           </li>
           <li>
-            <a class="page-scroll" href="../#staff">Staff</a>
-          </li>
-
-          <li>
-            <a class="page-scroll" href="../#schedule">Schedule</a>
+            <a href="https://dcvault.com/store/">Store</a>
           </li>
           <li>
-            <a class="page-scroll" href="../#events">Events</a>
+            <a href="https://dcvault.com/npva/">Non-Profit</a>
           </li>
           <li>
-            <a class="page-scroll" href="#contact" id="social-button">Social</a>
+            <a href="https://dcvault.com/important-information/">Important Info</a>
           </li>
-
+          <li>
+            <a href="https://dcvault.com/contact-us/">Contact Us</a>
+          </li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
 
   <div id="account-panel">
-
   </div>
 
   <footer id="contact">
     <div class="container">
-      <div class="row">
-        <div class="col-xs-6 col-md-4">
-          <div style="height:100%;float:left;margin-bottom:20px">
-            <img src="../img/logos/logo-footer.png" style="height:100%;width:auto"/>
+      <div class="rd-footer-cols">
+        <div class="rd-footer-brand">
+          <img src="../img/register/logo-footer.svg" class="rd-footer-logo"/>
+          <p class="rd-footer-find">Find us on...</p>
+          <div class="rd-social">
+            <a href="https://www.instagram.com/dcvault/"><img src="../img/register/icon-instagram.svg"/></a>
+            <a href="https://www.facebook.com/DCVault/"><img src="../img/register/icon-facebook.svg"/></a>
           </div>
         </div>
-        <div class="col-xs-6 col-md-4 col-md-push-4 footer-contact-info">
-          <p class="footer-content" style="font-weight:500;font-size:16px">ADDRESS</p>
-          <p class="footer-content" style="font-size:12px">2100 East Capitol Street NE</p>
-          <p class="footer-content" style="font-size:12px">Washington, DC</p>
 
-          <p class="footer-content" style="font-weight:500;font-size:16px;margin-top:10px">GENERAL INQUIRY</p>
-          <p class="footer-content" style="font-size:12px">DCVault@DCVault.org</p>
-          <div class="red-button" id="contact-button" style="float: right; margin-top: 10px">
-            <span class="button-text" style="font-size: 14px">Contact Us</span>
+        <div class="rd-footer-col">
+          <p class="rd-footer-title">Quick Links</p>
+          <div class="rd-footer-links">
+            <ul>
+              <li><a href="https://dcvault.com/">Home</a></li>
+              <li><a href="https://dcvault.com/about-us/">About Us</a></li>
+              <li><a href="https://dcvault.com/training/">Training &amp; Registration</a></li>
+              <li><a href="https://dcvault.com/events/">Events</a></li>
+              <li><a href="https://dcvault.com/schedule/">Schedule</a></li>
+            </ul>
+            <ul>
+              <li><a href="https://dcvault.com/store/">Store</a></li>
+              <li><a href="https://dcvault.com/npva/">Non-Profit</a></li>
+              <li><a href="https://dcvault.com/important-information/">Important Info</a></li>
+              <li><a href="https://dcvault.com/contact-us/">Contact Us</a></li>
+            </ul>
           </div>
         </div>
-        <div class="col-xs-12 col-md-4 col-md-pull-4 center-content">
-          <p class="footer-content">Find us on...</p>
-          <div class="social-links">
-            <a class="social-link" href="https://www.facebook.com/DCVault/"><img class="social-icon" src="../img/icons/facebook-grey-icon.png"/></a>
-            <a class="social-link" href="https://twitter.com/dc_vault?lang=en"><img class="social-icon" src="../img/icons/twitter-grey-icon.png"/></a>
-            <a class="social-link" href="https://www.instagram.com/dcvault/"><img class="social-icon" src="../img/icons/instagram-grey-icon.png"/></a>
-          </div>
+
+        <div class="rd-footer-contact">
+          <p class="rd-footer-title">Address</p>
+          <p>2100 East Capitol Street NE<br/>Washington, DC 20002</p>
+          <p class="rd-footer-title">General Inquiry</p>
+          <p>DCVault@DCVault.org</p>
+          <a class="rd-footer-btn" href="https://dcvault.com/contact-us/">Contact Us</a>
         </div>
+      </div>
+      <div class="rd-footer-bottom">
+        <p>© 2026 DC Vault. All rights reserved.</p>
+        <p><a class="rd-footer-privacy" href="https://dcvault.com/privacy-policy/">Privacy Policy</a></p>
       </div>
     </div>
   </footer>
 
+  <div id="login"></div>
   <div id='contact-modal'></div>
-
   <!-- jQuery -->
   <script src="../lib/jquery/jquery.min.js">
   </script> <!-- Bootstrap Core JavaScript -->

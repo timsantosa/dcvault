@@ -96,7 +96,7 @@ class PoleApp extends React.Component {
       if (answer) {
         loginButton.innerHTML = 'My Account'
         loginButton.onclick = () => {
-          window.location.href = '/account'
+          window.location.href = '/home/'
         }
       } else {
         loginButton.onclick = () => {

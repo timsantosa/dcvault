@@ -6,6 +6,7 @@ const {
   inviteOnlyPackages,
   parseCatalogMembership,
   resolveCatalogPurchase,
+  registrationPurchaseFields,
 } = require('../lib/registrationCatalog');
 
 function pkg(overrides) {
@@ -143,5 +144,79 @@ describe('resolveCatalogPurchase', () => {
 
     const season = resolveCatalogPurchase(Object.assign({}, purchase, { season: 'autumn' }));
     expect(season).toEqual({ ok: false, message: 'Choose a training session.' });
+  });
+});
+
+describe('registrationPurchaseFields', () => {
+  const catalogPurchase = {
+    group: 'adult',
+    membership: 'pkg:3',
+  };
+
+  it('keeps a catalog package id and clears month, including for adults', () => {
+    expect(registrationPurchaseFields({
+      catalogPurchase: catalogPurchase,
+      group: 'adult',
+      membership: '2classes',
+      month: 'january',
+    })).toEqual({
+      group: 'adult',
+      membership: 'pkg:3',
+      month: 'none',
+    });
+  });
+
+  it('keeps an adult class package and month on the hardcoded form', () => {
+    expect(registrationPurchaseFields({
+      catalogPurchase: null,
+      group: 'adult',
+      membership: '2classes',
+      month: 'january',
+    })).toEqual({
+      group: 'adult',
+      membership: '2classes',
+      month: 'january',
+    });
+  });
+
+  it('clears month for a non-adult hardcoded package and keeps the class option', () => {
+    expect(registrationPurchaseFields({
+      catalogPurchase: null,
+      group: 'allages',
+      membership: '8classes',
+      month: 'january',
+    })).toEqual({
+      group: 'allages',
+      membership: '8classes',
+      month: 'none',
+    });
+  });
+
+  it('keeps month for fly-kids and basic memberships', () => {
+    expect(registrationPurchaseFields({
+      catalogPurchase: null,
+      group: 'fly-kids',
+      membership: '8classes',
+      month: 'june',
+    }).month).toBe('june');
+    expect(registrationPurchaseFields({
+      catalogPurchase: null,
+      group: 'allages',
+      membership: 'basic',
+      month: 'june',
+    }).month).toBe('june');
+  });
+
+  it('stores a missing membership as none', () => {
+    expect(registrationPurchaseFields({
+      catalogPurchase: null,
+      group: 'plesson',
+      membership: undefined,
+      month: 'june',
+    })).toEqual({
+      group: 'plesson',
+      membership: 'none',
+      month: 'none',
+    });
   });
 });

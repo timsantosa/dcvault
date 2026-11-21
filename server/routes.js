@@ -12,6 +12,7 @@ const {
   visibleClassPackages,
   inviteOnlyPackages,
   resolveCatalogPurchase,
+  registrationPurchaseFields,
 } = require('./lib/registrationCatalog')
 const config = require('./config/config')
 const bodyParser = require('body-parser')
@@ -56,6 +57,25 @@ async function createWebsitePurchaseGrant(db, input) {
 }
 
 module.exports = (app, db) => {
+  // The training registration flow is the landing page (account.dcvault.com/).
+  // The marketing site now lives at dcvault.com, so the old client/index.html
+  // homepage is no longer served at the root. Registered before express.static
+  // so it takes precedence over client/index.html.
+  const registerPage = path.join(__dirname, '../client/register/index.html')
+  app.get('/', (req, res) => res.sendFile(registerPage))
+  // Old /register links (emails, legacy pages, bookmarks) -> canonical root.
+  // /register/info and other subpaths are still served statically.
+  app.get(['/register', '/register/'], (req, res) => {
+    const qsIndex = req.originalUrl.indexOf('?')
+    res.redirect(301, '/' + (qsIndex === -1 ? '' : req.originalUrl.slice(qsIndex)))
+  })
+
+  // My Account page moved from /account to /home (client/home/index.html).
+  app.get(['/account', '/account/'], (req, res) => {
+    const qsIndex = req.originalUrl.indexOf('?')
+    res.redirect(301, '/home/' + (qsIndex === -1 ? '' : req.originalUrl.slice(qsIndex)))
+  })
+
   // External Middleware
   app.use(express.static(path.join(__dirname, '../client')))
   app.use(bodyParser.json())
@@ -557,19 +577,18 @@ module.exports = (app, db) => {
       let noapp = purchaseInfo.selectPackage.yesApparel;
       let app = purchaseInfo.selectPackage.apparel;
   
-      // Catalog checkout keeps membership as pkg:<id>. The adult rewrite below
-      // replaces that value, so it only runs for the hardcoded form.
-      if (catalogPurchase) {
-        grp = catalogPurchase.group;
-        mem = catalogPurchase.membership;
-        mth = 'none';
-      } else if (grp !== 'fly-kids' && mem !== 'basic') {
-        if (grp == 'adult') {
-          mem = 'adult';
-        } else {
-          mth = 'none';
-        }
-      }
+      // Catalog checkout stores pkg:<id> and clears month. The hardcoded form
+      // keeps an adult's class package and month, and clears month for everyone
+      // else except fly-kids and basic memberships.
+      const purchaseFields = registrationPurchaseFields({
+        catalogPurchase: catalogPurchase,
+        group: grp,
+        membership: mem,
+        month: mth,
+      });
+      grp = purchaseFields.group;
+      mem = purchaseFields.membership;
+      mth = purchaseFields.month;
   
       if (!mem) {
         mem = 'none';
@@ -637,11 +656,19 @@ module.exports = (app, db) => {
                 return res.status(400).send({ok: false, message: 'missing purchase details'})
             }
 
-            const event_athlete = req.body.purchaseInfo.athleteInfo
+            const purchaseInfo = req.body.purchaseInfo
+            const event_athlete = purchaseInfo.athleteInfo
+            const payment = purchaseInfo['event-payment'] || {}
             const ageInt = parseInt(event_athlete.age, 10)
 
-            if (event_athlete.age === '' || event_athlete.age == null || isNaN(ageInt)) {
-                return res.status(400).send({ok: false, message: 'invalid or missing age'})
+            // This runs AFTER PayPal has already charged the customer, so never
+            // reject here over a bad field — save what we have and log it.
+            // (A blank age previously caused paid registrations to be lost.)
+            if (isNaN(ageInt)) {
+                console.warn('Event finalize: missing/invalid age, saving with null age', {
+                    paymentId: payment.paymentId,
+                    age: event_athlete.age
+                })
             }
 
             const athleteData = {
@@ -660,23 +687,35 @@ module.exports = (app, db) => {
                 division: event_athlete.division,
                 accomplishments: event_athlete.accomplishments,
                 dates: event_athlete.dates1,
-                age: ageInt
+                age: isNaN(ageInt) ? null : ageInt
             }
 
-            await db.tables.EventAthletes.create(athleteData)
+            const athleteRecord = await db.tables.EventAthletes.create(athleteData)
 
-            const purchaseInfo = req.body.purchaseInfo
-            await db.tables.EventPurchases.create({
-                waiverSignatory: purchaseInfo.agreement.name,
-                waiverDate: purchaseInfo.agreement.date,
-                paymentId: purchaseInfo['event-payment'].paymentId,
-                payerId: purchaseInfo['event-payment'].payerId,
+            const purchaseRecord = await db.tables.EventPurchases.create({
+                waiverSignatory: purchaseInfo.agreement ? purchaseInfo.agreement.name : 'Not provided',
+                waiverDate: purchaseInfo.agreement ? purchaseInfo.agreement.date : null,
+                paymentId: payment.paymentId || null,
+                payerId: payment.payerId || null,
                 athlete: event_athlete.fname + event_athlete.lname
             })
+            console.log('Event finalize saved:', {eventAthleteId: athleteRecord.id, eventPurchaseId: purchaseRecord.id, paymentId: payment.paymentId})
 
-            res.send({ok: true, message: 'purchase record saved'})
+            // Confirmation email is sent separately by the client via /event/email
+            res.send({ok: true, message: 'purchase record saved', athleteId: athleteRecord.id, purchaseId: purchaseRecord.id})
         } catch (error) {
-            console.error('Event Finalize Error:', error)
+            const info = req.body.purchaseInfo || {}
+            const athleteInfo = info.athleteInfo || {}
+            const payment = info['event-payment'] || {}
+            // Log enough to manually recover a paid registration
+            console.error('Error in /event/finalize:', {
+                athleteName: athleteInfo.fname + ' ' + athleteInfo.lname,
+                email: athleteInfo.email,
+                paymentId: payment.paymentId,
+                payerId: payment.payerId,
+                errorMessage: error.message,
+                errorStack: error.stack
+            })
             res.status(500).send({ok: false, message: 'a db error has occurred', error: error.message})
         }
     })
@@ -707,7 +746,10 @@ module.exports = (app, db) => {
       emailData = emailData.replace(/,/g, "<br>")
       console.log(emailData)
         if (email) {
+            // sendEventConfirmationEmails returns a promise; an unhandled
+            // rejection here would crash the server, so log failures instead.
             helpers.sendEventConfirmationEmails(email, emailData)
+                .catch((err) => console.error('Event confirmation email failed:', email, err.message))
             res.send({ok: true, message: 'email sent'})
         } else {
             res.status(400).send({ok: false, message: 'no or bad email'})
@@ -738,7 +780,9 @@ module.exports = (app, db) => {
     emailData = emailData.replace(/,/g, "<br>")
     console.log(emailData)
       if (email) {
+          // Returns a promise; log failures rather than crash on an unhandled rejection
           helpers.sendDMVEventConfirmationEmails(email, emailData, event_athlete.dates1)
+              .catch((err) => console.error('DMV event confirmation email failed:', email, err.message))
           res.send({ok: true, message: 'email sent'})
       } else {
           res.status(400).send({ok: false, message: 'no or bad email'})
@@ -913,9 +957,9 @@ module.exports = (app, db) => {
         } else {
           if (!user.verified) {
             db.tables.Users.update({verified: true}, {where: {id: user.id}})
-            res.redirect('/#justVerified=true')
+            res.redirect('/login/#justVerified=true')
           } else {
-            res.redirect('/#alreadyVerified=true')
+            res.redirect('/login/#alreadyVerified=true')
           }
         }
       })
@@ -981,7 +1025,19 @@ module.exports = (app, db) => {
                     athlete.dataValues.currentlyRegistered = currentlyRegistered
                     return athlete
                   })
-                  db.tables.Invites.findAll().then((invites) => {
+                  // Flag athletes who have a DCV mobile app profile linked to
+                  // their training record (athleteProfiles.athleteId). Read-only.
+                  db.tables.AthleteProfiles.findAll({
+                    attributes: ['athleteId'],
+                    where: {athleteId: {[db.tables.schema.Sequelize.Op.ne]: null}}
+                  }).then((profiles) => {
+                    let onApp = new Set(profiles.map((p) => p.athleteId))
+                    athletes.forEach((athlete) => {
+                      athlete.dataValues.dcvMobileApp = onApp.has(athlete.id) ? 'Yes' : ''
+                    })
+                  }).catch((err) => {
+                    console.error('Could not load mobile app profiles for admin info', err)
+                  }).then(() => db.tables.Invites.findAll()).then((invites) => {
                     db.tables.Discounts.findAll().then((discounts) => {
                       let user = {
                         id: foundUser.id,

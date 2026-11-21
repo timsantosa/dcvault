@@ -2,6 +2,8 @@ import React from 'react'
 import {render} from 'react-dom'
 import Calendar from './calendar.jsx'
 import Login from './login.jsx'
+import LoginPage from './login-page.jsx'
+import LoginModal from './login-modal.jsx'
 import AccountPanel from './account-panel.jsx'
 import Training from './training.jsx'
 import Register from './register.jsx'
@@ -23,9 +25,13 @@ render(<ContactModal preSelect={''} />, contactDiv)
 
 let contactClose = document.getElementById('contact-menu-close')
 
-contactButton.onclick = () => {
-  contactDiv.style.opacity = 1
-  contactDiv.style.visibility = 'visible'
+// Redesigned pages link "Contact Us" to dcvault.com/contact-us/ instead of
+// opening the contact modal, so they have no #contact-button.
+if (contactButton) {
+  contactButton.onclick = () => {
+    contactDiv.style.opacity = 1
+    contactDiv.style.visibility = 'visible'
+  }
 }
 
 contactClose.onclick = () => {
@@ -36,38 +42,36 @@ contactClose.onclick = () => {
 let socialButton = document.getElementById('social-button')
 let socialLinkDiv = document.getElementsByClassName('social-links')
 
-socialButton.onclick = () => {
-  socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
-  }, 500)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
-  }, 1000)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
-  }, 1500)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
-  }, 2000)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
-  }, 2500)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,.25)'
-  }, 3000)
-  setTimeout(() => {
-    socialLinkDiv[0].style.background = 'rgba(255,255,255,0)'
-  }, 3500)
+// Flash the footer's social icons when "Contact"/"Social" is clicked. Pages
+// using the redesigned footer (register, account, admin) don't have the old
+// `.social-links` block, so do nothing there (the link still scrolls to the
+// footer).
+if (socialButton) {
+  socialButton.onclick = () => {
+    let links = socialLinkDiv[0]
+    if (!links) {
+      return
+    }
+    links.style.background = 'rgba(255,255,255,.25)'
+    for (let i = 1; i <= 7; i++) {
+      setTimeout(() => {
+        links.style.background = i % 2 ? 'rgba(255,255,255,0)' : 'rgba(255,255,255,.25)'
+      }, i * 500)
+    }
+  }
 }
 
-if (currentPage.indexOf('account') !== -1) {
+if (currentPage.indexOf('/login') === 0) {
+  render(<LoginPage />, document.getElementById('login-page'))
+} else if (currentPage.indexOf('/home') === 0) {
   render(<AccountPanel />, document.getElementById('account-panel'))
-} else if (currentPage.indexOf('register') !== -1) {
+} else if (currentPage === '/' || currentPage.indexOf('register') !== -1) {
+  // "/" is the registration flow (see server/routes.js); /register/info is the legacy info page
   if (currentPage.indexOf('info') !== -1) {
     render(<Login />, document.getElementById('login'))
   } else {
-    render(<Login />, document.getElementById('login'))
+    // Redesigned page -> redesigned pop-up. Legacy pages keep the old <Login /> modal.
+    render(<LoginModal />, document.getElementById('login'))
     render(<Register />, document.getElementById('registration-page'))
   }
 } else if (currentPage.indexOf('admin') !== -1) {

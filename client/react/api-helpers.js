@@ -43,6 +43,24 @@ apiHelpers.getCurrentFullQuarter = () => {
     quarter: quarter }
 }
 
+// Training-quarter year for a purchase, derived from its createdAt. Winter
+// registrations made in January/February count toward the previous year's
+// winter (same rule as getCurrentFullQuarter).
+apiHelpers.getPurchaseFullQuarter = (purchase) => {
+  let created = new Date(purchase.createdAt)
+  let month = created.getMonth() + 1
+  let year = created.getFullYear()
+
+  if ((month === 1 || month === 2) && purchase.quarter.indexOf('winter') !== -1) {
+    year--
+  }
+
+  return {
+    year: year,
+    quarter: purchase.quarter
+  }
+}
+
 apiHelpers.getNextFullQuarter = () => {
   let current = apiHelpers.getCurrentFullQuarter()
   let retVal = {year: current.year}
