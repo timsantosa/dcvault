@@ -3,7 +3,7 @@
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Audience:** Client design review (walkthrough)  
 **Status:** Proposed UI for MVP / dark launch — not pixel-final  
-**Last updated:** 2026-11-18  
+**Last updated:** 2026-11-20  
 **Aligned with PRD:** v1.3
 
 This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail, data models, and later-phase features live in the PRD and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree, the **PRD is the source of truth**.
@@ -855,7 +855,9 @@ Delete does not notify. Cancel does, unless staff turn notify off or they are re
 
 ## Flow H — Message the class
 
-Uses the **existing messaging** system. Staff open class detail → **Message all**.
+**Permission:** `manage_classes` or `manage_attendance`
+
+Uses the **existing messaging** system. Staff tap the message icon on the class screen header. That opens a centered dialog, and Send posts into one group for that date. The inbox name includes the class and the date. Reserved athletes and walk-ins can read it and reply. A later send uses that same group. Someone who is no longer on the class does not get the later message.
 
 Class cancel / time / location changes do **not** use this thread. Each reserved athlete gets one message in their own Notifications conversation (Flow K). Staff can still save those edits with notify **off**. Auto-delete is **not MVP**, but the rule is already decided: **all class conversations** (this thread included) after ~2 weeks; **all other message types**, including Notifications, after 6 months.
 
@@ -870,7 +872,7 @@ Class cancel / time / location changes do **not** use this thread. Each reserved
 │  └─────────────────────────────┘    │
 ```
 
-Recipients are users with an athlete reserved on that class.
+The count is everyone on that date, reserved and walk-ins. Nobody signed up says **No one is on this class yet.**
 
 ---
 
@@ -1228,7 +1230,7 @@ These used to be open UI questions. They are now in the PRD as well.
 9. **Training group:** field on Edit Profile, not its own flow.
 10. **Credit adjustments:** new record for history, not a silent edit of the original package. Ending a package (including unlimited) sets that grant’s expiration and keeps the row.
 11. **Cancel vs delete class:** cancel stays on the calendar and is reversible; delete is permanent and confirmed (this one vs series).
-12. **Class changes:** one message in each reserved athlete’s private Notifications conversation, with the option to save without notifying. Message all stays a normal class group.
+12. **Class changes:** one message in each reserved athlete’s private Notifications conversation, with the option to save without notifying. Message all is one group for that date, including walk-ins, and those athletes can reply.
 13. **Weekly-allotment (later):** unused classes vanish at week’s end (use-it-or-lose-it).
 14. **Subscriptions (later):** admin sets the cadence; customer signs up and can cancel anytime.
 15. **Early bird (later):** configurable duration, not a hardcoded window.

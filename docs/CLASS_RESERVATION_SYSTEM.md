@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-19  
+**Last updated:** 2026-11-20  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -663,7 +663,7 @@ Export (PDF/CSV): **later**.
 
 ### Class-scoped messaging
 
-- Staff can **message all participants** in a class (reserved roster) using the **existing messaging infrastructure**.
+- Staff with `manage_classes` or `manage_attendance` can **message everyone on a class date** from the class screen header. Reserved athletes and walk-ins are included. It is one group conversation for that date, sent through the existing messaging path, and the people on the class can reply. A later send uses that same group. Someone whose signup is gone is left out of that later send. A coach who already sent stays in the group.
 
 
 
@@ -795,7 +795,7 @@ Server startup creates a missing table and does not add a column to a table that
 - [x] Check-in with walk-in support (two steps, one flow when granting a credit)
 - [ ] Admin credit add/remove; admin cancel reservation
 - [x] Class change notices: one read-only message per reserved athlete, with the option to save silently
-- [ ] Class participant messaging
+- [x] Class participant messaging
 - [x] Roster visibility (permission-gated)
 - [x] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
 - [x] Private lessons reserve immediately (no approval workflow)
@@ -1095,9 +1095,9 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Skeleton TODOs for email/SMS and for later message auto-delete (class conversations ~2 weeks; other messages 6 months).
   - *Completion notes:* 2026-11-19. A cancel, time change, date change, or location change with notify on posts one message in each reserved athlete’s private Notifications conversation. The thread is found by `conversations.noticesForAthleteProfileId` (see the deploy schema note in §14). A series change is still one message per person, worded for that person’s dates. Past dates are skipped. Notify off, restore, delete, and other edits send nothing. The note is optional. Each date names the previous value, and the message links to that class on the schedule. The athlete can read the thread and cannot reply. A server message is shown as DC Vault. The athlete’s own message still uses their name. Push uses the existing message send and opens that conversation. Email, SMS, and deletion are comments only. Reply and the other automated notices stay on 12.4. Message all stays on 12.3.
 
-- [ ] **12.3 — Message class participants**
+- [x] **12.3 — Message class participants**
   - Integrate with existing messaging system.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-20. **Message all** on class detail for `manage_classes` or `manage_attendance`. `POST /mobileapp/user/messaging/conversations/class` finds or creates one group for that series and date (`classConversations`, created by sync), sets the roster to everyone signed up including walk-ins, and sends with `sendMessageInConversation`. Athletes in the group can reply. A person who leaves is removed on the next send. Staff who already sent stay. The sheet opens that conversation after send. Email, SMS, and deletion stay comments. `manage_conversations` is not required. Reply on Notifications stays on 12.4.
 
 - [ ] **12.4 — Member notification place**
   - Add the other automated notices to the Notifications conversation from 12.2 (reservation canceled by staff, credit changes, a lesson reserved), and add Reply, which opens a normal conversation with coaches. The Notifications thread stays read-only.

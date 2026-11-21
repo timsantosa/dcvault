@@ -12,6 +12,7 @@ const {
   removeParticipant,
   deleteMessage,
   deleteConversation,
+  messageClass,
   getUnreadCounts,
   uploadMessageAttachment,
   deleteMessageAttachment,
@@ -69,6 +70,11 @@ module.exports = function messageRoutes(db) {
     userCanManageConversations,
     (req, res) => createConversation(req, res, db)
   );
+
+  // Message everyone signed up for one class date. manage_classes or
+  // manage_attendance, checked in the handler. Sending uses the same helper
+  // as POST /conversations/:conversationId/messages.
+  router.post('/conversations/class', (req, res) => messageClass(req, res, db));
 
   // Update a conversation (requires permission)
   router.put('/conversations/:conversationId',

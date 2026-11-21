@@ -20,6 +20,7 @@
 --   classOccurrenceTrainingGroups
 --   classOccurrenceCoaches
 --   classReservations
+--   classConversations
 --   creditAllocations
 --
 -- After the server has started (so those tables exist), from dcvault/:

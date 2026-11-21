@@ -897,6 +897,15 @@ columns.classOccurrenceCoaches = {
   athleteProfileId: { type: Sequelize.INTEGER, allowNull: false },
 };
 
+// One group conversation for one series and one date. schema.sync() creates
+// this table. A class date is the series plus the day, so it is not a column
+// on conversations.
+columns.classConversations = {
+  classSeriesId: { type: Sequelize.INTEGER, allowNull: false },
+  occursOn: { type: Sequelize.DATEONLY, allowNull: false },
+  conversationId: { type: Sequelize.INTEGER, allowNull: false },
+};
+
 // One signup for one profile, one series, and one date. Not tied to classOccurrences.
 // checkedInAt null means reserved and not present. walkIn is a signup created at
 // check-in. schema.sync() does not add columns to an existing table.
@@ -1233,6 +1242,21 @@ const syncTables = (schema, force) => {
       },
     ],
   });
+  tables.ClassConversations = schema.define('classConversation', columns.classConversations, {
+    tableName: 'classConversations',
+    indexes: [
+      {
+        unique: true,
+        fields: ['classSeriesId', 'occursOn'],
+        name: 'class_conversations_series_date',
+      },
+      {
+        unique: true,
+        fields: ['conversationId'],
+        name: 'class_conversations_conversation',
+      },
+    ],
+  });
   tables.ClassReservations = schema.define('classReservation', columns.classReservations, {
     tableName: 'classReservations',
     indexes: [
@@ -1560,6 +1584,27 @@ const syncTables = (schema, force) => {
     onUpdate: 'CASCADE',
   });
   tables.ClassSeries.hasMany(tables.ClassReservations, { as: 'reservations', foreignKey: 'classSeriesId' });
+
+  tables.ClassConversations.belongsTo(tables.ClassSeries, {
+    as: 'classSeries',
+    foreignKey: 'classSeriesId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.ClassSeries.hasMany(tables.ClassConversations, {
+    as: 'classConversations',
+    foreignKey: 'classSeriesId',
+  });
+  tables.ClassConversations.belongsTo(tables.Conversations, {
+    as: 'conversation',
+    foreignKey: 'conversationId',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  });
+  tables.Conversations.hasOne(tables.ClassConversations, {
+    as: 'classConversation',
+    foreignKey: 'conversationId',
+  });
 
   tables.CreditAllocations.belongsTo(tables.ClassReservations, {
     as: 'reservation',
