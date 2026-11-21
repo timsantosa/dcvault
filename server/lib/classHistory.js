@@ -53,10 +53,10 @@ function presentClassProgress(input) {
 
 function canViewClassHistory(input) {
   const permissions = Array.isArray(input.permissions) ? input.permissions : [];
-  if (permissions.indexOf('manage_credits') !== -1) {
+  if (permissions.includes('manage_credits')) {
     return true;
   }
-  return input.ownsProfile === true && permissions.indexOf('reserve_classes') !== -1;
+  return input.ownsProfile === true && permissions.includes('reserve_classes');
 }
 
 // Current quarter, then the eight before it. from/to are inclusive calendar days.

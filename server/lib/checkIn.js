@@ -282,7 +282,7 @@ function wholeCost(value) {
 function canReadCheckInList(input) {
   const permissions = Array.isArray(input.permissions) ? input.permissions : [];
   const hidden = isOff(input.visible);
-  const has = (key) => permissions.indexOf(key) !== -1;
+  const has = (key) => permissions.includes(key);
   if (has('manage_attendance')) {
     return { ok: true };
   }

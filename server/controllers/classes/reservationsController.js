@@ -2,7 +2,7 @@
 
 const { allocateForReservation } = require('../../lib/creditInventory');
 const { presentMemberSchedule, classStartInstant } = require('../../lib/memberSchedule');
-const { decideReserve, decideMemberCancel, sessionOnDate } = require('../../lib/reservations');
+const { decideReserve, cancelAccess, decideMemberCancel, sessionOnDate } = require('../../lib/reservations');
 const { loadClassGraph } = require('./classesController');
 const { loadEligibilityInput } = require('../../lib/athleteTrainingGroups');
 
@@ -93,11 +93,22 @@ async function cancelReservation(req, res, db) {
     if (!userId) {
       return res.status(401).json({ ok: false, message: 'Unauthorized' });
     }
-    const profile = await db.tables.AthleteProfiles.findOne({
-      where: { id: parsed.athleteProfileId, userId: userId },
-    });
+    const permissions = req.user && req.user.permissions;
+    const staff = Array.isArray(permissions) && permissions.includes('manage_classes');
+    const where = { id: parsed.athleteProfileId };
+    if (!staff) {
+      where.userId = userId;
+    }
+    const profile = await db.tables.AthleteProfiles.findOne({ where: where });
     if (!profile) {
       return res.status(404).json({ ok: false, message: 'Athlete profile not found.' });
+    }
+    const access = cancelAccess({
+      permissions: permissions,
+      ownsProfile: Number(profile.userId) === userId,
+    });
+    if (!access.ok) {
+      return res.status(access.status).json({ ok: false, message: access.message });
     }
 
     await db.tables.schema.transaction(async (transaction) => {
@@ -116,6 +127,7 @@ async function cancelReservation(req, res, db) {
         classStart: classStartInstant(session.occursOn, session.startTime),
         cancellationCutoffMinutes: session.cancellationCutoffMinutes,
         reservation: reservation,
+        overrideCutoff: access.overrideCutoff,
       });
       if (!decision.ok) {
         throw coded(decision.status, decision.message);

@@ -586,7 +586,7 @@ const getProfiles = async (req, res, db) => {
     }
     if (walkInSearch.active) {
       const permissions = req.user && req.user.permissions;
-      const canCheckIn = Array.isArray(permissions) && permissions.indexOf('manage_attendance') !== -1;
+      const canCheckIn = Array.isArray(permissions) && permissions.includes('manage_attendance');
       if (!canCheckIn) {
         return res.status(403).json({ ok: false, message: 'Forbidden: Insufficient permissions' });
       }

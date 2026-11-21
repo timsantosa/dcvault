@@ -220,7 +220,7 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
 └─────────────────────────────────────┘
 ```
 
-**Attendees:** class detail has a small tertiary **View attendees** button beside the spots count when the user has `view_class_roster` (planned default for members in MVP — confirmed OK for now). It opens the attendees screen: reserved people, then walk-ins, with names, photos, and training-group labels. A missing photo shows initials. Nobody signed up says **No one is on this class yet.** Tapping a name opens their existing athlete profile, with the Athletes roster underneath when it is not already there, and with the same privacy rules as today. Without `view_class_roster` or `manage_attendance`, the member only sees the count (“6 of 18”) and no View attendees button. The schedule row’s **Check in** button opens this same screen (Flow F). When Reserve or Cancel cannot be used, the button stays at the bottom of class detail, disabled, with the reason underneath. The staff ⋯ menu is task 12.5.
+**Attendees:** class detail has a small tertiary **View attendees** button beside the spots count when the user has `view_class_roster` (planned default for members in MVP — confirmed OK for now). It opens the attendees screen: reserved people, then walk-ins, with names, photos, and training-group labels. A missing photo shows initials. Nobody signed up says **No one is on this class yet.** Tapping a name opens their existing athlete profile, with the Athletes roster underneath when it is not already there, and with the same privacy rules as today. Without `view_class_roster` or `manage_attendance`, the member only sees the count (“6 of 18”) and no View attendees button. The schedule row’s **Check in** button opens this same screen (Flow F). When Reserve or Cancel cannot be used, the button stays at the bottom of class detail, disabled, with the reason underneath. Each attendees row has a ⋯ menu for `manage_classes` (Flow G4).
 
 ### A3. One tap — reserved
 
@@ -289,7 +289,7 @@ Primary action on the row and on detail flips from Reserve to Cancel. The month 
 
 ### B2. Too late to cancel (after cutoff)
 
-Reserve/Cancel is replaced with an explanation. The credit is already spent. There is no in-app “ask for an exception” button in MVP — staff restore a credit by hand if it is excused (Flow I). Cutoff is **a duration before start** (e.g. 24 hours before), not a clock time that day.
+Reserve/Cancel is replaced with an explanation. The credit stays spent until staff cancel the signup from Attendees, which returns it (Flow G4). Cutoff is **a duration before start** (e.g. 24 hours before), not a clock time that day.
 
 ```
 │  Cancellation closed 24 hours       │
@@ -628,7 +628,7 @@ Then confirm:
 
 If they have **zero credits**, it is **two steps in one flow** (not two disconnected screens). Staff with `manage_credits` add a credit first (that add is a **new history record**), then check them in. Staff without that permission are told to ask an admin.
 
-Going negative so the next purchase pays it back is **not MVP** and **not decided** — parked as a possible Phase 2+ item in the PRD so it is not lost.
+Going negative so the next purchase pays it back is **not MVP** and **not decided** — parked as a possible Phase 2 item in the PRD so it is not lost.
 
 ```
 │  Chris has 0 remaining.             │
@@ -782,7 +782,7 @@ The notify switch and optional message appear when this save changes the time, d
 
 ### G4. Cancel a member’s reservation (staff)
 
-On roster / class detail, staff with `manage_classes` can remove someone. This menu is task 12.5 and is not on the roster yet. Removing someone does **not** auto-restore the credit. If the cancel is excused, admin adds a credit in Flow I.
+On each attendees row, staff with `manage_classes` get a ⋯ popover. Cancel deletes the signup and returns the credit, including after the member cutoff and after the class has started. A free or dollar class used no credit. Adjust credits opens the existing screen with the Athletes roster anchored underneath. No message is sent.
 
 ```
 │  Emma Dunne                    ⋯    │
@@ -791,20 +791,16 @@ On roster / class detail, staff with `manage_classes` can remove someone. This m
 │  ┌─────────────────────────────┐    │
 │  │ View profile                │    │
 │  │ Cancel reservation          │    │
-│  │ Adjust credits…             │    │  ← only if manage_credits
+│  │ Adjust credits              │    │  ← only if manage_credits
 │  └─────────────────────────────┘    │
 
 Then:
 
-│  Cancel Emma’s reservation?         │
-│  Her credit is not returned         │
-│  automatically. Add a credit        │
-│  separately if this is excused.     │
+│  Cancel Emma's reservation?         │
+│  1 credit is returned.              │
 │                                     │
 │  [ Back ]     [ Cancel for Emma ]   │
 ```
-
-Emma gets a notification that her reservation changed.
 
 ### G5. Cancel class vs delete class
 
@@ -889,7 +885,7 @@ Admin has every permission above, plus credit and training-group tools. Coaches 
 ## Flow I — Add or remove credits
 
 **Permission:** `manage_credits`  
-**Entry:** athlete profile (someone else’s). The class roster ⋯ menu opens this same screen once that menu exists (task 12.5).  
+**Entry:** athlete profile (someone else’s), and Adjust credits on an attendees row. Both open this screen with the Athletes roster anchored underneath.  
 **MVP:** add/remove only. No cutoff override, no required reason field, no audit log UI. The screen says the member will get a notification. Saving posts that message in the athlete’s Notifications conversation.
 
 Each add or remove is a **new package / credit record** so history stays honest. It does **not** silently rewrite the original quarterly purchase.
@@ -956,7 +952,7 @@ The credits screen shows the chip and the package list. **Adjust credits** opens
 └─────────────────────────────────────┘
 ```
 
-Typical uses: excused late cancel, walk-in with no credits, goodwill makeup, fixing a website sync mistake.
+Typical uses: walk-in with no credits, goodwill makeup, fixing a website sync mistake. A late cancel that should give the credit back is Flow G4.
 
 If the profile is not linked to an athlete, the screen does not show the form. It tells staff to edit the profile and choose an **Associated Athlete** (the website registration), with a button that opens Edit Profile.
 
@@ -1179,12 +1175,12 @@ Call these out so the review stays on launch scope:
 - Lesson packs sold on the website registration form
 - Structured pole picker (free-text note only)
 - Bulk “reserve every Tuesday”
-- Admin override of cutoffs / eligibility (workaround: add a credit)
+- Admin override of the reservation cutoff or eligibility (workaround: add a credit). Staff cancel already overrides the cancellation cutoff and returns the credit.
 - Negative credits / walk-in overdraft paid back on next purchase (**parked — not decided**)
 - Refunds in-app (coach handles money; admin adjusts credits)
 - Email / SMS / 24-hour class reminders
 - Auto-delete of messages (class conversations ~2 weeks; other types 6 months)
-- Reply on Notifications, a lesson-reserved notice, notifying coaches when someone reserves, and a notice when staff cancel one reservation (Phase 2+). Credit changes already post in that athlete’s Notifications conversation. The cancel action is still MVP and does not send.
+- Reply on Notifications, a lesson-reserved notice, notifying coaches when someone reserves, and a notice when staff cancel one reservation (Phase 2+). Credit changes already post in that athlete’s Notifications conversation. Staff cancel returns the credit and does not send.
 - Personal Apple/Google calendar subscription
 - Progress meter flipping to next quarter when this quarter is empty
 - Replacing the public website calendar or turning off Zen Planner for everyone

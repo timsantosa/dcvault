@@ -11,7 +11,7 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 // manage_classes or manage_attendance. manage_conversations is not enough.
 function canMessageClass(permissions) {
   const list = Array.isArray(permissions) ? permissions : [];
-  return list.indexOf('manage_classes') !== -1 || list.indexOf('manage_attendance') !== -1;
+  return list.includes('manage_classes') || list.includes('manage_attendance');
 }
 
 // Body -> { ok, seriesId, occursOn, message, senderId }. The caller checks

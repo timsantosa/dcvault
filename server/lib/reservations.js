@@ -63,15 +63,35 @@ function decideReserve(input) {
   };
 }
 
-// Whether the member may cancel. Input: reservation (null when they have
-// none), cancellationCutoffMinutes, and Date instants now and classStart.
-// Returns { ok:true } or { ok:false, status, message }. After the cutoff the
-// reservation stays and the credit stays spent; the caller deletes both only
-// when this returns ok. The same cutoff applies while a class-cancel hold is
-// paused.
+// Who may cancel this signup. permissions is the caller's keys. ownsProfile
+// is true when the target profile belongs to the caller. manage_classes skips
+// the cutoff for any profile. Otherwise the caller must own the profile and
+// have reserve_classes, and the cutoff still applies. Returns
+// { ok:true, overrideCutoff } or { ok:false, status, message }. A profile
+// that is not theirs is a 404 from the caller, before this runs.
+function cancelAccess(input) {
+  const permissions = Array.isArray(input.permissions) ? input.permissions : [];
+  if (permissions.includes('manage_classes')) {
+    return { ok: true, overrideCutoff: true };
+  }
+  if (input.ownsProfile === true && permissions.includes('reserve_classes')) {
+    return { ok: true, overrideCutoff: false };
+  }
+  return reject(403, 'Forbidden: Insufficient permissions');
+}
+
+// Whether this signup may be canceled. Input: reservation (null when they have
+// none), cancellationCutoffMinutes, Date instants now and classStart, and
+// overrideCutoff. Returns { ok:true } or { ok:false, status, message }. After
+// the cutoff the reservation stays and the credit stays spent, unless
+// overrideCutoff is set. The caller deletes both only when this returns ok.
+// The same cutoff applies while a class-cancel hold is paused.
 function decideMemberCancel(input) {
   if (!input.reservation) {
     return reject(404, 'Reservation not found.');
+  }
+  if (input.overrideCutoff) {
+    return { ok: true };
   }
   const cutoffMinutes = Number(input.cancellationCutoffMinutes);
   if (input.now.getTime() >= input.classStart.getTime() - cutoffMinutes * 60 * 1000) {
@@ -362,6 +382,7 @@ function uniqueMoves(moves) {
 
 module.exports = {
   decideReserve,
+  cancelAccess,
   decideMemberCancel,
   reservationEffects,
   reallocatePaused,

@@ -77,7 +77,7 @@ async function getMemberSchedule(req, res, db) {
         paused: isPaused(allocationsByReservation[row.id] || []),
       })),
       now: now,
-      includeHidden: Array.isArray(permissions) && permissions.indexOf('manage_classes') !== -1,
+      includeHidden: Array.isArray(permissions) && permissions.includes('manage_classes'),
     });
 
     res.json({

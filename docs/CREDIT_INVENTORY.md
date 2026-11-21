@@ -170,7 +170,7 @@ There is no `remaining` column. A stored balance would have to be updated in loc
 
 `quantity − sum(allocation amounts still holding a credit on this grant)`
 
-An allocation exists only while that reservation is holding the credit. Check-in, a no-show, and a late cancel all leave the allocation in place. The credit was taken at reserve. Attendance does not put it back and does not take another one.
+An allocation exists only while that reservation is holding the credit. Check-in and a no-show leave the allocation in place. A member cancel after the cutoff does too. The credit was taken at reserve. Attendance does not put it back and does not take another one.
 
 **Unlimited** (`quantity` null) has no numeric balance. Allocations still record which reservation used it, so a cancel can find them. They do not reduce a count.
 
@@ -190,7 +190,7 @@ Task 7 persists allocations (`creditAllocations`: `reservationId`, `creditGrantI
 
 **Cancel inside the cutoff.** Delete that reservation’s allocations. The balance goes back up because the sum no longer includes them. The grant row is not modified. If the grant has since been ended, the returned amount sits on a grant that is no longer spendable. Staff add a new grant if the member should be able to book again.
 
-**Cancel after the cutoff.** Leave the allocations. Staff who excuse it add a grant.
+**Cancel after the cutoff.** The member is rejected and the allocations stay. Staff with `manage_classes` use the same delete as an in-window cancel, including after the class has started. The allocations and the signup are removed, and the credit is back. Adding a grant is still how staff change a balance while the signup stays.
 
 ---
 

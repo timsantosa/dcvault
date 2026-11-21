@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-20  
+**Last updated:** 2026-11-21  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -479,8 +479,8 @@ An athlete is an **active member** if they have purchased a package for the curr
 ### Cancellation (member)
 
 - **Within cancellation cutoff** (duration before start): credit returned to the package it came from.
-- **After cutoff:** credit **forfeited**.
-- MVP: no automatic admin override of cutoff — admin **manually adds a credit** via `manage_credits` if excused (creates a new credit record per §7).
+- **After cutoff:** the member cannot cancel, and the credit stays spent.
+- Staff with `manage_classes` can cancel that signup anyway, including after the class has started. The signup and its hold are deleted, so the credit comes back. Adding a credit by hand stays for a balance change that leaves the signup in place.
 
 
 
@@ -504,7 +504,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Admin on behalf of member
 
-- Staff with `manage_classes` can **cancel a member's reservation** (e.g., no-show shouldn't consume credit unfairly — admin restores credit separately via `manage_credits`).
+- Staff with `manage_classes` can **cancel a member's reservation** from the attendees row. That deletes the signup and returns the credit, including after the cancellation cutoff. The member can reserve that date again. No message is sent.
 
 
 
@@ -512,7 +512,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 - No explicit "mark no-show" action.
 - Athlete with a reservation who is **not checked in** = no-show; credit already consumed at reservation.
-- Admin restores credit manually if appropriate.
+- Staff cancel removes that signup and returns the credit. Leaving them on the class keeps the credit spent.
 
 
 
@@ -536,9 +536,9 @@ An athlete is an **active member** if they have purchased a package for the curr
 | ---------------------------------------- | ----------------------- |
 | Add credits to athlete                   | Yes (new credit record) |
 | Remove credits from athlete              | Yes (new credit record) |
-| Cancel reservation on behalf of user     | Yes (`manage_classes`)  |
-| Restore credit after late cancel         | Same as add credits     |
-| Override cutoff / eligibility            | **No** — future         |
+| Cancel reservation on behalf of user     | Yes (`manage_classes`). Deletes the signup and returns the credit, including after the cutoff. |
+| Restore credit after late cancel         | The staff cancel returns it. Add credits still changes a balance while the signup stays. |
+| Override reservation cutoff or eligibility | **No** — future       |
 | Optional note/reason on actions          | **No** — future         |
 | Audit log                                | **No** — future         |
 | Notify user on a credit change           | **Yes**                 |
@@ -639,11 +639,11 @@ Export (PDF/CSV): **later**.
 
 - Athlete showed up but has no reservation: staff can **add them to the class** and **deduct a credit**.
 - If athlete has no credits: **two steps, one flow** — staff with `manage_credits` add a credit (new record per §7), then sign them in, without dumping the coach back to a disconnected screen. Staff without `manage_credits` are told to ask an admin.
-- **Not MVP / not decided:** allowing the athlete to go **negative** so the next purchase automatically pays back the debt. Keep as a potential Phase 2+ item so it is not lost (§16).
+- **Not MVP / not decided:** allowing the athlete to go **negative** so the next purchase automatically pays back the debt. Keep as a potential Phase 2 item so it is not lost (§16).
 - Check-in and walk-in are allowed on the session’s America/New_York calendar day and any later day. A future session is rejected (`Check-in is not open yet`). There is no cutoff after the class.
 - A canceled session cannot be checked in or walked into.
 - A walk-in stops when the class is full. It does not use the reservation cutoff. Staff can check in a hidden class. A view-only class rejects a new walk-in; an existing reservation can still be marked present.
-- Undo clears present and leaves the reservation and its credit. Removing a walk-in is a staff cancel.
+- Undo clears present and leaves the reservation and its credit. Removing a walk-in is a staff cancel, which returns the credit.
 
 
 
@@ -792,7 +792,7 @@ Server startup creates a missing table and does not add a column to a table that
 - [ ] Multi-package deduction (soonest expiring)
 - [ ] Multi-athlete per user via profile switching
 - [x] Check-in with walk-in support (two steps, one flow when granting a credit)
-- [ ] Admin credit add/remove; admin cancel reservation
+- [x] Admin credit add/remove; admin cancel reservation
 - [x] Class change notices: one read-only message per reserved athlete, with the option to save silently
 - [x] Class participant messaging
 - [x] Roster visibility (permission-gated)
@@ -834,7 +834,7 @@ Server startup creates a missing table and does not add a column to a table that
 - **Lesson-credit packs** sold on the website (MVP lessons are pay-at-reserve only)
 - Attendance-based restrictions, dynamic pricing, analytics
 - **Message retention / auto-delete** — all class conversations after ~2 weeks; all other message types after 6 months
-- **Negative / overdraft credits** — potential Phase 2+; **not decided**. If built: walk-in (or similar) can go negative and the next package purchase pays the debt back. Keep on this list so it is not lost.
+- **Negative / overdraft credits** — potential Phase 2; **not decided**. If built: walk-in (or similar) can go negative and the next package purchase pays the debt back. Keep on this list so it is not lost.
 - Migrate public website calendar to new system; retire Zen Planner
 - History export
 
@@ -850,7 +850,7 @@ These are intentionally unresolved — capture decisions as they come up during 
 2. **Training group fallback** — eligibility treats an unset profile as Open / All Ages (task 7.3, 2026-11-17), so Elite and other group classes stay closed. Still open: whether to derive a saved group from a purchase or require an admin to set one.
 3. **Success metrics** — define before full release (e.g., beta reservation volume, support tickets, Zen Planner manual entry reduction).
 4. **Launch communication** — member messaging when switching off Zen Planner.
-5. **Walk-in overdraft (parked, not decided)** — potential Phase 2+: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
+5. **Walk-in overdraft (parked, not decided)** — potential Phase 2: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
 6. **Automatic discount eligibility** — how military / other non-time-based discounts are verified; whether automatic discounts stack with remaining manual codes. Early-bird window itself is decided: configurable duration.
 
 ### Resolved (2026-09-27)
@@ -1014,10 +1014,10 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - The class stays visible. The schedule row and class detail say why the selected athlete cannot reserve (Flow C2). Reserve rejects that same case. The blocked label is **Not eligible**.
   - A class with no training groups has no group limit (§10). A class that lists groups is open to an athlete in at least one of those groups. The reason names the athlete’s groups and the class’s groups.
   - Age uses the class minimum and maximum. No minimum and no maximum means no age limit. Outside that range is the same **Not eligible** block, and the reason says the age.
-  - A new walk-in uses the same checks. Marking someone present does not. Overriding eligibility is Phase 2+ (§9).
+  - A new walk-in uses the same checks. Marking someone present does not. Overriding eligibility is Phase 2 (§9).
   - An athlete with no groups is still §16 #2. Do not derive a group from a purchase in this task. Ask before deciding that case.
   - The roster, attendance marks, and the profile meter stay on their own tasks. The §15 eligibility box stays open until this task is done and any remaining gap is noted.
-  - *Completion notes:* 2026-11-17. `server/lib/eligibility.js` is the one rule for the schedule, reserve, and a new walk-in. It uses the session’s groups and ages, so a per-date override counts. Ages are inclusive, in completed years on the class date. A class with an age limit and an unreadable date of birth is blocked (`Emma’s age is not on the profile.`). An athlete with no groups counts as Open / All Ages and nothing is saved (§10, §16 #2). On the schedule, the order is Canceled, View only, already reserved (left alone, Cancel still shows), **Not eligible**, then the cutoff, full, and credit reasons. `eligibilityReason` holds the sentences, and the row and class detail show them. Reserve and walk-in return the same sentences as a 409. Marking present does not recheck. Walk-in search returns `notEligible` on each offer. The search row says Not eligible, and the prompt blocks before the add-credits step, so staff are not offered a credit for a walk-in that would fail. There is no override (Phase 2+). §15 eligibility box is checked.
+  - *Completion notes:* 2026-11-17. `server/lib/eligibility.js` is the one rule for the schedule, reserve, and a new walk-in. It uses the session’s groups and ages, so a per-date override counts. Ages are inclusive, in completed years on the class date. A class with an age limit and an unreadable date of birth is blocked (`Emma’s age is not on the profile.`). An athlete with no groups counts as Open / All Ages and nothing is saved (§10, §16 #2). On the schedule, the order is Canceled, View only, already reserved (left alone, Cancel still shows), **Not eligible**, then the cutoff, full, and credit reasons. `eligibilityReason` holds the sentences, and the row and class detail show them. Reserve and walk-in return the same sentences as a 409. Marking present does not recheck. Walk-in search returns `notEligible` on each offer. The search row says Not eligible, and the prompt blocks before the add-credits step, so staff are not offered a credit for a walk-in that would fail. There is no override (Phase 2). §15 eligibility box is checked.
 
 
 
@@ -1106,11 +1106,11 @@ Deferred. **5.1** is at the end of the MVP build list, after Task 12 and before 
   - Reply, a lesson-reserved notice, sending `notifyCoachOnReserve`, and a notice when staff cancel one reservation are Phase 2+ (§15), not further build tasks.
   - *Completion notes:* 2026-11-20. Add, remove, and end post one message in that athlete’s Notifications conversation. The sender is the staff member’s selected profile, and a profile that is missing or not theirs is rejected before the grant is written. An end that does not change the date sends nothing. A failed send leaves the grant saved. The four leftovers above moved to Phase 2+. The cancel action stays on 12.5 and does not send.
 
-- [ ] **12.5 — Roster staff menu**
-  - On each class-detail roster row, `manage_classes` gets View profile, Cancel reservation, and Adjust credits when they also have `manage_credits`.
-  - Cancel takes the person off the class and does not return the credit. The storage for that spent credit is still open: a reservation cannot be deleted while its hold exists, and keeping the row blocks reserving that same date again. Decide that before building this task.
+- [x] **12.5 — Roster staff menu**
+  - On each attendees row, `manage_classes` gets View profile, Cancel reservation, and Adjust credits when they also have `manage_credits`.
+  - Cancel deletes the signup and its hold, including after the cutoff, so the credit comes back. The member cancel route does both: the caller’s own profile still has the cutoff, and `manage_classes` skips it.
   - The notice that the reservation changed is Phase 2+. This task does not send it.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-21. The attendees ⋯ menu uses the jump-cell context popover. View profile and Adjust credits both open with the Athletes roster anchored underneath. `POST /mobileapp/user/reservations/cancel` deletes the allocations and the signup. `reserve_classes` stays on `POST /reservations` only. A member cancel after the cutoff is still rejected. No message is sent. §8, §9, §11, §15, Flow G4, and Flow B2 match the returned credit.
 
 
 
@@ -1136,7 +1136,7 @@ Last MVP build task. Do this after Tasks 6–12 so the schedule and reservations
   - *Completion notes:*
 
 - [ ] **13.2 — Update MVP checklist (§15)**
-  - Mark all completed items; file remaining gaps as new tasks or Phase 2+.
+  - Mark all completed items; file remaining gaps as new tasks or Phase 2.
   - *Completion notes:*
 
 ---

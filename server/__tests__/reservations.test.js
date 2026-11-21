@@ -2,6 +2,7 @@
 
 const {
   decideReserve,
+  cancelAccess,
   decideMemberCancel,
   reservationEffects,
   reallocatePaused,
@@ -142,6 +143,40 @@ describe('decideReserve', () => {
   });
 });
 
+describe('cancelAccess', () => {
+  it('lets manage_classes skip the cutoff for any profile', () => {
+    expect(cancelAccess({
+      permissions: ['manage_classes'],
+      ownsProfile: false,
+    })).toEqual({ ok: true, overrideCutoff: true });
+  });
+
+  it('lets the owner cancel inside the cutoff', () => {
+    expect(cancelAccess({
+      permissions: ['reserve_classes'],
+      ownsProfile: true,
+    })).toEqual({ ok: true, overrideCutoff: false });
+  });
+
+  it('rejects an owner without reserve_classes', () => {
+    const denied = cancelAccess({
+      permissions: ['manage_attendance'],
+      ownsProfile: true,
+    });
+    expect(denied.ok).toBe(false);
+    expect(denied.status).toBe(403);
+  });
+
+  it('rejects reserve_classes for a profile the caller does not own', () => {
+    const denied = cancelAccess({
+      permissions: ['reserve_classes'],
+      ownsProfile: false,
+    });
+    expect(denied.ok).toBe(false);
+    expect(denied.status).toBe(403);
+  });
+});
+
 describe('decideMemberCancel', () => {
   it('allows a cancel before the cutoff and rejects one after it', () => {
     expect(decideMemberCancel({
@@ -160,6 +195,28 @@ describe('decideMemberCancel', () => {
     expect(late.ok).toBe(false);
     expect(late.status).toBe(409);
     expect(late.message).toBe('Cancellation closed 24 hours before start');
+  });
+
+  it('skips the cutoff when staff override it', () => {
+    expect(decideMemberCancel({
+      now: HOUR_BEFORE,
+      classStart: START,
+      cancellationCutoffMinutes: 1440,
+      reservation: { id: 1 },
+      overrideCutoff: true,
+    })).toEqual({ ok: true });
+  });
+
+  it('still requires a signup when the cutoff is overridden', () => {
+    const missing = decideMemberCancel({
+      now: HOUR_BEFORE,
+      classStart: START,
+      cancellationCutoffMinutes: 1440,
+      reservation: null,
+      overrideCutoff: true,
+    });
+    expect(missing.ok).toBe(false);
+    expect(missing.status).toBe(404);
   });
 
   it('uses the same cutoff when the hold is already paused', () => {

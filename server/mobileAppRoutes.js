@@ -65,7 +65,8 @@ module.exports = function addMobileAppRoutes(app, db) {
   app.use('/mobileapp/user/classPackages', checkPermission('manage_classes'), classPackageRoutes(db));
   app.use('/mobileapp/user/classes', checkPermission('manage_classes'), classRoutes(db));
   app.use('/mobileapp/user/schedule', checkPermission('reserve_classes'), memberScheduleRoutes(db));
-  app.use('/mobileapp/user/reservations', checkPermission('reserve_classes'), reservationRoutes(db));
+  // Reserve requires reserve_classes. Cancel is own profile or manage_classes.
+  app.use('/mobileapp/user/reservations', reservationRoutes(db));
   app.use('/mobileapp/user/credits', checkPermission('manage_credits'), creditRoutes(db));
   app.use('/mobileapp/user/class-attendees', classAttendeeRoutes(db));
   app.use('/mobileapp/user/check-in', checkPermission('manage_attendance'), checkInRoutes(db));
