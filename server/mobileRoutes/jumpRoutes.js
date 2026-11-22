@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
-const { getJump, addOrUpdateJump, deleteJump, fetchJumps, pinOrUnpinJump, getFavoriteJumps, getTopMeetJumps, getTopIndoorOutdoorMeetJumps } = require('../controllers/jumpsController');
-const { uploadLogVideo, deleteLogVideo } = require('../controllers/logVideoController');
+const { getJump, addOrUpdateJump, deleteJump, fetchJumps, pinOrUnpinJump, getFavoriteJumps, getTopMeetJumps, getTopIndoorOutdoorMeetJumps } = require('../controllers/trainingLog/jumpsController');
+const { uploadLogVideo, deleteLogVideo } = require('../controllers/trainingLog/logVideoController');
 const { checkOwnAthleteProfileOrPermission } = require('../middlewares/mobileAuthMiddleware');
 
 

@@ -1,10 +1,10 @@
-const NotificationUtils = require('../utils/notificationUtils');
-const { uploadBufferToCloudinary } = require('../lib/cloudinaryUploadFromBuffer');
-const { JUMP_DRILL_VIDEO_FOLDER, destroyJumpDrillCloudinaryAssetIfOwned } = require('../lib/cloudinaryMedia');
+const NotificationUtils = require('../../utils/notificationUtils');
+const { uploadBufferToCloudinary } = require('../../lib/cloudinaryUploadFromBuffer');
+const { JUMP_DRILL_VIDEO_FOLDER, destroyJumpDrillCloudinaryAssetIfOwned } = require('../../lib/cloudinaryMedia');
 const {
   userCanVerifyLogVideoMedia,
   normalizeStoredVideoLink,
-} = require('../utils/pendingLogVideo');
+} = require('../../utils/pendingLogVideo');
 
 async function uploadLogVideo(req, res, db) {
   try {

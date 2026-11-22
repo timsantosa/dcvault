@@ -13,6 +13,10 @@ const {
   destroyStoredMessageAttachment,
 } = require('../lib/cloudinaryMedia');
 const { uploadBufferToCloudinary } = require('../lib/cloudinaryUploadFromBuffer');
+const { loadClassGraph } = require('./classes/classesController');
+const { sessionOnDate } = require('../lib/reservations');
+const { canMessageClass, classMessagePlan, readClassMessage } = require('../lib/classMessage');
+const { athleteProfileBelongsToUser } = require('../middlewares/mobileAuthMiddleware');
 
 // Get all conversations for the current user
 async function getConversations(req, res, db) {
@@ -1272,12 +1276,170 @@ async function deleteConversation(req, res, db) {
   }
 }
 
+// Message everyone signed up for one class date, including walk-ins.
+// Finds or creates that date's group, syncs who is in it, then uses the
+// same send helper as POST /conversations/:conversationId/messages.
+async function messageClass(req, res, db) {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ ok: false, message: 'Unauthorized' });
+    }
+    if (!canMessageClass(req.user.permissions)) {
+      return res.status(403).json({ ok: false, message: 'Forbidden: Insufficient permissions' });
+    }
+    const parsed = readClassMessage(req.body, (senderId) => (
+      athleteProfileBelongsToUser(senderId, req.user)
+      || athleteProfileBelongsToUser(String(senderId), req.user)
+    ));
+    if (!parsed.ok) {
+      return res.status(400).json({ ok: false, message: parsed.message });
+    }
+    const session = await classSession(db, parsed.seriesId, parsed.occursOn);
+    let conversationId;
+    try {
+      conversationId = await deliverClassMessage(db, parsed, session);
+    } catch (error) {
+      if (!isUniqueConflict(error)) {
+        throw error;
+      }
+      conversationId = await deliverClassMessage(db, parsed, session);
+    }
+    res.json({ ok: true, conversationId: conversationId });
+  } catch (error) {
+    if (error.status) {
+      return res.status(error.status).json({ ok: false, message: error.message });
+    }
+    console.error('Error sending class message:', error);
+    res.status(500).json({ ok: false, message: 'Failed to send message' });
+  }
+}
+
+async function classSession(db, seriesId, occursOn) {
+  const graph = await loadClassGraph(db, seriesId);
+  if (!graph || graph.series.deletedAt) {
+    const error = new Error('Class not found.');
+    error.status = 404;
+    throw error;
+  }
+  const session = sessionOnDate(graph, occursOn);
+  if (!session) {
+    const error = new Error('Class not found.');
+    error.status = 404;
+    throw error;
+  }
+  return session;
+}
+
+async function deliverClassMessage(db, parsed, session) {
+  const signups = await db.tables.ClassReservations.findAll({
+    where: { classSeriesId: parsed.seriesId, occursOn: parsed.occursOn },
+    attributes: ['athleteProfileId', 'walkIn'],
+  });
+  const link = await db.tables.ClassConversations.findOne({
+    where: { classSeriesId: parsed.seriesId, occursOn: parsed.occursOn },
+  });
+  const participants = link
+    ? await db.tables.ConversationParticipants.findAll({
+      where: { conversationId: link.conversationId },
+      attributes: ['athleteProfileId', 'role'],
+    })
+    : [];
+  const plan = classMessagePlan({
+    title: session.title,
+    occursOn: parsed.occursOn,
+    senderId: parsed.senderId,
+    signups: signups.map((row) => ({
+      athleteProfileId: row.athleteProfileId,
+      walkIn: row.walkIn,
+    })),
+    participants: participants.map((row) => ({
+      athleteProfileId: row.athleteProfileId,
+      role: row.role,
+    })),
+  });
+  if (!plan.ok) {
+    const error = new Error(plan.message);
+    error.status = 409;
+    throw error;
+  }
+
+  const conversationId = await db.tables.schema.transaction(async (transaction) => {
+    const id = await ensureClassConversation(db, parsed, plan, link, transaction);
+    await applyClassMembership(db, id, plan, transaction);
+    return id;
+  });
+
+  // TODO: email and SMS are not sent. Later, delete class-conversation
+  // messages after about 2 weeks and other messages after 6 months.
+  await sendMessageInConversation(conversationId, parsed.senderId, parsed.message, db);
+  return conversationId;
+}
+
+async function ensureClassConversation(db, parsed, plan, link, transaction) {
+  if (link) {
+    await db.tables.Conversations.update(
+      { name: plan.name },
+      { where: { id: link.conversationId }, transaction: transaction }
+    );
+    return link.conversationId;
+  }
+  const conversation = await db.tables.Conversations.create({
+    name: plan.name,
+    type: 'group',
+    createdBy: parsed.senderId,
+    settings: { canSendMessages: true, canReact: true },
+  }, { transaction: transaction });
+  await db.tables.ClassConversations.create({
+    classSeriesId: parsed.seriesId,
+    occursOn: parsed.occursOn,
+    conversationId: conversation.id,
+  }, { transaction: transaction });
+  return conversation.id;
+}
+
+async function applyClassMembership(db, conversationId, plan, transaction) {
+  if (plan.remove.length > 0) {
+    await db.tables.ConversationParticipants.destroy({
+      where: {
+        conversationId: conversationId,
+        athleteProfileId: plan.remove,
+      },
+      transaction: transaction,
+    });
+  }
+  for (let i = 0; i < plan.roleChanges.length; i += 1) {
+    const change = plan.roleChanges[i];
+    await db.tables.ConversationParticipants.update(
+      { role: change.role },
+      {
+        where: {
+          conversationId: conversationId,
+          athleteProfileId: change.athleteProfileId,
+        },
+        transaction: transaction,
+      }
+    );
+  }
+  if (plan.add.length > 0) {
+    await db.tables.ConversationParticipants.bulkCreate(plan.add.map((row) => ({
+      conversationId: conversationId,
+      athleteProfileId: row.athleteProfileId,
+      role: row.role,
+    })), { transaction: transaction, ignoreDuplicates: true });
+  }
+}
+
+function isUniqueConflict(error) {
+  return error != null && error.name === 'SequelizeUniqueConstraintError';
+}
+
 module.exports = {
   getConversations,
   getConversation,
   createConversation,
   updateConversation,
   sendMessage,
+  messageClass,
   editMessage,
   addParticipants,
   removeParticipant,

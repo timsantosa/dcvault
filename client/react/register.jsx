@@ -3,6 +3,56 @@ import apiHelpers from './api-helpers'
 import waivers from './waivers'
 const $ = window.$
 
+const CATALOG_AUDIENCE_LABELS = {
+  'fly-kids': 'Fly-Kids (7-11) + Camps',
+  dropin: 'Drop-In',
+  adult: 'Adult (21+)',
+  plesson: 'Private Lesson',
+  allages: 'All Ages (12+ Beginner thru Advanced)',
+  'emerging-elite': 'Emerging Elite (Level III)',
+  elite: 'Elite (Level IV)',
+  professional: 'Professional (Level V)'
+}
+
+const CATALOG_AUDIENCE_RANK = {
+  'fly-kids': 0,
+  adult: 1,
+  allages: 2
+}
+
+function catalogAudienceLabel (audience) {
+  return CATALOG_AUDIENCE_LABELS[audience] || audience
+}
+
+function sortCatalogPackages (packages) {
+  return packages.slice().sort(function (a, b) {
+    const rankA = Object.prototype.hasOwnProperty.call(CATALOG_AUDIENCE_RANK, a.audience) ? CATALOG_AUDIENCE_RANK[a.audience] : 3
+    const rankB = Object.prototype.hasOwnProperty.call(CATALOG_AUDIENCE_RANK, b.audience) ? CATALOG_AUDIENCE_RANK[b.audience] : 3
+    if (rankA !== rankB) {
+      return rankA - rankB
+    }
+    if (rankA === 3 && a.audience !== b.audience) {
+      return String(a.audience).localeCompare(String(b.audience))
+    }
+    const sortA = a.sortOrder == null ? 0 : a.sortOrder
+    const sortB = b.sortOrder == null ? 0 : b.sortOrder
+    if (sortA !== sortB) {
+      return sortA - sortB
+    }
+    return a.id - b.id
+  })
+}
+
+function catalogPackageLabel (pkg) {
+  const amount = Number(pkg.price)
+  const shown = amount % 1 === 0 ? String(amount) : amount.toFixed(2)
+  return pkg.name + ' ($' + shown + ')'
+}
+
+function catalogMembershipValue (pkg) {
+  return 'pkg:' + pkg.id
+}
+
 const parseFormValues = apiHelpers.parseFormValues
 
 // Feature flag: set to false to disable the "select an existing athlete"
@@ -237,6 +287,10 @@ class SelectPackage extends React.Component {
       showElite: false,
       showProfessional: false,
       inviteCode: null,
+      catalogStatus: 'loading',
+      useClassPackageCatalog: false,
+      catalogPackages: [],
+      invitePackages: [],
       quarters: [
         {name: 'Summer', value: 'summer'},
         {name: 'Fall', value: 'fall'},
@@ -276,6 +330,26 @@ class SelectPackage extends React.Component {
     }
     if (this.state.inviteCode) {
       output.invite = this.state.inviteCode
+    }
+
+    if (this.state.useClassPackageCatalog) {
+      const selected = this.selectedCatalogPackage(output.membership)
+      const missingRequired = output.quarter === undefined || output.group === undefined || output.facility === undefined || output.yesApparel === undefined
+      if (missingRequired) {
+        this.setState({
+          errorText: 'Please fill in all required fields'
+        })
+      } else if (!selected) {
+        this.setState({
+          errorText: 'Please choose a class option for your training group'
+        })
+      } else {
+        output.membership = catalogMembershipValue(selected)
+        output.catalogPrice = Number(selected.price)
+        output.catalogName = selected.name
+        this.props.advance('selectPackage', output)
+      }
+      return
     }
 
     // For these groups the class option sets the price (see the Payment
@@ -332,6 +406,72 @@ class SelectPackage extends React.Component {
     this.setState({
       activeQuarter: activeQuarter
     })
+
+    apiHelpers.getRegistrationCatalog()
+    .then((response) => {
+      const info = response && response.data
+      if (!info || !info.ok) {
+        this.setState({ catalogStatus: 'error' })
+        return
+      }
+      this.setState({
+        catalogStatus: 'ready',
+        useClassPackageCatalog: !!info.useClassPackageCatalog,
+        catalogPackages: info.packages || []
+      })
+    })
+    .catch(() => {
+      this.setState({ catalogStatus: 'error' })
+    })
+  }
+
+  visibleCatalogPackages () {
+    const merged = []
+    const seen = {}
+    const lists = [this.state.catalogPackages || [], this.state.invitePackages || []]
+    for (let listIndex = 0; listIndex < lists.length; listIndex++) {
+      const list = lists[listIndex]
+      for (let i = 0; i < list.length; i++) {
+        const pkg = list[i]
+        if (seen[pkg.id]) {
+          continue
+        }
+        seen[pkg.id] = true
+        merged.push(pkg)
+      }
+    }
+    return sortCatalogPackages(merged)
+  }
+
+  catalogAudiences () {
+    const packages = this.visibleCatalogPackages()
+    const audiences = []
+    const seen = {}
+    for (let i = 0; i < packages.length; i++) {
+      const audience = packages[i].audience
+      if (seen[audience]) {
+        continue
+      }
+      seen[audience] = true
+      audiences.push(audience)
+    }
+    return audiences
+  }
+
+  packagesForAudience (audience) {
+    return this.visibleCatalogPackages().filter(function (pkg) {
+      return pkg.audience === audience
+    })
+  }
+
+  selectedCatalogPackage (membership) {
+    const packages = this.visibleCatalogPackages()
+    for (let i = 0; i < packages.length; i++) {
+      if (catalogMembershipValue(packages[i]) === membership) {
+        return packages[i]
+      }
+    }
+    return null
   }
 
   adjustOptions () {
@@ -432,6 +572,18 @@ class SelectPackage extends React.Component {
           })
         } else {
           let level = info.invite.level
+          if (this.state.useClassPackageCatalog) {
+            const invitePackages = info.packages || []
+            const stillThere = (this.state.catalogPackages || []).concat(invitePackages).some(function (pkg) {
+              return catalogMembershipValue(pkg) === this.state.checkedMembership
+            }.bind(this))
+            this.setState({
+              inviteCode: code,
+              invitePackages: invitePackages,
+              checkedMembership: stillThere ? this.state.checkedMembership : null
+            })
+            return
+          }
           this.setState({
             inviteCode: code
           })
@@ -484,10 +636,23 @@ class SelectPackage extends React.Component {
   // Full-width selectable radio card (used for the training-group picker)
   groupCard (value, label, selected, show) {
     return (
-      <label className={'reg-radio reg-radio-card' + (selected ? ' reg-radio--selected' : '')} style={{display: show ? 'flex' : 'none'}}>
+      <label key={value} className={'reg-radio reg-radio-card' + (selected ? ' reg-radio--selected' : '')} style={{display: show ? 'flex' : 'none'}}>
         <input type='radio' name='group' value={value} checked={selected} onChange={this.adjustOptions.bind(this)} />
         <span className='reg-radio__dot' />
         <span className='reg-radio__label'>{label}</span>
+      </label>
+    )
+  }
+
+  // Catalog class option. Controlled so clearing the selection (group change
+  // or a new invite code) unchecks the previous package.
+  catalogPackageRow (pkg) {
+    const value = catalogMembershipValue(pkg)
+    return (
+      <label key={pkg.id} className='reg-radio'>
+        <input type='radio' name='membership' value={value} checked={this.state.checkedMembership === value} onChange={this.adjustOptions.bind(this)} />
+        <span className='reg-radio__dot' />
+        <span className='reg-radio__label'>{catalogPackageLabel(pkg)}</span>
       </label>
     )
   }
@@ -510,6 +675,16 @@ class SelectPackage extends React.Component {
       errorContainer = (
         <div className='reg-error'>
           <p>{s.errorText}</p>
+        </div>
+      )
+    }
+    if (this.state.catalogStatus !== 'ready') {
+      const catalogMessage = this.state.catalogStatus === 'error'
+        ? 'Registration options could not be loaded. Please refresh the page.'
+        : 'Loading registration options...'
+      return (
+        <div className='reg-form-col'>
+          <p className='reg-subnote' style={{textAlign: 'center'}}>{catalogMessage}</p>
         </div>
       )
     }
@@ -537,14 +712,24 @@ class SelectPackage extends React.Component {
             {/* Training Group */}
             <div className='reg-section'>
               <p className='reg-heading'>Training Group<span className='rd-req'>*</span></p>
-              {this.groupCard('fly-kids', 'Fly-Kids (7-11) + Camps', s.checkedGroup === 'fly-kids', true)}
-              {this.groupCard('dropin', 'Drop-In', s.checkedGroup === 'dropin', s.showDropIn)}
-              {this.groupCard('adult', 'Adult (21+)', s.checkedGroup === 'adult', true)}
-              {this.groupCard('plesson', 'Private Lesson', s.checkedGroup === 'plesson', s.showPrivateLesson)}
-              {this.groupCard('allages', 'All Ages (12+ Beginner thru Advanced)', s.checkedGroup === 'allages', true)}
-              {this.groupCard('emerging-elite', 'Emerging Elite (Level III)', s.checkedGroup === 'emerging-elite', s.showEmergingElite)}
-              {this.groupCard('elite', 'Elite (Level IV)', s.checkedGroup === 'elite', s.showElite)}
-              {this.groupCard('professional', 'Professional (Level V)', s.checkedGroup === 'professional', s.showProfessional)}
+              {this.state.useClassPackageCatalog ? (
+                <div>
+                  {this.catalogAudiences().map((audience) => {
+                    return this.groupCard(audience, catalogAudienceLabel(audience), s.checkedGroup === audience, true)
+                  })}
+                </div>
+              ) : (
+                <div>
+                  {this.groupCard('fly-kids', 'Fly-Kids (7-11) + Camps', s.checkedGroup === 'fly-kids', true)}
+                  {this.groupCard('dropin', 'Drop-In', s.checkedGroup === 'dropin', s.showDropIn)}
+                  {this.groupCard('adult', 'Adult (21+)', s.checkedGroup === 'adult', true)}
+                  {this.groupCard('plesson', 'Private Lesson', s.checkedGroup === 'plesson', s.showPrivateLesson)}
+                  {this.groupCard('allages', 'All Ages (12+ Beginner thru Advanced)', s.checkedGroup === 'allages', true)}
+                  {this.groupCard('emerging-elite', 'Emerging Elite (Level III)', s.checkedGroup === 'emerging-elite', s.showEmergingElite)}
+                  {this.groupCard('elite', 'Elite (Level IV)', s.checkedGroup === 'elite', s.showElite)}
+                  {this.groupCard('professional', 'Professional (Level V)', s.checkedGroup === 'professional', s.showProfessional)}
+                </div>
+              )}
 
               <div className='reg-callout' style={{marginTop: '12px'}}>
                 <div><span className='reg-link' onClick={this.toggleInvite.bind(this)}>CLICK HERE</span> and enter your <span className='reg-link'>Invite Code</span> to register for a <span className='reg-link'>Private Lesson</span> or <span className='reg-link'>Drop-In Class</span></div>
@@ -558,9 +743,22 @@ class SelectPackage extends React.Component {
               </div>
             </div>
 
-            {/* Class Options — always visible. The per-group lists are stacked in
-                one grid cell so the section is always as tall as the longest
-                list, and switching groups doesn't shift the layout. */}
+            {/* Class options. Catalog rows come from the package list. The hardcoded
+                lists stay stacked so switching groups does not shift the layout. */}
+            {this.state.useClassPackageCatalog ? (
+            <div className='reg-section'>
+              <p className='reg-heading'>Class Options<span className='rd-req'>*</span></p>
+              {this.packagesForAudience(s.checkedGroup).length ? (
+                <div>
+                  {this.packagesForAudience(s.checkedGroup).map((pkg) => {
+                    return this.catalogPackageRow(pkg)
+                  })}
+                </div>
+              ) : (
+                <p className='reg-subnote'>{s.checkedGroup ? 'No class options to choose for this training group.' : 'Select a training group above to see class options.'}</p>
+              )}
+            </div>
+            ) : (
             <div className='reg-section'>
               <p className='reg-heading'>Class Options<span className='rd-req'>*</span></p>
               <div className='reg-stack'>
@@ -594,6 +792,7 @@ class SelectPackage extends React.Component {
                 </div>
               </div>
             </div>
+            )}
 
             {/* Preferred Training Location */}
             <div className='reg-section reg-section--divider'>
@@ -1260,9 +1459,10 @@ class Payment extends React.Component {
     let membership = this.props.data.selectPackage.membership
     let fkmembership = this.props.data.selectPackage.fkmembership
 
-    // if the membership is fly kids then check the membership
-    // Then assign it to the props data for membership so it will reflect under "membership in the database"
-    if(group === 'fly-kids'){
+    // Catalog checkout sends the package price. The hardcoded table stays for the flag-off form.
+    if (this.props.data.selectPackage.catalogPrice != null && this.props.data.selectPackage.catalogPrice !== '') {
+      price = Number(this.props.data.selectPackage.catalogPrice)
+    } else if(group === 'fly-kids'){
       if(fkmembership === '8classes'){
         price = 200
         this.props.data.selectPackage.membership = fkmembership
@@ -1483,8 +1683,8 @@ class Payment extends React.Component {
     // Package description lines (only the ones that apply to this selection)
     let packageDetails = [
       pkg.quarter ? ['Session', LABELS.quarter[pkg.quarter] || pkg.quarter] : null,
-      pkg.group ? ['Training group', LABELS.group[pkg.group] || pkg.group] : null,
-      LABELS.membership[pkg.membership] ? ['Class option', LABELS.membership[pkg.membership]] : null,
+      pkg.group ? ['Training group', catalogAudienceLabel(pkg.group)] : null,
+      (pkg.catalogName || LABELS.membership[pkg.membership]) ? ['Class option', pkg.catalogName || LABELS.membership[pkg.membership]] : null,
       pkg.facility ? ['Location', LABELS.facility[pkg.facility] || pkg.facility] : null
     ].filter(Boolean)
 

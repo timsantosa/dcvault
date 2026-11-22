@@ -1,5 +1,5 @@
-const { validatePoleBrand } = require("../utils/poleBrandValidation");
-const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../lib/cloudinaryMedia");
+const { validatePoleBrand } = require("../../utils/poleBrandValidation");
+const { destroyJumpDrillCloudinaryAssetIfOwned } = require("../../lib/cloudinaryMedia");
 const {
   normalizeStoredVideoLink,
   userCanVerifyLogVideoMedia,
@@ -7,7 +7,7 @@ const {
   destroyPendingLogVideosForDrill,
   attachPendingLogVideoToDrillSingle,
   attachPendingLogVideoToDrills,
-} = require('../utils/pendingLogVideo');
+} = require('../../utils/pendingLogVideo');
 
 const addOrUpdateDrill = async (req, res, db) => {
   try {
