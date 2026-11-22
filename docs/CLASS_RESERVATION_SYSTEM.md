@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-21  
+**Last updated:** 2026-11-22  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
 
@@ -226,7 +226,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 | Title                             |                                                                                                               |
 | Description                       |                                                                                                               |
 | Start / end time                  | Per occurrence; custom series may use **different times on different days**                                   |
-| Location                          |                                                                                                               |
+| Location                          | One place for the series in the first build, including the address. A single date can still use a different place. **Phase 2:** each weekday can have its own location and address (§15). A weekday with none keeps the series location. |
 | Allowed athlete groups            | Fly Kids, Open/All Ages, Adult, Elite Development, etc.                                                       |
 | Age limits                        | Optional                                                                                                      |
 | Recurrence                        | Simple weekly **or custom multi-day** (see below). Edits apply to **single instance** or **entire series**    |
@@ -268,6 +268,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 
 - Typical case: weekly on one weekday at one time.
 - **Custom series required for MVP:** one series can include mixed days and times, e.g. Sunday 11:30, Tuesday 6:00 PM, Thursday 7:00 PM. Staff add those day/time rows rather than creating three unrelated series when it is conceptually one repeating class.
+- Those rows do not have their own location. Every weekday uses the series location and address. Giving a weekday its own standing place is Phase 2 (§15). Editing one date can still put that date somewhere else.
 - A repeating series may set an optional **end date**. That date is included. With no end date, the series continues.
 - A short run such as a week-long camp is a repeating series with an end date and one slot per weekday it meets. It does not continue after the end date. A non-repeating class is a single session.
 - Edit **this occurrence only** or **entire series**.
@@ -327,7 +328,7 @@ The **app/backend class system is the source of truth** for beta users.
 - A repeating class is **one Google event per weekday and time**. That event has **no end date** unless the class has one. A one-off class is a single event. Dates nobody edited are not stored as their own events.
 - A **moved, canceled, or otherwise edited** date is its own event. A moved session stays that one event and changes day. The sync stores each Google event id in a sync table.
 - A canceled class **stays** on the sync calendar, with the title prefixed `Canceled: `. A deleted class is **removed**.
-- Each event shows the **title, date, start and end time, location, and training groups**.
+- Each event shows the **title, date, start and end time, location, and training groups**. Until a weekday can have its own location, every weekday event uses the series location. After that, the event uses the weekday’s location when the weekday has one (§15).
 - **Hidden** classes are not copied. Only classes marked visible are synced.
 - The separate calendar id and a service-account key path come from the environment (`GOOGLE_CLASS_SYNC_CALENDAR_ID`, `GOOGLE_CLASS_SYNC_CREDENTIALS`). If either is missing, the push is skipped. The class save still succeeds. The public calendar is never written. Confirm the IANA timezone (gym local time) when the task is built.
 
@@ -805,6 +806,7 @@ Server startup creates a missing table and does not add a column to a table that
 ### Phase 2+ (prioritize later)
 
 - **One-way sync to a separate Google Calendar** — not the public website calendar. Rules are in §6. Moved out of the first build on 2026-11-21. Not built.
+- **Per-weekday location** — a series can give each weekday its own location and address, the same way it already gives each weekday its own start and end. Today every weekday uses the series location. A weekday left blank keeps that series location. Changing one date still overrides that date and does not rewrite the weekday. A location change on a weekday uses the existing class-change notice for upcoming reservations on that weekday. Not built. Added 2026-11-22.
 - **Reply on Notifications** — opens a normal conversation with coaches. Members can message coaches and admins to ask a question without `manage_conversations`. The Notifications thread stays read-only.
 - **Lesson reserved notice** — one message in the athlete’s Notifications conversation when a lesson is reserved.
 - **`notifyCoachOnReserve`** — when the class flag is on, tell the coaches listed on that class that someone reserved. The flag is already stored. An empty coach list sends nothing.
@@ -861,7 +863,7 @@ These are intentionally unresolved — capture decisions as they come up during 
 
 ### Resolved (2026-10-21)
 
-- **Google Calendar sync details** — separate calendar, not the public one. Push on create, edit, cancel, restore, and delete. One repeating Google event per weekday and time, with no end date unless the class has one. Edited dates are their own events. Title, time, location, and training groups. Canceled stays, prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied. Calendar id and service-account key path come from the environment; if either is missing, skip the push. The IANA timezone is still confirmed when the sync is built. See §6. Implementation is Phase 2.
+- **Google Calendar sync details** — separate calendar, not the public one. Push on create, edit, cancel, restore, and delete. One repeating Google event per weekday and time, with no end date unless the class has one. Edited dates are their own events. Title, time, location, and training groups. The location is the series location until a weekday can have its own (§15); then the event uses the weekday’s location when the weekday has one. Canceled stays, prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied. Calendar id and service-account key path come from the environment; if either is missing, skip the push. The IANA timezone is still confirmed when the sync is built. See §6. Implementation is Phase 2.
 
 ---
 
