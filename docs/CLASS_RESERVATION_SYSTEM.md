@@ -5,9 +5,11 @@
 **Scope:** Product and UX requirements only (no implementation specifics)  
 **Last updated:** 2026-11-22  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
-**Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)
+**Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)  
+**Beta checklist:** [CLASS_RESERVATION_BETA_CHECKLIST.md](./CLASS_RESERVATION_BETA_CHECKLIST.md) — manual dark-launch pass (Task 13.1)  
+**Later phases:** [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) — everything after the dark launch, not yet split into Phase 2 and Phase 3
 
-This document is the **source of truth**. The wireframes describe how MVP screens look and walk; if they ever disagree, update this file first, then the wireframes.
+This document is the **source of truth for the dark launch**. Later-phase requirements live in the later-phases file. The wireframes describe how MVP screens look and walk; if they disagree with this file, update this file first, then the wireframes. If a later-phase rule changes, update the later-phases file.
 
 ---
 
@@ -226,7 +228,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 | Title                             |                                                                                                               |
 | Description                       |                                                                                                               |
 | Start / end time                  | Per occurrence; custom series may use **different times on different days**                                   |
-| Location                          | One place for the series in the first build, including the address. A single date can still use a different place. **Phase 2:** each weekday can have its own location and address (§15). A weekday with none keeps the series location. |
+| Location                          | One place for the series in the first build, including the address. A single date can still use a different place. Each weekday having its own location is later (L1 in the later-phases doc). |
 | Allowed athlete groups            | Fly Kids, Open/All Ages, Adult, Elite Development, etc.                                                       |
 | Age limits                        | Optional                                                                                                      |
 | Recurrence                        | Simple weekly **or custom multi-day** (see below). Edits apply to **single instance** or **entire series**    |
@@ -237,7 +239,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 | Visibility                        | Hidden vs visible on member schedule                                                                          |
 | Color                             | Manual or default from athlete group                                                                          |
 | `isReservable`                    | `false` for display-only items (meets, breaks)                                                                |
-| Requires approval                 | **Not used in MVP.** Private lessons reserve immediately like other classes. Approval flow is Phase 2+        |
+| Requires approval                 | **Not used in MVP.** Private lessons reserve immediately like other classes. An approval flow is later (L11). |
 | Sends notification on reservation | Available as a class setting; MVP private lessons do not require a special request/approve loop               |
 | Coaching staff                    | Multiple; coaches have athlete profiles                                                                       |
 | Class note / pole suggestion      | Free-text note shown to members (e.g., "Bring your 14' pole")                                                 |
@@ -268,13 +270,13 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 
 - Typical case: weekly on one weekday at one time.
 - **Custom series required for MVP:** one series can include mixed days and times, e.g. Sunday 11:30, Tuesday 6:00 PM, Thursday 7:00 PM. Staff add those day/time rows rather than creating three unrelated series when it is conceptually one repeating class.
-- Those rows do not have their own location. Every weekday uses the series location and address. Giving a weekday its own standing place is Phase 2 (§15). Editing one date can still put that date somewhere else.
+- Those rows do not have their own location. Every weekday uses the series location and address. Giving a weekday its own standing place is later (L1). Editing one date can still put that date somewhere else.
 - A repeating series may set an optional **end date**. That date is included. With no end date, the series continues.
 - A short run such as a week-long camp is a repeating series with an end date and one slot per weekday it meets. It does not continue after the end date. A non-repeating class is a single session.
 - Edit **this occurrence only** or **entire series**.
 - Moving one session of a repeating series keeps it on that series. That original date drops off the schedule, the session shows on the new date, and the other weeks stay. The new day cannot be a weekday the series already uses. Moving a non-repeating class changes the series date itself.
 - Two sessions of one series do not fall on the same calendar day. A second session that day is a separate series.
-- Design series-wide reservation/pole updates with future bulk-update in mind (§8) — don't paint into a corner, but bulk update is **not MVP**.
+- Series edits stay compatible with a later bulk update of notes or poles (L9). That bulk action is not in the dark launch.
 
 
 
@@ -322,23 +324,15 @@ The **app/backend class system is the source of truth** for beta users.
 
 ### During transition
 
-- The **existing public Google Calendar** (website practice schedule) is **maintained separately** by staff — unchanged workflow for non-beta members.
-- Classes created in the new system **sync one-way to a separate Google Calendar** (not the existing public one) to avoid duplicate events during testing. This is Phase 2, not part of the first build. The rules below stay the spec.
-- The push runs when a class is **created, edited, canceled, restored, or deleted**. There is no scheduled job.
-- A repeating class is **one Google event per weekday and time**. That event has **no end date** unless the class has one. A one-off class is a single event. Dates nobody edited are not stored as their own events.
-- A **moved, canceled, or otherwise edited** date is its own event. A moved session stays that one event and changes day. The sync stores each Google event id in a sync table.
-- A canceled class **stays** on the sync calendar, with the title prefixed `Canceled: `. A deleted class is **removed**.
-- Each event shows the **title, date, start and end time, location, and training groups**. Until a weekday can have its own location, every weekday event uses the series location. After that, the event uses the weekday’s location when the weekday has one (§15).
-- **Hidden** classes are not copied. Only classes marked visible are synced.
-- The separate calendar id and a service-account key path come from the environment (`GOOGLE_CLASS_SYNC_CALENDAR_ID`, `GOOGLE_CLASS_SYNC_CREDENTIALS`). If either is missing, the push is skipped. The class save still succeeds. The public calendar is never written. Confirm the IANA timezone (gym local time) when the task is built.
+- The **existing public Google Calendar** (website practice schedule) is **maintained separately** by staff. Non-beta members keep that workflow.
+- The new system does not write that public calendar.
+- A one-way push to a **separate** Google Calendar is later and was not built. The rules are L37 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md).
 
 
 
-### Future goals (not MVP)
+### Later
 
-- Members subscribe/resync **personal calendar** (Apple/Google) with their reservations.
-- Un-reserving removes the event from their personal calendar.
-- Evaluate whether the public website calendar eventually reads from the new system instead of manual Google Calendar maintenance.
+Personal calendar subscription (L38), and moving the public website calendar onto this system when Zen Planner is retired (L39), are in that same file.
 
 ---
 
@@ -353,9 +347,9 @@ The **app/backend class system is the source of truth** for beta users.
 Build the credit system on a **flexible expiration model**:
 
 - Each package has: **credit count**, **expiration date**, optional **start date**, optional **no expiration** (unlimited).
-- **Quarter-bound behavior** is a policy layer: set expiration to end-of-quarter. This layer can be removed later without rewriting the core model. MVP uses fixed seasons (Dec–Feb, Mar–May, Jun–Aug, Sep–Nov). Later, an admin configures each season’s dates, and credit windows and active-member checks use that same configuration (§15).
+- **Quarter-bound behavior** is a policy layer: set expiration to end-of-quarter. This layer can be removed later without rewriting the core model. MVP uses fixed seasons (Dec–Feb, Mar–May, Jun–Aug, Sep–Nov). An admin-configured season calendar is later (L21).
 
-MVP packages are **a total number of classes for a period** (configurable count, including effectively unlimited). A later package style — **N classes per week during the period** — is Phase 2+ (see §15). Do not block MVP on weekly-allotment rules, but keep the inventory model from assuming “total count” is the only product that will ever exist.
+MVP packages are **a total number of classes for a period** (configurable count, including effectively unlimited). **N classes per week** during the period is later (L20). The inventory model does not assume a total count is the only product that will exist.
 
 When weekly-allotment packages ship: unused classes **do not roll**. If the package is 3 per week and the athlete only uses 1, the leftover 2 **vanish at the end of that week**. The point is to incentivize showing up more often.
 
@@ -381,7 +375,7 @@ When weekly-allotment packages ship: unused classes **do not roll**. If the pack
 
 - Entry points (when built): Schedule tab, athlete profile, out-of-credits prompts.
 - Must eventually achieve **full parity** with website registration (packages, waivers, fields, discounts, PayPal).
-- **Not MVP.**
+- **Not in the dark launch.** The requirement is L17 in the later-phases doc.
 
 
 
@@ -424,7 +418,7 @@ Adding or removing credits is **not** a silent edit of the existing package’s 
 
 - A private lesson is a class configuration, not a separate product: dollar price, small capacity, notify on reserve. It does **not** spend group credits. Website registration does not sell lesson packs in MVP.
 - **Payment (MVP):** reserving shows a confirm sheet with the price and saves the reservation. No PayPal call. Staff are notified and invoice outside the app. They can cancel the reservation with `manage_classes`.
-- Real card charging at reserve is later. A lesson-credit pool can be added later with a `creditPool` column; do not add it in the MVP schema. See [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §9.
+- Real card charging at reserve is later (L18). A lesson-credit pool can be added later with a `creditPool` column (L19). Do not add that column in the dark-launch schema. See [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §9.
 
 
 
@@ -434,7 +428,7 @@ Adding or removing credits is **not** a silent edit of the existing package’s 
 - No in-app discount management (`manage_discounts` not needed for MVP).
 - Coaches continue to **hand out codes manually** for MVP.
 - When in-app registration ships later, discount validation must match website behavior.
-- **Phase 2+:** configurable **automatic** discounts (early bird, military, and similar) that apply without a coach issuing a code — see §15. Those discounts should cover **packages and paid events**. Early-bird window is a **configurable amount of time** (staff set how long the discount runs), not a hardcoded date rule.
+- **Later (L23):** configurable **automatic** discounts (early bird, military, and similar) that apply without a coach issuing a code. Those discounts cover **packages and paid events**. The early-bird window is a **configurable amount of time** (staff set how long the discount runs), not a hardcoded date rule.
 
 
 
@@ -490,7 +484,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 - No structured pole-selection system for MVP.
 - Class may include a **note/suggestion field** (e.g., "Bring 14' pole for step 5").
 - Member reservation may include a **free-text note** field (storage TBD in engineering design). In the MVP the note is sent with the reserve request and cannot be changed afterward.
-- **Future:** the member can add or change that note on a reservation they already hold (Phase 2+, outside the MVP). Also later: structured pole selection, multi-pole preference order, bulk series updates, pinned-pole quick-select.
+- **Later:** the member can add or change that note on a reservation they already hold (L5). Also later: structured pole selection (L6), multi-pole preference order (L7), pinned-pole quick-select (L8), and bulk series updates (L9).
 
 
 
@@ -499,7 +493,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 - View upcoming reservations (per athlete).
 - A reservation is for **one session** (one series and one date), not for the whole series. Most sessions have no separate edited-date row.
 - Update/cancel before cutoff.
-- **Bulk/multi-class reservation:** later phase.
+- **Bulk/multi-class reservation:** later (L10).
 
 
 
@@ -519,7 +513,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Notifications
 
-- Member notified when staff add, remove, or end credits (see §12). A notice when staff cancel that member’s reservation is Phase 2+.
+- Member notified when staff add, remove, or end credits (see §12). A notice when staff cancel that member’s reservation is later (L31).
 - Class canceled / time / location changes notify through the **class messaging** path, unless staff choose to save without notifying.
 
 ---
@@ -539,11 +533,11 @@ An athlete is an **active member** if they have purchased a package for the curr
 | Remove credits from athlete              | Yes (new credit record) |
 | Cancel reservation on behalf of user     | Yes (`manage_classes`). Deletes the signup and returns the credit, including after the cutoff. |
 | Restore credit after late cancel         | The staff cancel returns it. Add credits still changes a balance while the signup stays. |
-| Override reservation cutoff or eligibility | **No** — future       |
-| Optional note/reason on actions          | **No** — future         |
-| Audit log                                | **No** — future         |
+| Override reservation cutoff or eligibility | **No** — later (L12) |
+| Optional note/reason on actions          | **No** — later (L41)    |
+| Audit log                                | **No** — later (L40)    |
 | Notify user on a credit change           | **Yes**                 |
-| Notify user when staff cancel their reservation | Phase 2+            |
+| Notify user when staff cancel their reservation | Later (L31)         |
 
 
 
@@ -582,14 +576,9 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 
 
-### Progress meter display rules (later — do not implement in MVP)
+### Progress meter display rules (later)
 
-MVP shows the **current quarter’s** inventory only. The following is the intended later behavior so it is not lost:
-
-- Default: current quarter’s remaining vs purchased.
-- If the athlete is **out of current-quarter classes** but has already purchased the **next** quarter, show the **next quarter’s** inventory (people at the end of a quarter will look for the classes they just bought).
-- If they have **not** purchased next quarter and have run out of this quarter, keep showing this quarter at **0 / N** (N = what they purchased this quarter).
-- If **no packages** exist for this quarter **or** next quarter, **hide** the semicircle entirely.
+MVP shows the **current quarter’s** inventory only. The later fallback, including showing next quarter when this quarter is used up, is L26 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md).
 
 
 
@@ -640,7 +629,7 @@ Export (PDF/CSV): **later**.
 
 - Athlete showed up but has no reservation: staff can **add them to the class** and **deduct a credit**.
 - If athlete has no credits: **two steps, one flow** — staff with `manage_credits` add a credit (new record per §7), then sign them in, without dumping the coach back to a disconnected screen. Staff without `manage_credits` are told to ask an admin.
-- **Not MVP / not decided:** allowing the athlete to go **negative** so the next purchase automatically pays back the debt. Keep as a potential Phase 2 item so it is not lost (§16).
+- **Not decided:** allowing the athlete to go **negative** so the next purchase automatically pays back the debt. Parked as L16. Do not design a debt ledger until that item is chosen (§16).
 - Check-in and walk-in are allowed on the session’s America/New_York calendar day and any later day. A future session is rejected (`Check-in is not open yet`). There is no cutoff after the class.
 - A canceled session cannot be checked in or walked into.
 - A walk-in stops when the class is full. It does not use the reservation cutoff. Staff can check in a hidden class. A view-only class rejects a new walk-in; an existing reservation can still be marked present.
@@ -677,7 +666,7 @@ When staff **cancel** a class, change **time** (including the date), or change *
 - Notify on sends one message, plus an optional note from staff. Each affected date is its own sentence, with that date and the previous value. The message ends with a View class link that opens that date on the schedule. A person reserved on several dates of a series still gets one message. Someone reserved only for a past date is not notified.
 - Restore and delete do not send.
 - The message uses the existing message push. Tapping it opens that athlete’s Notifications conversation. The athlete can read it and cannot reply there.
-- Credit changes use this same Notifications conversation. Reply, a lesson-reserved notice, `notifyCoachOnReserve` sending, and a notice when staff cancel one reservation are Phase 2+ (§15). They are not new build tasks.
+- Credit changes use this same Notifications conversation. Reply, a lesson-reserved notice, `notifyCoachOnReserve` sending, and a notice when staff cancel one reservation are later (L28–L31). They are not dark-launch work.
 
 
 
@@ -685,7 +674,7 @@ When staff **cancel** a class, change **time** (including the date), or change *
 
 Credit add, remove, and end each post one message in that athlete’s Notifications conversation. The date matches the credit history line. An end that does not change the expiration sends nothing.
 
-These waits are Phase 2+, not new build tasks: a notice when staff cancel that athlete’s reservation, a notice when a lesson is reserved, and sending `notifyCoachOnReserve` to the coaches on that class.
+These stay later (L29–L31): a notice when staff cancel that athlete’s reservation, a notice when a lesson is reserved, and sending `notifyCoachOnReserve` to the coaches on that class.
 
 
 
@@ -693,26 +682,15 @@ These waits are Phase 2+, not new build tasks: a notice when staff cancel that a
 
 Class groups (task 12.3) are for a person choosing Message all. They are not the place for an automated notice.
 
-Task 12.2 creates the athlete’s Notifications conversation for a class cancel, time change, or location change. Credit add, remove, and end post one message there. The athlete can read the thread and cannot reply. Reply, which would open a normal conversation with coaches, is Phase 2+. The Notifications thread itself stays read-only.
+Task 12.2 creates the athlete’s Notifications conversation for a class cancel, time change, or location change. Credit add, remove, and end post one message there. The athlete can read the thread and cannot reply. Messaging one coach listed on the class is later (L28). The Notifications thread itself stays read-only.
 
-`notifyCoachOnReserve` stays a stored flag. Sending it is Phase 2+.
-
-
-
-### Skeleton for later
-
-- Code structure should accommodate **email** and **SMS** channels (TODO stubs, not MVP implementation).
-- **Auto-delete old messages** (not MVP): design the messaging store so retention can be applied later without a rewrite.
-  - **All class conversations** (staff “Message all,” class-change threads, and any other class-scoped thread): delete after **about 2 weeks**.
-  - **All other message types**: delete after **6 months**.
+`notifyCoachOnReserve` stays a stored flag. Sending it is later (L30).
 
 
 
-### Out of scope (MVP, include as later requirement)
+### Later
 
-- **Class reminders** before start (e.g., 24h push)
-- **Package expiration alerts** (e.g. push ~2 weeks before a package expires) — see §15
-- Member opt-out of class messages separate from general comms
+Email, SMS, class reminders, package-expiration alerts, message retention, and a separate opt-out for class messages are L32–L36 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md). The dark launch left comments for email, SMS, and retention. It does not send or delete anything for those.
 
 ---
 
@@ -761,7 +739,7 @@ Task 12.2 creates the athlete’s Notifications conversation for a class cancel,
 ### Deferred engineering design tasks
 
 1. **Credit inventory architecture** — resolved 2026-09-27. See [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md).
-2. **Private/semi-private payment flow** — resolved for MVP: fake price confirm at reserve, no PayPal. Real charging is Phase 2+.
+2. **Private/semi-private payment flow** — resolved for the dark launch: fake price confirm at reserve, no PayPal. Real charging is L18.
 3. **Reservation note / pole field storage** — free-text now, structured later.
 4. **Website purchase → new system sync** — resolved 2026-09-27. Catalog flag, grant created inside registration finalize, no backfill. See [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §5.
 
@@ -781,17 +759,17 @@ Server startup creates a missing table and does not add a column to a table that
 
 - [x] Permission-gated new Schedule experience; fallback to Google Calendar
 - [x] Class CRUD with full configuration options (§5), including custom multi-day recurrence, relative cutoffs, credit and/or dollar cost, cancel vs delete
-- [ ] Flexible credit/package model with quarter overlay, start dates, unlimited packages (end unlimited by setting expiration)
-- [ ] Class package catalog, one-time seed, and admin package editor (`manage_classes`)
+- [x] Flexible credit/package model with quarter overlay, start dates, unlimited packages (end unlimited by setting expiration)
+- [x] Class package catalog, one-time seed, and admin package editor (`manage_classes`)
 - [x] Staff credit add/remove as **new records** (history preserved); end-grant sets expiration
 - [x] Website purchase → credit sync when the catalog flag is on (no backfill)
 - [x] Reserve from schedule row in **one tap** (no confirm sheet); credit chip animates remaining / reserved
 - [x] Credit chip: remaining, reserved, `N expire [date]`
 - [x] Calendar reserved vs unreserved day markers (independent of class-type color)
-- [ ] Scrolling agenda (past dimmed; ~2 weeks of past loaded by default)
+- [x] Scrolling agenda (past dimmed; ~2 weeks of past loaded by default)
 - [x] Eligibility visible-with-reason
-- [ ] Multi-package deduction (soonest expiring)
-- [ ] Multi-athlete per user via profile switching
+- [x] Multi-package deduction (soonest expiring)
+- [x] Multi-athlete per user via profile switching
 - [x] Check-in with walk-in support (two steps, one flow when granting a credit)
 - [x] Admin credit add/remove; admin cancel reservation
 - [x] Class change notices: one read-only message per reserved athlete, with the option to save silently
@@ -799,46 +777,13 @@ Server startup creates a missing table and does not add a column to a table that
 - [x] Roster visibility (permission-gated)
 - [x] Athlete profile: training group on Edit Profile, quarter progress, history, schedule attendance markers
 - [x] Private lessons reserve immediately (no approval workflow)
-- [ ] Unit test framework + core logic tests
+- [x] Unit test framework + core logic tests
 
 
 
-### Phase 2+ (prioritize later)
+### Later phases
 
-- **One-way sync to a separate Google Calendar** — not the public website calendar. Rules are in §6. Moved out of the first build on 2026-11-21. Not built.
-- **Per-weekday location** — a series can give each weekday its own location and address, the same way it already gives each weekday its own start and end. Today every weekday uses the series location. A weekday left blank keeps that series location. Changing one date still overrides that date and does not rewrite the weekday. A location change on a weekday uses the existing class-change notice for upcoming reservations on that weekday. Not built. Added 2026-11-22.
-- **Reply on Notifications** — opens a normal conversation with coaches. Members can message coaches and admins to ask a question without `manage_conversations`. The Notifications thread stays read-only.
-- **Lesson reserved notice** — one message in the athlete’s Notifications conversation when a lesson is reserved.
-- **`notifyCoachOnReserve`** — when the class flag is on, tell the coaches listed on that class that someone reserved. The flag is already stored. An empty coach list sends nothing.
-- **Reservation canceled by staff** — one message in that athlete’s Notifications conversation. The cancel action itself stays in the MVP (task 12.5) and does not send.
-- In-app registration with website parity
-- Waitlist
-- Meets reservation workflows
-- Structured pole selection + bulk series updates
-- **Update a reservation note** — after reserving, the member can add or change the free-text note on that reservation. The MVP only accepts the note on the reserve request. Outside the MVP build list.
-- Bulk/multi-class reservation
-- Override cutoff and eligibility (admin)
-- Audit log and action notes
-- Email and SMS notifications
-- Class reminders before start
-- **Expiring package alerts** — notify the member (push) when a package is about to expire, default **about 2 weeks before** expiration. Timing should be configurable later.
-- Personal calendar subscription (add/remove on reserve/unreserve)
-- Registration discount management in app
-- **Automatic discounts** — configurable **early bird** and other discounts (e.g. **military**) that apply **automatically** from rules, instead of a coach manually issuing discount codes. Applies to **class packages and paid events**. Early-bird window is a **configurable amount of time**. Manual codes may still exist as a complement until they are no longer needed.
-- **Auto-renewing memberships / subscriptions** — admin **sets up** one or more membership products and their **cadence** (quarterly, yearly, or whatever interval they configure). The customer **signs up** for that membership and can **cancel at any time**. Staff can also change or end a membership. Cadence is not hardcoded in the product — new intervals are an admin configuration, not an engineering project.
-- **Configurable quarter dates** — MVP seasons are fixed (Dec–Feb, Mar–May, Jun–Aug, Sep–Nov). Later, an admin sets each season’s start and end. Credit expiration and the active-member quarter check must use that same configuration.
-- **Weekly-allotment packages** — in addition to “N classes for the quarter,” offer packages that grant **N classes per week** for the period (e.g. 3 per week) so people keep showing up each week. This may need a **separate inventory model** from total-count packages if the same structure cannot express both cleanly. **Unused weekly classes vanish at week’s end** (use-it-or-lose-it; leftover 2 of 3 do not roll).
-- Progress meter fallback to next-quarter inventory when current quarter is exhausted (§10)
-- Refund/chargeback automation
-- Class configuration presets / "types" UI
-- Private lesson **request / approve** flow (held from MVP)
-- **Real payment at reserve** for dollar-cost classes (MVP shows the price and reserves; staff invoice outside the app)
-- **Lesson-credit packs** sold on the website (MVP lessons are pay-at-reserve only)
-- Attendance-based restrictions, dynamic pricing, analytics
-- **Message retention / auto-delete** — all class conversations after ~2 weeks; all other message types after 6 months
-- **Negative / overdraft credits** — potential Phase 2; **not decided**. If built: walk-in (or similar) can go negative and the next package purchase pays the debt back. Keep on this list so it is not lost.
-- Migrate public website calendar to new system; retire Zen Planner
-- History export
+Every requirement after the dark launch is in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md). That file is the list to sort into Phase 2, Phase 3, and anything after. This PRD does not assign those phases. Each item there has the rules that used to live in this section.
 
 ---
 
@@ -852,18 +797,18 @@ These are intentionally unresolved — capture decisions as they come up during 
 2. **Training group fallback** — eligibility treats an unset profile as Open / All Ages (task 7.3, 2026-11-17), so Elite and other group classes stay closed. Still open: whether to derive a saved group from a purchase or require an admin to set one.
 3. **Success metrics** — define before full release (e.g., beta reservation volume, support tickets, Zen Planner manual entry reduction).
 4. **Launch communication** — member messaging when switching off Zen Planner.
-5. **Walk-in overdraft (parked, not decided)** — potential Phase 2: staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
+5. **Walk-in overdraft (parked, not decided)** — L16 in the later-phases doc. Staff check someone in with **negative credits**, recovered automatically the next time they buy a package. Do not design a debt ledger until this is explicitly chosen.
 6. **Automatic discount eligibility** — how military / other non-time-based discounts are verified; whether automatic discounts stack with remaining manual codes. Early-bird window itself is decided: configurable duration.
 
 ### Resolved (2026-09-27)
 
 - **Private lesson inventory** — not a credit pack in MVP. Dollar-cost class, group credits are not spent. [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §9.
-- **Private lesson payment** — confirm sheet shows the price and the reservation is saved. No PayPal. Staff invoice manually. Real charging is Phase 2+.
+- **Private lesson payment** — confirm sheet shows the price and the reservation is saved. No PayPal. Staff invoice manually. Real charging is L18.
 - **Website → credit sync** — one grant inside registration finalize when `useClassPackageCatalog` is on. Flag off and all historical purchases create no grants. No backfill. Invite-only catalog packages stay hidden until a matching invite level. [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §5.
 
 ### Resolved (2026-10-21)
 
-- **Google Calendar sync details** — separate calendar, not the public one. Push on create, edit, cancel, restore, and delete. One repeating Google event per weekday and time, with no end date unless the class has one. Edited dates are their own events. Title, time, location, and training groups. The location is the series location until a weekday can have its own (§15); then the event uses the weekday’s location when the weekday has one. Canceled stays, prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied. Calendar id and service-account key path come from the environment; if either is missing, skip the push. The IANA timezone is still confirmed when the sync is built. See §6. Implementation is Phase 2.
+- **Google Calendar sync details** — separate calendar, not the public one. The rules moved to L37 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md). Not built. The IANA timezone is still confirmed when the sync is built.
 
 ---
 
@@ -981,7 +926,7 @@ Check off tasks by changing `[ ]` to `[x]` and adding a completion note (date + 
 
 ### Task 5: Google Calendar outbound sync
 
-Moved to Phase 2. The checkbox and notes are with the later task 5.1 entry. Do not pick it up for the first build. The rules are in §6.
+Moved out of the dark launch. The spec is L37 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md). Do not pick it up from this task list.
 
 
 
@@ -1016,7 +961,7 @@ Moved to Phase 2. The checkbox and notes are with the later task 5.1 entry. Do n
   - The class stays visible. The schedule row and class detail say why the selected athlete cannot reserve (Flow C2). Reserve rejects that same case. The blocked label is **Not eligible**.
   - A class with no training groups has no group limit (§10). A class that lists groups is open to an athlete in at least one of those groups. The reason names the athlete’s groups and the class’s groups.
   - Age uses the class minimum and maximum. No minimum and no maximum means no age limit. Outside that range is the same **Not eligible** block, and the reason says the age.
-  - A new walk-in uses the same checks. Marking someone present does not. Overriding eligibility is Phase 2 (§9).
+  - A new walk-in uses the same checks. Marking someone present does not. Overriding eligibility is later (L12).
   - An athlete with no groups is still §16 #2. Do not derive a group from a purchase in this task. Ask before deciding that case.
   - The roster, attendance marks, and the profile meter stay on their own tasks. The §15 eligibility box stays open until this task is done and any remaining gap is noted.
   - *Completion notes:* 2026-11-17. `server/lib/eligibility.js` is the one rule for the schedule, reserve, and a new walk-in. It uses the session’s groups and ages, so a per-date override counts. Ages are inclusive, in completed years on the class date. A class with an age limit and an unreadable date of birth is blocked (`Emma’s age is not on the profile.`). An athlete with no groups counts as Open / All Ages and nothing is saved (§10, §16 #2). On the schedule, the order is Canceled, View only, already reserved (left alone, Cancel still shows), **Not eligible**, then the cutoff, full, and credit reasons. `eligibilityReason` holds the sentences, and the row and class detail show them. Reserve and walk-in return the same sentences as a 409. Marking present does not recheck. Walk-in search returns `notEligible` on each offer. The search row says Not eligible, and the prompt blocks before the add-credits step, so staff are not offered a credit for a walk-in that would fail. There is no override (Phase 2). §15 eligibility box is checked.
@@ -1031,7 +976,7 @@ Moved to Phase 2. The checkbox and notes are with the later task 5.1 entry. Do n
 
 - [x] **8.2 — Private lessons as immediate reserve**
   - No request/approve UI in MVP. Lesson slots reserve immediately. The dollar-price confirm shipped in task 7.2; do not build a second one. It does not call PayPal (see §7 and CREDIT_INVENTORY.md §9).
-  - Approval workflow and real card charging are Phase 2+ — do not build them in this task.
+  - An approval flow (L11) and real card charging (L18) are later. Do not build them in this task.
   - *Completion notes:* 2026-11-09. Already shipped in 7.1, 7.2, and 8.1. A dollar class confirms the price, then reserves immediately with `paymentStatus: external`. `creditCost` 0 spends no group credits. There is no approval state and no PayPal call. Do not rebuild the confirm. `notifyCoachOnReserve` is still only stored (task 12.4). §15 private-lesson box is checked.
 
 - [x] **8.3 — Training group catalog**
@@ -1105,41 +1050,37 @@ Moved to Phase 2. The checkbox and notes are with the later task 5.1 entry. Do n
 
 - [x] **12.4 — Member notification place**
   - Credit add, remove, and end post one message in the Notifications conversation from 12.2. The thread stays read-only.
-  - Reply, a lesson-reserved notice, sending `notifyCoachOnReserve`, and a notice when staff cancel one reservation are Phase 2+ (§15), not further build tasks.
+  - Reply, a lesson-reserved notice, sending `notifyCoachOnReserve`, and a notice when staff cancel one reservation are L28–L31 in the later-phases doc, not further build tasks.
   - *Completion notes:* 2026-11-20. Add, remove, and end post one message in that athlete’s Notifications conversation. The sender is the staff member’s selected profile, and a profile that is missing or not theirs is rejected before the grant is written. An end that does not change the date sends nothing. A failed send leaves the grant saved. The four leftovers above moved to Phase 2+. The cancel action stays on 12.5 and does not send.
 
 - [x] **12.5 — Roster staff menu**
   - On each attendees row, `manage_classes` gets View profile, Cancel reservation, and Adjust credits when they also have `manage_credits`.
   - Cancel deletes the signup and its hold, including after the cutoff, so the credit comes back. The member cancel route does both: the caller’s own profile still has the cutoff, and `manage_classes` skips it.
-  - The notice that the reservation changed is Phase 2+. This task does not send it.
+  - The notice that the reservation changed is L31. This task does not send it.
   - *Completion notes:* 2026-11-21. The attendees ⋯ menu uses the jump-cell context popover. View profile and Adjust credits both open with the Athletes roster anchored underneath. `POST /mobileapp/user/reservations/cancel` deletes the allocations and the signup. `reserve_classes` stays on `POST /reservations` only. A member cancel after the cutoff is still rejected. No message is sent. §8, §9, §11, §15, Flow G4, and Flow B2 match the returned credit.
 
 
 
 ### Task 5: Google Calendar outbound sync
 
-Phase 2. Decisions stay in §6 (resolved 2026-10-21). Do not build this for the first release.
+Not in the dark launch. The spec is L37 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) (decisions from 2026-10-21). Do not build this from the phase 1 task list.
 
 - [x] **5.1 — Separate calendar sync**
-  - One-way push from the class system to a separate Google Calendar. The public calendar is not written.
-  - Push on create, edit, cancel, restore, and delete. No scheduled job.
-  - A repeating class is one Google event per weekday and time, with no end date unless the class has one. A one-off is a single event. A moved, canceled, or otherwise edited date is its own event, and a move updates that same event. Store each Google event id in a sync table added here.
-  - Title, date, start and end time, location, and training groups. Canceled stays, with the title prefixed `Canceled: `. Deleted is removed. Hidden classes are not copied.
-  - Read `GOOGLE_CLASS_SYNC_CALENDAR_ID` and `GOOGLE_CLASS_SYNC_CREDENTIALS`. If either is missing, skip the push and still save the class. Confirm the IANA timezone when building.
-  - *Completion notes:* 2026-11-21. Moved to Phase 2. Not built. The first build does not include this sync. Rules stay in §6. The next open task is 13.1.
+  - Spec is L37 in the later-phases doc. Not built.
+  - *Completion notes:* 2026-11-21. Moved out of the dark launch. Not built. The spec now lives at L37 in the later-phases doc. The next open task is 13.1.
 
 
 
 ### Task 13: Dark launch readiness
 
-- [ ] **13.1 — End-to-end beta test pass**
+- [x] **13.1 — End-to-end beta test pass**
   - Grant `reserve_classes` to test users; verify Zen Planner + old calendar still work for others.
   - Run full unit test suite; document manual test checklist.
-  - *Completion notes:*
+  - *Completion notes:* 2026-11-22. The walk is [CLASS_RESERVATION_BETA_CHECKLIST.md](./CLASS_RESERVATION_BETA_CHECKLIST.md). It covers a Class beta role (not Base), the Google Calendar tab for everyone else, Flows A–L, and the website catalog flag. `npm test` passed in `dcvault/` (19 suites, 301 tests) and `polevaultapp/DCVault/` (29 suites, 199 tests). No app or API change. Task 13.2 checked the remaining §15 boxes.
 
-- [ ] **13.2 — Update MVP checklist (§15)**
-  - Mark all completed items; file remaining gaps as new tasks or Phase 2.
-  - *Completion notes:*
+- [x] **13.2 — Update MVP checklist (§15)**
+  - Mark all completed items; file remaining gaps as new tasks or in the later-phases doc.
+  - *Completion notes:* 2026-11-22. Checked the six boxes that were still open. Each one had already shipped: the credit model (tasks 2.1–2.4), the package catalog and editor (2.2, 2.4), the scrolling agenda (6.2), soonest-expiring deduction (2.3, 7.1), profile switching on the schedule (6.2, 7.2, §10), and the Jest suites (0.1, 0.2, and the logic tests through 12.5). No new gap. Everything after the dark launch is already in the later-phases doc. §16 stays open on purpose.
 
 ---
 
@@ -1188,7 +1129,7 @@ Phase 2. Decisions stay in §6 (resolved 2026-10-21). Do not build this for the 
 ### What not to do
 
 - Do not remove or skip Zen Planner / existing Google Calendar behavior until Task 13+ and explicit user approval for full release.
-- Do not implement Phase 2+ items (§15) unless the user explicitly expands scope.
+- Do not implement items in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) unless the user explicitly expands scope.
 - Do not commit unless the user asks.
 
 

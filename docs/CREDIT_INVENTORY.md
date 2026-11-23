@@ -108,7 +108,7 @@ A grant is **spendable** for a class when all of these are true:
 
 ## 4. Quarter windows
 
-MVP seasons match `getCurrentQuarter` in `server/lib/helpers.js`: winter Dec–Feb, spring Mar–May, summer Jun–Aug, fall Sep–Nov. Use that function’s clock (server local time) so credit windows and active-member checks do not disagree. Making those boundaries admin-configurable is later work (PRD §15). When that ships, credit windows and active-member checks must read the same configuration.
+MVP seasons match `getCurrentQuarter` in `server/lib/helpers.js`: winter Dec–Feb, spring Mar–May, summer Jun–Aug, fall Sep–Nov. Use that function’s clock (server local time) so credit windows and active-member checks do not disagree. Making those boundaries admin-configurable is later work (L21 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md)). When that ships, credit windows and active-member checks must read the same configuration.
 
 `startsAt` is the first instant of the quarter (inclusive). `expiresAt` and `originalExpiresAt` are the first instant of the next day after the quarter (exclusive). Winter’s February uses the real last day (28 or 29).
 
@@ -225,7 +225,7 @@ History lines come from grants, not from edits to `quantity`:
 
 A private lesson is a normal class with a configuration: `creditCost = 0`, a dollar price, a small capacity, and notify-on-reserve. It does not draw group credits. There is no lesson-credit package in MVP.
 
-Reserve shows a confirm sheet with the price, then saves the reservation. It does not call PayPal. Staff get the existing reserve notification and invoice outside the app. They can cancel the reservation with `manage_classes`. Real card charging at reserve is later; see the PRD Phase 2 list.
+Reserve shows a confirm sheet with the price, then saves the reservation. It does not call PayPal. Staff get the existing reserve notification and invoice outside the app. They can cancel the reservation with `manage_classes`. Real card charging at reserve is later (L18 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md)).
 
 Task 7 stores a payment status on the reservation (`external` for this fake confirm). The credit deduct path is skipped when `creditCost` is 0.
 
@@ -241,7 +241,7 @@ Unchanged. An athlete is active for the current quarter when `purchases` has a r
 
 ## 11. Room for later products
 
-Do not add these columns or tables in Task 2.2.
+Product rules for these three are in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md): configurable quarter dates (L21), weekly allotment (L20), and auto-renewing memberships (L22). The shapes below are the inventory constraints. Do not add these columns or tables until that item is built.
 
 **Configurable quarter dates.** MVP hardcodes Dec–Feb, Mar–May, Jun–Aug, and Sep–Nov. Later, an admin sets each season’s start and end. Credit windows and the active-member quarter check must use that one configuration. Do not add it in Task 2.2.
 

@@ -22,7 +22,7 @@ Read these before proposing anything:
 - `dcvault/docs/CREDIT_INVENTORY.md` when the task touches packages, grants, balances, or website sync
 - Workspace `AGENTS.md` for repo layout and test commands
 
-The PRD wins over the wireframes. Do not implement Phase 2+ (§15) or the "What not to do" list in §19.
+The PRD wins over the wireframes. Later-phase requirements are in `dcvault/docs/CLASS_RESERVATION_LATER_PHASES.md`. Do not implement those, or the "What not to do" list in §19, unless the user explicitly asks.
 
 If the user named a specific task (for example "3.1"), do that task. Otherwise take the first `[ ]` item under §18.
 

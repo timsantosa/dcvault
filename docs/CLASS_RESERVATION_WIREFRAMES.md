@@ -6,7 +6,7 @@
 **Last updated:** 2026-11-22  
 **Aligned with PRD:** v1.3
 
-This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail, data models, and later-phase features live in the PRD and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree, the **PRD is the source of truth**.
+This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail and data models live in the PRD. Later-phase requirements live in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree about the dark launch, the **PRD is the source of truth**.
 
 ---
 
@@ -383,7 +383,7 @@ Credits bought on the website show up here automatically. Staff no longer need t
 
 Private lessons use the same Schedule tab. There is **no request / wait / approve loop in MVP**. A lesson is a normal class configured with a dollar price, a small capacity, and notify-on-reserve. It does not spend group credits, and the website does not sell lesson packs.
 
-Reserving a credit class is still one tap (Flow A). Reserving a **dollar** class asks the member to confirm the price, then saves the spot. MVP does not call PayPal. Staff send the invoice themselves. Notifying the coaches on reserve is Phase 2+. The flag is stored and does not send.
+Reserving a credit class is still one tap (Flow A). Reserving a **dollar** class asks the member to confirm the price, then saves the spot. MVP does not call PayPal. Staff send the invoice themselves. Notifying the coaches on reserve is later (L30 in the later-phases doc). The flag is stored and does not send.
 
 ### D1. Member sees a lesson slot
 
@@ -628,7 +628,7 @@ Then confirm:
 
 If they have **zero credits**, it is **two steps in one flow** (not two disconnected screens). Staff with `manage_credits` add a credit first (that add is a **new history record**), then check them in. Staff without that permission are told to ask an admin.
 
-Going negative so the next purchase pays it back is **not MVP** and **not decided** — parked as a possible Phase 2 item in the PRD so it is not lost.
+Going negative so the next purchase pays it back is **not decided**. It is parked as L16 in the later-phases doc.
 
 ```
 │  Chris has 0 remaining.             │
@@ -745,7 +745,7 @@ One form covers every current use case (open class, age-restricted, private, mee
 
 **Copy from** duplicates settings from an existing class so weekly setup is not retyped.
 
-**Custom repeat:** a series can be mixed days and times (Sunday 11:30, Tuesday 6 PM, Thursday 7 PM) instead of “every Tuesday only.” Simple weekly is still the default shortcut. Location stays one field for the series. A single date can still be edited to a different place. Giving each weekday its own standing location is Phase 2.
+**Custom repeat:** a series can be mixed days and times (Sunday 11:30, Tuesday 6 PM, Thursday 7 PM) instead of “every Tuesday only.” Simple weekly is still the default shortcut. Location stays one field for the series. A single date can still be edited to a different place. Giving each weekday its own standing location is later (L1 in the later-phases doc).
 
 **End date** is optional. That last date is included. Leave it empty and the series keeps going. A one-week camp sets the end on the last day and adds a slot for each weekday it meets. A class that does not repeat is a single date.
 
@@ -1031,7 +1031,7 @@ When staff cancel a class or change its time, date, or location, they get an opt
 │  └─────────────────────────────┘    │
 ```
 
-The athlete opens Notifications from the message list. They can read it and cannot reply. A message from the server is shown as from DC Vault. The athlete’s own message still uses their name. Each date says what changed, including the previous value, and **View class** opens that date on the schedule. Reply to coaches is Phase 2+.
+The athlete opens Notifications from the message list. They can read it and cannot reply. A message from the server is shown as from DC Vault. The athlete’s own message still uses their name. Each date says what changed, including the previous value, and **View class** opens that date on the schedule. Messaging one coach on the class is later (L28 in the later-phases doc).
 
 Member lock screen (the existing message push):
 
@@ -1161,7 +1161,7 @@ They keep reserving in Zen Planner until they are granted `reserve_classes`.
 
 ## Not in this MVP (say this out loud)
 
-Call these out so the review stays on launch scope:
+Call these out so the review stays on launch scope. The writeups, and the place to mark Phase 2 versus Phase 3, are in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md).
 
 - Waitlist when a class is full
 - Athlete self check-in or a front-desk tablet mode
@@ -1180,7 +1180,7 @@ Call these out so the review stays on launch scope:
 - Refunds in-app (coach handles money; admin adjusts credits)
 - Email / SMS / 24-hour class reminders
 - Auto-delete of messages (class conversations ~2 weeks; other types 6 months)
-- Reply on Notifications, a lesson-reserved notice, notifying coaches when someone reserves, and a notice when staff cancel one reservation (Phase 2+). Credit changes already post in that athlete’s Notifications conversation. Staff cancel returns the credit and does not send.
+- Messaging one coach on the class, a lesson-reserved notice, notifying coaches when someone reserves, and a notice when staff cancel one reservation (L28–L31). Credit changes already post in that athlete’s Notifications conversation. Staff cancel returns the credit and does not send.
 - Personal Apple/Google calendar subscription
 - Progress meter flipping to next quarter when this quarter is empty
 - Replacing the public website calendar or turning off Zen Planner for everyone
