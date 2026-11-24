@@ -3,11 +3,12 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-23  
+**Last updated:** 2026-11-24  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)  
 **Beta checklist:** [CLASS_RESERVATION_BETA_CHECKLIST.md](./CLASS_RESERVATION_BETA_CHECKLIST.md) — manual dark-launch pass (Task 13.1)  
-**Later phases:** [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) — everything after the dark launch, not yet split into Phase 2 and Phase 3
+**Later phases:** [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) — every requirement after the dark launch, with its phase  
+**Phase 2 tasks:** [CLASS_RESERVATION_PHASE_2.md](./CLASS_RESERVATION_PHASE_2.md) — the session list. §18 is complete.
 
 This document is the **source of truth for the dark launch**. Later-phase requirements live in the later-phases file. The wireframes describe how MVP screens look and walk; if they disagree with this file, update this file first, then the wireframes. If a later-phase rule changes, update the later-phases file.
 
@@ -785,7 +786,7 @@ Server startup creates a missing table and does not add a column to a table that
 
 ### Later phases
 
-Every requirement after the dark launch is in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md). That file is the list to sort into Phase 2, Phase 3, and anything after. This PRD does not assign those phases. Each item there has the rules that used to live in this section.
+Every requirement after the dark launch is in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md). That file assigns the phase. Phase 2 session tasks are in [CLASS_RESERVATION_PHASE_2.md](./CLASS_RESERVATION_PHASE_2.md). Each L item there has the rules that used to live in this section.
 
 ---
 
@@ -1095,17 +1096,17 @@ Not in the dark launch. The spec is L37 in [CLASS_RESERVATION_LATER_PHASES.md](.
 ### Before starting work
 
 1. Read `dcvault/docs/CLASS_RESERVATION_SYSTEM.md` (this file) in full, especially:
-  - §18 Implementation Tasks — find the **first unchecked task**
+  - §18 is complete. The next task is the first `[ ]` item in [CLASS_RESERVATION_PHASE_2.md](./CLASS_RESERVATION_PHASE_2.md). The L item in the later-phases doc is the rule.
   - §16 Open Questions — check if your task resolves any; update the PRD if so
-  - §15 MVP checklist — understand overall progress
+  - §15 MVP checklist — the dark launch is checked. Do not reopen it for phase 2 work.
 2. Read workspace `AGENTS.md` for repo layout (`dcvault/` backend vs `polevaultapp/DCVault/` mobile).
-3. Confirm with the user which **task number** they want to tackle this session (default: next unchecked in §18).
+3. Confirm with the user which **task** they want to tackle this session (default: next unchecked in the phase 2 doc).
 
 
 
 ### During the session
 
-1. **Scope to one task** (or one sub-task, e.g. 7.1) — do not bleed into the next task unless the user asks.
+1. **Scope to one task** (one L id in the phase 2 doc) — do not bleed into the next task unless the user asks.
 2. **Write unit tests** for business logic added in that task (see §14).
 3. Follow existing codebase conventions in each repo (Node 16 / Sequelize in `dcvault/`; Node 24 / Expo / TypeScript in `polevaultapp/`).
 4. If a product decision is required and not covered here, **ask the user** before implementing. Do not guess on business rules.
@@ -1115,8 +1116,8 @@ Not in the dark launch. The spec is L37 in [CLASS_RESERVATION_LATER_PHASES.md](.
 
 ### After completing a task
 
-1. **Check off the task** in §18: change `[ ]` to `[x]`.
-2. Add **completion notes** under the task: date, brief summary, any deviations.
+1. **Check off the task** in [CLASS_RESERVATION_PHASE_2.md](./CLASS_RESERVATION_PHASE_2.md): change `[ ]` to `[x]`. Leave §18 as it is.
+2. Add **completion notes** under the task: date, brief summary, any deviations. If the L item's behavior changed, update that item too.
 3. **Update this PRD** if anything changed:
   - Revise affected sections (don't leave contradictions).
   - Move resolved items out of §16 Open Questions.
@@ -1131,7 +1132,7 @@ Not in the dark launch. The spec is L37 in [CLASS_RESERVATION_LATER_PHASES.md](.
 ### What not to do
 
 - Do not remove or skip Zen Planner / existing Google Calendar behavior until Task 13+ and explicit user approval for full release.
-- Do not implement items in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) unless the user explicitly expands scope.
+- Do not implement an item in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) unless it is the current task in [CLASS_RESERVATION_PHASE_2.md](./CLASS_RESERVATION_PHASE_2.md), or the user explicitly expands scope. L46 is last. When it is the current task, work through the editor layout with the user before building.
 - Do not commit unless the user asks.
 
 
@@ -1144,5 +1145,5 @@ In a new agent chat, run:
 /next-class-reservation-task
 ```
 
-That skill (`.cursor/skills/next-class-reservation-task/`) reads this file and the wireframes, takes the first unchecked §18 task, asks what is still undecided, plans, then builds after you approve. Name a task in the same message (`/next-class-reservation-task` then "do 4.1") to override the next unchecked item.
+That skill (`.cursor/skills/next-class-reservation-task/`) reads the phase 2 task list and the L item it cites, asks what is still undecided, plans, then builds after you approve. Name a task in the same message (`/next-class-reservation-task` then "do L48") to override the next unchecked item.
 

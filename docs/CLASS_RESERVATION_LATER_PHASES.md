@@ -3,6 +3,7 @@
 **Status:** Phases filled in 2026-11-22. `unassigned` still needs a phase.  
 **Last updated:** 2026-11-24  
 **Phase 1 (dark launch):** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
+**Phase 2 sessions:** [CLASS_RESERVATION_PHASE_2.md](./CLASS_RESERVATION_PHASE_2.md) — build order for the thirteen `Phase 2` items. This file stays the rule.  
 **Screens for phase 1:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md)  
 **Credit schema:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md)
 
@@ -76,7 +77,7 @@ Coaches need to build classes on the website, not only in the app. The page is a
 
 The website has no app-style permission checks. Its JWT already carries `isAdmin`. This page is limited to `isAdmin` until the app permissions are put on that token. Do not build a website permission system as part of this page. `manage_classes` on the web token can replace the `isAdmin` check later without a new calendar.
 
-The editor layout is not specified yet. Do not invent the form. The app class sheet remains the source for what a class can store until that layout is written.
+The editor layout is not specified yet. Do not invent the form. The app class sheet remains the source for what a class can store until that layout is written. The phase 2 task list picks this up last, and that session settles the layout with the user, then writes it here.
 
 ### L47. Schedule window follows the calendar
 

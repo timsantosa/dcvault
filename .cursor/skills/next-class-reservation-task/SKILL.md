@@ -2,7 +2,7 @@
 name: next-class-reservation-task
 description: >-
   Continues the Class Reservation System from the first unchecked task in
-  dcvault/docs/CLASS_RESERVATION_SYSTEM.md. Asks only undecided questions,
+  dcvault/docs/CLASS_RESERVATION_PHASE_2.md. Asks only undecided questions,
   plans in Plan mode, implements with tests after approval, then sends the
   diff to a fresh reviewer. Use when the user invokes
   /next-class-reservation-task or asks for the next class reservation task.
@@ -11,29 +11,31 @@ disable-model-invocation: true
 
 # Next class reservation task
 
-One session, one unchecked task from §18. Simpler code is better than an over-engineered system.
+One session, one unchecked task from the phase 2 list. Phase 1 (§18) is complete. Simpler code is better than an over-engineered system.
 
 ## 1. Read
 
 Read these before proposing anything:
 
-- `dcvault/docs/CLASS_RESERVATION_SYSTEM.md` — §18 (first unchecked task), §19, §16, §15, and the product sections that task cites
+- `dcvault/docs/CLASS_RESERVATION_PHASE_2.md` — the first unchecked task, or the L id the user named
+- The L item that task cites in `dcvault/docs/CLASS_RESERVATION_LATER_PHASES.md` — that item is the rule
+- `dcvault/docs/CLASS_RESERVATION_SYSTEM.md` — §19, §16, and any dark-launch section the task still relies on. §18 is finished. Do not reopen it.
 - `dcvault/docs/CLASS_RESERVATION_WIREFRAMES.md` — only the flows for this task (table below)
 - `dcvault/docs/CREDIT_INVENTORY.md` when the task touches packages, grants, balances, or website sync
 - Workspace `AGENTS.md` for repo layout and test commands
 
-The PRD wins over the wireframes. Later-phase requirements are in `dcvault/docs/CLASS_RESERVATION_LATER_PHASES.md`. Do not implement those, or the "What not to do" list in §19, unless the user explicitly asks.
+The L item wins over the phase 2 task list and over the wireframes. If they disagree, follow the L item and fix the task list. Do not implement an item that is not the current phase 2 task, and do not do the "What not to do" list in §19, unless the user explicitly asks.
 
-If the user named a specific task (for example "3.1"), do that task. Otherwise take the first `[ ]` item under §18.
+If the user named a phase 2 task (for example "L48"), do that task. Otherwise take the first `[ ]` item in the phase 2 doc. A number like "3.1" is a finished §18 task. Do not rebuild it. An L id that is not in the phase 2 doc is a later phase, unassigned, or not being built. Stop.
 
 ## 2. Push back before planning
 
 Stop and say so when the task, as written, is not worth building yet:
 
-- It needs a product decision §16 still leaves open, and guessing would bake the wrong rule in
-- It repeats something already shipped, or it is Phase 2
+- It needs a product decision the L item or §16 still leaves open, and guessing would bake the wrong rule in. L30 is one of these: ask where the coach is told, then wait. L46 is the other: when it is the current task, ask the editor layout and wait. Do not invent the form, and do not skip the task.
+- It repeats something already shipped, or it is not in the phase 2 task list
 - A straightforward function or existing pattern covers it, and a new framework, layer, or generic "type" system does not
-- It is too big for one session — propose the smallest slice that is still manually testable, and wait
+- It is too big for one session — propose the smallest slice that is still manually testable, and wait. L47 says this explicitly.
 
 Wait for the user when you push back. Do not plan past a real objection.
 
@@ -55,7 +57,7 @@ The plan states:
 - Repos and files, following existing patterns and reusing components and shared functions.
 - The simple approach, and any heavier approach you are not taking
 - Unit tests (pure functions; see AGENTS.md). No `require` of `server/app.js`
-- Out of scope, including the next §18 task
+- Out of scope, including the next phase 2 task
 - What the user should manually test when it is done
 
 Stop. Implement only after the user approves the plan. Do not ask again once they approve. If you are still in Plan mode, switch to Agent mode and build.
@@ -87,30 +89,25 @@ If Bugbot fails because the call was wrong or the diff could not be computed, re
 
 You decide what is worth changing. Fix concrete bugs, wrong behavior against the task, permission holes, and missing tests for logic this task added. Then re-run `npm test` in repos you touch.
 
-Decline, and say why, when a finding is a style nit, a one-use helper, future-proofing, a drive-by refactor, or scope that belongs to a later task or Phase 2. Do not implement those.
+Decline, and say why, when a finding is a style nit, a one-use helper, future-proofing, a drive-by refactor, or scope that belongs to a later task or a later phase. Do not implement those.
 
 ## 8. Close the task
 
-Follow §19 "After completing a task": check off the §18 item, add completion notes (date and what shipped), update the PRD and wireframes if behavior changed, and tell the user the manual test steps plus the test commands you already ran. Do not check off a task whose tests failed.
+Follow §19 "After completing a task", applied to the phase 2 doc: check off that item, add completion notes (date and what shipped), update the L item and the wireframes if behavior changed, and tell the user the manual test steps plus the test commands you already ran. Do not check off a task whose tests failed. Do not edit §18.
 
 ## Wireframe flows
 
 | Task | Read |
 | --- | --- |
-| 3.1 | CREDIT_INVENTORY.md §5. No member screen. |
-| 4.1, 4.2, 8.1 | Flow G |
-| 5.1 | Phase 2. Do not pick it up. The rules stay in PRD §6. No screen. |
-| 6.1, 6.2 | Who sees what, visual language, Flow A |
-| 7.1, 7.2 | Flows A, B, C |
-| 7.3 | Flow C2. Also §5, §8, and §10. §16 #2 is still open. |
-| 8.2 | Flow D |
-| 8.3 | No wireframe. The task text is the spec. Class packages is only the Administrator entry. |
-| 9.1, 9.2 | Flow I and Flow G4 |
-| 10.1, 10.2 | Flow F |
-| 11.1 | Flow J |
-| 11.2a | Flow E1 and Flow E4 |
-| 11.2b | Flow E3 |
-| 12.1 | Who sees what, roster on class detail |
-| 12.2 | Flow K |
-| 12.3 | Flow H |
-| 13.x | MVP checklist and the flows for gaps you find |
+| L48 | Flow G |
+| L49, L50 | Flow A. L50 also class detail. |
+| L51 | Flow E2. The L item's date form wins over the E2 sketch. |
+| L52 | Flow A chip, class detail, Flow B cancel preview, Flow E2 |
+| L26 | Flow E1 |
+| L53 | Class detail, and the attendees list (who sees what, Flow F) |
+| L31 | Flow K, and staff cancel on the attendees row |
+| L30 | Flow G (the flag is already there). Ask where the notice is delivered before planning. |
+| L28 | Flow K. The L item is the rule. |
+| L54 | No wireframe. CREDIT_INVENTORY.md §5. No member screen. |
+| L47 | Flow A |
+| L46 | No layout yet. This session works through the editor layout with the user. The app class sheet is what a class can store. Do not invent the form. |
