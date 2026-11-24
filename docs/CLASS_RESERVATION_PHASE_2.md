@@ -42,13 +42,14 @@ L1 and L47 are first. They are the two changes needed now: a weekday can have it
 
 ### L1 — Per-weekday location
 
-- [ ] **L1 — Per-weekday location**
+- [x] **L1 — Per-weekday location**
   - Rule: [L1](./CLASS_RESERVATION_LATER_PHASES.md#l1-per-weekday-location). Screen: Flow G.
   - A series can give each weekday its own location and address, the same way it already gives each weekday its own start and end. A weekday left blank keeps the series location. Changing one date still overrides that date and does not rewrite the weekday.
   - A location change on a weekday uses the existing class-change notice for upcoming reservations on that weekday.
   - A single date can already be edited to a different place. This task adds the standing weekday location.
   - Unit-test how a date resolves its place: the weekday location, a blank weekday falling back to the series, and a single-date override winning.
   - Out of scope: Google Calendar sync (L37). Nothing pushes the weekday location to a calendar in this task. The next task is L47.
+  - *Completion notes:* 2026-11-24. A weekday slot stores a location and address. A blank name keeps the series name and address together. One date still overrides that date, and saving it unchanged does not rewrite the weekday. A weekday place change uses the existing class-change notice. The form has one facility field, showing the open date's place. Saving this date stores it on that date. Saving the series stores it on the series when the field was changed. Each weekday row has an optional facility. The column add is the first statement in `server/db/migrations/class-reservation-v2.mysql`. Later phase 2 column changes append there.
 
 ### L47 — Schedule window follows the calendar
 

@@ -230,7 +230,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 | Title                             |                                                                                                               |
 | Description                       |                                                                                                               |
 | Start / end time                  | Per occurrence; custom series may use **different times on different days**                                   |
-| Location                          | One place for the series in the first build, including the address. A single date can still use a different place. Each weekday having its own location is later (L1 in the later-phases doc). |
+| Location                          | One place for the series, including the address. A weekday can set its own place and address; a blank weekday keeps the series name and address. A single date can still use a different place. |
 | Allowed athlete groups            | Fly Kids, Open/All Ages, Adult, Elite Development, etc.                                                       |
 | Age limits                        | Optional                                                                                                      |
 | Recurrence                        | Simple weekly **or custom multi-day** (see below). Edits apply to **single instance** or **entire series**    |
@@ -272,7 +272,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 
 - Typical case: weekly on one weekday at one time.
 - **Custom series required for MVP:** one series can include mixed days and times, e.g. Sunday 11:30, Tuesday 6:00 PM, Thursday 7:00 PM. Staff add those day/time rows rather than creating three unrelated series when it is conceptually one repeating class. The day list starts on Sunday. Starting that list on the series start day is later (L48).
-- Those rows do not have their own location. Every weekday uses the series location and address. Giving a weekday its own standing place is later (L1). Editing one date can still put that date somewhere else.
+- Each weekday row can set its own location and address. A blank name keeps the series name and address. Editing one date can still put that date somewhere else, and that does not change the weekday row.
 - A repeating series may set an optional **end date**. That date is included. With no end date, the series continues.
 - A short run such as a week-long camp is a repeating series with an end date and one slot per weekday it meets. It does not continue after the end date. A non-repeating class is a single session.
 - Edit **this occurrence only** or **entire series**.
@@ -748,7 +748,7 @@ Email, SMS, class reminders, package-expiration alerts, message retention, and a
 
 ### Schema to apply on deploy
 
-Server startup creates a missing table and does not add a column to a table that already exists. The full list, the `conversations` column change, and the two manual seeds are in [server/db/migrations/class-reservation.sql](../server/db/migrations/class-reservation.sql). Run that file once on the existing database before deploying this work.
+Server startup creates a missing table and does not add a column to a table that already exists. The phase 1 list, the `conversations` column change, and the two manual seeds are in [server/db/migrations/class-reservation.sql](../server/db/migrations/class-reservation.sql). Run that file once on the existing database before deploying this work. Phase 2 column changes are appended to [server/db/migrations/class-reservation-v2.mysql](../server/db/migrations/class-reservation-v2.mysql). Run the statements added since the last deploy. The first statement adds `location` and `locationAddress` on `classSeriesSlots`.
 
 ---
 

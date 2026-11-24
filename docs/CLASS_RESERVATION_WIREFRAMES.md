@@ -3,7 +3,7 @@
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Audience:** Client design review (walkthrough)  
 **Status:** Proposed UI for MVP / dark launch — not pixel-final  
-**Last updated:** 2026-11-23  
+**Last updated:** 2026-11-24  
 **Aligned with PRD:** v1.3
 
 This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail and data models live in the PRD. Later-phase requirements live in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree about the dark launch, the **PRD is the source of truth**.
@@ -697,6 +697,7 @@ One form covers every current use case (open class, age-restricted, private, mee
 │  Ends (optional)       Sep 30       │
 │  Sun  11:30 AM – 1:00 PM            │
 │  Tue   6:00 PM – 8:00 PM            │
+│       The Pit                       │
 │  Thu   7:00 PM – 8:30 PM            │
 │  [ + Add day / time ]               │
 │                                     │
@@ -745,7 +746,7 @@ One form covers every current use case (open class, age-restricted, private, mee
 
 **Copy from** duplicates settings from an existing class so weekly setup is not retyped.
 
-**Custom repeat:** a series can be mixed days and times (Sunday 11:30, Tuesday 6 PM, Thursday 7 PM) instead of “every Tuesday only.” Simple weekly is still the default shortcut. The day list starts on Sunday. Starting it on the series start day is later (L48). Location stays one field for the series. A single date can still be edited to a different place. Giving each weekday its own standing location is later (L1 in the later-phases doc).
+**Custom repeat:** a series can be mixed days and times (Sunday 11:30, Tuesday 6 PM, Thursday 7 PM) instead of “every Tuesday only.” Simple weekly is still the default shortcut. The day list starts on Sunday. Starting it on the series start day is later (L48). There is one facility field. It shows the place for the date you have open. Saving this date stores that place on the date. Saving the whole series stores it on the series when you changed the field. Each weekday row can set its own facility and address. A blank row keeps the series name and address. Tuesday above is at The Pit; Sunday and Thursday stay at the series facility. Saving this date does not change the weekday row.
 
 **End date** is optional. That last date is included. Leave it empty and the series keeps going. A one-week camp sets the end on the last day and adds a slot for each weekday it meets. A class that does not repeat is a single date.
 
@@ -1184,7 +1185,6 @@ Call these out so the review stays on launch scope. The writeups, and the place 
 - Personal Apple/Google calendar subscription
 - Progress meter arrows and swipe between the current quarter and the next (L26)
 - Replacing the public website calendar or turning off Zen Planner for everyone
-- Per-weekday location on a series. The first build uses one location for every day. One date can still be edited to a different place.
 - A website calendar where coaches build classes. The app is the only editor for the dark launch.
 - Scrolling the app calendar past the first loaded months. The dark launch stops about 11 weeks ahead.
 - Weekday rows that start on the series start day. The dark launch lists Sunday first.
@@ -1234,4 +1234,4 @@ These used to be open UI questions. They are now in the PRD as well.
 14. **Subscriptions (later):** admin sets the cadence; customer signs up and can cancel anytime.
 15. **Early bird (later):** configurable duration, not a hardcoded window.
 16. **Message auto-delete (later):** all class conversations ~2 weeks; all other message types 6 months.
-17. **Per-weekday location (later):** each weekday in a series can have its own place and address. The first build uses one location for the series. A blank weekday keeps that location. One date can still differ on its own.
+17. **Per-weekday location:** each weekday in a series can have its own place and address. A blank weekday keeps the series name and address. One date can still differ on its own.

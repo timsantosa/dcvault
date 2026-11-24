@@ -530,6 +530,59 @@ function expandPrepared(prepared, rangeEnd) {
   });
 }
 
+describe('weekday location', () => {
+  const pit = {
+    line1: '1 Pit Rd',
+    city: 'Washington',
+    state: 'DC',
+    zip: '20001',
+    country: 'USA',
+  };
+
+  function locatedSlots() {
+    return [
+      { weekday: 0, startTime: '11:30:00', endTime: '13:00:00' },
+      { weekday: 2, startTime: '18:00:00', endTime: '20:00:00', location: 'The Pit', locationAddress: pit },
+    ];
+  }
+
+  it('uses the weekday place, the series place when that weekday is blank, and a date override', () => {
+    const open = expand({
+      slots: locatedSlots(),
+      rangeStart: '2026-08-25',
+      rangeEnd: '2026-08-30',
+    });
+    const tuesday = open.filter((session) => session.occursOn === '2026-08-25')[0];
+    const sunday = open.filter((session) => session.occursOn === '2026-08-30')[0];
+    expect(sunday.location).toBe('DC Vault');
+    expect(tuesday.location).toBe('The Pit');
+    expect(tuesday.locationAddress).toEqual(pit);
+
+    const overridden = expand({
+      slots: locatedSlots(),
+      rangeStart: '2026-08-25',
+      rangeEnd: '2026-08-25',
+      occurrences: [
+        occurrence({ occursOn: '2026-08-25', overrides: { location: 'Gym B', locationAddress: null } }),
+      ],
+    });
+    expect(overridden[0].location).toBe('Gym B');
+    expect(overridden[0].locationAddress).toBeNull();
+  });
+
+  it('keeps the origin weekday place when a date moves', () => {
+    const sessions = expand({
+      slots: locatedSlots(),
+      rangeStart: '2026-08-26',
+      rangeEnd: '2026-08-26',
+      occurrences: [
+        occurrence({ occursOn: '2026-08-26', rescheduledFrom: '2026-08-25' }),
+      ],
+    });
+    expect(sessions.map((session) => session.location)).toEqual(['The Pit']);
+  });
+});
+
 describe('prepareClassCreate', () => {
   it('accepts a repeating series and a one-off', () => {
     const repeating = prepareClassCreate(classInput({
@@ -651,6 +704,68 @@ describe('prepareClassUpdate', () => {
     expect(prepared.ok).toBe(true);
     expect(prepared.value.occurrences[0].overrides).toEqual({ note: 'Bring poles' });
     expect(prepared.value.slots[0].startTime).toBe('18:30:00');
+  });
+
+  it('keeps a time override when only the weekday place changes', () => {
+    const prepared = prepareClassUpdate(repeatingCurrent(null, [
+      occurrence({
+        occursOn: '2026-08-25',
+        overrides: { startTime: '17:00:00', endTime: '19:00:00' },
+      }),
+    ]), seriesInput({
+      slots: [{ weekday: 2, startTime: '18:00:00', endTime: '20:00:00', location: 'The Pit' }],
+    }), KNOWN);
+
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.occurrences[0].overrides).toEqual({
+      startTime: '17:00:00',
+      endTime: '19:00:00',
+    });
+    expect(prepared.value.slots[0].location).toBe('The Pit');
+    expect(prepared.value.slots[0].locationAddress).toBeNull();
+  });
+
+  it('does not store an override when this date keeps the weekday place', () => {
+    const pit = { line1: '1 Pit Rd', city: 'Washington', state: 'DC', zip: '20001', country: 'USA' };
+    const current = {
+      series: series(),
+      slots: [{ weekday: 2, startTime: '18:00:00', endTime: '20:00:00', location: 'The Pit', locationAddress: pit }],
+      occurrences: [],
+    };
+    const same = prepareClassUpdate(current, occurrenceInput({
+      location: 'The Pit',
+      locationAddress: pit,
+    }), KNOWN);
+
+    expect(same.ok).toBe(true);
+    expect(same.value.occurrences).toEqual([]);
+    expect(same.value.slots[0].location).toBe('The Pit');
+    expect(same.value.slots[0].locationAddress).toEqual(pit);
+
+    const moved = prepareClassUpdate(current, occurrenceInput({
+      location: 'Gym B',
+      locationAddress: null,
+    }), KNOWN);
+    expect(moved.ok).toBe(true);
+    expect(moved.value.slots[0].location).toBe('The Pit');
+    expect(moved.value.occurrences[0].overrides).toEqual({ location: 'Gym B', locationAddress: null });
+    expect(expandPrepared(moved, '2026-08-25')[0].location).toBe('Gym B');
+    expect(expandPrepared(moved, '2026-08-25')[0].locationAddress).toBeNull();
+  });
+
+  it('drops a weekday address when the name is blank', () => {
+    const prepared = prepareClassCreate(classInput({
+      slots: [{
+        weekday: 2,
+        startTime: '18:00:00',
+        endTime: '20:00:00',
+        location: '  ',
+        locationAddress: { line1: '1 Pit Rd', city: 'Washington', state: 'DC', zip: '20001', country: 'USA' },
+      }],
+    }), KNOWN);
+    expect(prepared.ok).toBe(true);
+    expect(prepared.value.slots[0].location).toBeNull();
+    expect(prepared.value.slots[0].locationAddress).toBeNull();
   });
 
   it('clears per-date coaches and groups when those lists change', () => {

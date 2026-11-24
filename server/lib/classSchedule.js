@@ -75,7 +75,7 @@ function expandClassOccurrences(input) {
   if (!series.repeats) {
     const occursOn = asIsoDate(series.startsOn, 'startsOn');
     if (occursOn >= rangeStart && occursOn <= rangeEnd) {
-      pushUnlessDeleted(sessions, series, occursOn, series.startTime, series.endTime, byOccursOn[occursOn]);
+      pushUnlessDeleted(sessions, series, occursOn, series.startTime, series.endTime, byOccursOn[occursOn], null);
     }
   } else {
     const startsOn = asIsoDate(series.startsOn, 'startsOn');
@@ -85,7 +85,7 @@ function expandClassOccurrences(input) {
       const inSeries = day >= startsOn && (endsOn == null || day <= endsOn);
       const slot = slotsByWeekday[weekdayOf(day)];
       if (inSeries && slot && !movedFrom[day] && !landsOnMovedSession(day, occurrences)) {
-        pushUnlessDeleted(sessions, series, day, slot.startTime, slot.endTime, byOccursOn[day]);
+        pushUnlessDeleted(sessions, series, day, slot.startTime, slot.endTime, byOccursOn[day], slot);
       }
       day = addDays(day, 1);
     }
@@ -102,7 +102,7 @@ function expandClassOccurrences(input) {
       const originSlot = slotsByWeekday[weekdayOf(origin)];
       const startTime = originSlot ? originSlot.startTime : series.startTime;
       const endTime = originSlot ? originSlot.endTime : series.endTime;
-      sessions.push(buildSession(series, occursOn, startTime, endTime, occurrence));
+      sessions.push(buildSession(series, occursOn, startTime, endTime, occurrence, originSlot));
     });
   }
 
@@ -255,11 +255,11 @@ function isBlankOccurrence(occurrence) {
   return Object.keys(presentOverrides(occurrence.overrides)).length === 0;
 }
 
-function pushUnlessDeleted(sessions, series, occursOn, startTime, endTime, occurrence) {
+function pushUnlessDeleted(sessions, series, occursOn, startTime, endTime, occurrence, slot) {
   if (occurrence && occurrence.deletedAt != null) {
     return;
   }
-  sessions.push(buildSession(series, occursOn, startTime, endTime, occurrence));
+  sessions.push(buildSession(series, occursOn, startTime, endTime, occurrence, slot));
 }
 
 function landsOnMovedSession(day, occurrences) {
@@ -270,8 +270,9 @@ function landsOnMovedSession(day, occurrences) {
   });
 }
 
-function buildSession(series, occursOn, startTime, endTime, occurrence) {
+function buildSession(series, occursOn, startTime, endTime, occurrence, slot) {
   const overrides = occurrence ? presentOverrides(occurrence.overrides) : {};
+  const place = placeFor(series, slot, overrides);
   const session = {
     seriesId: series.id,
     occursOn: occursOn,
@@ -285,9 +286,50 @@ function buildSession(series, occursOn, startTime, endTime, occurrence) {
     if (field === 'startTime' || field === 'endTime') {
       return;
     }
+    if (field === 'location') {
+      session.location = place.location;
+      return;
+    }
+    if (field === 'locationAddress') {
+      session.locationAddress = place.locationAddress;
+      return;
+    }
     session[field] = Object.prototype.hasOwnProperty.call(overrides, field) ? overrides[field] : series[field];
   });
   return session;
+}
+
+// A weekday with a name uses that name and address together. A blank name keeps
+// the series place. A single-date override replaces only the fields it sets.
+function placeFor(series, slot, overrides) {
+  const base = slotPlace(slot) || {
+    location: series.location,
+    locationAddress: series.locationAddress,
+  };
+  return {
+    location: Object.prototype.hasOwnProperty.call(overrides, 'location') ? overrides.location : base.location,
+    locationAddress: Object.prototype.hasOwnProperty.call(overrides, 'locationAddress')
+      ? overrides.locationAddress
+      : base.locationAddress,
+  };
+}
+
+function slotPlace(slot) {
+  if (!slot || slot.location == null) {
+    return null;
+  }
+  const name = String(slot.location).trim();
+  if (!name) {
+    return null;
+  }
+  return {
+    location: name,
+    locationAddress: slot.locationAddress == null ? null : slot.locationAddress,
+  };
+}
+
+function storedSlotPlace(slot) {
+  return slotPlace(slot) || { location: null, locationAddress: null };
 }
 
 function sessionStatus(series, occurrence) {
@@ -331,6 +373,12 @@ function presentOverrides(overrides) {
       present[key] = overrides[key];
     }
   });
+  // A date can name a place and have no address. Dropping that null would keep
+  // the weekday or series address.
+  if (present.location != null && Object.prototype.hasOwnProperty.call(overrides, 'locationAddress')
+    && overrides.locationAddress == null) {
+    present.locationAddress = null;
+  }
   return present;
 }
 
@@ -912,11 +960,16 @@ function finish(series, slots, occurrences, notifyRequested) {
   }
   const value = {
     series: pickSeries(series),
-    slots: slots.map((slot) => ({
-      weekday: Number(slot.weekday),
-      startTime: slot.startTime,
-      endTime: slot.endTime,
-    })),
+    slots: slots.map((slot) => {
+      const place = storedSlotPlace(slot);
+      return {
+        weekday: Number(slot.weekday),
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+        location: place.location,
+        locationAddress: place.locationAddress,
+      };
+    }),
     coachIds: idNumbers(series.coachIds),
     trainingGroupIds: idNumbers(series.trainingGroupIds),
     occurrences: occurrences,
@@ -973,7 +1026,11 @@ function changedOverrideFields(before, after) {
 function buildOverrides(series, times, fields) {
   const overrides = {};
   OVERRIDE_FIELDS.forEach((field) => {
-    const template = field === 'startTime' ? times.startTime : field === 'endTime' ? times.endTime : series[field];
+    const template = field === 'startTime' ? times.startTime
+      : field === 'endTime' ? times.endTime
+        : field === 'location' ? times.location
+          : field === 'locationAddress' ? times.locationAddress
+            : series[field];
     if (!sameField(field, template, fields[field])) {
       overrides[field] = fields[field];
     }
@@ -1037,15 +1094,29 @@ function locateDate(loaded, occursOn) {
 }
 
 function templateTimes(loaded, origin) {
-  if (!loaded.series.repeats) {
-    return { startTime: loaded.series.startTime, endTime: loaded.series.endTime };
+  let startTime = loaded.series.startTime;
+  let endTime = loaded.series.endTime;
+  let place = {
+    location: loaded.series.location,
+    locationAddress: loaded.series.locationAddress,
+  };
+  if (loaded.series.repeats) {
+    const slot = loaded.slots.filter((item) => item.weekday === weekdayOf(origin))[0];
+    if (slot) {
+      startTime = slot.startTime;
+      endTime = slot.endTime;
+      const filled = slotPlace(slot);
+      if (filled) {
+        place = filled;
+      }
+    }
   }
-  const weekday = weekdayOf(origin);
-  const slot = loaded.slots.filter((item) => item.weekday === weekday)[0];
-  if (!slot) {
-    return { startTime: loaded.series.startTime, endTime: loaded.series.endTime };
-  }
-  return { startTime: slot.startTime, endTime: slot.endTime };
+  return {
+    startTime: startTime,
+    endTime: endTime,
+    location: place.location,
+    locationAddress: place.locationAddress,
+  };
 }
 
 function withoutDate(occurrences, occursOn) {
@@ -1074,11 +1145,16 @@ function readCurrent(current) {
     return {
       ok: true,
       series: normalizeStoredSeries(current.series),
-      slots: (current.slots || []).map((slot) => ({
-        weekday: Number(slot.weekday),
-        startTime: normalizeTime(slot.startTime, 'startTime'),
-        endTime: normalizeTime(slot.endTime, 'endTime'),
-      })),
+      slots: (current.slots || []).map((slot) => {
+        const place = storedSlotPlace(slot);
+        return {
+          weekday: Number(slot.weekday),
+          startTime: normalizeTime(slot.startTime, 'startTime'),
+          endTime: normalizeTime(slot.endTime, 'endTime'),
+          location: place.location,
+          locationAddress: place.locationAddress,
+        };
+      }),
       occurrences: (current.occurrences || []).map(cloneOccurrence),
     };
   } catch (error) {
@@ -1334,10 +1410,24 @@ function readSlots(value) {
     } catch (error) {
       return fail(error.message);
     }
+    const location = readOptionalText(slot.location, 'location');
+    if (!location.ok) {
+      return location;
+    }
+    let locationAddress = null;
+    if (location.value) {
+      const address = readAddress(slot.locationAddress, 'locationAddress');
+      if (!address.ok) {
+        return address;
+      }
+      locationAddress = address.value;
+    }
     slots.push({
       weekday: Number(slot.weekday),
       startTime: normalizeTime(slot.startTime, 'startTime'),
       endTime: normalizeTime(slot.endTime, 'endTime'),
+      location: location.value,
+      locationAddress: locationAddress,
     });
   }
   slots.sort((a, b) => a.weekday - b.weekday);

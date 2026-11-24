@@ -1,0 +1,13 @@
+-- Phase 2 schema changes for an existing database.
+--
+-- Server startup calls schema.sync(). That creates a missing table. It does
+-- not add a column to a table that already exists. Append each phase 2 column
+-- change below. Run this file on a database that already has the phase 1
+-- class-reservation tables. A statement that already ran will fail if you
+-- run the whole file again; run only the statements added since the last time.
+--
+-- L1. Per-weekday location. A blank name means the series place.
+
+ALTER TABLE classSeriesSlots
+  ADD COLUMN location VARCHAR(255) NULL AFTER endTime,
+  ADD COLUMN locationAddress JSON NULL AFTER location;

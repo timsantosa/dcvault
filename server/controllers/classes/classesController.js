@@ -302,6 +302,8 @@ async function replaceChildren(db, seriesId, prepared, transaction) {
       weekday: slot.weekday,
       startTime: slot.startTime,
       endTime: slot.endTime,
+      location: slot.location,
+      locationAddress: slot.locationAddress,
     }, { transaction: transaction });
   }
   for (let i = 0; i < prepared.coachIds.length; i += 1) {
@@ -417,6 +419,10 @@ function graphFromRow(row) {
       weekday: slot.weekday,
       startTime: clock(slot.startTime),
       endTime: clock(slot.endTime),
+      location: slot.location == null || String(slot.location).trim() === '' ? null : slot.location,
+      locationAddress: slot.location == null || String(slot.location).trim() === '' || slot.locationAddress == null
+        ? null
+        : slot.locationAddress,
     })).sort((a, b) => a.weekday - b.weekday),
     occurrences: (plain.occurrences || []).map((occurrence) => ({
       occursOn: day(occurrence.occursOn),

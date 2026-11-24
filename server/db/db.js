@@ -854,6 +854,8 @@ columns.classSeriesSlots = {
   weekday: { type: Sequelize.INTEGER, allowNull: false },
   startTime: { type: Sequelize.TIME, allowNull: false },
   endTime: { type: Sequelize.TIME, allowNull: false },
+  location: { type: Sequelize.STRING, allowNull: true },
+  locationAddress: { type: Sequelize.JSON, allowNull: true },
 };
 
 columns.classSeriesTrainingGroups = {

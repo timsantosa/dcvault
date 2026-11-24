@@ -28,11 +28,11 @@ Tasks 13.1 and 13.2 are done. They are the dark-launch test pass and the MVP che
 **Phase:** Phase 2  
 **Ready:** Rules written
 
-A series can give each weekday its own location and address, the same way it already gives each weekday its own start and end. A weekday left blank keeps the series location. Changing one date still overrides that date and does not rewrite the weekday.
+A series can give each weekday its own location and address, the same way it already gives each weekday its own start and end. A weekday left blank keeps the series name and address together. Changing one date still overrides that date and does not rewrite the weekday.
 
 A location change on a weekday uses the existing class-change notice for upcoming reservations on that weekday.
 
-Phase 1 uses one location and address for the series. A single date can already be edited to a different place.
+Shipped 2026-11-24. The series facility stays the default. Each weekday row can set its own place. The form has one facility field, showing the open date's place. Saving this date stores it on that date. Saving the series stores it on the series when the field was changed. Phase 1 used one location for every weekday. A single date could already use a different place.
 
 If [L37](#l37-separate-google-calendar-sync) ships first, every weekday event uses the series location. After this item, the synced event uses the weekday’s location when the weekday has one.
 
