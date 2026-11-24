@@ -3,7 +3,7 @@
 **Status:** Phases filled in 2026-11-22. `unassigned` still needs a phase.  
 **Last updated:** 2026-11-24  
 **Phase 1 (dark launch):** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
-**Phase 2 sessions:** [CLASS_RESERVATION_PHASE_2.md](./CLASS_RESERVATION_PHASE_2.md) — build order for the thirteen `Phase 2` items. This file stays the rule.  
+**Phase 2 sessions:** [CLASS_RESERVATION_PHASE_2.md](./CLASS_RESERVATION_PHASE_2.md) — build order for the fourteen `Phase 2` items. This file stays the rule.  
 **Screens for phase 1:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md)  
 **Credit schema:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md)
 
@@ -25,7 +25,7 @@ Tasks 13.1 and 13.2 are done. They are the dark-launch test pass and the MVP che
 
 ### L1. Per-weekday location
 
-**Phase:** unassigned  
+**Phase:** Phase 2  
 **Ready:** Rules written
 
 A series can give each weekday its own location and address, the same way it already gives each weekday its own start and end. A weekday left blank keeps the series location. Changing one date still overrides that date and does not rewrite the weekday.

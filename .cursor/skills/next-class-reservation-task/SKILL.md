@@ -26,7 +26,7 @@ Read these before proposing anything:
 
 The L item wins over the phase 2 task list and over the wireframes. If they disagree, follow the L item and fix the task list. Do not implement an item that is not the current phase 2 task, and do not do the "What not to do" list in §19, unless the user explicitly asks.
 
-If the user named a phase 2 task (for example "L48"), do that task. Otherwise take the first `[ ]` item in the phase 2 doc. A number like "3.1" is a finished §18 task. Do not rebuild it. An L id that is not in the phase 2 doc is a later phase, unassigned, or not being built. Stop.
+If the user named a phase 2 task (for example "L1"), do that task. Otherwise take the first `[ ]` item in the phase 2 doc. A number like "3.1" is a finished §18 task. Do not rebuild it. An L id that is not in the phase 2 doc is a later phase, unassigned, or not being built. Stop.
 
 ## 2. Push back before planning
 
@@ -99,6 +99,8 @@ Follow §19 "After completing a task", applied to the phase 2 doc: check off tha
 
 | Task | Read |
 | --- | --- |
+| L1 | Flow G |
+| L47 | Flow A |
 | L48 | Flow G |
 | L49, L50 | Flow A. L50 also class detail. |
 | L51 | Flow E2. The L item's date form wins over the E2 sketch. |
@@ -109,5 +111,4 @@ Follow §19 "After completing a task", applied to the phase 2 doc: check off tha
 | L30 | Flow G (the flag is already there). Ask where the notice is delivered before planning. |
 | L28 | Flow K. The L item is the rule. |
 | L54 | No wireframe. CREDIT_INVENTORY.md §5. No member screen. |
-| L47 | Flow A |
 | L46 | No layout yet. This session works through the editor layout with the user. The app class sheet is what a class can store. Do not invent the form. |

@@ -1145,5 +1145,5 @@ In a new agent chat, run:
 /next-class-reservation-task
 ```
 
-That skill (`.cursor/skills/next-class-reservation-task/`) reads the phase 2 task list and the L item it cites, asks what is still undecided, plans, then builds after you approve. Name a task in the same message (`/next-class-reservation-task` then "do L48") to override the next unchecked item.
+That skill (`.cursor/skills/next-class-reservation-task/`) reads the phase 2 task list and the L item it cites, asks what is still undecided, plans, then builds after you approve. Name a task in the same message (`/next-class-reservation-task` then "do L1") to override the next unchecked item.
 

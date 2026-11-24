@@ -7,7 +7,7 @@
 **Screens:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md)  
 **Credits:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md)
 
-Phase 2 is the thirteen items whose **Phase** line is `Phase 2`. Each one is a session in this file, including L46. The skill `next-class-reservation-task` takes the first `[ ]` item, or the L id you name.
+Phase 2 is the fourteen items whose **Phase** line is `Phase 2`. Each one is a session in this file, including L46. The skill `next-class-reservation-task` takes the first `[ ]` item, or the L id you name.
 
 Work in order. Check off a task by changing `[ ]` to `[x]` and adding a completion note (date and what shipped). Update the L item and the wireframes when the behavior that shipped is different from what they say.
 
@@ -19,25 +19,51 @@ Phase 3 and later, `Later phase`, `unassigned`, and `Not doing` stay in the late
 
 | Order | Item | Ready | One session does |
 | --- | --- | --- | --- |
-| 1 | [L48](#l48--weekday-rows-start-on-the-series-start-day) | Rules written | Weekday rows and Add weekday follow the series start day |
-| 2 | [L49](#l49--class-description-on-the-schedule) | Rules written | Agenda row shows the class description, two lines |
-| 3 | [L51](#l51--dates-on-upcoming-classes) | Rules written | Upcoming classes shows the weekday and date |
-| 4 | [L50](#l50--quarter-label-on-each-class) | Rules written | Agenda and class detail name the quarter of that date |
-| 5 | [L53](#l53--show-the-reservation-note) | Rules written | Class detail and the attendees list show a saved note |
-| 6 | [L52](#l52--credit-chip-for-one-quarter) | Rules written | Chip counts are for one quarter |
-| 7 | [L26](#l26--progress-meter-current-and-next-quarter) | Rules written | Profile meter moves between this quarter and the next |
-| 8 | [L31](#l31--reservation-canceled-by-staff) | Rules written | Staff cancel posts one Notifications message |
-| 9 | [L30](#l30--notify-coaches-on-reserve) | Rules written, one question | Coaches are told when the flag is on |
-| 10 | [L28](#l28--message-a-coach-on-the-class) | Rules written | Member picks a coach and opens a normal conversation |
-| 11 | [L54](#l54--package-name-on-the-admin-purchases-table) | Rules written | Registered Athletes shows the package name and grant size |
-| 12 | [L47](#l47--schedule-window-follows-the-calendar) | Rules written | The app loads whole months as the calendar moves |
-| 13 | [L46](#l46--website-class-calendar) | Named only | Work through the website editor layout, then build |
+| 1 | [L1](#l1--per-weekday-location) | Rules written | Each weekday can have its own location and address |
+| 2 | [L47](#l47--schedule-window-follows-the-calendar) | Rules written | The calendar can move months beyond the current window |
+| 3 | [L48](#l48--weekday-rows-start-on-the-series-start-day) | Rules written | Weekday rows and Add weekday follow the series start day |
+| 4 | [L49](#l49--class-description-on-the-schedule) | Rules written | Agenda row shows the class description, two lines |
+| 5 | [L51](#l51--dates-on-upcoming-classes) | Rules written | Upcoming classes shows the weekday and date |
+| 6 | [L50](#l50--quarter-label-on-each-class) | Rules written | Agenda and class detail name the quarter of that date |
+| 7 | [L53](#l53--show-the-reservation-note) | Rules written | Class detail and the attendees list show a saved note |
+| 8 | [L52](#l52--credit-chip-for-one-quarter) | Rules written | Chip counts are for one quarter |
+| 9 | [L26](#l26--progress-meter-current-and-next-quarter) | Rules written | Profile meter moves between this quarter and the next |
+| 10 | [L31](#l31--reservation-canceled-by-staff) | Rules written | Staff cancel posts one Notifications message |
+| 11 | [L30](#l30--notify-coaches-on-reserve) | Rules written, one question | Coaches are told when the flag is on |
+| 12 | [L28](#l28--message-a-coach-on-the-class) | Rules written | Member picks a coach and opens a normal conversation |
+| 13 | [L54](#l54--package-name-on-the-admin-purchases-table) | Rules written | Registered Athletes shows the package name and grant size |
+| 14 | [L46](#l46--website-class-calendar) | Named only | Work through the website editor layout, then build |
 
-L48 through L51 are small and already specified, so they come first. L52 defines the quarter balance; L26 uses that same balance on the profile. L47 comes after L52 so a month several seasons ahead still shows that quarter’s chip. L46 is last. The skill picks it up, and that session settles the editor layout with the user before anything is built.
+L1 and L47 are first. They are the two changes needed now: a weekday can have its own place, and the calendar can move to a class months ahead. L52 still scopes the chip to the selected day's quarter. Until L52, a month outside today's quarter keeps the phase 1 chip. L46 is last. The skill picks it up, and that session settles the editor layout with the user before anything is built.
 
 ---
 
 ## Tasks
+
+### L1 — Per-weekday location
+
+- [ ] **L1 — Per-weekday location**
+  - Rule: [L1](./CLASS_RESERVATION_LATER_PHASES.md#l1-per-weekday-location). Screen: Flow G.
+  - A series can give each weekday its own location and address, the same way it already gives each weekday its own start and end. A weekday left blank keeps the series location. Changing one date still overrides that date and does not rewrite the weekday.
+  - A location change on a weekday uses the existing class-change notice for upcoming reservations on that weekday.
+  - A single date can already be edited to a different place. This task adds the standing weekday location.
+  - Unit-test how a date resolves its place: the weekday location, a blank weekday falling back to the series, and a single-date override winning.
+  - Out of scope: Google Calendar sync (L37). Nothing pushes the weekday location to a calendar in this task. The next task is L47.
+
+### L47 — Schedule window follows the calendar
+
+- [ ] **L47 — Schedule window follows the calendar**
+  - Rule: [L47](./CLASS_RESERVATION_LATER_PHASES.md#l47-schedule-window-follows-the-calendar). Screen: Flow A. Phase 1’s “about 11 weeks ahead” sentence in that flow is what this task replaces.
+  - Anyone on the app calendar can move to a class five or six months out. The app keeps loaded classes in memory and asks for more as the person moves.
+  - A fetch never leaves a month half loaded. If the range touches a month, that whole month is included before the month grid shows it.
+  - Ask for about 60 days of new classes, then extend both ends to the first and last day of the months that span covers. A request still cannot be longer than 92 days. Three whole months fit. A longer span is more than one request, and the grid waits until each of those months is complete.
+  - The loaded set is the union of those fetches. Moving near either end fetches the next chunk in that direction and adds it. Months already loaded stay.
+  - Choosing a date outside the loaded set fetches around that date: 14 days before it and about 60 days after it, then out to whole months. It does not first load every month between today and that date.
+  - Moving into a gap between two loaded stretches fetches those missing months. A refresh uses the calendar’s selected date when that date is not today, and loads the window around that date.
+  - Attendance older than the loaded window stays on class history.
+  - Put the range rules in one pure function and unit-test them: whole months, the 92-day cap, a jump that does not fill the months in between, a gap, and a refresh around the selected date. The schedule screen calls that function. The class list already rejects a range longer than 92 days.
+  - This is the largest ready task. If it does not fit one session, stop and name the smallest slice that is still manually testable. Do not start a later task in its place.
+  - Out of scope: the quarter chip (L52), the website calendar (L46), the public Google Calendar (L37, L39), and class history.
 
 ### L48 — Weekday rows start on the series start day
 
@@ -46,7 +72,7 @@ L48 through L51 are small and already specified, so they come first. L52 defines
   - On a new repeating class, the day rows and the weekday picker start on the weekday of the series start date, then the rest of the week, wrapping after Saturday. Wednesday starts Wednesday, not Sunday. Add weekday picks the next free day in that same order.
   - Changing the series start date does not move days already chosen. The picker order follows the new start date. Saved weekday numbers stay as they are. Sunday is still 0.
   - Unit-test the order. The form already has a first row set to the selected date’s weekday; this task changes the picker and Add weekday, and stops the rows sorting back to Sunday-first.
-  - Out of scope: L1 (per-weekday location), and the next task.
+  - Out of scope: weekday locations (L1), and the next task.
 
 ### L49 — Class description on the schedule
 
@@ -137,21 +163,6 @@ L48 through L51 are small and already specified, so they come first. L52 defines
   - Unit-test the label: package name plus that grant’s count, Unlimited, a missing package, and a non-`pkg:` value left as stored.
   - Out of scope: writing a different membership string, the app, and the next task.
 
-### L47 — Schedule window follows the calendar
-
-- [ ] **L47 — Schedule window follows the calendar**
-  - Rule: [L47](./CLASS_RESERVATION_LATER_PHASES.md#l47-schedule-window-follows-the-calendar). Screen: Flow A. Phase 1’s “about 11 weeks ahead” sentence in that flow is what this task replaces.
-  - Anyone on the app calendar can move to a class five or six months out. The app keeps loaded classes in memory and asks for more as the person moves.
-  - A fetch never leaves a month half loaded. If the range touches a month, that whole month is included before the month grid shows it.
-  - Ask for about 60 days of new classes, then extend both ends to the first and last day of the months that span covers. A request still cannot be longer than 92 days. Three whole months fit. A longer span is more than one request, and the grid waits until each of those months is complete.
-  - The loaded set is the union of those fetches. Moving near either end fetches the next chunk in that direction and adds it. Months already loaded stay.
-  - Choosing a date outside the loaded set fetches around that date: 14 days before it and about 60 days after it, then out to whole months. It does not first load every month between today and that date.
-  - Moving into a gap between two loaded stretches fetches those missing months. A refresh uses the calendar’s selected date when that date is not today, and loads the window around that date.
-  - Attendance older than the loaded window stays on class history.
-  - Put the range rules in one pure function and unit-test them: whole months, the 92-day cap, a jump that does not fill the months in between, a gap, and a refresh around the selected date. The schedule screen calls that function. The class list already rejects a range longer than 92 days.
-  - This is the largest ready task. If it does not fit one session, stop and name the smallest slice that is still manually testable. Do not start L46 in its place.
-  - Out of scope: the website calendar (L46), the public Google Calendar (L37, L39), and class history.
-
 ### L46 — Website class calendar
 
 - [ ] **L46 — Website class calendar**
@@ -172,5 +183,5 @@ These are in the later-phases doc and are not Phase 2 work:
 - Phase 4: L4, L5, L6, L7, L8, L22, L33
 - Phase 5: L20, L21, L34, L35, L39
 - Later phase, still unscheduled: L10, L13, L14, L16, L19, L23, L24, L25, L27, L29, L36, L38, L40, L41, L42, L44, L45
-- Unassigned: L1, L9, L12
+- Unassigned: L9, L12
 - Not doing: L2, L3, L15, L43
