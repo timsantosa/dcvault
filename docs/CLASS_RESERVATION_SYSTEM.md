@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-22  
+**Last updated:** 2026-11-23  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)  
 **Beta checklist:** [CLASS_RESERVATION_BETA_CHECKLIST.md](./CLASS_RESERVATION_BETA_CHECKLIST.md) — manual dark-launch pass (Task 13.1)  
@@ -90,6 +90,7 @@ All class **configuration scenarios** (§5) must be supported before dark launch
 | Website registration → new system | **Required**      | Required                                  |
 | In-app registration/payment       | Out of scope      | Full parity with website                  |
 | Waivers / registration fields     | Website handles   | App parity when in-app registration ships |
+| Staff class calendar on the website | Out of scope    | Same classes as the app, `isAdmin` until website permissions exist (L46) |
 
 
 ---
@@ -131,7 +132,7 @@ Primary interface for viewing the class schedule and reserving/canceling session
 ### Views
 
 - **Monthly calendar** at the top (existing pattern) plus a **single scrolling agenda** below.
-- **No Upcoming / Past toggle.** Past classes stay in the same list, visually dimmed. By default, load about the **past 2 weeks** plus upcoming classes; older history is reached from profile history (§10), not by paging the Schedule tab infinitely.
+- **No Upcoming / Past toggle.** Past classes stay in the same list, visually dimmed. The dark launch loads 14 days back through 77 days ahead. Older attendance stays on profile history (§10). Loading further months as someone moves through the calendar, without cutting off a month, is L47 in the later-phases doc.
 - Color-coded class rows (see §5 / §6). Calendar day markers are **not** the class-type color: they distinguish **reserved vs not reserved** for the selected athlete (see below).
 
 
@@ -269,7 +270,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 ### Recurrence
 
 - Typical case: weekly on one weekday at one time.
-- **Custom series required for MVP:** one series can include mixed days and times, e.g. Sunday 11:30, Tuesday 6:00 PM, Thursday 7:00 PM. Staff add those day/time rows rather than creating three unrelated series when it is conceptually one repeating class.
+- **Custom series required for MVP:** one series can include mixed days and times, e.g. Sunday 11:30, Tuesday 6:00 PM, Thursday 7:00 PM. Staff add those day/time rows rather than creating three unrelated series when it is conceptually one repeating class. The day list starts on Sunday. Starting that list on the series start day is later (L48).
 - Those rows do not have their own location. Every weekday uses the series location and address. Giving a weekday its own standing place is later (L1). Editing one date can still put that date somewhere else.
 - A repeating series may set an optional **end date**. That date is included. With no end date, the series continues.
 - A short run such as a week-long camp is a repeating series with an end date and one slot per weekday it meets. It does not continue after the end date. A non-repeating class is a single session.
@@ -309,6 +310,7 @@ Dollar-cost classes confirm the price and reserve without calling PayPal in MVP.
 
 - Create/edit via **bottom sheet** or modal.
 - Large touch targets; mobile-first admin UX.
+- A website calendar for building the same classes is later (L46). The app is the only editor in the dark launch. The website gate is `isAdmin` until that token carries app permissions.
 
 ---
 
@@ -578,7 +580,7 @@ An athlete is an **active member** if they have purchased a package for the curr
 
 ### Progress meter display rules (later)
 
-MVP shows the **current quarter’s** inventory only. The later fallback, including showing next quarter when this quarter is used up, is L26 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md).
+MVP shows the **current quarter’s** inventory only. Arrows and a swipe between the current quarter and the next quarter are L26 in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md).
 
 
 

@@ -1,7 +1,7 @@
 # Class Reservation — Later Phases
 
 **Status:** Phases filled in 2026-11-22. `unassigned` still needs a phase.  
-**Last updated:** 2026-11-22  
+**Last updated:** 2026-11-24  
 **Phase 1 (dark launch):** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Screens for phase 1:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md)  
 **Credit schema:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md)
@@ -67,6 +67,85 @@ The staff for a date is the series coach list, unless that date has its own coac
 
 Phase 1 fills the marker only when the selected athlete has a signup. Being a coach does not.
 
+### L46. Website class calendar
+
+**Phase:** Phase 2  
+**Ready:** Named only
+
+Coaches need to build classes on the website, not only in the app. The page is a calendar in the style of Google Calendar, and staff add a class from that calendar. It reads and writes the same classes as the app. It is not a second schedule, and it does not replace the public Google Calendar. That cutover is [L39](#l39-public-calendar-and-zen-planner-retirement).
+
+The website has no app-style permission checks. Its JWT already carries `isAdmin`. This page is limited to `isAdmin` until the app permissions are put on that token. Do not build a website permission system as part of this page. `manage_classes` on the web token can replace the `isAdmin` check later without a new calendar.
+
+The editor layout is not specified yet. Do not invent the form. The app class sheet remains the source for what a class can store until that layout is written.
+
+### L47. Schedule window follows the calendar
+
+**Phase:** Phase 2  
+**Ready:** Rules written
+
+Anyone on the app calendar, member or staff, can need a class five or six months out. Phase 1 does not do that. `GET /mobileapp/user/schedule` always uses today: 14 days back through 77 days ahead. The class list rejects a range longer than 92 days. A month on screen can therefore stop before the month ends.
+
+The app keeps loaded classes in memory and asks for more as the person moves.
+
+- A fetch never leaves a month half loaded. If the range touches a month, that whole month is included before the month grid shows it.
+- Ask for about 60 days of new classes, then extend both ends to the first and last day of the months that span covers. A request still cannot be longer than 92 days. Three whole months fit. A longer span is more than one request, and the grid waits until each of those months is complete.
+- The loaded set is the union of those fetches. Moving near either end of what is loaded fetches the next chunk in that direction and adds it. Months already loaded stay.
+- Choosing a date outside the loaded set fetches around that date: 14 days before it and about 60 days after it, then out to whole months. It does not first load every month between today and that date.
+- Moving into a gap between two loaded stretches fetches those missing months and fills them in.
+- A refresh uses the calendar’s selected date when that date is not today. The new load is the window around the selected date. Months that were only in memory from before the refresh are not assumed to still be there.
+- Attendance older than the loaded window stays on class history. This does not turn the schedule into an infinite history list.
+
+### L48. Weekday rows start on the series start day
+
+**Phase:** Phase 2  
+**Ready:** Rules written
+
+On a new repeating class, the day rows and the weekday picker begin with the weekday of the series start date, then the rest of the week, wrapping after Saturday. A series that starts on Wednesday lists Wednesday first, not Sunday. Add weekday picks the next free day in that same order.
+
+Phase 1 already sets the first row to the selected date’s weekday. The picker still runs Sunday through Saturday, and Add weekday takes the first free day from Sunday. The rows then sort Sunday-first, so the start day jumps down the list.
+
+Changing the series start date does not move days already chosen. The picker order follows the new start date. Saved weekday numbers stay as they are. Sunday is still 0.
+
+### L49. Class description on the schedule
+
+**Phase:** Phase 2  
+**Ready:** Rules written
+
+The agenda row on the schedule shows the class description, truncated to two lines, so a longer description is visibly cut off. The class detail screen keeps the full description. A class with no description adds no line.
+
+This is the class description, not the class note and not the athlete’s reservation note. The row already shows the class note when one is set. Both can show. The month grid stays dots only.
+
+### L50. Quarter label on each class
+
+**Phase:** Phase 2  
+**Ready:** Rules written
+
+The agenda row and the class detail screen name the quarter that class date falls in. The quarter comes from the class date and the fixed season dates: winter Dec–Feb, spring Mar–May, summer Jun–Aug, fall Sep–Nov. The label is the season and the year that season starts, such as `Fall 2026` or `Winter 2026` (Dec 2026 through Feb 2027).
+
+A class does not get a quarter from the athlete’s package. Two classes on the same day share a label. The month grid does not add the label.
+
+### L51. Dates on Upcoming classes
+
+**Phase:** Phase 2  
+**Ready:** Rules written
+
+Each row on Upcoming classes shows the weekday and date, in the same form as the schedule’s day headers (`Tuesday, Dec 2`), above the time. The schedule list already groups rows under those headers. Upcoming classes does not, so a row there is only a time and a title.
+
+The date is the class date. Several classes on one day each show that date.
+
+### L52. Credit chip for one quarter
+
+**Phase:** Phase 2  
+**Ready:** Rules written
+
+The chip’s remaining count and reserved count are for the same quarter. Phase 1 remaining counts credits that cover today, and reserved counts every upcoming reservation, including ones in a later quarter. That is how fall can read `0 remaining · 8 reserved` while winter still has unused credits.
+
+The quarter is the quarter of the day selected on the calendar. Moving to a day in another quarter switches the chip. Website purchases and staff grants both count. The chip names that quarter, after the counts, so the words `remaining` and `reserved` stay where they are: `7 remaining · 8 reserved · Winter 2026`.
+
+Remaining is the unused balance of grants that cover that quarter. Reserved is upcoming reservations whose class date falls in that quarter. A winter reservation is not counted on a fall chip. The expiring line counts only credits inside that same quarter. Unlimited for that quarter stays `Unlimited · N reserved`, then the quarter name.
+
+The schedule chip, the class detail chip, and the cancel preview all use this text. Class detail uses the quarter of that class date. Upcoming classes uses the quarter of the selected calendar day, the same as the schedule.
+
 ---
 
 ## Reservations and poles
@@ -76,7 +155,18 @@ Phase 1 fills the marker only when the selected athlete has a signup. Being a co
 **Phase:** Phase 4  
 **Ready:** Rules written
 
-After reserving, the member can add or change the free-text note on that reservation. Phase 1 accepts the note on the reserve request and does not allow a later edit. The note stays free text.
+After reserving, the member can add or change the free-text note on that reservation. Phase 1 accepts the note on the reserve request and does not allow a later edit. The note stays free text. Showing the saved note, without editing it, is [L53](#l53-show-the-reservation-note).
+
+### L53. Show the reservation note
+
+**Phase:** Phase 2  
+**Ready:** Rules written
+
+On class detail, the selected athlete’s reservation note shows as text when that class is already reserved and the note is not empty. It is not an editor. Phase 1 hides the editor after reserve, and the text on that screen is the class note, not this note. The reservation note is stored on the signup and is not on the schedule payload yet.
+
+The attendees list shows that same note under the athlete’s name when it is not empty. Anyone who can open that list can read it. It is not editable there.
+
+Before reserve, the optional note field stays editable, which it already is. An empty note adds no line. Editing a note after reserve stays [L5](#l5-update-a-reservation-note).
 
 ### L6. Structured pole selection
 
@@ -248,19 +338,25 @@ Staff manage the existing manual discount codes in the app. Phase 1 has no `mana
 
 Phase 1 refunds are manual. The coach handles the money and an admin adjusts credits with `manage_credits`. Ending active-member status after a refund is also manual. No automatic reversal of a PayPal refund or chargeback was specified.
 
-### L26. Progress meter, next quarter
+### L26. Progress meter, current and next quarter
 
-**Phase:** Phase 3  
+**Phase:** Phase 2  
 **Ready:** Rules written
 
-Phase 1 shows the current quarter only. Later display:
+The profile progress block can show the current quarter or the next quarter. Small arrows sit on the left and right of the quarter label. The right arrow shows the next quarter. The left arrow returns to the current quarter. The arrow that has nowhere to go is disabled. A horizontal swipe moves between those same two quarters. No earlier quarter and no quarter past the next one.
 
-- Default: current quarter’s remaining versus purchased.
-- If the athlete is out of current-quarter classes and has already purchased the next quarter, show the next quarter’s inventory.
-- If they have not purchased next quarter and have run out of this quarter, keep this quarter at `0 / N` (N is what they purchased this quarter).
-- If no package exists for this quarter or the next, hide the semicircle.
+The block opens on the current quarter. If no grant covers the current quarter and a grant covers the next quarter, it opens on the next quarter. Website purchases and staff grants both count. Running out of credits does not by itself switch quarters. If neither quarter has a grant, it stays on the current quarter and keeps today’s empty state.
 
-Unlimited and “no classes this quarter” stay as they are in phase 1 when that is the inventory being shown.
+The meter, attended count, remaining, reserved, and the expire line all follow the quarter on screen. Tapping the block still opens class history. Unlimited and “No classes this quarter” stay as they are in phase 1 for whichever quarter is showing.
+
+### L54. Package name on the admin purchases table
+
+**Phase:** Phase 2  
+**Ready:** Rules written
+
+The website admin panel’s Registered Athletes table shows the membership column as `pkg:9` after catalog checkout. That stored value stays `pkg:<id>`. Checkout and the credit grant parse that exact shape. This item does not write a different membership string.
+
+The table looks up that package and shows its name and how many credits the purchase gave. The count is the grant created for that purchase, so a later edit to the package does not change an old row. Unlimited stays the word Unlimited. A row that is not `pkg:<id>`, including the older `8classes` values, keeps the stored text.
 
 ### L27. History export
 

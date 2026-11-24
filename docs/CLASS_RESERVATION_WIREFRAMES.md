@@ -3,7 +3,7 @@
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Audience:** Client design review (walkthrough)  
 **Status:** Proposed UI for MVP / dark launch — not pixel-final  
-**Last updated:** 2026-11-22  
+**Last updated:** 2026-11-23  
 **Aligned with PRD:** v1.3
 
 This document is the screen-by-screen version of the PRD. It is meant to be walked through live: start at Flow A and follow the numbered taps. Engineering detail and data models live in the PRD. Later-phase requirements live in [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) and are only mentioned here when they affect what someone sees on a phone. If this file and the PRD disagree about the dark launch, the **PRD is the source of truth**.
@@ -122,7 +122,7 @@ These are the screens a beta athlete (or a parent switching into that athlete) u
 
 Replaces the current Google Calendar view **only** for beta users. Same tab, same header, same expandable month.
 
-There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past rows are dimmed. About the **past 2 weeks** load by default; older attendance is Class history, opened by tapping the progress block on the profile.
+There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past rows are dimmed. About the **past 2 weeks** load by default, through about 11 weeks ahead. Older attendance is Class history, opened by tapping the progress block on the profile. Looking several months ahead, and a website calendar for coaches, are later (L47 and L46).
 
 ```
 ┌─────────────────────────────────────┐
@@ -461,7 +461,7 @@ Semicircle is remaining vs total purchased for the **current** period. “Attend
 
 **Empty state (MVP):** when no finite or unlimited grant covers today, hide the semicircle and show `No classes this quarter`. The attended count and the chip line still show.
 
-**Later (not MVP):** if they are out of this quarter but already bought next quarter, show next quarter’s meter; if they ran out and did not buy next quarter, keep `0 / N` for this quarter; if they have no package this quarter or next, hide the meter. Documented in the PRD so it is not lost.
+**Later (L26):** arrows and a horizontal swipe move the progress block between the current quarter and the next quarter. It opens on the current quarter unless nothing covers this quarter and something covers the next one.
 
 Training group is **read-only** for the athlete. Staff change it on **Edit Profile** (Flow J), not a separate screen.
 
@@ -745,7 +745,7 @@ One form covers every current use case (open class, age-restricted, private, mee
 
 **Copy from** duplicates settings from an existing class so weekly setup is not retyped.
 
-**Custom repeat:** a series can be mixed days and times (Sunday 11:30, Tuesday 6 PM, Thursday 7 PM) instead of “every Tuesday only.” Simple weekly is still the default shortcut. Location stays one field for the series. A single date can still be edited to a different place. Giving each weekday its own standing location is later (L1 in the later-phases doc).
+**Custom repeat:** a series can be mixed days and times (Sunday 11:30, Tuesday 6 PM, Thursday 7 PM) instead of “every Tuesday only.” Simple weekly is still the default shortcut. The day list starts on Sunday. Starting it on the series start day is later (L48). Location stays one field for the series. A single date can still be edited to a different place. Giving each weekday its own standing location is later (L1 in the later-phases doc).
 
 **End date** is optional. That last date is included. Leave it empty and the series keeps going. A one-week camp sets the end on the last day and adds a slot for each weekday it meets. A class that does not repeat is a single date.
 
@@ -1182,9 +1182,12 @@ Call these out so the review stays on launch scope. The writeups, and the place 
 - Auto-delete of messages (class conversations ~2 weeks; other types 6 months)
 - Messaging one coach on the class, a lesson-reserved notice, notifying coaches when someone reserves, and a notice when staff cancel one reservation (L28–L31). Credit changes already post in that athlete’s Notifications conversation. Staff cancel returns the credit and does not send.
 - Personal Apple/Google calendar subscription
-- Progress meter flipping to next quarter when this quarter is empty
+- Progress meter arrows and swipe between the current quarter and the next (L26)
 - Replacing the public website calendar or turning off Zen Planner for everyone
 - Per-weekday location on a series. The first build uses one location for every day. One date can still be edited to a different place.
+- A website calendar where coaches build classes. The app is the only editor for the dark launch.
+- Scrolling the app calendar past the first loaded months. The dark launch stops about 11 weeks ahead.
+- Weekday rows that start on the series start day. The dark launch lists Sunday first.
 
 ---
 
