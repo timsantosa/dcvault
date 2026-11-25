@@ -84,7 +84,7 @@ The editor layout is not specified yet. Do not invent the form. The app class sh
 **Phase:** Phase 2  
 **Ready:** Rules written
 
-Anyone on the app calendar, member or staff, can need a class five or six months out. Phase 1 does not do that. `GET /mobileapp/user/schedule` always uses today: 14 days back through 77 days ahead. The class list rejects a range longer than 92 days. A month on screen can therefore stop before the month ends.
+Anyone on the app calendar, member or staff, can need a class five or six months out. A schedule request cannot be longer than 92 days.
 
 The app keeps loaded classes in memory and asks for more as the person moves.
 

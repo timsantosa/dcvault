@@ -34,7 +34,7 @@ Phase 3 and later, `Later phase`, `unassigned`, and `Not doing` stay in the late
 | 13 | [L54](#l54--package-name-on-the-admin-purchases-table) | Rules written | Registered Athletes shows the package name and grant size |
 | 14 | [L46](#l46--website-class-calendar) | Named only | Work through the website editor layout, then build |
 
-L1 and L47 are first. They are the two changes needed now: a weekday can have its own place, and the calendar can move to a class months ahead. L52 still scopes the chip to the selected day's quarter. Until L52, a month outside today's quarter keeps the phase 1 chip. L46 is last. The skill picks it up, and that session settles the editor layout with the user before anything is built.
+L1 and L47 are done. L48 is next. L52 still scopes the chip to the selected day's quarter. Until L52, a month outside today's quarter keeps the phase 1 chip. L46 is last. The skill picks it up, and that session settles the editor layout with the user before anything is built.
 
 ---
 
@@ -53,7 +53,7 @@ L1 and L47 are first. They are the two changes needed now: a weekday can have it
 
 ### L47 — Schedule window follows the calendar
 
-- [ ] **L47 — Schedule window follows the calendar**
+- [x] **L47 — Schedule window follows the calendar**
   - Rule: [L47](./CLASS_RESERVATION_LATER_PHASES.md#l47-schedule-window-follows-the-calendar). Screen: Flow A. Phase 1’s “about 11 weeks ahead” sentence in that flow is what this task replaces.
   - Anyone on the app calendar can move to a class five or six months out. The app keeps loaded classes in memory and asks for more as the person moves.
   - A fetch never leaves a month half loaded. If the range touches a month, that whole month is included before the month grid shows it.
@@ -65,6 +65,7 @@ L1 and L47 are first. They are the two changes needed now: a weekday can have it
   - Put the range rules in one pure function and unit-test them: whole months, the 92-day cap, a jump that does not fill the months in between, a gap, and a refresh around the selected date. The schedule screen calls that function. The class list already rejects a range longer than 92 days.
   - This is the largest ready task. If it does not fit one session, stop and name the smallest slice that is still manually testable. Do not start a later task in its place.
   - Out of scope: the quarter chip (L52), the website calendar (L46), the public Google Calendar (L37, L39), and class history.
+  - *Completion notes:* 2026-11-24. The app keeps loaded classes and asks for more as the person moves. A fetch is whole months, at most 92 days, starting from 14 days before a date through 60 days after it. The edge of what is loaded asks for the next 60 days that way. A date further out loads the window around that date and skips the months in between until the person moves into the gap. The header refresh drops what was only in memory and loads the window around the selected date. Leaving the tab and coming back reloads that window and keeps the other months. The month grid reaches 2 months back and 6 months ahead from the day the schedule opens. The week strip and class loading still follow the selected date past that. The next task is L48.
 
 ### L48 — Weekday rows start on the series start day
 

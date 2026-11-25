@@ -133,7 +133,7 @@ Primary interface for viewing the class schedule and reserving/canceling session
 ### Views
 
 - **Monthly calendar** at the top (existing pattern) plus a **single scrolling agenda** below.
-- **No Upcoming / Past toggle.** Past classes stay in the same list, visually dimmed. The dark launch loads 14 days back through 77 days ahead. Older attendance stays on profile history (§10). Loading further months as someone moves through the calendar, without cutting off a month, is L47 in the later-phases doc.
+- **No Upcoming / Past toggle.** Past classes stay in the same list, visually dimmed. Whole months load around the open day, and more load as the person moves. A month is not left half loaded. Older attendance stays on profile history (§10).
 - Color-coded class rows (see §5 / §6). Calendar day markers are **not** the class-type color: they distinguish **reserved vs not reserved** for the selected athlete (see below).
 
 

@@ -122,7 +122,7 @@ These are the screens a beta athlete (or a parent switching into that athlete) u
 
 Replaces the current Google Calendar view **only** for beta users. Same tab, same header, same expandable month.
 
-There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past rows are dimmed. About the **past 2 weeks** load by default, through about 11 weeks ahead. Older attendance is Class history, opened by tapping the progress block on the profile. Looking several months ahead, and a website calendar for coaches, are later (L47 and L46).
+There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past rows are dimmed. Whole months load around today, and more load as the person moves. A month’s classes show up together. Older attendance is Class history, opened by tapping the progress block on the profile. A website calendar for coaches is later (L46).
 
 ```
 ┌─────────────────────────────────────┐
@@ -1186,7 +1186,6 @@ Call these out so the review stays on launch scope. The writeups, and the place 
 - Progress meter arrows and swipe between the current quarter and the next (L26)
 - Replacing the public website calendar or turning off Zen Planner for everyone
 - A website calendar where coaches build classes. The app is the only editor for the dark launch.
-- Scrolling the app calendar past the first loaded months. The dark launch stops about 11 weeks ahead.
 - Weekday rows that start on the series start day. The dark launch lists Sunday first.
 
 ---
