@@ -107,6 +107,8 @@ Phase 1 already sets the first row to the selected date’s weekday. The picker 
 
 Changing the series start date does not move days already chosen. The picker order follows the new start date. Saved weekday numbers stay as they are. Sunday is still 0.
 
+Shipped 2026-11-24. Day rows, the weekday picker, and Add weekday follow the series start day and wrap after Saturday. Changing the start date reorders that list. Weekday numbers already chosen stay as they are. Saved slots stay in Sunday-through-Saturday order.
+
 ### L49. Class description on the schedule
 
 **Phase:** Phase 2  

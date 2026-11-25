@@ -34,7 +34,7 @@ Phase 3 and later, `Later phase`, `unassigned`, and `Not doing` stay in the late
 | 13 | [L54](#l54--package-name-on-the-admin-purchases-table) | Rules written | Registered Athletes shows the package name and grant size |
 | 14 | [L46](#l46--website-class-calendar) | Named only | Work through the website editor layout, then build |
 
-L1 and L47 are done. L48 is next. L52 still scopes the chip to the selected day's quarter. Until L52, a month outside today's quarter keeps the phase 1 chip. L46 is last. The skill picks it up, and that session settles the editor layout with the user before anything is built.
+L1, L47, and L48 are done. L49 is next. L52 still scopes the chip to the selected day's quarter. Until L52, a month outside today's quarter keeps the phase 1 chip. L46 is last. The skill picks it up, and that session settles the editor layout with the user before anything is built.
 
 ---
 
@@ -69,12 +69,13 @@ L1 and L47 are done. L48 is next. L52 still scopes the chip to the selected day'
 
 ### L48 — Weekday rows start on the series start day
 
-- [ ] **L48 — Weekday rows start on the series start day**
+- [x] **L48 — Weekday rows start on the series start day**
   - Rule: [L48](./CLASS_RESERVATION_LATER_PHASES.md#l48-weekday-rows-start-on-the-series-start-day). Screen: Flow G.
   - On a new repeating class, the day rows and the weekday picker start on the weekday of the series start date, then the rest of the week, wrapping after Saturday. Wednesday starts Wednesday, not Sunday. Add weekday picks the next free day in that same order.
   - Changing the series start date does not move days already chosen. The picker order follows the new start date. Saved weekday numbers stay as they are. Sunday is still 0.
   - Unit-test the order. The form already has a first row set to the selected date’s weekday; this task changes the picker and Add weekday, and stops the rows sorting back to Sunday-first.
   - Out of scope: weekday locations (L1), and the next task.
+  - *Completion notes:* 2026-11-24. Day rows, the weekday picker, and Add weekday follow the series start day and wrap after Saturday. Changing the start date reorders that list. Weekday numbers already chosen stay as they are, and Sunday is still 0. Saved slots stay in Sunday-through-Saturday order. Turning Repeat back on re-sorts existing rows the same way. The next task is L49.
 
 ### L49 — Class description on the schedule
 

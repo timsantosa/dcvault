@@ -271,7 +271,7 @@ Do **not** build a rigid "class types" catalog for MVP. Instead, provide **confi
 ### Recurrence
 
 - Typical case: weekly on one weekday at one time.
-- **Custom series required for MVP:** one series can include mixed days and times, e.g. Sunday 11:30, Tuesday 6:00 PM, Thursday 7:00 PM. Staff add those day/time rows rather than creating three unrelated series when it is conceptually one repeating class. The day list starts on Sunday. Starting that list on the series start day is later (L48).
+- **Custom series required for MVP:** one series can include mixed days and times, e.g. Sunday 11:30, Tuesday 6:00 PM, Thursday 7:00 PM. Staff add those day/time rows rather than creating three unrelated series when it is conceptually one repeating class. The day list starts on the weekday of the series start date, then the rest of the week, wrapping after Saturday. Changing that date reorders the rows and the picker. Days already chosen stay on their weekdays. Sunday is still 0.
 - Each weekday row can set its own location and address. A blank name keeps the series name and address. Editing one date can still put that date somewhere else, and that does not change the weekday row.
 - A repeating series may set an optional **end date**. That date is included. With no end date, the series continues.
 - A short run such as a week-long camp is a repeating series with an end date and one slot per weekday it meets. It does not continue after the end date. A non-repeating class is a single session.
