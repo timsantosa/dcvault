@@ -41,7 +41,7 @@ function history(extra) {
 }
 
 describe('presentClassProgress', () => {
-  it('counts staff adds and removals in purchased and leaves out an ended grant', () => {
+  it('counts staff adds, removals, and a grant that ended earlier this quarter', () => {
     const result = presentClassProgress({
       now: NOW,
       grants: [
@@ -55,9 +55,9 @@ describe('presentClassProgress', () => {
     });
     expect(result.seasonLabel).toBe('Fall quarter');
     expect(result.unlimited).toBe(false);
-    expect(result.purchased).toBe(15);
-    expect(result.remaining).toBe(12);
-    expect(result.summaryText).toBe('12 remaining · 0 reserved · 14 expire Nov 30');
+    expect(result.purchased).toBe(23);
+    expect(result.remaining).toBe(20);
+    expect(result.summaryText).toBe('20 remaining · 0 reserved · 8 expire Sep 30');
   });
 
   it('shows unlimited with no purchased count', () => {
@@ -69,7 +69,7 @@ describe('presentClassProgress', () => {
     expect(result.unlimited).toBe(true);
     expect(result.purchased).toBeNull();
     expect(result.remaining).toBeNull();
-    expect(result.summaryText).toBe('Unlimited · 0 reserved · through Nov 30');
+    expect(result.summaryText).toBe('Unlimited · 0 reserved');
   });
 
   it('returns zeros when there are no grants', () => {
@@ -125,6 +125,24 @@ describe('presentClassProgress', () => {
       ],
     });
     expect(result.reserved).toBe(1);
+  });
+
+  it('uses this quarter’s balance and leaves the next quarter out of the line', () => {
+    const result = presentClassProgress({
+      now: NOW,
+      grants: [
+        grant(1, 4),
+        grant(2, 8, { startsAt: new Date(2026, 11, 1), expiresAt: new Date(2027, 2, 1) }),
+      ],
+      reservations: [
+        { occursOn: '2026-11-20', classStart: new Date(2026, 10, 20, 16), paused: false },
+        { occursOn: '2026-12-10', classStart: new Date(2026, 11, 10, 16), paused: false },
+      ],
+    });
+    expect(result.summaryText).toBe('4 remaining · 1 reserved · 4 expire Nov 30');
+    expect(result.remaining).toBe(4);
+    expect(result.reserved).toBe(1);
+    expect(result.purchased).toBe(4);
   });
 });
 

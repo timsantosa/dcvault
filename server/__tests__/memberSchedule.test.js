@@ -6,7 +6,7 @@ const {
   presentMemberSchedule,
   attendanceMark,
 } = require('../lib/memberSchedule');
-const { summarizeCredits, formatCreditChip } = require('../lib/creditInventory');
+const { quarterSpan } = require('../lib/creditInventory');
 
 function session(overrides) {
   return Object.assign({
@@ -239,7 +239,7 @@ describe('presentMemberSchedule', () => {
     });
     expect(presented.sessions[0].blockReason).toBe('Register to reserve');
     expect(presented.needsRegistration).toBe(true);
-    expect(presented.chipText).toBe('0 remaining · 0 reserved');
+    expect(presented.chipText).toBe(quarterSpan(open).name + ' · 0 remaining · 0 reserved');
   });
 
   it('builds the chip from grants with no reservations', () => {
@@ -250,11 +250,7 @@ describe('presentMemberSchedule', () => {
       grants: grants,
       sessions: [],
     });
-    expect(presented.chipText).toBe(formatCreditChip(summarizeCredits({
-      now: now,
-      grants: grants,
-      allocations: [],
-    })));
+    expect(presented.chipText).toBe(quarterSpan(now).name + ' · 8 remaining · 0 reserved');
     expect(presented.chipText).toContain('0 reserved');
     expect(presented.needsRegistration).toBe(false);
   });
@@ -265,7 +261,7 @@ describe('presentMemberSchedule', () => {
       grants: [grant({ quantity: null })],
       sessions: [session()],
     });
-    expect(presented.chipText).toBe('Unlimited · 0 reserved');
+    expect(presented.chipText).toBe(quarterSpan(open).name + ' · Unlimited · 0 reserved');
     expect(presented.needsRegistration).toBe(false);
     expect(presented.sessions[0].blockReason).toBeNull();
   });
@@ -412,12 +408,34 @@ describe('presentMemberSchedule', () => {
         9: new Date('2026-07-20T20:00:00.000Z'),
       },
       chipReservations: [
-        { classStart: new Date('2026-07-20T20:00:00.000Z'), paused: false },
-        { classStart: new Date('2026-07-20T16:00:00.000Z'), paused: false },
-        { classStart: new Date('2026-07-21T20:00:00.000Z'), paused: true },
+        { occursOn: '2026-07-20', classStart: new Date('2026-07-20T20:00:00.000Z'), paused: false },
+        { occursOn: '2026-07-20', classStart: new Date('2026-07-20T16:00:00.000Z'), paused: false },
+        { occursOn: '2026-07-21', classStart: new Date('2026-07-21T20:00:00.000Z'), paused: true },
       ],
     });
     expect(presented.chipText).toContain('1 reserved');
     expect(presented.chipText).toContain('3 remaining');
+  });
+
+  it('returns one chip for each quarter the range touches', () => {
+    const now = new Date(2026, 10, 17, 12);
+    const presented = presentMemberSchedule({
+      now: now,
+      from: '2026-11-01',
+      to: '2026-12-15',
+      grants: [
+        { id: 1, quantity: 4, startsAt: new Date(2026, 8, 1), expiresAt: new Date(2026, 11, 1) },
+        { id: 2, quantity: 7, startsAt: new Date(2026, 11, 1), expiresAt: new Date(2027, 2, 1) },
+      ],
+      chipReservations: [
+        { occursOn: '2026-11-20', classStart: new Date(2026, 10, 20, 16), paused: false },
+        { occursOn: '2026-12-10', classStart: new Date(2026, 11, 10, 16), paused: false },
+      ],
+      sessions: [],
+    });
+    expect(presented.chips.map((chip) => chip.text)).toEqual([
+      'Fall 2026 · 4 remaining · 1 reserved · 4 expire Nov 30',
+      'Winter 2026 · 7 remaining · 1 reserved · 7 expire Feb 28',
+    ]);
   });
 });

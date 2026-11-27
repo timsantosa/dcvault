@@ -75,7 +75,10 @@ async function getMemberSchedule(req, res, db) {
       chipReservations: myReservations.map((row) => ({
         classStart: starts[row.id] || null,
         paused: isPaused(allocationsByReservation[row.id] || []),
+        occursOn: day(row.occursOn),
       })),
+      from: from,
+      to: to,
       now: now,
       includeHidden: Array.isArray(permissions) && permissions.includes('manage_classes'),
     });
@@ -88,6 +91,7 @@ async function getMemberSchedule(req, res, db) {
       athleteName: athleteName(profile),
       chipText: presented.chipText,
       needsRegistration: presented.needsRegistration,
+      chips: presented.chips,
       sessions: presented.sessions,
     });
   } catch (error) {

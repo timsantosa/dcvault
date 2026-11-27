@@ -1,7 +1,7 @@
 # Class Reservation — Phase 2 tasks
 
 **Status:** Ready to build, in the order below.  
-**Last updated:** 2026-11-24  
+**Last updated:** 2026-11-27  
 **Product rules:** [CLASS_RESERVATION_LATER_PHASES.md](./CLASS_RESERVATION_LATER_PHASES.md) — the L item is the rule. If this file and that item disagree, that item wins, then fix this file.  
 **Dark launch:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md) — §18 is complete. Do not reopen it.  
 **Screens:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md)  
@@ -22,11 +22,11 @@ Phase 3 and later, `Later phase`, `unassigned`, and `Not doing` stay in the late
 | 1 | [L1](#l1--per-weekday-location) | Rules written | Each weekday can have its own location and address |
 | 2 | [L47](#l47--schedule-window-follows-the-calendar) | Rules written | The calendar can move months beyond the current window |
 | 3 | [L48](#l48--weekday-rows-start-on-the-series-start-day) | Rules written | Weekday rows and Add weekday follow the series start day |
-| 4 | [L49](#l49--class-description-on-the-schedule) | Rules written | Agenda row shows the class description, two lines |
-| 5 | [L51](#l51--dates-on-upcoming-classes) | Rules written | Upcoming classes shows the weekday and date |
-| 6 | [L50](#l50--quarter-label-on-each-class) | Rules written | Agenda and class detail name the quarter of that date |
-| 7 | [L53](#l53--show-the-reservation-note) | Rules written | Class detail and the attendees list show a saved note |
-| 8 | [L52](#l52--credit-chip-for-one-quarter) | Rules written | Chip counts are for one quarter |
+| 4 | [L52](#l52--credit-chip-for-one-quarter) | Rules written | Chip counts are for one quarter |
+| 5 | [L49](#l49--class-description-on-the-schedule) | Rules written | Agenda row shows the class description, two lines |
+| 6 | [L51](#l51--dates-on-upcoming-classes) | Rules written | Upcoming classes shows the weekday and date |
+| 7 | [L50](#l50--quarter-label-on-each-class) | Rules written | Agenda and class detail name the quarter of that date |
+| 8 | [L53](#l53--show-the-reservation-note) | Rules written | Class detail and the attendees list show a saved note |
 | 9 | [L26](#l26--progress-meter-current-and-next-quarter) | Rules written | Profile meter moves between this quarter and the next |
 | 10 | [L31](#l31--reservation-canceled-by-staff) | Rules written | Staff cancel posts one Notifications message |
 | 11 | [L30](#l30--notify-coaches-on-reserve) | Rules written, one question | Coaches are told when the flag is on |
@@ -34,7 +34,7 @@ Phase 3 and later, `Later phase`, `unassigned`, and `Not doing` stay in the late
 | 13 | [L54](#l54--package-name-on-the-admin-purchases-table) | Rules written | Registered Athletes shows the package name and grant size |
 | 14 | [L46](#l46--website-class-calendar) | Named only | Work through the website editor layout, then build |
 
-L1, L47, and L48 are done. L49 is next. L52 still scopes the chip to the selected day's quarter. Until L52, a month outside today's quarter keeps the phase 1 chip. L46 is last. The skill picks it up, and that session settles the editor layout with the user before anything is built.
+L1, L47, L48, and L52 are done. L49 is next. L46 is last. The skill picks it up, and that session settles the editor layout with the user before anything is built.
 
 ---
 
@@ -77,6 +77,17 @@ L1, L47, and L48 are done. L49 is next. L52 still scopes the chip to the selecte
   - Out of scope: weekday locations (L1), and the next task.
   - *Completion notes:* 2026-11-24. Day rows, the weekday picker, and Add weekday follow the series start day and wrap after Saturday. Changing the start date reorders that list. Weekday numbers already chosen stay as they are, and Sunday is still 0. Saved slots stay in Sunday-through-Saturday order. Turning Repeat back on re-sorts existing rows the same way. The next task is L49.
 
+### L52 — Credit chip for one quarter
+
+- [x] **L52 — Credit chip for one quarter**
+  - Rule: [L52](./CLASS_RESERVATION_LATER_PHASES.md#l52-credit-chip-for-one-quarter). Screens: schedule chip, class detail chip, cancel preview, Upcoming classes. Credits: [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md).
+  - The chip’s remaining count and reserved count are for one quarter. Remaining is the unused balance of grants that cover that quarter. Reserved is upcoming reservations whose class date falls in that quarter. The expiring line counts only credits inside that same quarter. Unlimited for that quarter stays `Unlimited · N reserved`, then the quarter name.
+  - The quarter on the schedule and on Upcoming classes is the quarter of the day selected on the calendar. Moving to a day in another quarter switches the chip. Class detail uses the quarter of that class date. The chip names the quarter after the counts: `7 remaining · 8 reserved · Winter 2026`. The words `remaining` and `reserved` stay where they are.
+  - Website purchases and staff grants both count. A winter reservation is not counted on a fall chip.
+  - Unit-test the quarter filter: remaining, reserved, expiring, and unlimited. One function. The schedule, class detail, cancel preview, and Upcoming classes all use its text.
+  - Out of scope: the profile meter (L26), configurable season dates (L21), and the next task.
+  - *Completion notes:* 2026-11-27. `creditChip` replaces `summarizeCredits` and `formatCreditChip`. Pass `from` and `to` to limit the counts to that range, and an optional name that leads the text: `Winter 2026 · 7 remaining · 8 reserved · 4 expire Feb 28`. No dates keeps the unscoped line, which is what staff credits still shows. The schedule and Upcoming use the selected day's quarter. Class detail and the cancel preview use the class date. The profile meter uses the current quarter and leaves the name off. A grant that overlaps two quarters shows its balance on both. The next task is L49.
+
 ### L49 — Class description on the schedule
 
 - [ ] **L49 — Class description on the schedule**
@@ -111,16 +122,6 @@ L1, L47, and L48 are done. L49 is next. L52 still scopes the chip to the selecte
   - The note is already stored on the signup. Phase 1 does not put it on the schedule payload. This task adds it there, or on the attendees payload, only as far as those two screens need it.
   - Before reserve, the optional note field stays editable. An empty note adds no line.
   - Out of scope: editing the note after reserve (L5, Phase 4), bulk notes (L9), and the next task.
-
-### L52 — Credit chip for one quarter
-
-- [ ] **L52 — Credit chip for one quarter**
-  - Rule: [L52](./CLASS_RESERVATION_LATER_PHASES.md#l52-credit-chip-for-one-quarter). Screens: schedule chip, class detail chip, cancel preview, Upcoming classes. Credits: [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md).
-  - The chip’s remaining count and reserved count are for one quarter. Remaining is the unused balance of grants that cover that quarter. Reserved is upcoming reservations whose class date falls in that quarter. The expiring line counts only credits inside that same quarter. Unlimited for that quarter stays `Unlimited · N reserved`, then the quarter name.
-  - The quarter on the schedule and on Upcoming classes is the quarter of the day selected on the calendar. Moving to a day in another quarter switches the chip. Class detail uses the quarter of that class date. The chip names the quarter after the counts: `7 remaining · 8 reserved · Winter 2026`. The words `remaining` and `reserved` stay where they are.
-  - Website purchases and staff grants both count. A winter reservation is not counted on a fall chip.
-  - Unit-test the quarter filter: remaining, reserved, expiring, and unlimited. One function. The schedule, class detail, cancel preview, and Upcoming classes all use its text.
-  - Out of scope: the profile meter (L26), configurable season dates (L21), and the next task.
 
 ### L26 — Progress meter, current and next quarter
 

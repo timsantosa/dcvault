@@ -4,7 +4,7 @@
 // callers persist grants and allocations. Pass `today` / `now` in; nothing here
 // reads the clock or the database.
 
-const { day } = require('./dates');
+const { day, parseIsoDay } = require('./dates');
 
 const SEASONS = ['winter', 'spring', 'summer', 'fall'];
 
@@ -231,12 +231,12 @@ function prepareEndGrant(grant, now) {
   };
 }
 
-// Staff list. Pass reservations (class start and paused) so reserved matches the schedule chip.
+// Staff list. Pass reservations (class start and paused) so reserved matches the unscoped chip.
 function presentStaffCredits(input) {
   const now = input.now;
   const allocations = input.allocations || [];
   const grants = (input.grants || []).slice().sort((a, b) => (a.id || 0) - (b.id || 0));
-  const summary = summarizeCredits({
+  const summary = creditChip({
     grants: grants,
     allocations: allocations,
     now: now,
@@ -251,7 +251,7 @@ function presentStaffCredits(input) {
       expiringCount: summary.expiringCount,
       expiringOn: summary.expiringOn,
       through: summary.through,
-      summaryText: formatCreditChip(summary),
+      summaryText: summary.text,
     },
     grants: grants.map((row) => ({
       id: row.id,
@@ -337,14 +337,63 @@ function releaseReservation(allocations, reservationId) {
   return (allocations || []).filter((allocation) => allocation.reservationId !== reservationId);
 }
 
-function summarizeCredits(input) {
+// Quarter that contains date. from/to are inclusive calendar days. name is the
+// season plus the year that season starts (Winter 2026 runs through Feb 2027).
+function quarterSpan(date) {
+  assertDate(date, 'date');
+  const season = seasonOf(date);
+  const window = resolveSeasonWindow(season, date);
+  return {
+    from: day(window.startsAt),
+    to: day(lastInclusiveDay(window.expiresAt)),
+    name: season.charAt(0).toUpperCase() + season.slice(1) + ' ' + window.startsAt.getFullYear(),
+    startsAt: window.startsAt,
+    expiresAt: window.expiresAt,
+  };
+}
+
+// Chip text. Omit from and to for grants that cover now and every upcoming
+// reservation. Pass both to limit grants and reservations to that inclusive
+// range. name, when set, leads the text. A ranged unlimited chip has no through-date.
+function creditChip(input) {
   assertDate(input.now, 'now');
   const grants = input.grants || [];
   const allocations = input.allocations || [];
+  const ranged = input.from != null || input.to != null;
+  const bounds = ranged ? rangeBounds(input.from, input.to) : null;
+  const covering = grants.filter((grant) => {
+    return bounds ? grantOverlaps(grant, bounds) : grantCovers(grant, input.now);
+  });
+  const reserved = reservedCount(input, bounds);
+  const unlimited = covering.filter((grant) => grant.quantity == null).sort(compareExpiryThenId);
+  const summary = unlimited.length
+    ? unlimitedSummary(unlimited[0], reserved, ranged)
+    : finiteSummary(covering, allocations, reserved);
+
+  return {
+    unlimited: summary.unlimited,
+    remaining: summary.remaining,
+    reserved: summary.reserved,
+    expiringCount: summary.expiringCount,
+    expiringOn: summary.expiringOn,
+    through: summary.through,
+    needsRegistration: summary.unlimited !== true && summary.remaining === 0,
+    text: chipLine(summary, input.name),
+  };
+}
+
+function reservedCount(input, bounds) {
+  if (input.reservations) {
+    return input.reservations.filter((reservation) => {
+      return isUpcoming(reservation, input.now) && inChipRange(reservation, bounds);
+    }).length;
+  }
+  if (bounds) {
+    return 0;
+  }
   const classStartByReservationId = input.classStartByReservationId || {};
   const reservedIds = {};
-
-  allocations.forEach((allocation) => {
+  (input.allocations || []).forEach((allocation) => {
     if (!isHolding(allocation)) {
       return;
     }
@@ -353,29 +402,35 @@ function summarizeCredits(input) {
       reservedIds[allocation.reservationId] = true;
     }
   });
+  return Object.keys(reservedIds).length;
+}
 
-  let reserved = Object.keys(reservedIds).length;
-  if (input.reservations) {
-    reserved = input.reservations.filter((reservation) => {
-      return reservation.paused !== true
-        && reservation.classStart instanceof Date
-        && reservation.classStart > input.now;
-    }).length;
+function isUpcoming(reservation, now) {
+  return reservation.paused !== true
+    && reservation.classStart instanceof Date
+    && reservation.classStart > now;
+}
+
+function inChipRange(reservation, bounds) {
+  if (!bounds) {
+    return true;
   }
-  const covering = grants.filter((grant) => grantCovers(grant, input.now));
-  const unlimited = covering.filter((grant) => grant.quantity == null).sort(compareExpiryThenId);
+  const occursOn = typeof reservation.occursOn === 'string' ? reservation.occursOn.slice(0, 10) : '';
+  return occursOn >= bounds.from && occursOn <= bounds.to;
+}
 
-  if (unlimited.length) {
-    return {
-      unlimited: true,
-      remaining: null,
-      reserved: reserved,
-      expiringCount: null,
-      expiringOn: null,
-      through: lastInclusiveDay(unlimited[0].expiresAt),
-    };
-  }
+function unlimitedSummary(grant, reserved, ranged) {
+  return {
+    unlimited: true,
+    remaining: null,
+    reserved: reserved,
+    expiringCount: null,
+    expiringOn: null,
+    through: ranged ? null : lastInclusiveDay(grant.expiresAt),
+  };
+}
 
+function finiteSummary(covering, allocations, reserved) {
   let finiteTotal = 0;
   const positive = [];
   covering.forEach((grant) => {
@@ -392,7 +447,6 @@ function summarizeCredits(input) {
   const dated = positive.filter((entry) => entry.grant.expiresAt != null).sort((a, b) => {
     return compareExpiryThenId(a.grant, b.grant);
   });
-
   const remaining = Math.max(0, finiteTotal);
   let expiringCount = null;
   let expiringOn = null;
@@ -417,20 +471,50 @@ function summarizeCredits(input) {
   };
 }
 
-function formatCreditChip(summary) {
+function chipLine(summary, name) {
+  let line;
   if (summary.unlimited) {
-    let line = 'Unlimited · ' + summary.reserved + ' reserved';
+    line = 'Unlimited · ' + summary.reserved + ' reserved';
     if (summary.through) {
       line += ' · through ' + formatMonthDay(summary.through);
     }
-    return line;
+  } else {
+    line = summary.remaining + ' remaining · ' + summary.reserved + ' reserved';
+    if (summary.expiringCount != null && summary.expiringOn != null) {
+      line += ' · ' + summary.expiringCount + ' expire ' + formatMonthDay(summary.expiringOn);
+    }
   }
-
-  let line = summary.remaining + ' remaining · ' + summary.reserved + ' reserved';
-  if (summary.expiringCount != null && summary.expiringOn != null) {
-    line += ' · ' + summary.expiringCount + ' expire ' + formatMonthDay(summary.expiringOn);
+  if (typeof name === 'string' && name !== '') {
+    return name + ' · ' + line;
   }
   return line;
+}
+
+function rangeBounds(from, to) {
+  if (from == null || to == null) {
+    throw new Error('from and to must both be set');
+  }
+  const startsAt = parseIsoDay(from, 'from');
+  const endsOn = parseIsoDay(to, 'to');
+  if (from > to) {
+    throw new Error('from must be on or before to');
+  }
+  return {
+    from: from,
+    to: to,
+    startsAt: startsAt,
+    expiresAt: new Date(endsOn.getFullYear(), endsOn.getMonth(), endsOn.getDate() + 1),
+  };
+}
+
+function grantOverlaps(grant, bounds) {
+  if (grant.startsAt != null && grant.startsAt >= bounds.expiresAt) {
+    return false;
+  }
+  if (grant.expiresAt != null && grant.expiresAt <= bounds.startsAt) {
+    return false;
+  }
+  return true;
 }
 
 function formatHistoryLine(grant) {
@@ -688,8 +772,8 @@ module.exports = {
   grantBalance,
   allocateForReservation,
   releaseReservation,
-  summarizeCredits,
-  formatCreditChip,
+  quarterSpan,
+  creditChip,
   formatHistoryLine,
   lastInclusiveDay,
 };

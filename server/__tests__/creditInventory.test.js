@@ -15,8 +15,8 @@ const {
   grantBalance,
   allocateForReservation,
   releaseReservation,
-  summarizeCredits,
-  formatCreditChip,
+  quarterSpan,
+  creditChip,
   formatHistoryLine,
 } = require('../lib/creditInventory');
 
@@ -437,7 +437,7 @@ describe('releaseReservation', () => {
   });
 });
 
-describe('summarizeCredits', () => {
+describe('creditChip', () => {
   const now = new Date(2026, 8, 27, 12, 0, 0);
 
   it('sums remaining, counts upcoming reservations, and groups the soonest expiration', () => {
@@ -459,7 +459,7 @@ describe('summarizeCredits', () => {
       { reservationId: 3, creditGrantId: 2, amount: 1 },
       { reservationId: 4, creditGrantId: 2, amount: 1 },
     ];
-    const summary = summarizeCredits({
+    const summary = creditChip({
       grants: [later, soon],
       allocations: allocations,
       classStartByReservationId: {
@@ -479,14 +479,14 @@ describe('summarizeCredits', () => {
       through: null,
     });
     expectLocalMidnight(summary.expiringOn, 2026, 8, 30);
-    expect(formatCreditChip(summary)).toBe('8 remaining · 3 reserved · 4 expire Sep 30');
+    expect(summary.text).toBe('8 remaining · 3 reserved · 4 expire Sep 30');
   });
 
   it('shows Unlimited from the soonest spendable unlimited grant and hides the finite count', () => {
     const finite = grant({ id: 1, quantity: 4, expiresAt: new Date(2026, 9, 1) });
     const sooner = grant({ id: 3, quantity: null, expiresAt: new Date(2026, 11, 1) });
     const later = grant({ id: 2, quantity: null, expiresAt: new Date(2027, 2, 1) });
-    const summary = summarizeCredits({
+    const summary = creditChip({
       grants: [finite, later, sooner],
       allocations: [
         { reservationId: 1, creditGrantId: 3, amount: 1 },
@@ -505,27 +505,27 @@ describe('summarizeCredits', () => {
     expect(summary.remaining).toBeNull();
     expect(summary.reserved).toBe(3);
     expectLocalMidnight(summary.through, 2026, 10, 30);
-    expect(formatCreditChip(summary)).toBe('Unlimited · 3 reserved · through Nov 30');
+    expect(summary.text).toBe('Unlimited · 3 reserved · through Nov 30');
   });
 
   it('omits the through date when unlimited has no expiration', () => {
-    const summary = summarizeCredits({
+    const summary = creditChip({
       grants: [grant({ id: 1, quantity: null, expiresAt: null })],
       allocations: [{ reservationId: 1, creditGrantId: 1, amount: 1 }],
       classStartByReservationId: { 1: new Date(2026, 8, 29) },
       now: now,
     });
-    expect(formatCreditChip(summary)).toBe('Unlimited · 1 reserved');
+    expect(summary.text).toBe('Unlimited · 1 reserved');
   });
 
   it('omits the expire clause when every remaining credit has no expiration', () => {
-    const summary = summarizeCredits({
+    const summary = creditChip({
       grants: [grant({ id: 1, quantity: 8, expiresAt: null, originalExpiresAt: null })],
       allocations: [],
       classStartByReservationId: {},
       now: now,
     });
-    expect(formatCreditChip(summary)).toBe('8 remaining · 0 reserved');
+    expect(summary.text).toBe('8 remaining · 0 reserved');
   });
 
   it('keeps a future hold in the reserved count until class start and drops it after', () => {
@@ -535,7 +535,7 @@ describe('summarizeCredits', () => {
       { reservationId: 2, creditGrantId: 1, amount: 1 },
       { reservationId: 3, creditGrantId: 1, amount: 1, holding: false },
     ];
-    const beforeStart = summarizeCredits({
+    const beforeStart = creditChip({
       grants: [pack],
       allocations: allocations,
       classStartByReservationId: {
@@ -548,7 +548,7 @@ describe('summarizeCredits', () => {
     expect(beforeStart.reserved).toBe(1);
     expect(beforeStart.remaining).toBe(2);
 
-    const atStart = summarizeCredits({
+    const atStart = creditChip({
       grants: [pack],
       allocations: allocations,
       classStartByReservationId: {
@@ -561,7 +561,7 @@ describe('summarizeCredits', () => {
   });
 
   it('counts a free reservation until start when the caller passes reservation rows', () => {
-    const summary = summarizeCredits({
+    const summary = creditChip({
       grants: [grant({ id: 1, quantity: 4, expiresAt: new Date(2026, 11, 1) })],
       allocations: [],
       reservations: [
@@ -576,7 +576,7 @@ describe('summarizeCredits', () => {
   });
 
   it('floors a negative finite total at zero and ignores a future start', () => {
-    const summary = summarizeCredits({
+    const summary = creditChip({
       grants: [
         grant({ id: 1, quantity: 2, expiresAt: new Date(2026, 11, 1) }),
         grant({ id: 2, quantity: -5, expiresAt: new Date(2026, 11, 1) }),
@@ -588,7 +588,169 @@ describe('summarizeCredits', () => {
     });
     expect(summary.remaining).toBe(0);
     expect(summary.expiringCount).toBeNull();
-    expect(formatCreditChip(summary)).toBe('0 remaining · 0 reserved');
+    expect(summary.text).toBe('0 remaining · 0 reserved');
+  });
+});
+
+describe('creditChip range', () => {
+  const now = new Date(2026, 8, 27, 12, 0, 0);
+  const fall = { from: '2026-09-01', to: '2026-11-30' };
+  const winter = { from: '2026-12-01', to: '2027-02-28' };
+
+  function pack(id, quantity, startsAt, expiresAt) {
+    return grant({
+      id: id,
+      quantity: quantity,
+      startsAt: startsAt,
+      expiresAt: expiresAt,
+      originalExpiresAt: expiresAt,
+    });
+  }
+
+  const fallPack = pack(1, 4, new Date(2026, 8, 1), new Date(2026, 11, 1));
+  const winterPack = pack(2, 7, new Date(2026, 11, 1), new Date(2027, 2, 1));
+  const reservations = [
+    { occursOn: '2026-11-20', classStart: new Date(2026, 10, 20, 16), paused: false },
+    { occursOn: '2026-12-10', classStart: new Date(2026, 11, 10, 16), paused: false },
+  ];
+
+  it('keeps a winter grant and reservation off the fall chip', () => {
+    const summary = creditChip({
+      now: now,
+      from: fall.from,
+      to: fall.to,
+      name: 'Fall 2026',
+      grants: [fallPack, winterPack],
+      reservations: reservations,
+    });
+    expect(summary.text).toBe('Fall 2026 · 4 remaining · 1 reserved · 4 expire Nov 30');
+  });
+
+  it('keeps a fall grant, reservation, and expiration off the winter chip', () => {
+    const summary = creditChip({
+      now: now,
+      from: winter.from,
+      to: winter.to,
+      name: 'Winter 2026',
+      grants: [fallPack, winterPack],
+      reservations: reservations,
+    });
+    expect(summary.text).toBe('Winter 2026 · 7 remaining · 1 reserved · 7 expire Feb 28');
+  });
+
+  it('drops only the name when the range is unnamed', () => {
+    const summary = creditChip({
+      now: now,
+      from: winter.from,
+      to: winter.to,
+      grants: [winterPack],
+      reservations: [],
+    });
+    expect(summary.text).toBe('7 remaining · 0 reserved · 7 expire Feb 28');
+  });
+
+  it('prints the name it is given and leaves the through date off an unlimited range', () => {
+    const summary = creditChip({
+      now: now,
+      from: winter.from,
+      to: winter.to,
+      name: 'Winter 2026',
+      grants: [grant({
+        id: 3,
+        quantity: null,
+        startsAt: new Date(2026, 11, 1),
+        expiresAt: new Date(2027, 2, 1),
+      })],
+      reservations: reservations,
+    });
+    expect(summary.text).toBe('Winter 2026 · Unlimited · 1 reserved');
+    expect(summary.through).toBeNull();
+  });
+
+  it('does not let a removal in one range reduce the other', () => {
+    const removal = pack(4, -3, new Date(2026, 11, 1), new Date(2027, 2, 1));
+    const fallChip = creditChip({
+      now: now,
+      from: fall.from,
+      to: fall.to,
+      grants: [fallPack, removal],
+      reservations: [],
+    });
+    const winterChip = creditChip({
+      now: now,
+      from: winter.from,
+      to: winter.to,
+      grants: [winterPack, removal],
+      reservations: [],
+    });
+    expect(fallChip.remaining).toBe(4);
+    expect(winterChip.remaining).toBe(4);
+  });
+
+  it('counts a grant with no end date and skips one that starts after the range', () => {
+    const open = creditChip({
+      now: now,
+      from: winter.from,
+      to: winter.to,
+      grants: [grant({ id: 1, quantity: 3, startsAt: new Date(2026, 8, 1), expiresAt: null })],
+      reservations: [],
+    });
+    const later = creditChip({
+      now: now,
+      from: fall.from,
+      to: fall.to,
+      grants: [winterPack],
+      reservations: [],
+    });
+    expect(open.remaining).toBe(3);
+    expect(later.remaining).toBe(0);
+    expect(later.needsRegistration).toBe(true);
+  });
+
+  it('shows a grant that spans two quarters on both chips', () => {
+    const spanning = pack(5, 6, new Date(2026, 10, 15), new Date(2027, 0, 15));
+    const fallChip = creditChip({
+      now: now,
+      from: fall.from,
+      to: fall.to,
+      grants: [spanning],
+      reservations: [],
+    });
+    const winterChip = creditChip({
+      now: now,
+      from: winter.from,
+      to: winter.to,
+      grants: [spanning],
+      reservations: [],
+    });
+    expect(fallChip.remaining).toBe(6);
+    expect(winterChip.remaining).toBe(6);
+  });
+
+  it('leaves out a paused reservation and a class that already started', () => {
+    const summary = creditChip({
+      now: now,
+      from: fall.from,
+      to: fall.to,
+      grants: [fallPack],
+      reservations: [
+        { occursOn: '2026-11-20', classStart: new Date(2026, 10, 20, 16), paused: true },
+        { occursOn: '2026-09-01', classStart: new Date(2026, 8, 1, 16), paused: false },
+        { occursOn: '2026-11-28', classStart: new Date(2026, 10, 28, 16), paused: false },
+      ],
+    });
+    expect(summary.reserved).toBe(1);
+  });
+});
+
+describe('quarterSpan', () => {
+  it('names December and the following January as the winter that starts in December', () => {
+    expect(quarterSpan(new Date(2026, 11, 15))).toMatchObject({
+      from: '2026-12-01',
+      to: '2027-02-28',
+      name: 'Winter 2026',
+    });
+    expect(quarterSpan(new Date(2027, 0, 15)).name).toBe('Winter 2026');
   });
 });
 

@@ -15,6 +15,29 @@ function day(value) {
   return String(value).slice(0, 10);
 }
 
+// 'YYYY-MM-DD' (or the first ten characters) -> local midnight. The reverse of day().
+// Null stays null.
+function isoDay(value) {
+  const text = day(value);
+  if (text == null) {
+    return null;
+  }
+  const parts = text.split('-').map(Number);
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+}
+
+// A real YYYY-MM-DD calendar day, or an error. February 31 is rejected.
+function parseIsoDay(value, label) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new Error(label + ' must be YYYY-MM-DD');
+  }
+  const date = isoDay(value);
+  if (day(date) !== value) {
+    throw new Error(label + ' must be YYYY-MM-DD');
+  }
+  return date;
+}
+
 // Time value -> 'HH:MM:SS'. Shorter text is left as-is. Null stays null.
 function clock(value) {
   if (value == null) {
@@ -41,6 +64,8 @@ function pad(number) {
 
 module.exports = {
   day,
+  isoDay,
+  parseIsoDay,
   clock,
   timestamp,
 };

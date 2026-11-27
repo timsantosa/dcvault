@@ -143,11 +143,13 @@ The date is the class date. Several classes on one day each show that date.
 
 The chip’s remaining count and reserved count are for the same quarter. Phase 1 remaining counts credits that cover today, and reserved counts every upcoming reservation, including ones in a later quarter. That is how fall can read `0 remaining · 8 reserved` while winter still has unused credits.
 
-The quarter is the quarter of the day selected on the calendar. Moving to a day in another quarter switches the chip. Website purchases and staff grants both count. The chip names that quarter, after the counts, so the words `remaining` and `reserved` stay where they are: `7 remaining · 8 reserved · Winter 2026`.
+The quarter is the quarter of the day selected on the calendar. Moving to a day in another quarter switches the chip. Website purchases and staff grants both count. The name leads the text, and `remaining` and `reserved` stay in that order: `Winter 2026 · 7 remaining · 8 reserved · 4 expire Feb 28`. A caller can omit the name. Unlimited for that quarter is `Winter 2026 · Unlimited · N reserved`, with no through-date. With the name left off, that is `Unlimited · N reserved`.
 
-Remaining is the unused balance of grants that cover that quarter. Reserved is upcoming reservations whose class date falls in that quarter. A winter reservation is not counted on a fall chip. The expiring line counts only credits inside that same quarter. Unlimited for that quarter stays `Unlimited · N reserved`, then the quarter name.
+Remaining is the unused balance of grants whose window overlaps that quarter. A grant that spans two quarters shows its balance on both chips. Reserved is upcoming reservations whose class date falls in that quarter. A winter reservation is not counted on a fall chip. The expiring line uses the same soonest-expiration rule on that same set of grants.
 
-The schedule chip, the class detail chip, and the cancel preview all use this text. Class detail uses the quarter of that class date. Upcoming classes uses the quarter of the selected calendar day, the same as the schedule.
+The schedule chip and Upcoming classes use the quarter of the selected calendar day. Class detail and the cancel preview use the quarter of that class date. The profile meter uses the current quarter and leaves the name off, because the heading already names it. The staff credits summary passes no dates, so it stays the unscoped line.
+
+Shipped 2026-11-27. One function, `creditChip`, takes an optional `from`/`to` and an optional name. No dates means grants that cover now and every upcoming reservation.
 
 ---
 

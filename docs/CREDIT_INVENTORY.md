@@ -2,7 +2,7 @@
 
 **Companion to:** [CLASS_RESERVATION_SYSTEM.md](./CLASS_RESERVATION_SYSTEM.md)  
 **Status:** Decided (Task 2.1). Tasks 2.2+ implement this file.  
-**Last updated:** 2026-11-10
+**Last updated:** 2026-11-27
 
 This is the schema and spending model for class credits. The PRD remains the product source of truth. If this file and the PRD disagree, update the PRD first, then this file.
 
@@ -209,6 +209,8 @@ An active unlimited grant:
 `Unlimited · 3 reserved · through Nov 30`
 
 No remaining count, because they will not run out while that grant is live. Finite grants are still spent first and still listed in history. If the unlimited grant has no `expiresAt`, omit the through-date. Reserving animates the **reserved** count. The word Unlimited does not tick down.
+
+The member chip passes a quarter’s `from` and `to`. The name leads the text, and a ranged unlimited chip has no through-date. The profile meter passes that quarter and leaves the name off. Omit `from` and `to` for the lines above: grants that cover now, and every upcoming reservation. That is what the staff credits summary shows.
 
 The profile meter for a quarter covered by unlimited shows **Unlimited**, not a fraction. Attended count still shows.
 

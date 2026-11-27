@@ -6,8 +6,8 @@
 const {
   seasonOf,
   resolveSeasonWindow,
-  summarizeCredits,
-  formatCreditChip,
+  quarterSpan,
+  creditChip,
   formatHistoryLine,
   grantBalance,
   lastInclusiveDay,
@@ -22,22 +22,26 @@ function presentClassProgress(input) {
   const now = input.now;
   const grants = input.grants || [];
   const reservations = input.reservations || [];
-  const summary = summarizeCredits({
+  const span = quarterSpan(now);
+  const summary = creditChip({
     now: now,
     grants: grants,
     allocations: input.allocations || [],
-    reservations: reservations.map((row) => ({ classStart: row.classStart, paused: row.paused })),
+    reservations: reservations.map((row) => ({
+      classStart: row.classStart,
+      paused: row.paused,
+      occursOn: row.occursOn,
+    })),
+    from: span.from,
+    to: span.to,
   });
 
   const season = seasonOf(now);
-  const window = resolveSeasonWindow(season, now);
-  const firstDay = day(window.startsAt);
-  const lastDay = day(new Date(window.expiresAt.getFullYear(), window.expiresAt.getMonth(), window.expiresAt.getDate() - 1));
   const attended = reservations.filter((row) => {
-    return row.checkedInAt != null && row.occursOn >= firstDay && row.occursOn <= lastDay;
+    return row.checkedInAt != null && row.occursOn >= span.from && row.occursOn <= span.to;
   }).length;
 
-  const finite = grants.filter((grant) => grant.quantity != null && covers(grant, now));
+  const finite = grants.filter((grant) => grant.quantity != null && overlaps(grant, span));
   const purchased = Math.max(0, finite.reduce((sum, grant) => sum + Number(grant.quantity), 0));
 
   return {
@@ -47,7 +51,7 @@ function presentClassProgress(input) {
     remaining: summary.remaining,
     reserved: summary.reserved,
     attended: attended,
-    summaryText: formatCreditChip(summary),
+    summaryText: summary.text,
   };
 }
 
@@ -206,11 +210,11 @@ function historyClass(session, series) {
   };
 }
 
-function covers(grant, instant) {
-  if (grant.startsAt != null && instant < grant.startsAt) {
+function overlaps(grant, span) {
+  if (grant.startsAt != null && grant.startsAt >= span.expiresAt) {
     return false;
   }
-  if (grant.expiresAt != null && instant >= grant.expiresAt) {
+  if (grant.expiresAt != null && grant.expiresAt <= span.startsAt) {
     return false;
   }
   return true;

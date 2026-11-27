@@ -3,7 +3,7 @@
 **Version:** 1.3 (credit inventory design)  
 **Status:** Pre-engineering  
 **Scope:** Product and UX requirements only (no implementation specifics)  
-**Last updated:** 2026-11-24  
+**Last updated:** 2026-11-27  
 **Client walkthrough:** [CLASS_RESERVATION_WIREFRAMES.md](./CLASS_RESERVATION_WIREFRAMES.md) — MVP screen wireframes and flows (members, coaches, admin)  
 **Credit inventory:** [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) — schema and spending rules (Task 2.1)  
 **Beta checklist:** [CLASS_RESERVATION_BETA_CHECKLIST.md](./CLASS_RESERVATION_BETA_CHECKLIST.md) — manual dark-launch pass (Task 13.1)  
@@ -170,6 +170,8 @@ Show:
 - **Expiring soonest** — how many remaining credits expire on the soonest date, e.g. `4 expire Sep 30` (not only `expires Sep 30`).
 
 Example: `8 remaining · 3 reserved · 4 expire Sep 30`.
+
+L52 scopes the member chip to one quarter and leads with that quarter’s name (`Summer 2026 · 8 remaining · 3 reserved · 4 expire Sep 30`). The schedule and Upcoming use the selected day. Class detail and the cancel preview use the class date. The profile meter uses the current quarter and leaves the name off. Details: [L52](./CLASS_RESERVATION_LATER_PHASES.md#l52-credit-chip-for-one-quarter).
 
 If the athlete has a spendable **unlimited** grant, the chip shows `Unlimited` instead of a remaining count (`Unlimited · 3 reserved · through Nov 30`). Finite grants are still spent first. Details: [CREDIT_INVENTORY.md](./CREDIT_INVENTORY.md) §8.
 

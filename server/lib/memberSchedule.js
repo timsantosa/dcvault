@@ -3,7 +3,8 @@
 // Read-only member schedule. Callers load sessions and grants. Dates on a class
 // are wall-clock America/New_York. Grants are Date instants. No database.
 
-const { summarizeCredits, formatCreditChip, grantBalance } = require('./creditInventory');
+const { isoDay } = require('./dates');
+const { creditChip, quarterSpan, grantBalance } = require('./creditInventory');
 const { eligibilityReason } = require('./eligibility');
 
 const TIME_ZONE = 'America/New_York';
@@ -37,13 +38,18 @@ function presentMemberSchedule(input) {
   const now = input.now;
   const grants = input.grants || [];
   const allocations = input.allocations || [];
-  const summary = summarizeCredits({
+  const chipInput = {
     now: now,
     grants: grants,
     allocations: allocations,
-    classStartByReservationId: input.classStartByReservationId || {},
     reservations: input.chipReservations,
-  });
+  };
+  const today = quarterSpan(now);
+  const todayChip = creditChip(Object.assign({}, chipInput, {
+    from: today.from,
+    to: today.to,
+    name: today.name,
+  }));
   const signups = {};
   (input.signups || []).forEach((signup) => {
     signups[signup.seriesId + '|' + signup.occursOn] = signup;
@@ -61,10 +67,47 @@ function presentMemberSchedule(input) {
 
   return {
     today: nyDateString(now),
-    chipText: formatCreditChip(summary),
-    needsRegistration: summary.unlimited !== true && summary.remaining === 0,
+    chipText: todayChip.text,
+    needsRegistration: todayChip.needsRegistration,
+    chips: quarterChips(input.from, input.to, chipInput),
     sessions: sessions,
   };
+}
+
+function quarterChips(from, to, chipInput) {
+  if (from == null || to == null) {
+    return [];
+  }
+  return quartersOverlapping(from, to).map((span) => {
+    const chip = creditChip(Object.assign({}, chipInput, {
+      from: span.from,
+      to: span.to,
+      name: span.name,
+    }));
+    return {
+      from: span.from,
+      to: span.to,
+      text: chip.text,
+      needsRegistration: chip.needsRegistration,
+    };
+  });
+}
+
+function quartersOverlapping(from, to) {
+  const spans = [];
+  let cursor = isoDay(from);
+  const end = isoDay(to);
+  while (cursor <= end) {
+    const span = quarterSpan(cursor);
+    spans.push(span);
+    const next = isoDay(span.to);
+    next.setDate(next.getDate() + 1);
+    if (next <= cursor) {
+      break;
+    }
+    cursor = next;
+  }
+  return spans;
 }
 
 function presentSession(session, grants, now, allocations, signup, notEligible) {

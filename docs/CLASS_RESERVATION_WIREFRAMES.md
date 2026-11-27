@@ -131,8 +131,8 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
 │  💬         SCHEDULE            ☰   │
 ├─────────────────────────────────────┤
 │  Emma · Open / All Ages      [▾]    │
-│  8 remaining · 3 reserved           │
-│  4 expire Sep 30                    │
+│  Summer 2026 · 8 remaining · 3      │
+│  reserved · 4 expire Sep 30         │
 │                                     │
 │            August 2026              │
 │     S  M  T  W  T  F  S             │
@@ -170,9 +170,10 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
 
 - **Athlete chip** at the top is the currently selected AthleteProfile. Parents with two kids switch here (or via More → Switch Profile). Everything on this tab is for that athlete only.
 - **Credits** always show (not only when low) and update as soon as you reserve or cancel. On reserve, the remaining and reserved numbers **animate** (count change / brief emphasis) so the spend is obvious:
-  - **Remaining** = unused credits still available to book.
-  - **Reserved** = upcoming spots already pulled for this athlete.
-  - **Expiring** = how many of the remaining credits expire on the soonest date (`4 expire Sep 30`), not just the date.
+  - The quarter name leads the line. Counts are for the quarter of the selected day. Moving to a day in another quarter switches the chip.
+  - **Remaining** = unused credits of grants that overlap that quarter.
+  - **Reserved** = upcoming spots in that quarter.
+  - **Expiring** = how many of those remaining credits expire on the soonest date (`4 expire Sep 30`), not just the date.
 - Month markers use the class color. An open ring means the class is that day and Emma has not reserved. A filled dot means she has a reservation in that color. The row’s left bar uses the same color.
 - Past classes stay in the same list, dimmed — no toggle.
 - Ineligible classes stay on the list with a reason. We do not hide them.
@@ -210,8 +211,8 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
 │  │ 14'7" 180                   │    │
 │  └─────────────────────────────┘    │
 │                                     │
-│  8 remaining · 3 reserved           │
-│  4 expire Sep 30                    │
+│  Summer 2026 · 8 remaining · 3      │
+│  reserved · 4 expire Sep 30         │
 │                                     │
 │  ┌─────────────────────────────┐    │
 │  │         RESERVE             │    │
@@ -227,16 +228,15 @@ There is **no Upcoming / Past toggle**. The agenda is one scrolling list. Past r
 Tapping **Reserve** on the schedule row (or on detail) **commits immediately**. There is no confirm sheet. The row flips to Reserved, the athlete appears on the roster, and the header chip animates the credit spend:
 
 ```
-Before tap                         After tap
-8 remaining · 3 reserved           7 remaining · 4 reserved
-4 expire Sep 30                    4 expire Sep 30
+Before tap                                      After tap
+Summer 2026 · 8 remaining · 3 reserved       Summer 2026 · 7 remaining · 4 reserved
         ↘  numbers tick / pulse  ↙
 ```
 
 ```
 │  Emma · Open / All Ages      [▾]    │
-│  8 remaining · 3 reserved           │  ← tick down / up
-│  4 expire Sep 30                    │
+│  Summer 2026 · 8 remaining · 3      │  ← tick down / up
+│  reserved                           │
 ```
 
 Cancel cutoff still lives on class detail (“Cancel up to 24 hours before start”) so it is readable before they tap; it does not appear as a blocking confirm.
@@ -284,6 +284,8 @@ Primary action on the row and on detail flips from Reserve to Cancel. The month 
 │  └─────────────────────────────┘    │
 └─────────────────────────────────────┘
 ```
+
+The before/after numbers are the quarter of the class being canceled.
 
 
 
@@ -459,7 +461,9 @@ Optional note still exists on class detail (“Working 13' 7" this week”). To 
 
 Semicircle is remaining vs total purchased for the **current** period. “Attended” means checked in, not merely reserved. Training group labels appear only when the profile has groups set. Tapping the quarter block opens **Class history** (Flow E3). **Upcoming classes** already ships from task 7.2.
 
-**Empty state (MVP):** when no finite or unlimited grant covers today, hide the semicircle and show `No classes this quarter`. The attended count and the chip line still show.
+**Empty state (MVP):** when no finite or unlimited grant covers this quarter, hide the semicircle and show `No classes this quarter`. The attended count and the chip line still show.
+
+The line under the meter is the quarter chip with the name left off. The heading already names the quarter. The arc’s remaining count is that same number.
 
 **Later (L26):** arrows and a horizontal swipe move the progress block between the current quarter and the next quarter. It opens on the current quarter unless nothing covers this quarter and something covers the next one.
 
@@ -467,7 +471,7 @@ Training group is **read-only** for the athlete. Staff change it on **Edit Profi
 
 ### E2. Upcoming classes (from profile)
 
-A simple list of this athlete’s reservations — same cancel rules as the Schedule tab.
+A simple list of this athlete’s reservations — same cancel rules as the Schedule tab. The chip at the top is the selected calendar day’s quarter, the same chip as the schedule. Canceling a row previews that class’s quarter.
 
 ```
 ┌─────────────────────────────────────┐
